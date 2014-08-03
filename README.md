@@ -111,7 +111,7 @@ how to update you test codec
 how to configure test case
 --------------------------
 
--1. Edit configure file ./CaseConfigure/case.cfg
+-       1. Edit configure file ./CaseConfigure/case.cfg
 
         using white space to separate the value of test parameter
         eg: IntraPeriod:  -1   30 
