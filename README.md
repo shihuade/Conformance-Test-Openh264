@@ -56,8 +56,10 @@ structure
 
 -   Codec
    
-	--openh264 codec: encoder, decoder and configure file layerXX.cfg welsenc.cfg, 
-	JM decoder;
+	openh264 codec: encoder, decoder and configure file layerXX.cfg welsenc.cfg, 
+	JM decoder,JSVM decoder and bit stream extractor  for multilayer test, downsample and cropper
+	for those non multiple of 16 resolution 
+	sequence, 
 	for how to	update your test codec,please go to section  "how to update you test codec"
 
 -   FinalResult
@@ -90,8 +92,8 @@ how to update you test codec
 
 -	2.update automatically
  	just given your openh264 repository's directory, and run script file 
-	./run_UpdateCodecAndTestBitStream.sh  ${YourOpenH264Dir}
-	and the script file will complete below task
+	./run_UpdateCodec.sh  ${YourOpenH264Dir}
+	and the script file will complete below tasks:
 	----enable macro for dump reconstructed YUV in codec/encoder/core/inc/as264_common.h
 	----build codec
 	----copy h264enc h264dec layer2.cfg welsenc.cfg to ./Codec
@@ -100,14 +102,16 @@ how to update you test codec
 
 		
 
-how to generate case
---------------------
+how to configure test case
+--------------------------
 -   Edit configure file ./CaseConfigure/case.cfg
-    using white space to separate  case  value  of test parameter 
+    using white space to separate the value of test parameter
     eg: IntraPeriod:  -1   30  
 -   if you want to change the combination order of test parameter or anything else,
      please refer to script file ./Scripts/run_GenerateCase.sh and change the script 
 	 if you want.
+--SVC single layer
+
 
 how to verify  the test case
 ---------------------------
