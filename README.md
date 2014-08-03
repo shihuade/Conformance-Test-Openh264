@@ -30,7 +30,7 @@ how to use
 
         eg.
         1. ./run_UpdateCodec.sh  $YourOpenh264Dir
-        2. change your test configure by editin file CaseConfigure/case.cfg
+        2. change your test configure by editing file CaseConfigure/case.cfg
         3. ./run_Main.sh CaseConfigure/case.cfg
         4. wait for the final test result.
         5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.testlog or XXX_AllCasesOutput.csv file
@@ -65,11 +65,10 @@ structure
 
 -   Codec
    
-	openh264 codec: encoder, decoder and configure file layerXX.cfg welsenc.cfg, 
-	JM decoder,JSVM decoder and bit stream extractor  for multilayer test, downsample and cropper
-	for those non multiple of 16 resolution 
-	sequence, 
-	for how to	update your test codec,please go to section  "how to update you test codec"
+        1. openh264 codec: encoder, decoder and configure file layerXX.cfg welsenc.cfg; 
+        2. JM decoder,JSVM decoder and bit stream extractor  for multilayer test;
+        3. downsample and cropper for those resolution are non multiple of 16  
+        4. for how toupdate your test codec,please go to section  "how to update you test codec"
 
 -   FinalResult
   
@@ -90,35 +89,32 @@ structure
 
 how to update you test codec
 ----------------------------
--       no matter you choose 1 or 2, the macro "WELS_TESTBED" must be enable,so that the reconstrution YUV file 
+        no matter you choose 1 or 2, the macro "WELS_TESTBED" must be enable,so that the reconstrution YUV file 
         will be dumped during the encoding proccess. if you choose 1, you need to open the macro by 
         adding "#define WELS_TESTBED" in file codec/encoder/core/inc/as264_common.h;if you choose 2, auto script
         will do it automatically.
 
 -	1.update your test codec manually
-	build your private openh264, and copied  h264enc, h264dec, layer2.cfg, welsenc.cfg 
-	to folder ./Codec manually.
+        build your private openh264, and copied  h264enc, h264dec, layer2.cfg, welsenc.cfg to folder ./Codec manually.
 
 -	2.update automatically
- 	just given your openh264 repository's directory, and run script file 
-	./run_UpdateCodec.sh  ${YourOpenH264Dir}
-	and the script file will complete below tasks:
-	----enable macro for dump reconstructed YUV in codec/encoder/core/inc/as264_common.h
-	----build codec
-	----copy h264enc h264dec layer2.cfg welsenc.cfg to ./Codec
-	----copy test bit stream from openh264/res  to ./BitStreamForTest
-		
+        just given your openh264 repository's directory, and run script file 
 
+        ./run_UpdateCodec.sh  ${YourOpenH264Dir}
+        and the script file will complete below tasks:
+        ----enable macro for dump reconstructed YUV in codec/encoder/core/inc/as264_common.h
+        ----build codec
+        ----copy h264enc h264dec layer2.cfg welsenc.cfg to ./Codec
+        ----copy test bit stream from openh264/res  to ./BitStreamForTest
 		
 
 how to configure test case
 --------------------------
--   Edit configure file ./CaseConfigure/case.cfg
+-   1. Edit configure file ./CaseConfigure/case.cfg
     using white space to separate the value of test parameter
-    eg: IntraPeriod:  -1   30  
--   if you want to change the combination order of test parameter or anything else,
-     please refer to script file ./Scripts/run_GenerateCase.sh and change the script 
-	if you want.
+        eg: IntraPeriod:  -1   30  
+-   2. if you want to change the combination order of test parameter or anything else,
+     please refer to script file ./Scripts/run_GenerateCase.sh and change the script if you want.
 
     SVC single layer
 
