@@ -64,11 +64,11 @@ structure
 
 -   FinalResult
   
-	All test sequences' test result will be copied to folder ./FinalResult.
-	XXX_AllCaseOutput.csv       contain the passe status of all cases(passed or unpassed etc.)
-	XXX_AllCase_SHA1_Table.csv  contain the SHA1 string of those  passed cases
-	XXX_.TestLog    test log of each test bit stream
-	XXX_.Summary    test summary of each test bit stream
+        All test sequences' test result will be copied to folder ./FinalResult.
+        XXX_AllCaseOutput.csv       contain the passe status of all cases(passed or unpassed etc.)
+        XXX_AllCase_SHA1_Table.csv  contain the SHA1 string of those  passed cases
+        XXX_.TestLog    test log of each test bit stream
+        XXX_.Summary    test summary of each test bit stream
 
 -   Script
    
