@@ -109,8 +109,9 @@ how to configure test case
     eg: IntraPeriod:  -1   30  
 -   if you want to change the combination order of test parameter or anything else,
      please refer to script file ./Scripts/run_GenerateCase.sh and change the script 
-	 if you want.
---SVC single layer
+	if you want.
+
+    SVC single layer
 
 
 how to verify  the test case
