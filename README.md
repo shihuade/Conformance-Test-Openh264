@@ -26,7 +26,9 @@ how to use
 	   test time  depends on how many cases you are running and 
 	   how many test sequences you used in the test
 -   step 4. go to folder ./FinalResult t for the final test result
-          SHA1 table files are under folder ./SHA1Table		
+          SHA1 table files are under folder ./SHA1Table	
+
+        testdddd dddd
 
 
 supported features
