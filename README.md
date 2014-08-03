@@ -112,12 +112,14 @@ how to configure test case
 --------------------------
 
 -       1. Edit configure file ./CaseConfigure/case.cfg
-
         using white space to separate the value of test parameter
         eg: IntraPeriod:  -1   30 
 -2. 	
-   using white space to separate the value of test parameter
+ 
+        using white space to separate the value of test parameter
         eg: IntraPeriod:  -1   30  
+
+
 
 -	2. if you want to change the combination order of test parameter or anything else,
           please refer to script file ./Scripts/run_GenerateCase.sh and change the script if you want.
