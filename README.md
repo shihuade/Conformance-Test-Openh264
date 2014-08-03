@@ -143,7 +143,7 @@ how to configure test case
             UsageType:     1            #0: camera video 1:screen content
 
 
-how to verify  the test case
+how to verify test case
 ---------------------------
 -1.Basic check:
 
