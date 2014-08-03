@@ -3,7 +3,7 @@ Conformance-Test-Openh264
 ==========================================
 about
 -----
--   This model is part of Cisco openh264 project for encoder binary comparison test.
+-   This model is part of Cisco openh264 project for encoder conformance test.
 	In this test, all cases of all test sequences will be tested and check that whether 
 	the reconstructed YUV is the same with JM decoder's YUV. if yes, the test case 
 	will be marked as passed and SHA1 string will be generated, otherwise, marked as unpassed 
@@ -19,7 +19,7 @@ about
 how to use
 ----------
 -   step 1. update your test codec in folder ./Codec, for how to update, please refer to section 
-	  "how to update you test codec";
+	  "how to update your test codec";
 -   step 2. configure your test case if you do not use default test case.
           for how to generate your personal test case, please refer to section "how to configure test case"	
 -   step 3. run shell script file: ./run_Main.sh ./CaseConfigure/case.csf,ignore the warning info during the test.
@@ -87,7 +87,7 @@ structure
     all SHA1 table of each test sequence.
 
 
-how to update you test codec
+how to update your test codec
 ----------------------------
         no matter you choose 1 or 2, the macro "WELS_TESTBED" must be enable,so that the reconstrution YUV file 
         will be dumped during the encoding proccess. if you choose 1, you need to open the macro by 
