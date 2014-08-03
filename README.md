@@ -145,4 +145,21 @@ how to configure test case
 
 how to verify  the test case
 ---------------------------
--   please refer to script file ./Scripts/run_BitStreamValidateCheck.sh
+-1.Basic check:
+
+    1. please refer to run_CheckBasicCheck.sh
+    2. check below item:
+       --Encoded failed check, like core down, encoder command line incorrect, input YUV does not exist etc.
+       --croped RecYUV if the resulution of input  is not multiple of 16, RecYUV should need to be cropped used the same resoulion of input YUV. This step is prapare for JSVM check.
+        --encoded number check when rc is off.
+
+-2.JSVM check:
+
+    1. plese refer to run_CheckByJSVMDecoder.sh
+    2. check item listed as below:
+       --extracted bit steam for multiple spatial layer case;
+       --decoded  by JSVM, failed or succeed;
+       --decoded by h264dec encoder, failed or succeed;
+       --check whether JSVMDecYUV is the same with RecYUV
+       --check whether JSVMDecYUV is the same with DecYUV
+       
