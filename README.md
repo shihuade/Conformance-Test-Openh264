@@ -110,10 +110,11 @@ how to update you test codec
 
 how to configure test case
 --------------------------
+
 -	1. Edit configure file ./CaseConfigure/case.cfg
           using white space to separate the value of test parameter
           eg: IntraPeriod:  -1   30  
--   2. if you want to change the combination order of test parameter or anything else,
+-	2. if you want to change the combination order of test parameter or anything else,
           please refer to script file ./Scripts/run_GenerateCase.sh and change the script if you want.
 
 -	3. SVC single sptatial layer
@@ -129,10 +130,7 @@ how to configure test case
             MultiLayer:    0            # 0 single layer  1 multi layer
             UsageType:     1            #0: camera video 1:screen content
 
+
 how to verify  the test case
 ---------------------------
 -   please refer to script file ./Scripts/run_BitStreamValidateCheck.sh
--   
-
-
-
