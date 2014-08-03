@@ -150,7 +150,8 @@ how to verify  the test case
     1. please refer to run_CheckBasicCheck.sh
     2. check below item:
        --Encoded failed check, like core down, encoder command line incorrect, input YUV does not exist etc.
-       --croped RecYUV if the resulution of input  is not multiple of 16, RecYUV should need to be cropped used the same resoulion of input YUV. This step is prapare for JSVM check.
+       --croped RecYUV if the resulution of input  is not multiple of 16, RecYUV should need to 
+         be cropped used the same resoulion of input YUV. This step is prapare for JSVM check.
         --encoded number check when rc is off.
 
 -2.JSVM check:
