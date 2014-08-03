@@ -34,7 +34,7 @@ how to use
         3. ./run_Main.sh CaseConfigure/case.cfg
         4. wait for the final test result.
         5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file
-          during you test, those files will update case by case.
+          during your test, those files will update case by case.
       	
 
 
