@@ -110,6 +110,12 @@ how to update you test codec
 
 how to configure test case
 --------------------------
+-	1.update your test codec manually
+        build your private openh264, and copied  h264enc, h264dec, layer2.cfg, welsenc.cfg to folder ./Codec manually.
+
+-	1.update your test codec manually
+        build your private openh264, and copied  h264enc, h264dec, layer2.cfg, welsenc.cfg to folder ./Codec manually.
+
 
 -	1. Edit configure file ./CaseConfigure/case.cfg
           using white space to separate the value of test parameter
