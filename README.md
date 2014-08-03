@@ -28,7 +28,14 @@ how to use
 -   step 4. go to folder ./FinalResult t for the final test result
           SHA1 table files are under folder ./SHA1Table	
 
-        testdddd dddd
+        eg.
+        1. ./run_UpdateCodec.sh  $YourOpenh264Dir
+        2. change your test configure by editin file CaseConfigure/case.cfg
+        3. ./run_Main.sh CaseConfigure/case.cfg
+        4. wait for the final test result.
+        5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.testlog or XXX_AllCasesOutput.csv file
+          during you test, those files will update case by case.
+      	
 
 
 supported features
