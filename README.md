@@ -9,7 +9,7 @@ about
 	will be marked as passed and SHA1 string will be generated, otherwise, marked as unpassed 
 	and no SHA1 string for this test case in SHA1 table file(XXX.yuv_AllCases_SHA1_Table.csv)
 
--   The output of the test are those files in ./FinalResult, espectially the summary files named as XXX.summary.
+-   The output of the test are those files in ./FinalResult, espectially the summary files named as XXX.Summary.
 	and cases passed status in files named as XXX_AllCasesOutput.csv.And SHA1 table files can be found in 
         folder  ./SHA1Table.
 	For those temp data generated during test, can be found ./AllTestData/xxx.yuv/
@@ -25,7 +25,7 @@ how to use
 -   step 3. run shell script file: ./run_Main.sh ./CaseConfigure/case.csf,ignore the warning info during the test.
 	   test time  depends on how many cases you are running and 
 	   how many test sequences you used in the test
--   step 4. go to folder ./FinalResult t for the final test result
+-   step 4. go to folder ./FinalResult t for the final test result.
           SHA1 table files are under folder ./SHA1Table	
 
         eg.
@@ -33,7 +33,7 @@ how to use
         2. change your test configure by editing file CaseConfigure/case.cfg
         3. ./run_Main.sh CaseConfigure/case.cfg
         4. wait for the final test result.
-        5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.testlog or XXX_AllCasesOutput.csv file
+        5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file
           during you test, those files will update case by case.
       	
 
@@ -73,8 +73,8 @@ structure
 -   FinalResult
   
         All test sequences' test result will be copied to folder ./FinalResult.
-        XXX_AllCaseOutput.csv       contain the passe status of all cases(passed or unpassed etc.)
-        XXX_AllCase_SHA1_Table.csv  contain the SHA1 string of those  passed cases
+        XXX_AllCasesOutput.csv       contain the passe status of all cases(passed or unpassed etc.)
+        XXX_AllCases_SHA1_Table.csv  contain the SHA1 string of those  passed cases
         XXX_.TestLog    test log of each test bit stream
         XXX_.Summary    test summary of each test bit stream
 
@@ -116,10 +116,22 @@ how to configure test case
 -   2. if you want to change the combination order of test parameter or anything else,
      please refer to script file ./Scripts/run_GenerateCase.sh and change the script if you want.
 
-    SVC single layer
-
+-   3. SVC single sptatial layer
+        chane setting in case.cfg as below:
+          MultiLayer:    0            # 0 single layer  1 multi layer
+          UsageType:     0            #0: camera video 1:screen content
+-   4. SVC multiple spatial layers
+        chane setting in case.cfg as below:
+          MultiLayer:    0            # 0 single layer  1 multi layer
+          UsageType:     0            #0: camera video 1:screen content
+-   5. SCC (openh264 codec will support SCC in the futhure)
+        chane setting in case.cfg as below:
+          MultiLayer:    0            # 0 single layer  1 multi layer
+          UsageType:     1            #0: camera video 1:screen content
 
 how to verify  the test case
 ---------------------------
 -   please refer to script file ./Scripts/run_BitStreamValidateCheck.sh
+-   
+
 
