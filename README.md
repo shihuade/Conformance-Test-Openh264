@@ -111,30 +111,31 @@ how to update you test codec
 how to configure test case
 --------------------------
 
--       1. Edit configure file ./CaseConfigure/case.cfg
+- 1. Edit configure file ./CaseConfigure/case.cfg
+
         using white space to separate the value of test parameter
         eg: IntraPeriod:  -1   30 
--2. 	
- 
         using white space to separate the value of test parameter
         eg: IntraPeriod:  -1   30  
 
 
 
--	2. if you want to change the combination order of test parameter or anything else,
-          please refer to script file ./Scripts/run_GenerateCase.sh and change the script if you want.
+-2. if you want to change the combination order of test parameter or anything else,
 
--	3. SVC single sptatial layer
-          chane setting in case.cfg as below:
+        please refer to script file ./Scripts/run_GenerateCase.sh and change the script if you want.
+
+-3. SVC single sptatial layer
+          
+            chane setting in case.cfg as below:
             MultiLayer:    0            # 0 single layer  1 multi layer
             UsageType:     0            #0: camera video 1:screen content
 
--	4. SVC multiple spatial layers
+-4. SVC multiple spatial layers
           chane setting in case.cfg as below:
            MultiLayer:    0            # 0 single layer  1 multi layer
            UsageType:     0            #0: camera video 1:screen content
 
--	5. SCC (openh264 codec will support SCC in the futhure)
+-5. SCC (openh264 codec will support SCC in the futhure)
           chane setting in case.cfg as below:
             MultiLayer:    0            # 0 single layer  1 multi layer
             UsageType:     1            #0: camera video 1:screen content
