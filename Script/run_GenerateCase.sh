@@ -67,8 +67,9 @@ runGlobalVariableInital()
 	fi
 	local  TestSequence=$1
 	local  OutputCaseFile=$2
-	let " FramesToBeEncoded = 0"
-	let " MaxNalSize = 0"
+	let   " FramesToBeEncoded = 0"
+	let   " MaxNalSize = 0"
+	let   "Multiple16Flag=0"
 	declare -a  aNumSpatialLayer
 	declare -a  aNumTempLayer
 	declare -a  aUsageType
@@ -129,15 +130,15 @@ runMultiLayerInitial()
 	
 	#set spatial layer resolution
 	#may look like 360 640   720 1280   0 0   0 0
-	aSpatialLayerResolutionSet1=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 1`)
-	aSpatialLayerResolutionSet2=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 2`) 
-	aSpatialLayerResolutionSet3=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 3`)
-	aSpatialLayerResolutionSet4=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 4`)
+	aSpatialLayerResolutionSet1=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 1 ${Multiple16Flag}`)
+	aSpatialLayerResolutionSet2=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 2 ${Multiple16Flag}`)
+	aSpatialLayerResolutionSet3=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 3 ${Multiple16Flag}`)
+	aSpatialLayerResolutionSet4=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 4 ${Multiple16Flag}`)
 	#may look like: 200 400 800 0 , 50 300 600 0 ,
-	aSpatialLayerBRSet1=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  1 $ConfigureFile `)
-	aSpatialLayerBRSet2=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  2 $ConfigureFile `)
-	aSpatialLayerBRSet3=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  3 $ConfigureFile `)
-	aSpatialLayerBRSet4=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  4 $ConfigureFile `)
+	aSpatialLayerBRSet1=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  1 $ConfigureFile ${Multiple16Flag}`)
+	aSpatialLayerBRSet2=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  2 $ConfigureFile ${Multiple16Flag}`)
+	aSpatialLayerBRSet3=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  3 $ConfigureFile ${Multiple16Flag}`)
+	aSpatialLayerBRSet4=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  4 $ConfigureFile ${Multiple16Flag}`)
 }
 #usage:  runGenerateMultiLayerBRSet ${SpatialNum}
 #e.g:    --input:  runGenerateMultiLayerBRSet 2
@@ -281,7 +282,12 @@ runParseCaseConfigure()
 		elif [[ "$line" =~ ^EnableAdaptiveQuantization ]]
 		then
 			aEnableAdaptiveQuantization=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+		elif [[ "$line" =~ ^Multiple16Flag ]]
+		then
+			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
 		fi
+		
+		
 	done <$ConfigureFile
 	
 	

@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #***********************************************************************************************
 #    1.usage:   run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  $SpatialNum $ConfigureFile
 #      output:  ("LayerBRSet0", "LayerBRSet1",...)
@@ -23,7 +22,6 @@
 #         --input : 1280 720  10  2  case.cfg (1 spatial layer)
 #           output: (1000 0 0 0, 500 0 0 0)
 #***********************************************************************************************
-
 #usage: runGetLayerBR ${TopLayerBRIndex} ${SpatialLayerNum} $LayerIndex 
 #     
 #e.g:   1. input: runGetLayerBR  0  4  2   output: 600  (0->1000kbps)
@@ -55,7 +53,6 @@ runGetLayerBR()
     echo "Layer index and spatial number are not corret, please double check!"
 	exit 1
   fi
-
   if [ ${LayerBRSetIndex} -eq 0 ]
   then
     aLayerBitRate=(${aTestBRPointForLayer0[@]})
@@ -77,14 +74,11 @@ runGetLayerBR()
   else
     echo  ${aLayerBitRate[${NumBRPoint}]}
   fi
-
 }
-
 #usage: runGenerateTestBRSet
 #out generate final test bit rate point set
 runGenerateTestBRSet()
 {
-
  local TopLayerBRPonitNum=${#aTestBRPointForLayer3[@]}
  local AllLayerBR=""
  local TempLayerBR=""
@@ -112,7 +106,6 @@ runGenerateTestBRSet()
  echo ${aFinaleTestBRSet[@]}
  
 }
-
 runOutputTempData()
 {
   
@@ -128,7 +121,6 @@ runOutputTempData()
   echo ${aTestBRPointForLayer2[@]}
   echo ${aTestBRPointForLayer3[@]}
   echo ""
-
   echo ""
   echo "BR matric is:"
   echo ${aTestBRPointForLayer0[0]}
@@ -136,7 +128,6 @@ runOutputTempData()
   echo ${aTestBRPointForLayer2[0]}
   echo ${aTestBRPointForLayer3[0]}
   echo ""
-
   echo ""
   echo "BR matric is:"
   echo ${aTestBRPointForLayer0[1]}
@@ -145,18 +136,16 @@ runOutputTempData()
   echo ${aTestBRPointForLayer3[1]}
   echo ""  
 }
-
 #usage:   runMain  $PicW  $PicH $FPS  $SpatialNum $ConfigureFile
 runMain()
 {
-
-  if [ ! $#  -eq  5 ]
+  if [ ! $#  -eq  6 ]
   then
-    echo "usage: run_GetSpatialLayerBitRateSet.sh  \$PicW  \$PicH \$FPS  \$SpatialNum \$ConfigureFile"
+    echo "usage: run_GetSpatialLayerBitRateSet.sh  \$PicW  \$PicH \$FPS  \$SpatialNum \$ConfigureFile \$Multiple16Flag"
     exit  1
   elif [  $1 -le 0  -o $2 -le 0  -o $3 -le 0  -o $4 -le 0 ]
   then
-    echo "usage: run_GetSpatialLayerBitRateSet.sh  \$PicW  \$PicH \$FPS  \$SpatialNum \$ConfigureFile"
+    echo "usage: run_GetSpatialLayerBitRateSet.sh  \$PicW  \$PicH \$FPS  \$SpatialNum \$ConfigureFile \$Multiple16Flag"
     exit  1
   fi
   
@@ -165,6 +154,7 @@ runMain()
   FPS=$3
   SpatialNum=$4
   ConfigureFile=$5
+  Multiple16Flag=$6
   declare -a aSpatailResolution
   declare -a aTestBRPointForLayer0
   declare -a aTestBRPointForLayer1
@@ -173,8 +163,7 @@ runMain()
   
   #calculate 4 layers' resolution
   #aSpatailResolution=(PicWLayer_0 PicHLayer_0  PicWLayer_1 PicHLayer_1 PicWLayer_2 PicHLayer_2 PicWLayer_3 PicHLayer_3  )
-  aSpatailResolution=( `./run_GetSpatialLayerResolutionInfo.sh  $PicW $PicH  4` )
-
+  aSpatailResolution=( `./run_GetSpatialLayerResolutionInfo.sh  $PicW $PicH  4  ${Multiple16Flag}` )
   #get layer's test bit rate point based on configure file
   aTestBRPointForLayer0=(`./run_GetTargetBitRate.sh  ${aSpatailResolution[0]} ${aSpatailResolution[1]} ${FPS} ${ConfigureFile} `)
   aTestBRPointForLayer1=(`./run_GetTargetBitRate.sh  ${aSpatailResolution[2]} ${aSpatailResolution[3]} ${FPS} ${ConfigureFile} `)
@@ -184,11 +173,12 @@ runMain()
   #generate 
   runGenerateTestBRSet
 }
-
 PicW=$1
 PicH=$2
 FPS=$3
 SpatialNum=$4
 ConfigureFile=$5
-runMain  $PicW  $PicH $FPS  $SpatialNum $ConfigureFile
+Multiple16Flag=$6
+runMain  ${PicW}  ${PicH} ${FPS}  ${SpatialNum} ${ConfigureFile} ${Multiple16Flag}
+
 
