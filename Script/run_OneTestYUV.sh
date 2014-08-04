@@ -74,7 +74,7 @@ runGetYUVFullPath()
 	if [ ! $? -eq 0 ]
 	then
 		echo ""
-		echo  -e "\033[31m  Failed to parse YUV full path info  \033[0m"
+		echo  -e "\033[31m  can not find test yuv file ${TestYUVName} \033[0m"
 		echo ""
 		exit 1
 	else

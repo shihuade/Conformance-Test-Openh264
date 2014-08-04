@@ -111,11 +111,20 @@ runMultiLayerInitial()
 {
 	runParseYUVInfo  ${TestSequence}
 	MultiLayerNum=`./run_GetSpatialLayerNum.sh  ${PicW}  ${PicH}`
-	if [  ${MultiLayerFlag} -eq 1  ]
+	if [  ${MultiLayerFlag} -eq 0  ]
+	then
+		aNumSpatialLayer=( 1 )
+	elif  [  ${MultiLayerFlag} -eq 1  ]
 	then
 		aNumSpatialLayer=( ${MultiLayerNum} )
-	else
-		aNumSpatialLayer=(1)
+	elif  [  ${MultiLayerFlag} -eq 2  ]
+	then
+		if [  ${MultiLayerNum} -gt 1 ]
+		then
+			aNumSpatialLayer=( 1 ${MultiLayerNum} )
+		else
+			aNumSpatialLayer=( 1 )
+		fi	
 	fi
 	
 	#set spatial layer resolution
