@@ -128,6 +128,9 @@ runYUVResolutionCheck()
 		exit 1
 	fi
 	#generate SHA-1 table
+	echo ""
+	echo " TestYUVFullPath  is ${TestYUVFullPath}"
+	echo "./run_TestAllCases.sh   ${TestYUVName}  ${TestYUVFullPath}  ${OutPutCaseFile}"
 	./run_TestAllCases.sh   ${TestYUVName}  ${TestYUVFullPath}  ${OutPutCaseFile}
 	if [  ! $? -eq 0 ]
 	then

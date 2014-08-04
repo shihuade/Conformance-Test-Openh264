@@ -10,7 +10,7 @@ runGetYUVPath()
 	fi
 	local YUVName=$1
 	local FindScope=$2
-	local YUVFullPath="" 
+	local YUVFullPath="NULL" 
 	local Log="find.result"
 	local CurrentDir=`pwd`
 	if [ ! -d ${FindScope} ]
@@ -31,7 +31,17 @@ runGetYUVPath()
 		   break
 		fi
 	done <${Log}
-	echo ${YUVFullPath}
+	
+	
+	if [ ${YUVFullPath} = "NULL" ]
+	then
+		echo "can not find ${YUVName} in folder ${FindScope}"
+		echo ${YUVFullPath}
+		return 1
+	else
+		echo ${YUVFullPath}	
+		return 0
+	fi
 }
 YUVName=$1
 FindScope=$2
