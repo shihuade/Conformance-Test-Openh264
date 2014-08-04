@@ -34,7 +34,8 @@ runGlobalVariableInitial()
 	BitStreamFile=""
 	
 	EncoderLog="${TempDataPath}/encoder.log"
-				
+	FPS="NULL"
+	
 	let "EncoderNum=-1"
 	let "SpatailLayerNum=1" 
 	let "RCMode=0" 
@@ -196,6 +197,17 @@ runGetFileSize()
 	echo $FileSize
 	
 }
+runParseEncoderLog()
+{
+	while read line
+	do
+		if [[ $line =~ ^FPS  ]]
+		then
+			FPS=`echo $line | awk '{print $2}'`
+			break
+		fi	
+	done < ${EncoderLog}
+}
 #usage runParsetCaseCheckLog  ${CheckLog}
 runParsetCaseCheckLog()
 {
@@ -236,11 +248,11 @@ runParsetCaseCheckLog()
 runOutputCaseCheckStatus()
 {	
 	 echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AllCasesSHATableFile}
-	 echo " ${EncoderCheckResult},${DecoderCheckResult}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${EncoderCommand} ">>${AllCasesPassStatusFile}
+	 echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${EncoderCommand} ">>${AllCasesPassStatusFile}
 	 
 	if [ ${BasicCheckFlag} -eq 1 -o  ${JSVMCheckFlag} -eq 1 ]
 	then
-		echo " ${EncoderCheckResult},${DecoderCheckResult}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${EncoderCommand}">>${UnPassedCasesFile}
+		echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${EncoderCommand}">>${UnPassedCasesFile}
 	fi
 }
 runOutputCaseInfo()
@@ -289,7 +301,6 @@ runBasicCheck()
 }
 runJSVMCheck()
 {
-	
 	./run_CheckByJSVMDecoder.sh ${CheckLogFile} ${TempDataPath}  ${InputYUV} ${BitStreamFile}  ${SpatailLayerNum}  ${aRecYUVFileList[@]}
 	
 	#copy bit stream file to ./issue folder
@@ -332,7 +343,7 @@ runMain()
 		runOutputCaseCheckStatus
 		exit 1
 	fi
-	
+		
 	runJSVMCheck
 	if [ ! $? -eq 0  ]
 	then
@@ -343,6 +354,8 @@ runMain()
 		exit 1
 	fi
 	
+	#get FPS info from encoder log 
+	runParseEncoderLog
 	runParsetCaseCheckLog ${CheckLogFile}
 	runOutputCaseCheckStatus
 	return 0
