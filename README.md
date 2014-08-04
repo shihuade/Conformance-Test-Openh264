@@ -28,6 +28,7 @@ how to use
 -   step 4. go to folder ./FinalResult t for the final test result.
           SHA1 table files are under folder ./SHA1Table	
 
+
         eg.
         1. ./run_UpdateCodec.sh  $YourOpenh264Dir
         2. change your test configure by editing file CaseConfigure/case.cfg
@@ -136,7 +137,7 @@ how to configure test case
            MultiLayer:    0            # 0 single layer  1 multi layer
            UsageType:     0            #0: camera video 1:screen content
 
--5. SCC (openh264 codec will support SCC in the futhure)
+-5. SCC 
 
           chane setting in case.cfg as below:
             MultiLayer:    0            # 0 single layer  1 multi layer
