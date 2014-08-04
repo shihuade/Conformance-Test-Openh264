@@ -42,6 +42,10 @@ runGetYUVPath()
 		echo ${YUVFullPath}	
 		return 0
 	fi
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4220e30995dda0a55e288feab41934377df430ac
 }
 YUVName=$1
 FindScope=$2
