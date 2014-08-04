@@ -25,7 +25,7 @@ runParseYUVInfo()
 {
 	if [ ! $# -eq 1 ]
 	then
-		echo "usage:  usage  runGetTargetBitRate  \${YUVName}"
+		echo "usage:  runParseYUVInfo  \${YUVName}"
 		return 1
 	fi
 	declare -a aYUVInfo

@@ -40,7 +40,7 @@ runGlobalVariableInitial()
 	AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}.TestLog"
 	CaseSummaryFile="${ResultPath}/${TestYUVName}.Summary"
 	HeadLine1="EncoderFlag,DecoderFlag,BitSreamSHA1, BitSreamMD5, InputYUVSHA1, InputYUVMD5,\
-			-scrsig,  -frms,  -numl,  -numtl, -sw, -sh,\
+			-utype,  -frms,  -numl,  -numtl, -sw, -sh,\
 			-dw 0, -dh 0, -dw 1, -dh 1, -dw 2, -dh 2, -dw 3, -dh 3,\
 			-frout 0,  -frout 1, -frout 2, -frout 3,\
 			-lqp 0, -lqp 1, -lqp 2, -lqp 3,\
@@ -52,7 +52,7 @@ runGlobalVariableInitial()
 			-scene,  -bgd ,  -aq, "
 	
 	HeadLine2="BitSreamSHA1, BitSreamMD5, InputYUVSHA1, InputYUVMD5,\
-			-scrsig,  -frms,  -numl,  -numtl, -sw, -sh,\
+			-utype,  -frms,  -numl,  -numtl, -sw, -sh,\
 			-dw 0, -dh 0, -dw 1, -dh 1,-dw 2, -dh 2, -dw 3, -dh 3,\
 			-frout 0,  -frout 1, -frout 2, -frout 3,\
 			-lqp 0, -lqp 1, -lqp 2, -lqp 3,\

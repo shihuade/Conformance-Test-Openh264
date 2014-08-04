@@ -53,7 +53,7 @@ runGlobalVariableInitial()
 #usage runEncoderCommandInital
 runEncoderCommandInital()
 {
-	aEncoderCommandSet=(-scrsig  -frms  -numl   -numtl \
+	aEncoderCommandSet=( -utype  -frms  -numl   -numtl \
 					-sh -sw  "-dw 0"  "-dh 0" "-dw 1" "-dh 1" "-dw 2" "-dh 2" "-dw 3" "-dh 3" \
 					"-frout 0" "-frout 1" "-frout 2" "-frout 3" \
 					"-lqp 0" "-lqp 1" "-lqp 2" "-lqp 3" \
@@ -63,7 +63,7 @@ runEncoderCommandInital()
 					-nalsize \
 					-iper   -thread    -ltr \
 					-db  -denois    -scene    -bgd    -aq )
-	aEncoderCommandName=(scrsig  frms  numl   numtl \
+	aEncoderCommandName=(usagetype  frms  numl   numtl \
 					sw sh  dw0 dh0 dw1 dh1 dw2 dh2 dw3 dh3 \
 					frout0 frout1 frout2 frout3 \
 					lqp0 lqp1 lqp2 lqp3 \
