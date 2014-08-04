@@ -278,14 +278,14 @@ runMain()
 	if [ ! ${PrepareFlag} -eq 0 ]
 	then
 		echo ""
-		echo -e "\033[31m multilayer input YUV preparation failed! \033[0m"
+		echo -e "\033[31m  input YUV preparation failed! \033[0m"
 		echo ""
 		exit 1
 	fi
 	runSetLayerYUVSize
 	runOutputPrepareLog
 	echo ""
-	echo -e "\033[32m multilayer input YUV preparation succeed! \033[0m"
+	echo -e "\033[32m  input YUV preparation succeed! \033[0m"
 	echo ""	
 	
 	return 0
