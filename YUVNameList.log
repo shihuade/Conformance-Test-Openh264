@@ -1,0 +1,141 @@
+/opt/TestSequence/:
+total 811372
+drwxrwxr-x. 7 Video Video      4096 Jun  2 23:46 HEVC
+drwxrwxr-x. 7 Video Video      4096 Jun  9 20:38 SCC
+-rw-r--r--. 1 Video Video 830822400 Jul 16  2013 ScreenCaptureDocEditing_1280x720_noDuplicate.yuv
+drwxrwxr-x. 2 Video Video      4096 Jun  9 21:08 Special
+drwxrwxr-x. 6 Video Video      4096 Jun  9 20:58 Standard_SVC
+
+/opt/TestSequence/HEVC:
+total 20
+drwxrwxr-x. 2 Video Video 4096 Jun  3 03:08 A
+drwxrwxr-x. 2 Video Video 4096 Jun  3 03:09 B
+drwxrwxr-x. 2 Video Video 4096 Jun  3 00:30 C
+drwxrwxr-x. 2 Video Video 4096 Jun  3 00:47 D
+drwxrwxr-x. 2 Video Video 4096 Jun  3 03:08 E
+
+/opt/TestSequence/HEVC/A:
+total 900004
+-rw-r--r--. 1 Video Video 921600000 Nov  5  2009 Traffic_2560x1600_30_crop.yuv
+
+/opt/TestSequence/HEVC/B:
+total 5595096
+-rw-r--r--. 1 Video Video 1558310400 Jul 13  2009 BasketballDrive_1920x1080_50.yuv
+-rw-r--r--. 1 Video Video 1869350400 Jul 13  2009 BQTerrace_1920x1080_60.yuv
+-rw-r--r--. 1 Video Video 1555200000 Jul  2  2009 Cactus_1920x1080_50.yuv
+-rw-r--r--. 1 Video Video  746496000 Apr 22  2009 Kimono1_1920x1080_24.yuv
+
+/opt/TestSequence/HEVC/C:
+total 1113264
+-rw-r--r--. 1 Video Video 300119040 Jul 13  2009 BasketballDrill_832x480_50.yuv
+-rw-r--r--. 1 Video Video 360023040 Jul 13  2009 BQMall_832x480_60.yuv
+-rw-r--r--. 1 Video Video 300119040 Jul 13  2009 PartyScene_832x480_50.yuv
+-rw-r--r--. 1 Video Video 179712000 Jul 16  2009 RaceHorses_832x480_30.yuv
+
+/opt/TestSequence/HEVC/D:
+total 278320
+-rw-r--r--. 1 Video Video 75029760 Jul 13  2009 BasketballPass_416x240_50.yuv
+-rw-r--r--. 1 Video Video 75029760 Jul 13  2009 BlowingBubbles_416x240_50.yuv
+-rw-r--r--. 1 Video Video 90005760 Jul 13  2009 BQSquare_416x240_60.yuv
+-rw-r--r--. 1 Video Video 44928000 Jul 16  2009 RaceHorses_416x240_30.yuv
+
+/opt/TestSequence/HEVC/E:
+total 1620008
+-rw-r--r--. 1 Video Video 829440000 Nov  9  2007 vidyo1_720p_60.yuv
+-rw-r--r--. 1 Video Video 829440000 Nov 28  2007 vidyo3_720p_60.yuv
+
+/opt/TestSequence/SCC:
+total 281108
+drwxr-xr-x. 2 Video Video      4096 Jun  3 03:19 1024x768
+drwxr-xr-x. 2 Video Video      4096 Jun  9 20:36 1280x720
+drwxr-xr-x. 2 Video Video      4096 Jun  9 20:37 1920x1080
+-rw-r--r--. 1 Video Video 287834112 Feb 12  2011 Adobe_PDF_sample_b_1024x768.yuv
+drwxr-xr-x. 2 Video Video      4096 Jun  9 20:39 AS_Sequences
+drwxr-xr-x. 2 Video Video      4096 May 27 17:41 bak
+
+/opt/TestSequence/SCC/1024x768:
+total 2131208
+-rw-r--r--. 1 Video Video 530841600 Mar 28  2011 Doc_simple_1024x768.yuv
+-rw-r--r--. 1 Video Video 825753600 Mar 28  2011 PDF_standard_1024x768.yuv
+-rw-r--r--. 1 Video Video 412876800 Mar 28  2011 PPT_simpleSmall_1024x768.yuv
+-rw-r--r--. 1 Video Video 412876800 Mar 28  2011 Scene_action_1024x768.yuv
+
+/opt/TestSequence/SCC/1280x720:
+total 1687508
+-rw-r--r--. 1 Video Video 691200000 Mar  9  2011 Doc_BJUT_1280x720.yuv
+-rw-r--r--. 1 Video Video 345600000 Mar 23  2011 PPT_BJUT_1280x720.yuv
+-rw-r--r--. 1 Video Video 691200000 Mar  8  2011 Web_BJUT_1280x720.yuv
+
+/opt/TestSequence/SCC/1920x1080:
+total 2790468
+-rw-r--r--. 1 Video Video 777600000 Mar 28  2011 Doc_complex_1920x1080.yuv
+-rw-r--r--. 1 Video Video 777600000 Mar 28  2011 PPT_simpleBig_1920x1080.yuv
+-rw-r--r--. 1 Video Video 777600000 Mar 28  2011 Web_twoScreen_1920x1080.yuv
+-rw-r--r--. 1 Video Video 524620800 Mar 24  2011 Web_twoScreen_textinfo.dat
+
+/opt/TestSequence/SCC/AS_Sequences:
+total 6032616
+-rw-r--r--. 1 Video Video  864696832 Sep 27  2010 desktop_dialog_1920x1080_i420.avi
+-rw-r--r--. 1 Video Video  432345600 Sep 13  2010 desktop_dialog_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video  774489600 Sep 13  2010 desktop_ppt_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video  902016000 May  3  2011 desktop_text_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video  902016000 May  3  2011 desktop_web_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video  373248000 Sep 13  2010 desktop_zoom_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video 1928551680 May  8  2013 Doc_roll_with_figures_1440x912.yuv
+
+/opt/TestSequence/SCC/bak:
+total 837440
+-rw-r--r--. 1 Video Video 691200000 Mar  8  2011 web_1280x720_500_10.yuv
+-rw-r--r--. 1 Video Video 166330368 Feb 12  2011 Web_share_sample_b_1024X768.yuv
+-rw-r--r--. 1 Video Video      2820 Jan 27  2011 Web_share_sample_b_static.mask
+
+/opt/TestSequence/Special:
+total 277872
+-rw-r--r--. 1 Video Video  45619200 Sep 28  2009 foreman_352x288_30.yuv
+-rw-r--r--. 1 Video Video    274944 Jan 13  2011 MSHD_2people_32x32_6.yuv
+-rw-r--r--. 1 Video Video   1099776 Jan 13  2011 MSHD_2people_64x64_6.yuv
+-rw-r--r--. 1 Video Video 161948160 Sep 28  2009 paris_352x288_30.yuv
+-rw-r--r--. 1 Video Video  75587584 Jan 13  2011 wine_tasting2_240x480_30.yuv
+
+/opt/TestSequence/Standard_SVC:
+total 1517776
+drwxrwxr-x. 2 Video Video      4096 Jun  9 20:54 180p
+drwxrwxr-x. 2 Video Video      4096 Jun  9 20:53 360p
+drwxrwxr-x. 2 Video Video      4096 Jun  9 20:57 720p
+drwxrwxr-x. 2 Video Video      4096 Jun  9 20:52 90p
+-rw-r--r--. 1 Video Video 182476800 Jul  2  2009 CREW_704x576_30_denoise.yuv
+-rw-r--r--. 1 Video Video 364953600 Oct  8  2003 CREW_704x576_60_orig_01.yuv
+-rw-r--r--. 1 Video Video 376358400 Aug 16  2012 Doc_complex_1920x1080_noDuplicate.yuv
+-rw-r--r--. 1 Video Video  45619200 Apr  3  2009 HARBOUR_352x288_30_orig_01.yuv
+-rw-r--r--. 1 Video Video  91238400 Mar 24  2009 HARBOUR_704x576_15_orig_01.yuv
+-rw-r--r--. 1 Video Video 182476800 May  3  2004 SOCCER_704x576_30_orig_02.yuv
+-rw-r--r--. 1 Video Video 103680000 Nov 26  2008 whale_show2_640x480_15fps.yuv
+-rw-r--r--. 1 Video Video 207360000 Dec  4  2008 whale_show2_640x480_30fps.yuv
+
+/opt/TestSequence/Standard_SVC/180p:
+total 81636
+-rw-r--r--. 1 Video Video 20736000 Apr 23  2010 CiscoVT2people_320x192_12fps.yuv
+-rw-r--r--. 1 Video Video 27371520 Apr  9  2010 Logi75002people_320x192_12fps.yuv
+-rw-r--r--. 1 Video Video 35481600 Apr  9  2010 Logi9000smallmotionbright_320x192_12fps.yuv
+
+/opt/TestSequence/Standard_SVC/360p:
+total 793804
+-rw-r--r--. 1 Video Video 165888000 Apr 23  2010 CiscoVT2people_640x384_24fps.yuv
+-rw-r--r--. 1 Video Video 383016960 Apr  9  2010 Logi7500_640x384_24fps.yuv
+-rw-r--r--. 1 Video Video 263946240 Apr 13  2010 MSHD2people_640x384_24fps.yuv
+
+/opt/TestSequence/Standard_SVC/720p:
+total 692696
+-rw-r--r--. 1 Video Video 211507200 Aug 16  2012 PPT_BJUT_1280x720_noDuplicate.yuv
+-rw-r--r--. 1 Video Video 168689664 Aug 16  2012 Switch_share_sample_b_1024x768_noDuplicate.yuv
+-rw-r--r--. 1 Video Video 329121792 Aug 16  2012 Visual_studio_sample_a_1024x768_noDuplicate.yuv
+
+/opt/TestSequence/Standard_SVC/90p:
+total 63752
+-rw-r--r--. 1 Video Video  5184000 May 10  2010 CiscoVT_2people_160x96_12fps.yuv
+-rw-r--r--. 1 Video Video 10368000 May 10  2010 CiscoVT_2people_160x96_24fps.yuv
+-rw-r--r--. 1 Video Video 11980800 May 10  2010 Logi7500_160x96_12fps.yuv
+-rw-r--r--. 1 Video Video 23938560 May 10  2010 Logi7500_160x96_24fps.yuv
+-rw-r--r--. 1 Video Video  5990400 Apr 23  2010 Logi7500_160x96_6fps.yuv
+-rw-r--r--. 1 Video Video  3686400 Apr 23  2010 MSHD_160x96_6fps.yuv
+-rw-r--r--. 1 Video Video  4124160 Apr 23  2010 MSHD_2people_160x96_6fps.yuv

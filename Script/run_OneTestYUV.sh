@@ -47,33 +47,6 @@ runGetYUVFullPath()
 	TestYUVFullPath=`./run_GetYUVPath.sh  ${TestYUVName}  ${YUVDir}`
 	return $?
 }
-#uase: runYUVResolutionCheck  ${YUVName}
-runYUVResolutionCheck()
-{
-	if [ ! $# -eq 1 ]
-	then
-		echo "usage: runYUVResolutionCheck  \${YUVName}"
-		return 1
-	fi
-	local YUVName=$1
-	declare -a aYUVInfo
-	aYUVInfo=(`./run_ParseYUVInfo.sh  ${YUVName}`)
-	PicW=${aYUVInfo[0]}
-	PicH=${aYUVInfo[1]}
-	if [  ${PicW} -eq 0 -o ${PicH} -eq 0  ]
-	then
-		echo "YUVName is not correct,should be named as ABC_PicWXPicH_FPS.yuv"
-		return  1
-	fi
-	let "PicWRemainder= $PicW %16"
-	let "PicHRemainder= $PicH %16"
-	if [  ${PicWRemainder} -gt 0 -o ${PicHRemainder} -gt 0  ]
-	then
-		return 1
-	else
-		return 0
-	fi
-}
 #usage:  runMain ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
  runMain()
  {
@@ -95,14 +68,8 @@ runYUVResolutionCheck()
 	echo ""
 	echo  "TestYUVName is ${TestYUVName}" 
 	echo "OutPutCaseFile is  ${OutPutCaseFile}"
-	runYUVResolutionCheck  ${TestYUVName}
-	if [ ! $? -eq 0 ]
-	then
-		echo ""
-		echo  -e "\033[31m YUV resolution is not multiple of 16,it is not supported in WelsRuby local test currently! \033[0m"
-		echo ""
-		exit 1
-	fi
+	
+	
 	runGetYUVFullPath  ${TestYUVName}  ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
