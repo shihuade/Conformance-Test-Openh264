@@ -2,10 +2,11 @@
 #*********************************************************************************************
 #  --for multiple layer test, generate input YUV for another spacial layer 
 #
-#  --usage:   run_PrepareMultiLayerInputYUV.sh ${OriginInputYUV} ${LayerNum} ${PrepareLog}
-#                                                       2<=${LayerNum}<=4
+#  --usage:   run_PrepareMultiLayerInputYUV.sh ${OriginInputYUV} ${LayerNum} ${PrepareLog} ${Multiple16Flag}
+#                                              ${LayerNum}       2<=${LayerNum}<=4        
+#                                              ${Multiple16Flag} sub layer's resolution is multiple of 16 or not
 #  --eg:
-#    input:  run_PrepareMultiLayerInputYUV.sh  ../../ABC_1080X720_30fps.yuv   3  prepare.log
+#    input:  run_PrepareMultiLayerInputYUV.sh  ../../ABC_1080X720_30fps.yuv   3  prepare.log  0
 #    output: there will be tow down sample YUV generated under current directory.
 #            ----ABC_540X360_30fps.yuv
 #            ----ABC_270X180_30fps.yuv
@@ -97,6 +98,26 @@ runRenameOutPutYUV()
 	done
 	echo "${OutputYUVName}"
 }
+#usage: runExtendMultiple16 ${PicW} or ${PicH}
+runExtendMultiple16()
+{
+	if [ $1 -lt 4 ]
+	then
+		echo "usage: runExtendMultiple16 \${PicW} or \${PicH}"
+		exit 1
+	fi
+	local Num=$1
+	let  "TempNum=0"
+	let "Remainder=${Num}%16"
+	if [ ${Remainder} -eq 0  ]
+	then
+		let  "TempNum=${Num}"
+	else
+		let  "TempNum=${Num} + 16 - ${Remainder}"
+	fi
+	echo "${TempNum}"
+	return 0
+}
 #usage: runSetLayerInfo
 runSetLayerInfo()
 {
@@ -114,12 +135,10 @@ runSetLayerInfo()
 	then
 		let "FPS=10"
 	fi
-	
 	if [ $FPS -gt 100 ]
 	then
 		let "FPS=100"
 	fi
-	
 	let "LayerWidth_0 = OriginWidth/8 "
 	let "LayerWidth_1 = OriginWidth/4 "
 	let "LayerWidth_2 = OriginWidth/2 "
@@ -128,20 +147,31 @@ runSetLayerInfo()
 	let "LayerHeight_1 = OriginHeight/4 "
 	let "LayerHeight_2 = OriginHeight/2 "
 	let "LayerHeight_3 = OriginHeight"
-	OutputYUVLayer_0=`runRenameOutPutYUV  ${OriginYUVName}   ${LayerWidth_0} ${LayerHeight_0}`
-	OutputYUVLayer_1=`runRenameOutPutYUV  ${OriginYUVName}   ${LayerWidth_1} ${LayerHeight_1}`
-	OutputYUVLayer_2=`runRenameOutPutYUV  ${OriginYUVName}   ${LayerWidth_2} ${LayerHeight_2}`
-	OutputYUVLayer_3=`runRenameOutPutYUV  ${OriginYUVName}   ${LayerWidth_3} ${LayerHeight_3}`
-		
-   aLayerWidth=(  ${LayerWidth_3}  ${LayerWidth_2}  ${LayerWidth_1}  ${LayerWidth_0}  )
-   aLayerHeight=( ${LayerHeight_3} ${LayerHeight_2} ${LayerHeight_1} ${LayerHeight_0} )
+	aLayerWidth=(  ${LayerWidth_3}  ${LayerWidth_2}  ${LayerWidth_1}  ${LayerWidth_0}  )
+	aLayerHeight=( ${LayerHeight_3} ${LayerHeight_2} ${LayerHeight_1} ${LayerHeight_0} )
+	if [ ${Multiple16Flag} -eq 1  ]
+	then
+	for((i=0;i<4;i++))
+		do
+			aLayerWidth[$i]=`runExtendMultiple16   ${aLayerWidth[$i]}`
+			aLayerHeight[$i]=`runExtendMultiple16  ${aLayerHeight[$i]}`
+		done
+	fi
+	OutputYUVLayer_0=`runRenameOutPutYUV  ${OriginYUVName}   ${aLayerWidth[3]} ${aLayerHeight[3]}`
+	OutputYUVLayer_1=`runRenameOutPutYUV  ${OriginYUVName}   ${aLayerWidth[2]} ${aLayerHeight[2]}`
+	OutputYUVLayer_2=`runRenameOutPutYUV  ${OriginYUVName}   ${aLayerWidth[1]} ${aLayerHeight[1]}`
+	OutputYUVLayer_3=`runRenameOutPutYUV  ${OriginYUVName}   ${aLayerWidth[0]} ${aLayerHeight[0]}`
    aOutputLayerName=( ${OutputYUVLayer_3} ${OutputYUVLayer_2} ${OutputYUVLayer_1} ${OutputYUVLayer_0} )
    
+   
+    echo "OutputYUVLayer_0 ${OutputYUVLayer_0}"
+	echo "OutputYUVLayer_1 ${OutputYUVLayer_1}"
+	echo "OutputYUVLayer_2 ${OutputYUVLayer_2}"
+	echo "OutputYUVLayer_3 ${OutputYUVLayer_3}"
 	for((i=0;i<4;i++))
 	do
 		let "PicWRemainder= ${aLayerWidth[$i]}%2"
 		let "PicHRemainder= ${aLayerHeight[$i]}%2"
-		
 		if [ ${PicWRemainder} -eq 1 -o ${PicHRemainder} -eq 1 ]
 		then
 			echo ""
@@ -197,18 +227,19 @@ runOutputPrepareLog()
 		echo "LayerSize_${LayerIndex}:  ${aYUVSize[$i]}">>${PrepareLog}  
 	done
 }
-#usage: run_PrepareMultiLayerInputYUV.sh ${OriginYUV} ${NumberLayer} ${PrepareLog}
+#usage: run_PrepareMultiLayerInputYUV.sh ${OriginYUV} ${NumberLayer} ${PrepareLog} ${Multiple16Flag}
 runMain()
 {
-	if [ ! $# -eq 3 ]
+	if [ ! $# -eq 4 ]
 	then
-		echo "usage: run_PrepareMultiLayerInputYUV.sh \${OriginYUV} \${NumberLayer} \${PrepareLog}"
+		echo "usage: run_PrepareMultiLayerInputYUV.sh \${OriginYUV} \${NumberLayer} \${PrepareLog} \${Multiple16Flag}"
 		exit 1
 	fi
 	
 	OriginYUV=$1
 	NumberLayer=$2
 	PrepareLog=$3
+	Multiple16Flag=$4
 	let "PrepareFlag=0"
 	
 	runGlobalVariableInitial ${OriginYUV}
@@ -262,5 +293,7 @@ runMain()
 OriginYUV=$1
 NumberLayer=$2
 PrepareLog=$3
-runMain   ${OriginYUV}  ${NumberLayer} ${PrepareLog}
+Multiple16Flag=$4
+runMain   ${OriginYUV}  ${NumberLayer} ${PrepareLog} ${Multiple16Flag}
+
 

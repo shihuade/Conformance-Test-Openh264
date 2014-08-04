@@ -72,6 +72,9 @@ runGlobalVariableInitial()
 	let "YUVSizeLayer2=0"
 	let "YUVSizeLayer3=0"
 	
+	let "Multiple16Flag=1"
+	let "MultiLayerFlag=0"
+	
 	YUVFileLayer0=""
 	YUVFileLayer1=""
 	YUVFileLayer2=""
@@ -84,6 +87,19 @@ runGlobalVariableInitial()
 	let "DecoderUpPassedNum=0"
 	let "DecoderUnCheckNum=0"
 }
+runParseConfigure()
+{
+	while read line
+	do
+		if [[ "$line" =~ ^Multiple16Flag ]]
+		then
+			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+		elif [[ "$line" =~ ^MultiLayer ]]
+		then
+			MultiLayerFlag=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+		fi
+	done <${ConfigureFile}
+}
 runPrepareMultiLayerInputYUV()
 {
 	local PrepareLog="${TestYUVName}_MultiLayerInputYUVPrepare.log"
@@ -94,7 +110,8 @@ runPrepareMultiLayerInputYUV()
 	PicH=${aYUVInfo[1]}
 	#generate input YUV file for each layer
 	MaxSpatialLayerNum=`./run_GetSpatialLayerNum.sh ${PicW} ${PicH}`
-	./run_PrepareMultiLayerInputYUV.sh ${InputYUV} ${MaxSpatialLayerNum} ${PrepareLog}
+		
+	./run_PrepareMultiLayerInputYUV.sh ${InputYUV} ${MaxSpatialLayerNum} ${PrepareLog} ${Multiple16Flag}
 	
 	if [ ! $? -eq 0 ]
 	then
@@ -271,27 +288,36 @@ runOutputPassNum()
 	touch ${FlagFile}
 }
 #***********************************************************
-# usage: runMain $TestYUV  $InputYUV $AllCaseFile
+# usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $AllCaseFile
 runMain()
 {
-	if [ ! $# -eq 3  ]
+	if [ ! $# -eq 4  ]
 	then
-		echo "usage: run_TestAllCase.sh \$TestYUVName \$InputYUV  \$AllCaseFile"
+		echo "usage: run_TestAllCase.sh  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AllCaseFile"
 	return 1
 	fi
 	
-	TestYUVName=$1
-	InputYUV=$2
-	AllCaseFile=$3
+	ConfigureFile=$1
+	TestYUVName=$2
+	InputYUV=$3
+	AllCaseFile=$4
 	runGlobalVariableInitial
-	runPrepareMultiLayerInputYUV
+	runParseConfigure
 	
+	if [ ${MultiLayerFlag} -eq 1 -o ${MultiLayerFlag} -eq 2 ]
+	then
+		runPrepareMultiLayerInputYUV
+	fi
+	
+	echo ""
+	echo  -e "\033[32m  testing all cases, please wait!...... \033[0m"
 	runAllCaseTest >${AllCasesConsoleLogFile}
 	runOutputPassNum
 }
-TestYUVName=$1
-InputYUV=$2
-AllCaseFile=$3
-runMain  ${TestYUVName}  ${InputYUV}  ${AllCaseFile}
+ConfigureFile=$1
+TestYUVName=$2
+InputYUV=$3
+AllCaseFile=$4
+runMain  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AllCaseFile}
 
 
