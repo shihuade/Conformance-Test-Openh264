@@ -1,0 +1,49 @@
+../../YUV/SCC/:
+total 884416
+drwxr-xr-x. 2 Video Video      4096 Jun  3 03:19 1024x768
+drwxr-xr-x. 2 Video Video      4096 Jun  9 20:36 1280x720
+drwxr-xr-x. 2 Video Video      4096 Jun  9 20:37 1920x1080
+-rw-r--r--. 1 Video Video 287834112 Feb 12  2011 Adobe_PDF_sample_b_1024x768.yuv
+drwxr-xr-x. 2 Video Video      4096 Jun  9 20:39 AS_Sequences
+drwxr-xr-x. 2 Video Video      4096 May 27 17:41 bak
+-rw-r--r--. 1 Video Video  13847040 Jul 28 23:49 ScreenCaptureDocEditing_160X96_noDuplicate.yuv
+-rw-r--r--. 1 Video Video  51926400 Jul 28 17:47 ScreenCaptureDocEditing_320X180_noDuplicate.yuv
+-rw-r--r--. 1 Video Video  55388160 Jul 28 23:49 ScreenCaptureDocEditing_320X192_noDuplicate.yuv
+-rw-r--r--. 1 Video Video 212321280 Jul 28 23:48 ScreenCaptureDocEditing_640X368_noDuplicate.yuv
+-rw-r--r--. 1 Video Video 284295168 Nov  9  2010 Switch_sample_a_1024x768.yuv
+
+../../YUV/SCC/1024x768:
+total 2131216
+-rw-r--r--. 1 Video Video 530841600 Mar 28  2011 Doc_simple_1024x768.yuv
+-rw-r--r--. 1 Video Video 825753600 Mar 28  2011 PDF_standard_1024x768.yuv
+-rw-r--r--. 1 Video Video 412876800 Mar 28  2011 PPT_simpleSmall_1024x768.yuv
+-rw-r--r--. 1 Video Video 412876800 Mar 28  2011 Scene_action_1024x768.yuv
+
+../../YUV/SCC/1280x720:
+total 1687508
+-rw-r--r--. 1 Video Video 691200000 Mar  9  2011 Doc_BJUT_1280x720.yuv
+-rw-r--r--. 1 Video Video 345600000 Mar 23  2011 PPT_BJUT_1280x720.yuv
+-rw-r--r--. 1 Video Video 691200000 Mar  8  2011 Web_BJUT_1280x720.yuv
+
+../../YUV/SCC/1920x1080:
+total 2790468
+-rw-r--r--. 1 Video Video 777600000 Mar 28  2011 Doc_complex_1920x1080.yuv
+-rw-r--r--. 1 Video Video 777600000 Mar 28  2011 PPT_simpleBig_1920x1080.yuv
+-rw-r--r--. 1 Video Video 777600000 Mar 28  2011 Web_twoScreen_1920x1080.yuv
+-rw-r--r--. 1 Video Video 524620800 Mar 24  2011 Web_twoScreen_textinfo.dat
+
+../../YUV/SCC/AS_Sequences:
+total 6032612
+-rw-r--r--. 1 Video Video  864696832 Sep 27  2010 desktop_dialog_1920x1080_i420.avi
+-rw-r--r--. 1 Video Video  432345600 Sep 13  2010 desktop_dialog_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video  774489600 Sep 13  2010 desktop_ppt_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video  902016000 May  3  2011 desktop_text_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video  902016000 May  3  2011 desktop_web_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video  373248000 Sep 13  2010 desktop_zoom_1920x1080_i420.yuv
+-rw-r--r--. 1 Video Video 1928551680 May  8  2013 Doc_roll_with_figures_1440x912.yuv
+
+../../YUV/SCC/bak:
+total 837440
+-rw-r--r--. 1 Video Video 691200000 Mar  8  2011 web_1280x720_500_10.yuv
+-rw-r--r--. 1 Video Video 166330368 Feb 12  2011 Web_share_sample_b_1024X768.yuv
+-rw-r--r--. 1 Video Video      2820 Jan 27  2011 Web_share_sample_b_static.mask
