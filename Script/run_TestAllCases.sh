@@ -304,10 +304,7 @@ runMain()
 	runGlobalVariableInitial
 	runParseConfigure
 	
-	if [ ${MultiLayerFlag} -eq 1 -o ${MultiLayerFlag} -eq 2 ]
-	then
-		runPrepareMultiLayerInputYUV
-	fi
+	runPrepareMultiLayerInputYUV
 	
 	echo ""
 	echo  -e "\033[32m  testing all cases, please wait!...... \033[0m"

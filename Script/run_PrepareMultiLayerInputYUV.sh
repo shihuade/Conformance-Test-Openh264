@@ -249,9 +249,9 @@ runMain()
 		exit 1
 	fi
 	
-	if [  ${NumberLayer} -lt 2  -o  ${NumberLayer} -gt 4 ]
+	if [  ${NumberLayer} -lt 1  -o  ${NumberLayer} -gt 4 ]
 	then
-		echo "layer number should be equal to 2 or 3 or 4 "
+		echo "layer number should be equal to 1 or 2 or 3 or 4 "
 		exit 1
 	fi
 	
