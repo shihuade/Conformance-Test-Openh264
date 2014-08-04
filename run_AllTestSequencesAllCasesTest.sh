@@ -34,6 +34,7 @@ runGetTestYUVList()
 	return 1
 	fi
 	local ConfigureFile=$1
+	local TestSet0=""
 	local TestSet1=""
 	local TestSet2=""
 	local TestSet3=""
@@ -41,9 +42,13 @@ runGetTestYUVList()
 	local TestSet5=""
 	local TestSet6=""
 	local TestSet7=""   
+	local TestSet8=""  
 	while read line
 	do
-	if [[ "$line" =~ ^TestSet1  ]]
+	if [[ "$line" =~ ^TestSet0  ]]
+	then
+		TestSet0=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+	elif  [[ "$line" =~ ^TestSet1  ]]
 	then
 		TestSet1=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet2  ]]
@@ -63,10 +68,13 @@ runGetTestYUVList()
 		TestSet6=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet7  ]]
 	then
-		TestSet7=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet8=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+	elif  [[ "$line" =~ ^TestSet8  ]]
+	then
+		TestSet2=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
 	fi	  	  
 	done <${ConfigureFile}
-	echo "${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  " 
+	echo "${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8}   " 
 }
 #usage: runAllTestBitstream   ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
 runAllTestBitstream()
@@ -123,4 +131,5 @@ AllTestDataDir=$1
 FinalResultDir=$2
 ConfigureFile=$3
 runAllTestBitstream   ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
+
 

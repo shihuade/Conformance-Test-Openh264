@@ -71,7 +71,7 @@ runGetTestYUVList()
 		TestSet8=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
 	fi	  	  
 	done <${ConfigureFile}
-	echo "${TestSet8} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8} " 
+	echo "${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8} " 
 }
 #usage: runPrepareALlFolder   $AllTestDataFolder  $TestBitStreamFolder   $CodecFolder  $ScriptFolder  $ConfigureFile/$SH1TableFolder
 runPrepareALlFolder()
