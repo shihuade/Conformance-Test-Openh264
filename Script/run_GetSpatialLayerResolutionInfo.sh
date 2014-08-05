@@ -1,10 +1,14 @@
 
 #!/bin/bash
+#!/bin/bash
 #*******************************************************************************
-#  usage:  input:   run_GetSpatialLayerResolutionInfo.sh $PicW $PicH  $SpatialNum
+#brief:  get actual spatial layer resolution based on actual spatial number
+#
+#usage:  input:   run_GetSpatialLayerResolutionInfo.sh $PicW $PicH  $SpatialNum
 #          output:  LayerWidth_0  LayerHeight_0  LayerWidth_1  LayerHeight_1  \
 #                   LayerWidth_2  LayerHeight_2  LayerWidth_3  LayerHeight_3
 #
+#date:  5/08/2014 Created
 #*******************************************************************************
 #usage: runExtendMultiple16 ${PicW} or ${PicH}
 runExtendMultiple16()
