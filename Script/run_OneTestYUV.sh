@@ -35,7 +35,7 @@ runGetYUVFullPath()
 	do
 		if [[  $line =~ ^TestYUVDir  ]]
 		then
-			 YUVDir=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+			 YUVDir=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 			 break
 		fi 
 	done <${ConfigureFile}
