@@ -1,6 +1,8 @@
 #!/bin/bash
 #***********************************************************************************************
-#    1.usage:   run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  $SpatialNum $ConfigureFile
+# brief: get spatial layer's test bit rate set base on actual spatial layer
+#
+#1.usage:   run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  $SpatialNum $ConfigureFile
 #      output:  ("LayerBRSet0", "LayerBRSet1",...)
 #
 #    2.e.g:
@@ -20,7 +22,9 @@
 #           output: (600 1000 0 0, 300 500 0 0)
 #
 #         --input : 1280 720  10  2  case.cfg (1 spatial layer)
+#
 #           output: (1000 0 0 0, 500 0 0 0)
+#date:  5/08/2014 Created
 #***********************************************************************************************
 #usage: runGetLayerBR ${TopLayerBRIndex} ${SpatialLayerNum} $LayerIndex
 #
