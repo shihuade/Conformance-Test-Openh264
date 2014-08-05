@@ -31,13 +31,13 @@ runGetYUVFullPath()
 	local TestYUVName=$1
 	local ConfigureFile=$2
 	local YUVDir=""
-	while read line 
+	while read line
 	do
 		if [[  $line =~ ^TestYUVDir  ]]
 		then
 			 YUVDir=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 			 break
-		fi 
+		fi
 	done <${ConfigureFile}
 	if [  ! -d ${YUVDir} ]
 	then
@@ -59,17 +59,17 @@ runGetYUVFullPath()
 	local TestYUVName=$1
 	local FinalResultDir=$2
 	local ConfigureFile=$3
-	
+
 	TestYUVFullPath=""
-	local CurrentDir=`pwd` 
+	local CurrentDir=`pwd`
 	local OutPutCaseFile=""
 	ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
 	OutPutCaseFile=${TestYUVName}_AllCase.csv
 	echo ""
-	echo  "TestYUVName is ${TestYUVName}" 
+	echo  "TestYUVName is ${TestYUVName}"
 	echo "OutPutCaseFile is  ${OutPutCaseFile}"
-	
-	
+
+
 	runGetYUVFullPath  ${TestYUVName}  ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then

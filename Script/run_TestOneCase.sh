@@ -14,7 +14,7 @@
 #      4 For more detail, please refer to READE.md
 #
 # brief:
-#  
+#
 #
 #date:  10/06/2014 Created
 #***************************************************************************************
@@ -29,17 +29,17 @@ runGlobalVariableInitial()
 	declare -a aRecCropYUVFileList
 	declare -a aEncodedPicW
 	declare -a aEncodedPicH
-	
+
 	BitstreamPrefix=""
 	BitStreamFile=""
-	
+
 	EncoderLog="${TempDataPath}/encoder.log"
 	FPS="NULL"
-	
+
 	let "EncoderNum=-1"
-	let "SpatailLayerNum=1" 
-	let "RCMode=0" 
-	  
+	let "SpatailLayerNum=1"
+	let "RCMode=0"
+
 	BitStreamSHA1String="NULL"
 	BitStreamMD5String="NULL"
 	InputYUVSHA1String="NULL"
@@ -47,7 +47,7 @@ runGlobalVariableInitial()
 	EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
 	EncoderCommand="NULL"
-	
+
 	let "EncoderFlag=0"
 }
 #called by runGlobalVariableInitial
@@ -73,7 +73,7 @@ runEncoderCommandInital()
 					slcmd2 slcnum2 slcmd3 slcnum3 \
 					MaxNalSZ  \
 					iper   thread  ltr \
-					db  denois  scene  bgd  aq )	
+					db  denois  scene  bgd  aq )
 	NumParameter=${#aEncoderCommandSet[@]}
 	for ((i=0;i<NumParameter; i++))
 	do
@@ -92,7 +92,7 @@ runParseCaseInfo()
 	return 1
 	fi
 	local TempData=""
-	
+
 	local CaseData=$@
 	declare -a aTempParamIndex=( 6 7 8 9 10 11 12 13    15 16 17   19 20 21     24 25 26 27   30 31 32 33 34 35 )
 	TempData=`echo $CaseData |awk 'BEGIN {FS="[,\r]"} {for(i=1;i<=NF;i++) printf(" %s",$i)} ' `
@@ -111,22 +111,22 @@ runParseCaseInfo()
 		then
 			BitstreamPrefix=${BitstreamPrefix}_${aEncoderCommandName[$i]}_${aEncoderCommandValue[$i]}
 		fi
-		let "TempParamFlag=0"    
+		let "TempParamFlag=0"
 	done
 }
 runSetCaseGlobalParam()
 {
 	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_welsrubyenc.264
 	let "EncoderNum      = ${aEncoderCommandValue[1]}"
-	let "SpatailLayerNum = ${aEncoderCommandValue[2]}" 
-	let "RCMode          = ${aEncoderCommandValue[22]}" 
-	
+	let "SpatailLayerNum = ${aEncoderCommandValue[2]}"
+	let "RCMode          = ${aEncoderCommandValue[22]}"
+
 	for((i=0;i<4;i++))
 	do
 		aRecYUVFileList[$i]="${TempDataPath}/${TestYUVName}_rec${i}.yuv"
 		aRecCropYUVFileList[$i]="${TempDataPath}/${TestYUVName}_rec${i}_cropped.yuv"
-	done 
-	
+	done
+
 	declare -a aTempInputYUVSize
 	aTempInputYUVSize=( ${YUVSizeLayer0} ${YUVSizeLayer1} ${YUVSizeLayer2} ${YUVSizeLayer3} )
 	aInputYUVSizeLayer=( 0 0 0 0 )
@@ -135,23 +135,23 @@ runSetCaseGlobalParam()
 		let "InputYUVSizeIndex=$i + 4 - ${SpatailLayerNum}"
 		aInputYUVSizeLayer[$i]=${aTempInputYUVSize[$InputYUVSizeIndex]}
 	done
-		
+
 	aEncodedPicW=( ${aEncoderCommandValue[6]} ${aEncoderCommandValue[8]} ${aEncoderCommandValue[10]} ${aEncoderCommandValue[12]})
 	aEncodedPicH=( ${aEncoderCommandValue[7]} ${aEncoderCommandValue[9]} ${aEncoderCommandValue[11]} ${aEncoderCommandValue[12]})
-	
+
 }
 #call by  runAllCaseTest
 #usage  runEncodeOneCase
 runEncodeOneCase()
 {
- 
+
 	local ParamCommand=""
 	for ((i=4; i<${NumParameter}; i++))
 	do
-		ParamCommand="${ParamCommand} ${aEncoderCommandSet[$i]}  ${aEncoderCommandValue[$i]} " 
+		ParamCommand="${ParamCommand} ${aEncoderCommandSet[$i]}  ${aEncoderCommandValue[$i]} "
 	done
-	
-	
+
+
 	ParamCommand="${aEncoderCommandSet[0]} ${aEncoderCommandValue[0]} ${aEncoderCommandSet[1]}  ${aEncoderCommandValue[1]} \
 				 ${aEncoderCommandSet[2]}  ${aEncoderCommandValue[2]} \
 				-lconfig 0 layer0.cfg -lconfig 1 layer1.cfg -lconfig 2 layer2.cfg  -lconfig 3 layer3.cfg  \
@@ -167,7 +167,7 @@ runEncodeOneCase()
 	./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} \
 				-drec 0 ${aRecYUVFileList[0]} -drec 1 ${aRecYUVFileList[1]} \
 				-drec 2 ${aRecYUVFileList[2]} -drec 3 ${aRecYUVFileList[3]}  -org ${InputYUV}>${EncoderLog}
-	
+
 	if [ $? -eq 0  ]
 	then
 		let "EncoderFlag=0"
@@ -176,7 +176,7 @@ runEncodeOneCase()
 	fi
 	cat  ${EncoderLog}
 	return 0
-	
+
 }
 #usage: runGetFileSize  $FileName
 runGetFileSize()
@@ -195,7 +195,7 @@ runGetFileSize()
 	TempInfo=`ls -l $FileName`
 	FileSize=`echo $TempInfo | awk '{print $5}'`
 	echo $FileSize
-	
+
 }
 runParseEncoderLog()
 {
@@ -205,7 +205,7 @@ runParseEncoderLog()
 		then
 			FPS=`echo $line | awk '{print $2}'`
 			break
-		fi	
+		fi
 	done < ${EncoderLog}
 }
 #usage runParsetCaseCheckLog  ${CheckLog}
@@ -243,13 +243,13 @@ runParsetCaseCheckLog()
 		then
 			InputYUVMD5String=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
 		fi
-	done <${CheckLog} 
+	done <${CheckLog}
 }
 runOutputCaseCheckStatus()
-{	
+{
 	 echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AllCasesSHATableFile}
 	 echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${EncoderCommand} ">>${AllCasesPassStatusFile}
-	 
+
 	if [ ${BasicCheckFlag} -eq 1 -o  ${JSVMCheckFlag} -eq 1 ]
 	then
 		echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${EncoderCommand}">>${UnPassedCasesFile}
@@ -257,7 +257,7 @@ runOutputCaseCheckStatus()
 }
 runOutputCaseInfo()
 {
-	
+
 	echo "YUVFileLayer3:  ${YUVFileLayer3}"
 	echo "YUVSizeLayer3:  ${YUVSizeLayer3}"
 	echo "YUVFileLayer2:  ${YUVFileLayer2}"
@@ -265,14 +265,14 @@ runOutputCaseInfo()
 	echo "YUVFileLayer1:  ${YUVFileLayer1}"
 	echo "YUVSizeLayer1:  ${YUVSizeLayer1}"
 	echo "YUVFileLayer0:  ${YUVFileLayer0}"
-	echo "YUVSizeLayer0:  ${YUVSizeLayer0}"	
-	
+	echo "YUVSizeLayer0:  ${YUVSizeLayer0}"
+
 	echo ""
 	echo "EncoderNum ${EncoderNum}"
 	echo "EncoderNum  ${EncoderNum}"
-	echo "SpatailLayerNum:  ${SpatailLayerNum}" 
-	echo "RCMode   ${RCMode}" 
-	
+	echo "SpatailLayerNum:  ${SpatailLayerNum}"
+	echo "RCMode   ${RCMode}"
+
 	for((i=0;i<4;i++))
 	do
 		echo "aInputYUVSizeLayer  $i : ${aInputYUVSizeLayer[$i]}"
@@ -280,12 +280,12 @@ runOutputCaseInfo()
 		echo "aRecCropYUVFileList $i :${aRecCropYUVFileList[$i]}"
 		echo "PicWxPicH:  ${aEncodedPicW[$i]}x${aEncodedPicH[$i]}"
 	done
-	  
+
 }
 runBasicCheck()
 {
 	./run_CheckBasicCheck.sh  ${EncoderFlag}  ${EncoderLog} ${EncoderNum}  ${SpatailLayerNum} ${RCMode} ${CheckLogFile} \
-							${aInputYUVSizeLayer[@]} ${aRecYUVFileList[@]} ${aRecCropYUVFileList[@]}  ${aEncodedPicW[@]} ${aEncodedPicH[@]}		
+							${aInputYUVSizeLayer[@]} ${aRecYUVFileList[@]} ${aRecCropYUVFileList[@]}  ${aEncodedPicW[@]} ${aEncodedPicH[@]}
 	#copy bit stream file to ./issue folder
 	if [ ! $? -eq 0 ]
 	then
@@ -297,12 +297,12 @@ runBasicCheck()
 	else
 		return 0
 	fi
-	
+
 }
 runJSVMCheck()
 {
 	./run_CheckByJSVMDecoder.sh ${CheckLogFile} ${TempDataPath}  ${InputYUV} ${BitStreamFile}  ${SpatailLayerNum}  ${aRecYUVFileList[@]}
-	
+
 	#copy bit stream file to ./issue folder
 	if [ ! $? -eq 0 ]
 	then
@@ -330,7 +330,7 @@ runMain()
 	runParseCaseInfo ${TestCaseInfo}
 	runSetCaseGlobalParam
 	runEncodeOneCase
-	
+
 	echo ""
 	let "BasicCheckFlag=0"
 	let "JSVMCheckFlag=0"
@@ -343,7 +343,7 @@ runMain()
 		runOutputCaseCheckStatus
 		exit 1
 	fi
-		
+
 	runJSVMCheck
 	if [ ! $? -eq 0  ]
 	then
@@ -353,8 +353,8 @@ runMain()
 		runOutputCaseCheckStatus
 		exit 1
 	fi
-	
-	#get FPS info from encoder log 
+
+	#get FPS info from encoder log
 	runParseEncoderLog
 	runParsetCaseCheckLog ${CheckLogFile}
 	runOutputCaseCheckStatus
