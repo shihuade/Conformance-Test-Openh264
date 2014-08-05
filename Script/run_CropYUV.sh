@@ -1,22 +1,24 @@
 #!/bin/bash
 
+
 #*************************************************************************************************
-#  As openh264 encoder's reconstructed YUV file is multiple of 16 even though the 
-#  input resolution is not multiple 0f 16. So, in order to make comparison between
-#  JM decoded YUV and reconstructed YUV, we need to crop the reconstructed  YUV 
-#  first.
+# brife:
+#    As openh264 encoder's reconstructed YUV file is multiple of 16 even though the
+#    input resolution is not multiple 0f 16. So, in order to make comparison between
+#    JM decoded YUV and reconstructed YUV, we need to crop the reconstructed  YUV
+#    first.
 #
 #  usage:
 #         ----./run_CropYUV.sh  ${InputYUV} ${OutputYUV} ${EncodedWidth} ${EncodedHeight}
 #  return value:
 #          0-->cropped succeed   1-->no need to crop, multiple of 16
-#          2-->cropped failed    
+#          2-->cropped failed
 #  e.g:
 #        input:  run_CropYUV.sh test_320X192.yuv test_320X180.yuv  320 180
 #        output: test_320X180.yuv  with resolution of 320X180
 #
+#date:  5/08/2014 Created
 #*************************************************************************************************
-
 runSetCropResolution()
 {
 
