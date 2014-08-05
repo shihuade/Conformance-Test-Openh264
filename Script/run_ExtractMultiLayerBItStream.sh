@@ -1,11 +1,13 @@
 #!/bin/bash
 #*************************************************************************
-# used bit stream extractor from train's project.
+#brief:  used bit stream extractor from train's project.
+#        and extract single layer spatial layer's bit stream 
 #
-#    ----usage: run_ExtractMultiLayerBItStream.sh  ${InputBitSteam}  \
+#usage: run_ExtractMultiLayerBItStream.sh  ${InputBitSteam}  \
 #                         ${SpatialLayerNUm} ${OutputBitStreamName[@]}
 #
 #
+#date:  5/08/2014 Created
 #*************************************************************************
 #usage: run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNUm} ${InputBitSteam}  ${OutputBitStreamName[@]}
 runMain()
