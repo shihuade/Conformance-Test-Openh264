@@ -1,7 +1,8 @@
 #!/bin/bash
 #************************************************************************************************
+#brief: check whether the encoded number is the same with setting
 #
-# Usage:   run_CheckEncodedNum.sh  $EncoderNum  $SpatailLayerNum \
+# usage:   run_CheckEncodedNum.sh  $EncoderNum  $SpatailLayerNum \
 #                                  ${EncoderLog}  ${aInputLayerYUVSize} $aRecYUVFile
 #
 # e.g:    --run_CheckEncodedNum.sh  32  3  Encoder.log  400 800  1600  0 \
@@ -9,6 +10,7 @@
 #         --run_CheckEncodedNum.sh  32  2  Encoder.log   800  1600 0 0 \
 #                                          640X360.yuv 1280X720.yuv  NuLL01.yuv NULL02.yuv
 #
+#date:  5/08/2014 Created
 #************************************************************************************************
 #usage: runGetFileSize  $FileName
 runGetFileSize()
