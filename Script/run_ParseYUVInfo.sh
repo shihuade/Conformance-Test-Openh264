@@ -1,30 +1,18 @@
 #!/bin/bash
 #***************************************************************************************
-# SHA1 table generation model:
-#      This model is part of Cisco openh264 project for encoder binary comparison test.
-#      The output of this test are those SHA1 tables for all test bit stream, and will
-#      be used in openh264/test/encoder_binary_comparison/SHA1Table.
-#
-#      1.Test case configure file: ./CaseConfigure/case.cfg.
-#
-#      2.Test bit stream files: ./BitStreamForTest/*.264
-#
-#      3.Test result: ./FinalResult  and ./SHA1Table
-#
-#      4 For more detail, please refer to READE.md
-#
 # brief:
 #      --get YUV info via YUV's name
-#      --usage: run_ParseYUVInfo ${YUVName}
 #
 #
-#date:  10/06/2014 Created
+#     usage runGetYUVInfo  $TestSequencName
+#     eg. input:  ABC_1920X1080_30fps_XXX.yuv  output: 1920 1080 30
+#     eg. input:  ABC_1920X1080_XXX.yuv        output: 1920 1080 0
+#     eg. input:  ABC_XXX.yuv                  output: 0    0    0
+#
+#
+#date:  5/08/2014 Created
 #***************************************************************************************
-#called by runGlobalVariableInitial
-#usage runGetYUVInfo  $TestSequencName
-#eg. input:  ABC_1920X1080_30fps_XXX.yuv  output: 1920 1080 30
-#eg. input:  ABC_1920X1080_XXX.yuv        output: 1920 1080 0
-#eg. input:  ABC_XXX.yuv                  output: 0    0    0
+
 runGetYUVInfo()
 {
   if [ ! $# -eq 1  ]
