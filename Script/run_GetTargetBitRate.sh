@@ -42,31 +42,31 @@ runParseBRSetting()
   do
 	if [[ "$line" =~ ^TargetBitRate_QCIF  ]]
     then
-      TargetBitRate_QCIF=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+      TargetBitRate_QCIF=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
     elif [[ "$line" =~ ^TargetBitRate_QVGA  ]]
     then
-      TargetBitRate_QVGA=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+      TargetBitRate_QVGA=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
     elif [[ "$line" =~ ^TargetBitRate_VGA  ]]
     then
-      TargetBitRate_VGA=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+      TargetBitRate_VGA=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
     elif [[ "$line" =~ ^TargetBitRate_SVGA  ]]
     then
-      TargetBitRate_SVGA=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `	
+      TargetBitRate_SVGA=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `	
     elif [[ "$line" =~ ^TargetBitRate_XGA  ]]
     then
-      TargetBitRate_XGA=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+      TargetBitRate_XGA=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
     elif [[ "$line" =~ ^TargetBitRate_SXGA  ]]
     then
-      TargetBitRate_SXGA=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `	
+      TargetBitRate_SXGA=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `	
     elif [[ "$line" =~ ^TargetBitRate_WSXGA+  ]]
     then
-      TargetBitRate_WSXGA=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `	
+      TargetBitRate_WSXGA=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `	
     elif [[ "$line" =~ ^TargetBitRate_WUXGA  ]]
     then
-      TargetBitRate_WUXGA=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `	
+      TargetBitRate_WUXGA=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `	
     elif [[ "$line" =~ ^TargetBitRate_QXGA  ]]
     then
-      TargetBitRate_QXGA=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `	
+      TargetBitRate_QXGA=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `	
     fi
   done <$ConfigureFile
 }
