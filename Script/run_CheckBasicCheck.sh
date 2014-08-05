@@ -4,11 +4,11 @@
 #
 # Usage: run_CheckBasicCheck.sh  $EncoderFlag  $EncoderLog $EncodedNum \
 #                                $SpatailLayerNum $RCMode $CheckLog    \
-#		                         $aInputYUVSizeLayer  $aRecYUVFileList \
+#		                 $aInputYUVSizeLayer  $aRecYUVFileList \
 #                                $aRecCropYUVFileList $aEncodedPicW    \
 #                                $aEncodedPicH
 #
-#
+#date:  5/08/2014 Created
 #**************************************************************************
 runOutputFailedCheckLog()
 {
