@@ -27,7 +27,7 @@ runGetFileSize()
 	TempInfo=`ls -l $FileName`
 	FileSize=`echo $TempInfo | awk '{print $5}'`
 	echo $FileSize
-	
+
 }
 #usage: runCheckActulLayerSize ${ActualSpatialNum}
 runCheckActulLayerSize()
@@ -37,9 +37,9 @@ runCheckActulLayerSize()
 		echo "usage: runCheckActulLayerSize ${ActualSpatialNum}"
 		exit 1
 	fi
-	
+
 	local ActualSpatialNum=$1
-	
+
 	aRecYUVLayerSize=(0 0 0 0)
 	let "SizeMatchFlag=0"
 	for((i=0;i<${ActualSpatialNum};i++))
@@ -49,18 +49,18 @@ runCheckActulLayerSize()
 			aRecYUVLayerSize[$i]=`runGetFileSize  ${aRecYUVFile[$i]}`
 			echo "${aRecYUVFile[$i]} size: ${aRecYUVLayerSize[$i]}"
 		fi
-		
+
 		echo "Rec--Input:  ${aRecYUVLayerSize[$i]} ---- ${aInputLayerYUVSize[$i]}"
 		if [ ! ${aRecYUVLayerSize[$i]} -eq ${aInputLayerYUVSize[$i]}  ]
 		then
 			let "SizeMatchFlag=1"
 		fi
 	done
-		
+
 	echo "RecYUV   size: ${aRecYUVLayerSize[@]}"
 	echo "InputYUV size: ${aInputLayerYUVSize[@]}"
 	echo ""
-		
+
 	if [ ! ${SizeMatchFlag} -eq 0 ]
 	then
 		echo ""
@@ -118,7 +118,7 @@ runCheckActualEncodedNum()
 		echo ""
 		echo  -e "\033[31m  Actual encoded number does not match with configured number  \033[0m"
 		echo ""
-		return 1	
+		return 1
 	fi
 }
 runMain()
@@ -134,13 +134,13 @@ runMain()
 	declare -a aInputLayerYUVSize
 	declare -a aRecYUVLayerSize
 	declare -a aRecYUVFile
-	
+
 	aParameterSet=($@)
-	
+
 	EncoderNum=${aParameterSet[0]}
 	SpatailLayerNum=${aParameterSet[1]}
 	EncoderLog=${aParameterSet[2]}
-		
+
 	for((i=0;i<4;i++))
 	do
 		let "YUVSizeIndex=    $i + 3 "
@@ -148,15 +148,15 @@ runMain()
 		aInputLayerYUVSize[$i]=${aParameterSet[${YUVSizeIndex}]}
 		aRecYUVFile[$i]=${aParameterSet[${RecYUVFileIndex}]}
 	done
-	
+
 	if [ ${SpatailLayerNum} -lt 1 -o ${SpatailLayerNum} -gt 4 ]
 	then
 		echo ""
 		echo  -e "\033[31m spatial layer number is not correct, should be 1<=SpatialNum<=4  \033[0m"
 		echo ""
 		exit 1
-	fi	
-	
+	fi
+
 	if [ ${EncoderNum} -eq -1 ]
 	then
 		runCheckActulLayerSize ${SpatailLayerNum}
@@ -166,20 +166,20 @@ runMain()
 		runCheckActualEncodedNum ${EncoderNum}
 		let "CheckFlag=$?"
 	fi
-	
+
 	if [  ${CheckFlag} -eq 0 ]
 	then
 		echo ""
 		echo  -e "\033[32m Actual encoded number matches with configured number   \033[0m"
-		echo ""	
+		echo ""
 		return 0
 	else
 		echo ""
 		echo  -e "\033[31m Actual encoded number does not match with configured number   \033[0m"
-		echo ""	
+		echo ""
 		return 1
 	fi
 }
-runMain $@   
+runMain $@
 
 

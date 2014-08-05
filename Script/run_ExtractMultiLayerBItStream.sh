@@ -17,7 +17,7 @@ runMain()
 		echo ""
 		exit 1
 	fi
-	local SpatialLayerNUm=$1	
+	local SpatialLayerNUm=$1
 	local InputBitSteam=$2
 	local OutputBitStreamNameL0=$3
 	local OutputBitStreamNameL1=$4
@@ -32,7 +32,7 @@ runMain()
 		echo ""
 		exit 1
 	fi
-	
+
 	if [ ${SpatialLayerNUm} -lt 1   -o ${SpatialLayerNUm} -gt 4  ]
 	then
 		echo ""
@@ -41,10 +41,10 @@ runMain()
 		echo ""
 		exit 1
 	fi
-	
+
 	declare -a aOutputBitStreamNameList
 	aOutputBitStreamNameList=( ${OutputBitStreamNameL0} ${OutputBitStreamNameL1} ${OutputBitStreamNameL2} ${OutputBitStreamNameL3} )
-	
+
 	let "ExtractFlag=0"
 	for((i=0;i<${SpatialLayerNUm}; i++))
 	do
@@ -54,7 +54,7 @@ runMain()
 			let "ExtractFlag=1"
 		fi
 	done
-	
+
 	if [ ${ExtractFlag} -eq 0 ]
 	then
 		echo ""
@@ -65,9 +65,9 @@ runMain()
 		echo ""
 		echo -e "\033[31m bit stream extraction failed \033[0m"
 		echo ""
-		return 1	
+		return 1
 	fi
-		
+
 }
 runMain  $@
 
