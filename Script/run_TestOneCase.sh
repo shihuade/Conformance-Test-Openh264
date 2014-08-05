@@ -1,23 +1,13 @@
 #!/bin/bash
 #***************************************************************************************
-# SHA1 table generation model:
-#      This model is part of Cisco openh264 project for encoder binary comparison test.
-#      The output of this test are those SHA1 tables for all test bit stream, and will
-#      be used in openh264/test/encoder_binary_comparison/SHA1Table.
+# brief: test one case and check whether this case pass conformance test with JSVM decoder
 #
-#      1.Test case configure file: ./CaseConfigure/case.cfg.
 #
-#      2.Test bit stream files: ./BitStreamForTest/*.264
+#usage: run_TestOneCase.sh \${CaseInfo}
 #
-#      3.Test result: ./FinalResult  and ./SHA1Table
-#
-#      4 For more detail, please refer to READE.md
-#
-# brief:
-#  
-#
-#date:  10/06/2014 Created
+#date:  5/08/2014 Created
 #***************************************************************************************
+
 runGlobalVariableInitial()
 {
 	#initial command line parameters
