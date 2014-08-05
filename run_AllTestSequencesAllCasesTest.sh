@@ -41,8 +41,8 @@ runGetTestYUVList()
 	local TestSet4=""
 	local TestSet5=""
 	local TestSet6=""
-	local TestSet7=""   
-	local TestSet8=""  
+	local TestSet7=""
+	local TestSet8=""
 	while read line
 	do
 	if [[ "$line" =~ ^TestSet0  ]]
@@ -72,9 +72,9 @@ runGetTestYUVList()
 	elif  [[ "$line" =~ ^TestSet8  ]]
 	then
 		TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	fi	  	  
+	fi
 	done <${ConfigureFile}
-	echo "${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8}   " 
+	echo "${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8}   "
 }
 #usage: runAllTestBitstream   ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
 runAllTestBitstream()
@@ -103,7 +103,7 @@ runAllTestBitstream()
 		SubFolder="${AllTestDataDir}/${TestYUV}"
 		TestFlagFile="${TestYUV}_Tested.flag"
 		if [ -e   ${SubFolder}/${TestFlagFile} ]
-		then	
+		then
 			continue
 		fi
 		cd  ${SubFolder}
