@@ -1,9 +1,13 @@
 #!/bin/bash
 
+
 #****************************************************************
-#get list of files' size
+#brief:get list of files' size
+#
+#usage: run_GetListOfFilesSize.sh file1 file2 ...
 #
 #
+##date:  5/08/2014 Created
 #****************************************************************
 #usage: runGetFileSize  $FileName
 runGetFileSize()

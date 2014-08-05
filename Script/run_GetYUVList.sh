@@ -1,6 +1,14 @@
 
 #!/bin/bash
 
+#***************************************************************************************
+# brief: get list of YUV name in the given folder
+# 
+# usage: run_GetYUVList.sh  /opt/TestYUV
+#     
+#
+#date:  5/08/2014 Created
+#***************************************************************************************
 #usage: runGetYUVNameList   ${YUVFolder}
 runGetYUVNameList()
 {

@@ -1,27 +1,17 @@
+
 #!/bin/bash
 #***************************************************************************************
-# SHA1 table generation model:
-#      This model is part of Cisco openh264 project for encoder binary comparison test.
-#      The output of this test are those SHA1 tables for all test bit stream, and will
-#      be used in openh264/test/encoder_binary_comparison/SHA1Table.
-#
-#      1.Test case configure file: ./CaseConfigure/case.cfg.
-#
-#      2.Test bit stream files: ./BitStreamForTest/*.264
-#
-#      3.Test result: ./FinalResult  and ./SHA1Table
-#
-#      4 For more detail, please refer to READE.md
-#
 # brief:
 #      --start point of the test.
 #      --before run this script,
 #          i) you need to update you codec  in folder ./Codec
 #          ii) change you configure file if you do not use the default test case
 #      --usage: run_Main.sh $ConfigureFile
+# 
+#      --for more detail,please refer to README.md
 #
 #
-#date:  10/06/2014 Created
+#date:  5/08/2014 Created
 #***************************************************************************************
 runPromptInfo()
  {

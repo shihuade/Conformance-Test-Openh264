@@ -1,5 +1,16 @@
 #!/bin/bash
-#get YUV file's full path
+
+#***************************************************************************************
+# brief: get YUV file's path 
+#
+# usage:  run_GetYUVPath.sh  ${YUVName}  ${FindScope}
+
+#    e.g.: input :run_GetYUVPath.sh ABC_1280X720.yuv /opt/
+#          output    /opt/TestYUV.ABC_1280x720.yuv
+#
+#
+#date:  5/08/2014 Created
+#***************************************************************************************
 #usage: runGetYUVPath  ${YUVName}  ${FindScope}
 runGetYUVPath()
 {

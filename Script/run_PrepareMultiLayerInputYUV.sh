@@ -1,18 +1,18 @@
 #!/bin/bash
+
 #*********************************************************************************************
+#brief:
 #  --for multiple layer test, generate input YUV for another spacial layer
 #
-#  --usage:   run_PrepareMultiLayerInputYUV.sh ${OriginInputYUV} ${LayerNum} ${PrepareLog} ${Multiple16Flag}
-#                                              ${LayerNum}       2<=${LayerNum}<=4
-#                                              ${Multiple16Flag} sub layer's resolution is multiple of 16 or not
 #  --eg:
-#    input:  run_PrepareMultiLayerInputYUV.sh  ../../ABC_1080X720_30fps.yuv   3  prepare.log  0
+#    input:  run_PrepareMultiLayerInputYUV.sh  ../../ABC_1080X720_30fps.yuv   3  prepare.log
 #    output: there will be tow down sample YUV generated under current directory.
 #            ----ABC_540X360_30fps.yuv
 #            ----ABC_270X180_30fps.yuv
 #            ----prepare.log
 #  --note: YUV name must be named as XXX_PicWxPicH_FPSxxxx.yuv
 #
+#date:  5/08/2014 Created
 #*********************************************************************************************
 #usage: runGlobalVariableInitial ${OriginYUV}
 runGlobalVariableInitial()

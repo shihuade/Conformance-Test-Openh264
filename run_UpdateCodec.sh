@@ -1,25 +1,10 @@
 #!/bin/bash
 #***************************************************************************************
-# SHA1 table generation model:
-#      This model is part of Cisco openh264 project for encoder binary comparison test.
-#      The output of this test are those SHA1 tables for all test bit stream, and will
-#      be used in openh264/test/encoder_binary_comparison/SHA1Table.
+#brief:  build and copy  codec to Codec folder
 #
-#      1.Test case configure file: ./CaseConfigure/case.cfg.
-#
-#      2.Test result: ./FinalResult  and ./SHA1Table
-#
-#      3 For more detail, please refer to READE.md
-#
-# brief:
-#      --enable reconstructed YUV macro in  codec/encoder/core/inc/as264_common.h
-#      --build codec
-#      --copy h264ecn and h264dec, layerXX.cfg, welsenc.cfg file to ./Codec
-#      --usage: run_UpdateCodecAndTestBitStream.sh  $Openh264Dir
-#        eg: run_UpdateCodecAndTestBitStream.sh  ../openh264
-#
-#
-#date:  10/06/2014 Created
+#  usage: run_UpdateCodec.sh  ${CodecDir}
+#       
+#date:  5/08/2014 Created
 #***************************************************************************************
 runYUVDumpMacroOpen()
 {

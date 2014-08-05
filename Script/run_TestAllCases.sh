@@ -1,27 +1,17 @@
 #!/bin/bash
 #***************************************************************************************
-# SHA1 table generation model:
-#      This model is part of Cisco openh264 project for encoder binary comparison test.
-#      The output of this test are those SHA1 tables for all test bit stream, and will
-#      be used in openh264/test/encoder_binary_comparison/SHA1Table.
-#
-#      1.Test case configure file: ./CaseConfigure/case.cfg.
-#
-#      2.Test bit stream files: ./BitStreamForTest/*.264
-#
-#      3.Test result: ./FinalResult  and ./SHA1Table
-#
-#      4 For more detail, please refer to READE.md
-#
 # brief:
-#       --Test all cases for one sequence to check that the target codec is the same as benchmark codec
-#       --output info can be found  in ../AllTestData/${TestSetIndex}/result/
+#       --Test all cases for one sequence 
+#       --output info can be found  in ../AllTestData/${TestSequence}/result/
 #            pass case number, unpass case number total case number
 #            ${TestSetIndex}_${TestYUVName}_AllCaseOutput.csv
 #            ${AllCasesConsoleLogFile}
 #            ${CaseSummaryFile}
 #
-#date:  10/06/2014 Created
+#usage:  ./run_TestAllCases.sh $TestYUV  $InputYUV $AllCaseFile
+#
+#
+#date:  5/08/2014 Created
 #***************************************************************************************
 runGlobalVariableInitial()
 {

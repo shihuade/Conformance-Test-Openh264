@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #*******************************************************************************
 #brief:  get test bit rate point setting from configure file.
 #
@@ -8,8 +7,8 @@
 #e.g:   --input:         run_GetTargetBitRate.sh 1280 720 10  case.cfg
 #       --output(kbps):  500  1000
 #
+#date:  5/08/2014 Created
 #*******************************************************************************
-
 
 #usage  runGlobalVariableInital
 runGlobalVariableInital()

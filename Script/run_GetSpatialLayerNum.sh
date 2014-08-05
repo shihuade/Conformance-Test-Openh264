@@ -8,6 +8,8 @@
 #e.g:   --input:  run_GetSpatialLayerNum.sh  1280 720
 #       --output: 4
 #
+#
+#date:  5/08/2014 Created
 #*******************************************************************************
 
 #usage: runGetLayerNum  $PicW  $PicH
