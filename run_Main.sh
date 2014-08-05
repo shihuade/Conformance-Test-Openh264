@@ -14,7 +14,6 @@
 #date:  5/08/2014 Created
 #***************************************************************************************
 runPromptInfo()
-runPromptInfo()
  {
 	echo ""
 	echo  -e "\033[32m Final result can be found in ./FinaleRestult \033[0m"
