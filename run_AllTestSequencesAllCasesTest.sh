@@ -47,31 +47,31 @@ runGetTestYUVList()
 	do
 	if [[ "$line" =~ ^TestSet0  ]]
 	then
-		TestSet0=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet0=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet1  ]]
 	then
-		TestSet1=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet1=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet2  ]]
 	then
-		TestSet2=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet3  ]]
 	then
-		TestSet3=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet3=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet4  ]]
 	then
-		TestSet4=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet4=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet5  ]]
 	then
-		TestSet5=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet5=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet6  ]]
 	then
-		TestSet6=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet6=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet7  ]]
 	then
-		TestSet8=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet8  ]]
 	then
-		TestSet2=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+		TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	fi	  	  
 	done <${ConfigureFile}
 	echo "${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8}   " 
