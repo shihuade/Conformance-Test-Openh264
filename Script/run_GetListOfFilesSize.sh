@@ -23,7 +23,7 @@ runGetFileSize()
 	TempInfo=`ls -l $FileName`
 	FileSize=`echo $TempInfo | awk '{print $5}'`
 	echo $FileSize
-	
+
 }
 
 #usage: run_GetListOfFilesSize.sh ${File1} ${File2} ......
@@ -37,12 +37,12 @@ runMain()
 		echo ""
 		exit 1
 	fi
-	
+
 	local FileNum=$#
 	declare -a aFileList
 	declare -a aFileSize
 	aFileList=( $@ )
-	
+
 	let "FileIndex=0"
 	for file in ${aFileList[@]}
 	do
@@ -50,16 +50,16 @@ runMain()
 		then
 			echo ""
 			echo  -e "\033[31m file ${file} does not exist! please check \033[0m"
-			echo  -e "\033[31m  set size to 0 bit \033[0m"	
+			echo  -e "\033[31m  set size to 0 bit \033[0m"
 			echo ""
-			
+
 			aFileList[${FileIndex}]=0
-			
+
 		else
 			aFileList[${FileIndex}]=`runGetFileSize  $file`
 		fi
-		
-		let "FileIndex ++"	
+
+		let "FileIndex ++"
 	done
 
 	echo ""

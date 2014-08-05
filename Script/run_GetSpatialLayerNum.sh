@@ -2,12 +2,12 @@
 
 #*******************************************************************************
 #brief:  get spatial layer number based on PicE and PicH
-#          
-#usage:  run_GetSpatialLayerNum.sh  ${PicWidth} ${PicHeight} 
 #
-#e.g:   --input:  run_GetSpatialLayerNum.sh  1280 720 
-#       --output: 4  
-# 
+#usage:  run_GetSpatialLayerNum.sh  ${PicWidth} ${PicHeight}
+#
+#e.g:   --input:  run_GetSpatialLayerNum.sh  1280 720
+#       --output: 4
+#
 #*******************************************************************************
 
 #usage: runGetLayerNum  $PicW  $PicH
@@ -21,14 +21,14 @@ runGetLayerNum()
   elif [  $1 -le 0  -o $2 -le 0 ]
   then
     echo "usage: run_GetSpatialLayerNum.sh  \$PicW  \$PicH"
-    exit  1 
+    exit  1
   fi
-  
+
   local PicWidth=$1
   local PicHeight=$2
-  
+
   let " TotalPixel= ${PicWidth} * ${PicHeight}"
-  
+
   let "Flag_720P=1280*720"
   let "Flag_360P=480*360"
   let "Flag_180P=240*180"
@@ -45,7 +45,7 @@ runGetLayerNum()
   else
     let "LayerNum = 1 "
   fi
-  
+
   echo ${LayerNum}
 
 }

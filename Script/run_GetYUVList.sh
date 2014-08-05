@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-#usage: runGetYUVNameList   ${YUVFolder} 
+#usage: runGetYUVNameList   ${YUVFolder}
 runGetYUVNameList()
 {
 	if [ ! $# -eq 1 ]
@@ -24,7 +24,7 @@ runGetYUVNameList()
 	ls -lR ${YUVFolder}>${TempLog}
 
 
-	while read line 
+	while read line
 	do
 		if [[  "${line}" =~ ".yuv" ]]
 		then
@@ -36,4 +36,4 @@ runGetYUVNameList()
 }
 
 YUVFolder=$1
-runGetYUVNameList   ${YUVFolder} 
+runGetYUVNameList   ${YUVFolder}

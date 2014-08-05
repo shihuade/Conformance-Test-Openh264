@@ -14,18 +14,18 @@ runExtendMultiple16()
 		echo "usage: runExtendMultiple16 \${PicW} or \${PicH}"
 		exit 1
 	fi
-	
+
 	local Num=$1
 	let  "TempNum=0"
 	let "Remainder=${Num}%16"
-	
+
 	if [ ${Remainder} -eq 0  ]
 	then
 		let  "TempNum=${Num}"
 	else
 		let  "TempNum=${Num} + 16 - ${Remainder}"
 	fi
-	
+
 	echo "${TempNum}"
 	return 0
 }
@@ -38,7 +38,7 @@ runMain()
 	elif [  $1 -le 0  -o $2 -le 0 ]
 	then
 		echo "usage: runGetLayerNum  \$PicW  \$PicH"
-		exit  1 
+		exit  1
 	fi
 	local PicW=$1
 	local PicH=$2
@@ -51,21 +51,21 @@ runMain()
 	let "LayerWidth_2 = ${PicW}/2"
 	let "LayerWidth_3 = ${PicW}"
 	let "LayerHeight_0 = ${PicH}/8"
-	let "LayerHeight_1 = ${PicH}/4"  
-	let "LayerHeight_2 = ${PicH}/2" 
+	let "LayerHeight_1 = ${PicH}/4"
+	let "LayerHeight_2 = ${PicH}/2"
 	let "LayerHeight_3 = ${PicH}"
 	aLayerWidth=( ${LayerWidth_0}  ${LayerWidth_1}  ${LayerWidth_2}  ${LayerWidth_3}  )
 	aLayerHeight=( ${LayerHeight_0} ${LayerHeight_1} ${LayerHeight_2} ${LayerHeight_3} )
-	
+
 	if [ ${Multiple16Flag} -eq 1 ]
 	then
 		for((i=0;i<4;i++))
 		do
 			aLayerWidth[$i]=`runExtendMultiple16   ${aLayerWidth[$i]}`
 			aLayerHeight[$i]=`runExtendMultiple16  ${aLayerHeight[$i]}`
-		done 
+		done
 	fi
-	
+
 	#not: output format need to use whit space to separate each parameter
 	if [ ${SpatialNum} -eq 4  ]
 	then

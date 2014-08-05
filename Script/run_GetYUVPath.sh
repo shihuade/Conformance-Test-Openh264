@@ -1,5 +1,5 @@
 #!/bin/bash
-#get YUV file's full path 
+#get YUV file's full path
 #usage: runGetYUVPath  ${YUVName}  ${FindScope}
 runGetYUVPath()
 {
@@ -10,7 +10,7 @@ runGetYUVPath()
 	fi
 	local YUVName=$1
 	local FindScope=$2
-	local YUVFullPath="NULL" 
+	local YUVFullPath="NULL"
 	local Log="find.result"
 	local CurrentDir=`pwd`
 	if [ ! -d ${FindScope} ]
@@ -22,8 +22,8 @@ runGetYUVPath()
 		FindScope=`pwd`
 		cd ${CurrentDir}
 	fi
-	find   ${FindScope}  -name  ${YUVName}>${Log}	
-	while read line 
+	find   ${FindScope}  -name  ${YUVName}>${Log}
+	while read line
 	do
 		YUVFullPath=${line}
 		if [ -f ${YUVFullPath} ]
@@ -31,15 +31,15 @@ runGetYUVPath()
 		   break
 		fi
 	done <${Log}
-	
-	
+
+
 	if [ ${YUVFullPath} = "NULL" ]
 	then
 		echo "can not find ${YUVName} in folder ${FindScope}"
 		echo ${YUVFullPath}
 		return 1
 	else
-		echo ${YUVFullPath}	
+		echo ${YUVFullPath}
 		return 0
 	fi
 }
