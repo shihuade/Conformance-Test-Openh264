@@ -221,70 +221,70 @@ runParseCaseConfigure()
 	do
 		if [[ "$line" =~ ^FramesToBeEnc  ]]
 		then
-			FramesToBeEncoded=`echo $line | awk 'BEGIN {FS="[#:]" } {print $2}' `
+			FramesToBeEncoded=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 		elif [[ "$line" =~ ^UsageType ]]
 		then
-			aUsageType=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aUsageType=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^MultiLayer ]]
 		then
-			MultiLayerFlag=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			MultiLayerFlag=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^TemporalLayerNum ]]
 		then
-			aNumTempLayer=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aNumTempLayer=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^MultipleThreadIdc ]]
 		then
-			aMultipleThreadIdc=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aMultipleThreadIdc=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^SliceMode ]]
 		then
-			aSliceMode=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aSliceMode=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^MaxNalSize ]]
 		then
-			MaxNalSize=`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `
+			MaxNalSize=`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `
 		elif [[ "$line" =~ ^SliceNum0 ]]
 		then
-			aSliceNum0=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aSliceNum0=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^SliceNum1 ]]
 		then
-			aSliceNum1=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aSliceNum1=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^SliceNum2 ]]
 		then
-			aSliceNum2=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aSliceNum2=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^SliceNum3 ]]
 		then
-			aSliceNum3=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aSliceNum3=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^SliceNum4 ]]
 		then
-			aSliceNum4=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aSliceNum4=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^IntraPeriod ]]
 		then
-			aIntraPeriod=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aIntraPeriod=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^RCMode ]]
 		then
-			aRCMode=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aRCMode=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^EnableLongTermReference ]]
 		then
-			aEnableLongTermReference=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aEnableLongTermReference=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^LoopFilterDisableIDC ]]
 		then
-			aLoopFilterDisableIDC=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aLoopFilterDisableIDC=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^InitialQP ]]
 		then
-			aInitialQP=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aInitialQP=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^EnableDenoise ]]
 		then
-			aEnableDenoise=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aEnableDenoise=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^EnableSceneChangeDetection ]]
 		then
-			aEnableSceneChangeDetection=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aEnableSceneChangeDetection=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^EnableBackgroundDetection ]]
 		then
-			aEnableBackgroundDetection=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aEnableBackgroundDetection=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^EnableAdaptiveQuantization ]]
 		then
-			aEnableAdaptiveQuantization=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			aEnableAdaptiveQuantization=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^Multiple16Flag ]]
 		then
-			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		fi
 		
 		
