@@ -1,4 +1,18 @@
 #!/bin/bash
+
+
+#***************************************************************************************
+# brief:
+#   check item listed as below:
+#       --extracted bit steam for multiple spatial layer case;
+#       --decoded  by JSVM, failed or succeed;
+#       --decoded by h264decc decoder, failed or succeed;
+#       --check whether JSVMDecYUV is the same with RecYUV
+#       --check whether JSVMDecYUV is the same with DecYUV
+#
+#date:  5/08/2014 Created
+#***************************************************************************************
+
 runIntialGlobalParam()
 {
 	declare -a aParameter
