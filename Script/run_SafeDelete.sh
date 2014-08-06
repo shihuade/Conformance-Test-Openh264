@@ -320,7 +320,7 @@ runMain()
 	runDeleteItem
 	
 	#output parse info
-	runOutputParseInfo
+	#runOutputParseInfo
 
 }
 DeleteItem=$1
