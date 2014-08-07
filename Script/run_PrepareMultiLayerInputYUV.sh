@@ -113,7 +113,7 @@ runExtendMultiple16()
 	then
 		let  "TempNum=${Num}"
 	else
-		let  "TempNum=${Num} + 16 - ${Remainder}"
+		let  "TempNum=${Num} - ${Remainder}"
 	fi
 	echo "${TempNum}"
 	return 0
@@ -205,7 +205,7 @@ runGetFileSize()
 #usage: runSetLayerYUVSize
 runSetLayerYUVSize()
 {
-	aLayerYUVList=( ${OriginYUV}  ${OutputYUVLayer_2} ${OutputYUVLayer_1} ${OutputYUVLayer_0} )
+	aLayerYUVList=( ${OutputYUVLayer_3}  ${OutputYUVLayer_2} ${OutputYUVLayer_1} ${OutputYUVLayer_0} )
 	for ((i=0; i<4; i++ ))
 	do
 		if [ -e ${aLayerYUVList[$i]}  ]
@@ -265,8 +265,8 @@ runMain()
 		fi
 	done
 
-	#down sample start from 1/2 PicW layer
-	for ((i=1; i<${NumberLayer}; i++ ))
+	#down sample 
+	for ((i=0; i<${NumberLayer}; i++ ))
 	do
 		./${DownSampleExe}  ${OriginWidth} ${OriginHeight} ${OriginYUV}  ${aLayerWidth[$i]} ${aLayerHeight[i]}  ${aOutputLayerName[i]}
 		if [ ! $? -eq 0 ]
