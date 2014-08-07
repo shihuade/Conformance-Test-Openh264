@@ -101,8 +101,6 @@ runGetFileFullPath()
 		TempPath=`echo ${DeleteItem} |awk 'BEGIN {FS="/"} {for (i=1;i<NF;i++) printf("%s/",$i)}'`
 	else
 		TempPath=${CurrentDir}
-		echo "for xxx.123 case: ${DeleteItem} "
-		echo "TempPath is ${TempPath}"
 	fi
 	
 	#for those permission denied files
