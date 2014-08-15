@@ -204,9 +204,8 @@ runAllCaseTest()
 	do
 		if [ ${LineIndex} -gt 0  ]
 		then
-		
+			#to limit log file's size,each log file only records 1000 cases' log 
 			let "NewLogFileFlag = ${TotalCaseNum}%1000"
-			#to limit log file's size,each log file only record 1000 cases' log
 			if [ ${NewLogFileFlag} -eq 0 ]
 			then
 				AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_${LogFileIndex}.TestLog"
@@ -217,7 +216,7 @@ runAllCaseTest()
 			echo "" >>${AllCasesConsoleLogFile}
 			echo "" >>${AllCasesConsoleLogFile}
 			echo "" >>${AllCasesConsoleLogFile}
-			echo "********************case index is ${TotalCaseNum}**********************">>${AllCasesConsoleLogFile}
+			echo "****************case index is ${TotalCaseNum}************">>${AllCasesConsoleLogFile}
 			export IssueDataPath
 			export TempDataPath
 			export TestYUVName
@@ -239,7 +238,7 @@ runAllCaseTest()
 
 			runParseCaseCheckLog  ${CheckLogFile}  >>${AllCasesConsoleLogFile}
 			echo "" >>${AllCasesConsoleLogFile}
-			echo "---------------Cat Check Log file--------------------------------------------">>${AllCasesConsoleLogFile}
+			echo "---------------Cat Check Log file------------------------">>${AllCasesConsoleLogFile}
 			cat ${CheckLogFile} >>${AllCasesConsoleLogFile}
 			for file in  ${TempDataPath}/*
 			do
