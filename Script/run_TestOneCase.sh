@@ -78,8 +78,8 @@ runParseCaseInfo()
 {
 	if [ $#  -lt 1  ]
 	then
-	echo "no parameter!"
-	return 1
+		echo "no parameter!"
+		return 1
 	fi
 	local TempData=""
 
