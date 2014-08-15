@@ -176,7 +176,7 @@ runMain()
 	if [ ! $? -eq 0 ]
 	then
 		echo -e "\033[31m RecYUV does not exist! \033[0m"
-		return 1
+		return 2
 	fi
 
 	echo "-------------------3. Basic Check--Crop RecYUV for JSVM comparison"
@@ -184,7 +184,7 @@ runMain()
 	if [ ! $? -eq 0 ]
 	then
 		echo -e "\033[31m  cropped failed \033[0m"
-		return 1
+		return 3
 	fi
 
 	echo "-------------------4. Basic Check--Encoded Number Check"
@@ -192,7 +192,7 @@ runMain()
 	if [ ! $? -eq 0 ]
 	then
 		echo -e "\033[31m  encoded number not equal to setting  \033[0m"
-		return 1
+		return 4
 	fi
 
 	echo ""
