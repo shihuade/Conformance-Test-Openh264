@@ -214,10 +214,10 @@ runAllCaseTest()
 				echo "">${AllCasesConsoleLogFile}
 			fi
 			
-			echo "" 
-			echo "" 
-			echo ""
-			echo "********************case index is ${TotalCaseNum}**************************************">>${AllCasesConsoleLogFile}
+			echo "" >>${AllCasesConsoleLogFile}
+			echo "" >>${AllCasesConsoleLogFile}
+			echo "" >>${AllCasesConsoleLogFile}
+			echo "********************case index is ${TotalCaseNum}**********************">>${AllCasesConsoleLogFile}
 			export IssueDataPath
 			export TempDataPath
 			export TestYUVName
@@ -235,12 +235,12 @@ runAllCaseTest()
 			export YUVFileLayer2
 			export YUVFileLayer3
 
-			./run_TestOneCase.sh  ${CaseData} 
+			./run_TestOneCase.sh  ${CaseData}      >>${AllCasesConsoleLogFile}
 
-			runParseCaseCheckLog  ${CheckLogFile}
-			echo ""
-			echo "---------------Cat Check Log file--------------------------------------------"
-			cat ${CheckLogFile}
+			runParseCaseCheckLog  ${CheckLogFile}  >>${AllCasesConsoleLogFile}
+			echo "" >>${AllCasesConsoleLogFile}
+			echo "---------------Cat Check Log file--------------------------------------------">>${AllCasesConsoleLogFile}
+			cat ${CheckLogFile} >>${AllCasesConsoleLogFile}
 			for file in  ${TempDataPath}/*
 			do
 				./run_SafeDelete.sh  ${file}>>DeletedFile.list
@@ -310,7 +310,7 @@ runMain()
 
 	echo ""
 	echo  -e "\033[32m  testing all cases, please wait!...... \033[0m"
-	runAllCaseTest >>${AllCasesConsoleLogFile}
+	runAllCaseTest 
 	runOutputPassNum
 }
 ConfigureFile=$1
