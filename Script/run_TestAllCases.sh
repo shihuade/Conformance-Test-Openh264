@@ -27,7 +27,7 @@ runGlobalVariableInitial()
 	AllCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput.csv"
 	UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput.csv"
 	AllCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table.csv"
-	AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}.TestLog"
+	AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_0.TestLog"
 	CaseSummaryFile="${ResultPath}/${TestYUVName}.Summary"
 	HeadLine1="EncoderFlag, DecoderFlag, FPS, BitSreamSHA1, BitSreamMD5, InputYUVSHA1, InputYUVMD5,\
 			-utype,  -frms,  -numl,  -numtl, -sw, -sh,\
@@ -199,14 +199,25 @@ runAllCaseTest()
 	local CheckLogFile="${TempDataPath}/CaseCheck.log"
 	let "TotalCaseNum=0"
 	let "LineIndex=0"
+	let "LogFileIndex=0"
 	while read CaseData
 	do
 		if [ ${LineIndex} -gt 0  ]
 		then
+		
+			let "NewLogFileFlag = ${TotalCaseNum}%1000"
+			#to limit log file's size,each log file only record 1000 cases' log
+			if [ ${NewLogFileFlag} -eq 0 ]
+			then
+				AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_${LogFileIndex}.TestLog"
+				let "LogFileIndex++"
+				echo "">${AllCasesConsoleLogFile}
+			fi
+			
+			echo "" 
+			echo "" 
 			echo ""
-			echo ""
-			echo ""
-			echo "********************case index is ${TotalCaseNum}**************************************"
+			echo "********************case index is ${TotalCaseNum}**************************************">>${AllCasesConsoleLogFile}
 			export IssueDataPath
 			export TempDataPath
 			export TestYUVName
@@ -224,12 +235,12 @@ runAllCaseTest()
 			export YUVFileLayer2
 			export YUVFileLayer3
 
-			./run_TestOneCase.sh  ${CaseData}
+			./run_TestOneCase.sh  ${CaseData} 
 
 			runParseCaseCheckLog  ${CheckLogFile}
 			echo ""
 			echo "---------------Cat Check Log file--------------------------------------------"
-            cat ${CheckLogFile}
+			cat ${CheckLogFile}
 			for file in  ${TempDataPath}/*
 			do
 				./run_SafeDelete.sh  ${file}>>DeletedFile.list
@@ -239,6 +250,7 @@ runAllCaseTest()
 		fi
 
 		let "LineIndex++"
+		
 	done <$AllCaseFile
 }
 #usage runOutputPassNum
@@ -298,7 +310,7 @@ runMain()
 
 	echo ""
 	echo  -e "\033[32m  testing all cases, please wait!...... \033[0m"
-	runAllCaseTest >${AllCasesConsoleLogFile}
+	runAllCaseTest >>${AllCasesConsoleLogFile}
 	runOutputPassNum
 }
 ConfigureFile=$1
