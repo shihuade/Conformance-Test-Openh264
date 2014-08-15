@@ -277,7 +277,8 @@ runBasicCheck()
 	./run_CheckBasicCheck.sh  ${EncoderFlag}  ${EncoderLog} ${EncoderNum}  ${SpatailLayerNum} ${RCMode} ${CheckLogFile} \
 							${aInputYUVSizeLayer[@]} ${aRecYUVFileList[@]} ${aRecCropYUVFileList[@]}  ${aEncodedPicW[@]} ${aEncodedPicH[@]}
 	#copy bit stream file to ./issue folder
-	if [ ! $? -eq 0 ]
+	#do not copy those cases RecYUV not exist!
+	if [ ! $? -eq 0  -o  ! $? -eq 2  ]
 	then
 		if [ -e ${BitStreamFile}  ]
 		then
