@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #***************************************************************************************
 # brief:
 #      --delete file or entire folder, instead of using "rm -rf ",
@@ -16,8 +15,6 @@
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
-
-
 runGlobalInitial()
 {
 	UserName=`whoami`
@@ -26,12 +23,9 @@ runGlobalInitial()
 	FileName="NULL"
 	FullPath="NULL"
 }
-
-
 #usage: runUserNameCheck 
 runUserNameCheck()
 {
-
 	if [  ${UserName} = "root"  ]
 	then
 		echo ""
@@ -43,7 +37,6 @@ runUserNameCheck()
 	
 	return 0
 }
-
 #usage: runGetItermInfo  $FilePath
 runGetFileName()
 {
@@ -66,10 +59,7 @@ runGetFileName()
 		FileName=` echo ${DeleteItem} | awk 'BEGIN {FS="/"}; {print $NF}'`
 	fi
 	return 0
-
 }
-
-
 #******************************************************************************************************
 #usage:  runGetFileFullPath  $FileDeleteItem
 #eg:  current path is /opt/VideoTest/openh264/ABC
@@ -114,7 +104,6 @@ runGetFileFullPath()
 		cd ${CurrentDir}
 		return 0
 	fi
-
 }
 #******************************************************************************************************
 #usage:  runGetFolderFullPath  $FolderDeleteItem
@@ -125,7 +114,6 @@ runGetFileFullPath()
 #******************************************************************************************************
 runGetFolderFullPath()
 {
-
 	if [ ! -d ${DeleteItem} ]
 	then
 		echo -e "\033[31m DeleteItem is not a folder! \033[0m"
@@ -165,8 +153,6 @@ runGetFolderFullPath()
 	
 	return 0	
 }
-
-
 runDeleteItemCheck()
 {
 	let "CheckFlag=0"
@@ -190,23 +176,20 @@ runDeleteItemCheck()
 		echo  -e "\033[31m detected by run_SafeDelere.sh \033[0m"
 		exit 1
 	fi
-
 	return 0
 }
-
 runFolderLocationCheck()
 {
 	local ItemDirDepth=`echo ${FullPath} | awk 'BEGIN {FS="/"} {print NF}'`
-
 	#only item  under  /home/, /root/, /opt/ can be delete!
 	let "FolderFlag=0"
-	if [[ ${FullPath} =~ ^/root/  ]]
+	if [[ ${FullPath} =~ ^/opt/sge62u2_1/SGE_room2 ]]
 	then
 		let "FolderFlag=0"
 	elif [[ ${FullPath} =~ ^/home/  ]]
 	then
 		let "FolderFlag=0"
-	elif [[ ${FullPath} =~ ^/opt/  ]]
+	elif [[ ${FullPath} =~ ^/root/  ]]
 	then
 		let "FolderFlag=0"
 	else
@@ -216,20 +199,23 @@ runFolderLocationCheck()
 	if [ ! ${FolderFlag} -eq 0 ]
 	then
 		echo ""
-		echo -e "\033[31m only item  under  /home/xxx, /root/xxx, /opt/xxx can be delete, please double check!  \033[0m"
+		echo -e "\033[31m deleting item's fullPath is ${FullPath} \033[0m"
+		echo -e "\033[31m only item  under  /home/Folder/xxx, /root/Folder/XXX, /opt/sge62u2_1/SGE_room2/xxx can be delete, please double check!  \033[0m"
 		echo -e "\033[31m detected by run_SafeDelere.sh \033[0m"
+		echo -e "\033[31m for change this constraint, please modify script in run_SafeDelere.sh \033[0m"
 		exit 1		
 	fi	
 	
 	
 	#for other non-project folder data protection
 	#e.g /opt/VideoTest/DeleteItem depth=4
-	if [  $ItemDirDepth -lt 5 ]
+	if [  $ItemDirDepth -lt 4 ]
 	then
 		echo ""
-		echo -e "\033[31m FullPath is ${FullPath} \033[0m"
-		echo -e "\033[31m FileDepth is  $ItemDirDepth not matched the minimum depth(5) \033[0m"
-		echo -e "\033[31m unsafe delete! try to delete non-project items: $FullPath \033[0m"
+		echo -e "\033[31m deleting item's fullPath is ${FullPath} \033[0m"
+		echo -e "\033[31m FileDepth is  $ItemDirDepth not matched the minimum depth(4) \033[0m"
+		echo -e "\033[31m 				should looks like /XXX/XXX/XXX/DeleteItem \033[0m"
+		echo -e "\033[31m unsafe delete! try to delete non-project items under: $FullPath \033[0m"
 		echo -e "\033[31m detected by run_SafeDelere.sh \033[0m"
 		exit  1
 	fi
@@ -237,6 +223,7 @@ runFolderLocationCheck()
 	if [   -d ${DeleteItem}  -a "${FullPath}" = "${CurrentDir}"  ]
 	then
 		echo ""
+		echo -e "\033[31m DeleteItem is ${DeleteItem} \033[0m"
 		echo -e "\033[31m DeletingPatth--CurrentPath: ${FullPath} -- ${CurrentDir} \033[0m"
 		echo -e "\033[31m trying to delete current dir, it is not allow! \033[0m"
 		echo -e "\033[31m detected by run_SafeDelere.sh \033[0m"
@@ -245,7 +232,6 @@ runFolderLocationCheck()
 		
 	return 0
 }
-
 runDeleteItem()
 {
 	let "DeleteFlag=0"
@@ -261,17 +247,16 @@ runDeleteItem()
 		fi
 		
 		echo "deleted folder is:  $DeleteItem"
-		rm -rf ${DeleteItem}
+		#rm -rf ${DeleteItem}
 		let "DeleteFlag=$?"
 	elif [ -f $DeleteItem ]
 	then		
 		runGetFileName
 		DeleteItem="${FullPath}/${FileName}"
 		echo "deleted file is :  $DeleteItem"
-		rm  ${DeleteItem}
+		#rm  ${DeleteItem}
 		let "DeleteFlag=$?"
 	fi
-
 	if [ ! ${DeleteFlag} -eq 0 ]
 	then
 		echo -e "\033[31m deleted failed! \033[0m"
@@ -280,8 +265,6 @@ runDeleteItem()
 	
 	return 0
 }
-
-
 runOutputParseInfo()
 {
 	echo "UserName    ${UserName}"
@@ -290,7 +273,6 @@ runOutputParseInfo()
 	echo "FileName    ${FileName}"
 	echo "FullPath    ${FullPath}"
 }
-
 #usage runMain $DeleteItem
 runMain()
 {
@@ -300,16 +282,14 @@ runMain()
 		echo "usage runMain \$DeleteItem"
 		return 1
 	fi
-
 	runGlobalInitial
 	DeleteItem=$1
 	
 	#user validity check
-	runUserNameCheck  
+	#runUserNameCheck  
 	
 	#check item exist or not or there is permission denied for current user
 	runDeleteItemCheck
-
 	#check that whether item is project file/folder or not 
 	runFolderLocationCheck
 	
@@ -319,11 +299,9 @@ runMain()
 	
 	#output parse info
 	#runOutputParseInfo
-
 }
 DeleteItem=$1
 echo ""
 runMain $DeleteItem
 echo ""
-
 
