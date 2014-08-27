@@ -1,0 +1,26 @@
+#!/bin/bash
+# SGE submission options
+#$ -q all.q 	 # Select the queue
+##$ -l h_rt=00:10:00 	 # Set 10 minutes of wall clock time
+##$ -cwd 	 # Change to current working directory
+#$ -V 	 # Export environment variables into script
+##$ -t 1-100 	 # Set the array indices
+#$ -N  SGE_TEST_OPENH264 	 # The name of job
+##$ -a 	             # request the launch time of job
+#$ -S /bin/bash 	 # Shell category
+##$ -o 	     # terminal output file
+##$ -e 	     # terminal error file
+#$ -j y 	 # combine error file with output file
+##$ -pe 	 # Select the parallel environment
+##$ -R y 	 # Switch on resource reservation
+# mail event (`e' `b' `a' `n' `s') 
+ #$ -m beas
+#$ -notify 	 # notify job before killing or suspending it 
+#$ -now n 	 # start the job immediately or not 
+# mail list, notify these email addresses
+#$ -M root@sge-qmaster	
+# work directory
+#$ -wd  /opt/sge62u2_1/SGE_room2/HelloSGE/
+# run job script: 
+#/opt/sge62u2_1/SGE_room2/HelloSGE/hello.sh
+

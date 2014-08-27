@@ -9,15 +9,111 @@
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
-#usage: runGetTestYUVList  ${ConfigureFile}
-runGetTestYUVList()
+runRemovedPreviousTestData()
 {
-	if [ ! $# -eq 1  ]
+	
+	if [ -d $AllTestDataFolder ]
 	then
-		echo "usage: runGetTestYUVList  \${ConfigureFile}"
+		./${ScriptFolder}/run_SafeDelete.sh  $AllTestDataFolder
+	fi
+	if [ -d $SHA1TableFolder ]
+	then
+		./${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
+	fi
+	if [ -d $FinalResultDir ]
+	then
+		./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
+	fi
+	
+	if [ -d $SourceFolder ]
+	then
+		./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
+	fi
+	
+}
+runUnpdateCodec()
+{
+	echo ""
+	echo -e "\033[32m openh264 repository cloning... \033[0m"
+	echo ""
+	./run_CheckoutCiscoOpenh264Codec.sh  ${Openh264GitAddr} ${SourceFolder}
+	if [  ! $? eq 0 ]
+	then	
+		echo ""
+		echo -e "\033[31m Failed to clone latest openh264 repository! Please double check! \033[0m"
+		echo ""
+		exit 1
+	fi
+		
+	echo ""
+	echo -e "\033[32m openh264 codec building... \033[0m"
+	echo ""
+	./run_UpdateCodec.sh  ${SourceFolder}
+	if [ ! $? -eq 0 ]
+	then	
+		echo ""
+		echo -e "\033[31m Failed to update codec to latest version! Please double check! \033[0m"
+		echo ""
+		exit 1
+	fi
+	
+	return 0
+}
+runPrepareSGEJobFile()
+{
+	if [ ! $# -eq 2 ]
+	then
+		echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName "
 		return 1
 	fi
-	local ConfigureFile=$1
+	TestSequenceDir=$1
+	TestYUVName=$2
+	
+	if [ -d ${TestSequenceDir} ]
+	then
+		cd ${TestSequenceDir}
+		TestSequenceDir=`pwd`
+		cd ${CurrentDir}
+	else
+		echo -e "\033[31m Job folder does not exist! Please double check! \033[0m"
+		exit 1
+	fi
+	
+	SGEQueue="Openh264SGE"
+	SGEName="${TestYUVName}_SGE_Test"
+	SGEModelFile="${CurrentDir}/Script/SGEModel.sge"
+	SGEJobFile="${TestSequenceDir}/${TestYUV}.sge"
+	SGEJobScript="run_OneTestYUV.sh"
+	
+	echo ""
+	echo -e "\033[32m creating SGE job file : ${SGEJobFile} ......\033[0m"
+	echo ""
+	
+	echo "">${SGEJobFile}
+	while read line
+	do
+		if [[ $line =~ ^"#$ -q"  ]]
+		then
+			echo "#$ -q ${SGEQueue}  # Select the queue">>${SGEJobFile}
+		elif [[ $line =~ ^"#$ -N"  ]]
+		then
+			echo "#$ -N ${SGEName} # The name of job">>${SGEJobFile}
+		elif [[ $line =~ ^"#$ -wd"  ]]
+		then
+			echo "#$ -wd ${TestSequenceDir}">>${SGEJobFile}
+		else
+			echo $line >>${SGEJobFile}
+		fi
+	
+	done <${SGEModelFile}
+	
+	echo "${TestSequenceDir}/${SGEJobScript}   ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}">>${SGEJobFile}
+	
+	return 0
+}
+#usage: runGetTestYUVList 
+runGetTestYUVList()
+{
 	local TestSet0=""
 	local TestSet1=""
 	local TestSet2=""
@@ -58,56 +154,25 @@ runGetTestYUVList()
 		TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	fi
 	done <${ConfigureFile}
-	echo "${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8} "
+	
+	aTestYUVList=(${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8})
 }
-#usage: runPrepareALlFolder   $AllTestDataFolder  $TestBitStreamFolder   $CodecFolder  $ScriptFolder  $ConfigureFile/$SH1TableFolder
-runPrepareALlFolder()
+runPrepareTestSpace()
 {
-	#parameter check!
-	if [ ! $# -eq 4  ]
-	then
-		echo "usage: usage: run_PrepareAllTestFolder.sh    \$AllTestDataFolder  \$CodecFolder  \$ScriptFolder \$ConfigureFile"
-		return 1
-	fi
-	local AllTestDataFolder=$1
-	local CodecFolder=$2
-	local ScriptFolder=$3
-	local ConfigureFile=$4
-	local SubFolder=""
-	local IssueFolder="issue"
-	local TempDataFolder="TempData"
-	local ResultFolder="result"
-	local SHA1TableFolder="SHA1Table"
-	local FinalResultDir="FinalResult"
-	declare -a aTestYUVList
-	if [ -d $AllTestDataFolder ]
-	then
-		./${ScriptFolder}/run_SafeDelete.sh  $AllTestDataFolder
-	fi
-	if [ -d $SHA1TableFolder ]
-	then
-		./${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
-	fi
-	if [ -d $FinalResultDir ]
-	then
-		./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
-	fi
-	mkdir ${SHA1TableFolder}
-	mkdir ${FinalResultDir}
-	echo ""
-	echo "preparing All test data folders...."
-	echo ""
-	echo ""
-	aTestYUVList=(`runGetTestYUVList  ${ConfigureFile}`)
+	
+	#now prepare for test space for all test sequences
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataFolder}/${TestYUV}"
+	
+		echo ""
+		echo "Test sequence name is ${TestYUV}"
+		echo "sub folder is  ${SubFolder}"
+		echo ""
 		if [  -d  ${SubFolder}  ]
 		then
 			continue
 		fi
-		echo "sub folder is  ${SubFolder}"
-		echo ""
 		mkdir -p ${SubFolder}
 		mkdir -p ${SubFolder}/${IssueFolder}
 		mkdir -p ${SubFolder}/${TempDataFolder}
@@ -115,14 +180,64 @@ runPrepareALlFolder()
 		cp  ${CodecFolder}/*    ${SubFolder}
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
+		
+		if [ ${TestType} = "SGETest"  ]
+		then
+			runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}
+		fi 		
 	done
+	
+	return 0
 }
-AllTestDataFolder=$1
-CodecFolder=$2
-ScriptFolder=$3
-ConfigureFile=$4
-runPrepareALlFolder   $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile
-echo ""
-echo ""
-
+#usage: runPrepareALlFolder   $AllTestDataFolder  $TestBitStreamFolder   $CodecFolder  $ScriptFolder  $ConfigureFile/$SH1TableFolder
+runMain()
+{
+	#parameter check!
+	if [ ! $# -eq 6  ]
+	then
+		echo ""
+		echo -e "\033[31musage: run_PrepareAllTestFolder.sh   \$TestType  \$SourceFolder  \$AllTestDataFolder  \$CodecFolder  \$ScriptFolder \$ConfigureFile \033[0m"
+		echo ""
+		return 1
+	fi
+	
+	TestType=$1
+	SourceFolder=$2
+	AllTestDataFolder=$3
+	CodecFolder=$4
+	ScriptFolder=$5
+	ConfigureFile=$6
+	
+	CurrentDir=`pwd`
+	SHA1TableFolder="SHA1Table"
+	FinalResultDir="FinalResult"
+	Openh264GitAddr="https://github.com/cisco/openh264"
+	declare -a aTestYUVList
+	#folder for eache test sequence
+	SubFolder=""
+	SGEJobFile=""
+	IssueFolder="issue"
+	TempDataFolder="TempData"
+	ResultFolder="result"
+	
+	runRemovedPreviousTestData
+	
+	mkdir ${SHA1TableFolder}
+	mkdir ${FinalResultDir}
+	mkdir ${SourceFolder}
+	
+	
+	runUnpdateCodec
+	
+	echo "Preparing test space for all test sequences!"
+	runGetTestYUVList
+	runPrepareTestSpace
+}
+TestType=$1
+SourceFolder=$2
+AllTestDataFolder=$3
+CodecFolder=$4
+ScriptFolder=$5
+ConfigureFile=$6
+runMain  $TestType  $SourceFolder $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile
 
