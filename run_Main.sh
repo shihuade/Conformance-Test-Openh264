@@ -20,34 +20,64 @@ runPromptInfo()
 	echo  -e "\033[32m SHA1 table can be found in ./SHA1Table \033[0m"
 	echo ""
  }
-runMain()
+ runUsage()
  {
-	if [ ! $# -eq 1 ]
+ 	echo "usage: ./run_Main.sh  \$TestType \$ConfigureFile"
+	echo "      eg:   ./run_Main.sh  SGETest  ../CaseConfigure/case.cfg "
+	echo "      eg:   ./run_Main.sh  LocalTest  ../CaseConfigure/case.cfg "
+ }
+ 
+ 
+runCheck()
+{
+	#check test type
+	if [ ${TestType} = "SGETest" ]
 	then
-		echo "usage: ./run_Main.sh \$ConfigureFile"
-		echo "      eg:   ./run_Main.sh  ../CaseConfigure/case.cfg "
-		exit 1
+		return 0
+	elif [ ${TestType} = "LocalTest" ]
+	then
+		return 0
+	else
+		 runUsage
+		 exit 1
 	fi
-	local ConfigureFile=$1
+	
+	#check configure file
 	if [  ! -f ${ConfigureFile} ]
 	then
 		echo "Configure file not exist!, please double check in "
 		echo " usage may looks like:   ./run_Main.sh  ../CaseConfigure/case.cfg "
 		exit 1
 	fi
+	return 0
+}
+runMain()
+ {
+	if [ ! $# -eq 2 ]
+	then
+		runUsage
+		exit 1
+	fi
+	TestType=$1
+	ConfigureFile=$1
+	
+	runCheck
+	
 	#dir translation
 	AllTestDataFolder="AllTestData"
+	CourceFolder="Source"
 	CodecFolder="Codec"
-	ScriptFolder="Script"
+	ScriptFolder="Scripts"
 	SH1TableFolder="SHA1Table"
 	ConfigureFolder="CaseConfigure"
 	FinalResultDir="FinalResult"
+	
 	echo ""
 	echo ""
 	echo "prepare for all test data......."
 	echo ""
 	# prepare for all test data
-	./run_PrepareAllTestData.sh    ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile}
+	./run_PrepareAllTestData.sh   ${TestType}  ${CourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
 		echo "failed to prepared  test space for all test data!"
@@ -57,7 +87,7 @@ runMain()
 	echo ""
 	echo "running all test cases for all bit streams......"
 	echo ""
-	./run_AllTestSequencesAllCasesTest.sh   ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
+	./run_AllTestSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
 		echo ""
@@ -75,7 +105,7 @@ runMain()
 		exit 0
 	fi
 }
-ConfigureFile=$1
-runMain  ${ConfigureFile}
-
+TestType=$1
+ConfigureFile=$2
+runMain  ${TestType} ${ConfigureFile}
 
