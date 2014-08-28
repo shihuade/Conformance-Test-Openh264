@@ -55,8 +55,9 @@ runGetTestYUVList()
 	
 	aTestYUVList=(${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8})
 }
-runSGETest()
+runSGEJobSubmit()
 {
+	let "JobNum=0" 
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataDir}/${TestYUV}"
@@ -65,16 +66,115 @@ runSGETest()
 		echo "test YUV is ${TestYUV}"
 		echo ""
 		
-		if [ -e   ${SubFolder}/${TestSubmitFlagFile} ]
+		if [  -e   ${SubFolder}/${TestSubmitFlagFile} ]
 		then
-			continue
+		echo ""
+			#continue
 		fi
 		cd  ${SubFolder}
-		qsub ./${TestYUV}.sge  ${TestYUV}  ${FinalResultDir}  ${ConfigureFile}
+		echo "submit job"
+		aSubmitJobList[$JobNum]=`qsub ./${TestYUV}.sge `
+		echo "submit job is ${aSubmitJobList[$JobNum]} "
+		let "JobNum ++" 
 		touch ${TestSubmitFlagFile}		
 		cd  ${CurrentDir}
 	done
 	return 0
+}
+#extract all SGE job ID by using command qstat 
+runGetAllSGEJobID()
+{
+	SGEJObList="Job.list"	
+	qstat >${SGEJObList}
+	
+	let "LineIndex=0"
+	let "JobIDIndex=0"
+	while read line
+	do
+		if [ ${LineIndex} -ge 2 ]
+		then
+			aAllSGEJobIDList[${JobIDIndex}]=`echo $line | awk '{print $1}'`
+			let "JobIDIndex++"
+		fi
+		let "LineIndex++"
+	done <${SGEJObList}
+	
+	let "CurrentSGEJobNum=${LineIndex}"
+}
+#comparison between  current SGE job list and the submitted list 
+#to check that whether all submit jobs are not in current running list
+runSGEJobCheck()
+{
+	
+	SGEJobSubmittedNum=${#aSubmitJobList[@]}
+	
+	let "RunningJobNum=0"
+	for((i=0;i<${SGEJobSubmittedNum};i++))
+	do	
+		SubmitId=`echo ${aSubmitJobList[$i]} | awk '{print $3} ' `
+		let "JonRunningFlag=0"
+		for((j=0;j<${CurrentSGEJobNum};j++))
+		do
+		
+			CurrenJobID=${aAllSGEJobIDList[$j]}					
+			if [ ${SubmitId} -eq ${CurrenJobID} ]
+			then
+				let "JonRunningFlag=1"
+				break
+			fi
+		done
+		
+		if [ ${JonRunningFlag} -eq 1 ]
+		then
+			echo ""
+			echo  -e "\033[32m  Job ${SubmitId} is still running \033[0m"
+			echo  -e "\033[32m  Job info is:----${aSubmitJobList[$i]} \033[0m"
+			echo ""
+			let "RunningJobNum++"
+		else
+			echo ""
+			echo  -e "\033[32m  Job ${SubmitId} has been finished! \033[0m"
+			echo  -e "\033[32m  Job info is:----${aSubmitJobList[$i]} \033[0m"
+			echo ""
+		fi
+	done
+	
+	if [ ${RunningJobNum} -eq 0  ]
+	then
+		return 0
+	else
+		return 1
+	fi
+	
+}
+runSGETest()
+{
+	runSGEJobSubmit
+	
+	#check whether all job have finished
+	let "AllJobFinishedFlag=0"
+	while [ ${AllJobFinishedFlag} -eq 0 ]
+	do
+		runGetAllSGEJobID
+		runSGEJobCheck
+		if [ $? -eq 0 ]
+		then
+			let "AllJobFinishedFlag=1"
+			echo ""
+			echo  -e "\033[32m  All jobs have be finished! \033[0m"
+			echo ""
+		else
+			let "AllJobFinishedFlag=0"
+			echo ""
+			echo  -e "\033[32m  Not all jobs have be finished yet! \033[0m"
+			echo  -e "\033[32m  Please wait! \033[0m"
+			echo ""
+			sleep 20
+		fi 
+	done
+	
+	return 0
+	
 }
 runLocalTest()
 {
@@ -102,12 +202,46 @@ runLocalTest()
 		cd  ${CurrentDir}
 	done
 	
-	if [ ! ${Flag} -eq 0  ]
-	then
-		return 1
-	else
-		return 0
-	fi
+	return ${Flag}
+	
+}
+runGetTestSummary()
+{
+	echo "">${AllTestSummary}
+		
+	let "AllPassedFlag=1"
+	for TestYUV in ${aTestYUVList[@]}
+	do
+		
+		if [ -e  ${FinalResultDir}/${TestYUV}.Summary ]
+		then
+	
+			while read line
+			do
+				if [[  $line =~ ^Failed ]]
+				then
+					let "AllPassedFlag=0"
+					break			
+				fi
+				break	
+			done <${FinalResultDir}/${TestYUV}.Summary
+			
+			echo "">>${AllTestSummary}
+			cat ${FinalResultDir}/${TestYUV}.Summary >>${AllTestSummary}
+		fi	
+	done
+	
+	echo ""
+	echo -e "\033[32m ********************************************************** \033[0m"
+	echo -e "\033[32m all test summary listed as below: \033[0m"
+	echo -e "\033[32m ********************************************************** \033[0m"
+	echo ""
+	cat ${AllTestSummary}
+	echo ""
+	echo -e "\033[32m ********************************************************** \033[0m"
+	echo ""
+	
+	return ${AllPassedFlag}
 }
 #usage: runMain  ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
 runMain()
@@ -125,16 +259,28 @@ runMain()
 	ConfigureFile=$4
 	CurrentDir=`pwd`
 	
-	local TestFlagFile=""
+	TestFlagFile=""
+	AllTestSummary="${FinalResultDir}/AllTestYUVsSummary.txt"
+	let "CurrentSGEJobNum=0"
 	declare -a aTestYUVList
+	declare -a aSubmitJobList
+	declare -a aAllSGEJobIDList
+	
 	#get full path info
+	cd ${AllTestDataDir}
+	AllTestDataDir=`pwd`
+	cd  ${CurrentDir}
 	cd ${FinalResultDir}
 	FinalResultDir=`pwd`
 	cd  ${CurrentDir}
 	echo ""
 	echo "testing all test sequences......"
 	echo ""
+	
+	#get YUV list
 	runGetTestYUVList
+	
+	#Test 
 	if [ ${TestType} = "SGETest"  ]
 	then
 		runSGETest
@@ -142,6 +288,10 @@ runMain()
 	then
 		runLocalTest
 	fi
+	
+	#get all test summary
+	runGetTestSummary
+	return $?
 	
 }
 TestType=$1

@@ -1,0 +1,17 @@
+job-ID  prior   name       user         state submit/start at     queue                          slots ja-task-ID 
+-----------------------------------------------------------------------------------------------------------------
+    116 0.55500 CREW_352x2 root         r     08/28/2014 22:42:02 Openh264SGE@GuanYu                 1        
+    119 0.55500 CiscoVT_2p root         r     08/28/2014 22:42:47 Openh264SGE@ZhaoYun                1        
+    120 0.55500 ScreenCapt root         qw    08/28/2014 22:42:01                                    1        
+    121 0.55500 Doc_simple root         qw    08/28/2014 22:42:01                                    1        
+    122 0.55500 Jiessie_ha root         qw    08/28/2014 22:42:01                                    1        
+    123 0.55500 Jiessie_Ja root         qw    08/28/2014 22:42:01                                    1        
+    124 0.55500 MSHD_320x1 root         qw    08/28/2014 22:45:56                                    1        
+    125 0.55500 CREW_352x2 root         qw    08/28/2014 22:45:56                                    1        
+    126 0.55500 CITY_704x5 root         qw    08/28/2014 22:45:56                                    1        
+    127 0.55500 CREW_176x1 root         qw    08/28/2014 22:45:56                                    1        
+    128 0.55500 CiscoVT_2p root         qw    08/28/2014 22:45:56                                    1        
+    129 0.55500 ScreenCapt root         qw    08/28/2014 22:45:56                                    1        
+    130 0.55500 Doc_simple root         qw    08/28/2014 22:45:56                                    1        
+    131 0.55500 Jiessie_ha root         qw    08/28/2014 22:45:56                                    1        
+    132 0.55500 Jiessie_Ja root         qw    08/28/2014 22:45:56                                    1        
