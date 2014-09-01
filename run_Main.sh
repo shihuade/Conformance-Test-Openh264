@@ -61,7 +61,7 @@ runMain()
 		exit 1
 	fi
 	TestType=$1
-	ConfigureFile=$1
+	ConfigureFile=$2
 	
 	runCheck
 	

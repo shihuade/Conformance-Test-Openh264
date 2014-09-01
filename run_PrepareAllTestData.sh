@@ -123,36 +123,37 @@ runGetTestYUVList()
 	local TestSet6=""
 	local TestSet7=""
 	local TestSet8=""
+	
 	while read line
 	do
-	if [[ "$line" =~ ^TestSet0  ]]
-	then
-		TestSet0=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	elif  [[ "$line" =~ ^TestSet1  ]]
-	then
-		TestSet1=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	elif  [[ "$line" =~ ^TestSet2  ]]
-	then
-		TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	elif  [[ "$line" =~ ^TestSet3  ]]
-	then
-		TestSet3=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	elif  [[ "$line" =~ ^TestSet4  ]]
-	then
-		TestSet4=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	elif  [[ "$line" =~ ^TestSet5  ]]
-	then
-		TestSet5=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	elif  [[ "$line" =~ ^TestSet6  ]]
-	then
-		TestSet6=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	elif  [[ "$line" =~ ^TestSet7  ]]
-	then
-		TestSet7=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	elif  [[ "$line" =~ ^TestSet8  ]]
-	then
-		TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-	fi
+		if [[ "$line" =~ ^TestSet0  ]]
+		then
+			TestSet0=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		elif  [[ "$line" =~ ^TestSet1  ]]
+		then
+			TestSet1=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		elif  [[ "$line" =~ ^TestSet2  ]]
+		then
+			TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		elif  [[ "$line" =~ ^TestSet3  ]]
+		then
+			TestSet3=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		elif  [[ "$line" =~ ^TestSet4  ]]
+		then
+			TestSet4=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		elif  [[ "$line" =~ ^TestSet5  ]]
+		then
+			TestSet5=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		elif  [[ "$line" =~ ^TestSet6  ]]
+		then
+			TestSet6=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		elif  [[ "$line" =~ ^TestSet7  ]]
+		then
+			TestSet7=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		elif  [[ "$line" =~ ^TestSet8  ]]
+		then
+			TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		fi
 	done <${ConfigureFile}
 	
 	aTestYUVList=(${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8})
@@ -202,6 +203,15 @@ runCheck()
 		 echo -e "\033[31musage: TestTest should be SGETest or LocalTest, please choose one! \033[0m"
 		 exit 1
 	fi
+	
+	#check configure file
+	if [  ! -f ${ConfigureFile} ]
+	then
+		echo "Configure file not exist!, please double check in "
+		echo " usage may looks like:   ./run_Main.sh  ../CaseConfigure/case.cfg "
+		exit 1
+	fi
+	return 0
 }
 #usage: runPrepareALlFolder   $TestType $AllTestDataFolder  $TestBitStreamFolder   $CodecFolder  $ScriptFolder  $ConfigureFile/$SH1TableFolder
 runMain()
@@ -242,7 +252,7 @@ runMain()
 	mkdir ${FinalResultDir}
 	mkdir ${SourceFolder}
 	
-	
+	#update codec
 	runUnpdateCodec
 	
 	echo "Preparing test space for all test sequences!"
