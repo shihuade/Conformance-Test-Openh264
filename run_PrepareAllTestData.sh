@@ -37,7 +37,7 @@ runUnpdateCodec()
 	echo -e "\033[32m openh264 repository cloning... \033[0m"
 	echo ""
 	./run_CheckoutCiscoOpenh264Codec.sh  ${Openh264GitAddr} ${SourceFolder}
-	if [  ! $? eq 0 ]
+	if [  ! $? -eq 0 ]
 	then	
 		echo ""
 		echo -e "\033[31m Failed to clone latest openh264 repository! Please double check! \033[0m"
@@ -81,7 +81,7 @@ runPrepareSGEJobFile()
 	
 	SGEQueue="Openh264SGE"
 	SGEName="${TestYUVName}_SGE_Test"
-	SGEModelFile="${CurrentDir}/Script/SGEModel.sge"
+	SGEModelFile="${CurrentDir}/${ScriptFolder}/SGEModel.sge"
 	SGEJobFile="${TestSequenceDir}/${TestYUV}.sge"
 	SGEJobScript="run_OneTestYUV.sh"
 	
@@ -189,7 +189,21 @@ runPrepareTestSpace()
 	
 	return 0
 }
-#usage: runPrepareALlFolder   $AllTestDataFolder  $TestBitStreamFolder   $CodecFolder  $ScriptFolder  $ConfigureFile/$SH1TableFolder
+runCheck()
+{
+	#check test type
+	if [ ${TestType} = "SGETest" ]
+	then
+		return 0
+	elif [ ${TestType} = "LocalTest" ]
+	then
+		return 0
+	else
+		 echo -e "\033[31musage: TestTest should be SGETest or LocalTest, please choose one! \033[0m"
+		 exit 1
+	fi
+}
+#usage: runPrepareALlFolder   $TestType $AllTestDataFolder  $TestBitStreamFolder   $CodecFolder  $ScriptFolder  $ConfigureFile/$SH1TableFolder
 runMain()
 {
 	#parameter check!
@@ -220,6 +234,8 @@ runMain()
 	TempDataFolder="TempData"
 	ResultFolder="result"
 	
+	#check input parameters
+	runCheck
 	runRemovedPreviousTestData
 	
 	mkdir ${SHA1TableFolder}

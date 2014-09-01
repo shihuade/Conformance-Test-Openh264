@@ -13,20 +13,22 @@
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
-runPromptInfo()
+ runUsage()
+ {
+	echo ""
+	echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest  ../CaseConfigure/case.cfg\033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ../CaseConfigure/case.cfg \033[0m"
+ 	echo ""
+ }
+ 
+ runPromptInfo()
  {
 	echo ""
 	echo  -e "\033[32m Final result can be found in ./FinaleRestult \033[0m"
 	echo  -e "\033[32m SHA1 table can be found in ./SHA1Table \033[0m"
 	echo ""
  }
- runUsage()
- {
- 	echo "usage: ./run_Main.sh  \$TestType \$ConfigureFile"
-	echo "      eg:   ./run_Main.sh  SGETest  ../CaseConfigure/case.cfg "
-	echo "      eg:   ./run_Main.sh  LocalTest  ../CaseConfigure/case.cfg "
- }
- 
  
 runCheck()
 {
@@ -65,7 +67,7 @@ runMain()
 	
 	#dir translation
 	AllTestDataFolder="AllTestData"
-	CourceFolder="Source"
+	SourceFolder="Source"
 	CodecFolder="Codec"
 	ScriptFolder="Scripts"
 	SH1TableFolder="SHA1Table"
@@ -76,8 +78,8 @@ runMain()
 	echo ""
 	echo "prepare for all test data......."
 	echo ""
-	# prepare for all test data
-	./run_PrepareAllTestData.sh   ${TestType}  ${CourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile}
+	# prepare for all test data  //$TestType  $SourceFolder $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile
+	./run_PrepareAllTestData.sh   ${TestType}  ${SourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
 		echo "failed to prepared  test space for all test data!"
@@ -87,6 +89,7 @@ runMain()
 	echo ""
 	echo "running all test cases for all bit streams......"
 	echo ""
+	##                                     ${TestType}  ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
 	./run_AllTestSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then

@@ -9,6 +9,14 @@
 #
 #date: 05/08/2014 Created
 #***************************************************************************************
+ runUsage()
+ {
+	echo ""
+	echo -e "\033[31m usage: ./run_AllTestSequencesAllCasesTest.sh   \${TestType}  \${AllTestDataDir}  \${FinalResultDir} \${ConfigureFile} \033[0m"
+	echo -e "\033[31m       --eg:   ./run_AllTestSequencesAllCasesTest.sh  SGETest   AllTestData  FinalResult ./CaseConfigure/case.cfg \033[0m"
+	echo -e "\033[31m       --eg:   ./run_AllTestSequencesAllCasesTest.sh  LocalTest AllTestData  FinalResult ./CaseConfigure/case.cfg \033[0m"
+ 	echo ""
+ }
 #usage: runGetTestYUVList 
 runGetTestYUVList()
 {
@@ -68,8 +76,7 @@ runSGEJobSubmit()
 		
 		if [  -e   ${SubFolder}/${TestSubmitFlagFile} ]
 		then
-		echo ""
-			#continue
+			continue
 		fi
 		cd  ${SubFolder}
 		echo "submit job"
@@ -166,8 +173,10 @@ runSGETest()
 		else
 			let "AllJobFinishedFlag=0"
 			echo ""
+			echo  -e "\033[32m *************************************************************** \033[0m"
 			echo  -e "\033[32m  Not all jobs have be finished yet! \033[0m"
 			echo  -e "\033[32m  Please wait! \033[0m"
+			echo  -e "\033[32m *************************************************************** \033[0m"
 			echo ""
 			sleep 20
 		fi 
@@ -243,20 +252,47 @@ runGetTestSummary()
 	
 	return ${AllPassedFlag}
 }
+ 
+runCheck()
+{
+	#check test type
+	if [ ${TestType} = "SGETest" ]
+	then
+		return 0
+	elif [ ${TestType} = "LocalTest" ]
+	then
+		return 0
+	else
+		 runUsage
+		 exit 1
+	fi
+	
+	#check configure file
+	if [  ! -f ${ConfigureFile} ]
+	then
+		echo "Configure file not exist!, please double check in "
+		echo " usage may looks like:   ./run_Main.sh  ../CaseConfigure/case.cfg "
+		exit 1
+	fi
+	return 0
+}
 #usage: runMain  ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
 runMain()
 {
 	#parameter check!
 	if [ ! $# -eq 4  ]
 	then
-		echo "usage: ./run_AllTestSequencesAllCasesTest.sh   \${TestType}  \${AllTestDataDir}  \${FinalResultDir}  \${ConfigureFile}"
-		return 1
+		runUsage
+		exit 1
 	fi
 	
 	TestType=$1
 	AllTestDataDir=$2
 	FinalResultDir=$3
 	ConfigureFile=$4
+	#check input parameters
+	runCheck
+	
 	CurrentDir=`pwd`
 	
 	TestFlagFile=""
