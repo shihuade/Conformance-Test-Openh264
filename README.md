@@ -20,7 +20,7 @@ how to use
 ----------
 
 -  SGE system based test
--  (each test YUV as single job and will be asign to different hosts)
+   each test YUV as single job and will be asigned to different host
 
 
         1. change your test configure by editing file CaseConfigure/case_XXX.cfg;
@@ -33,14 +33,16 @@ how to use
           during your test, those files will update case by case.
       	
 - Local test:
-- (run all test yuv under single host)
+  run all test yuv under single host
 
-        eg.
-        1. ./run_UpdateCodec.sh  $YourOpenh264Dir
-        2. change your test configure by editing file CaseConfigure/case.cfg
-        3. ./run_Main.sh CaseConfigure/case.cfg
-        4. wait for the final test result.
-        5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file
+
+        1. change your test configure by editing file CaseConfigure/case_XXX.cfg;
+        2. for how to generate your personal test case, please refer to section 
+           "how to configure test case";
+        3. ./run_Main.sh  LocalTest  ./CaseConfigure/case_XXX.cfg;
+        3. wait for the final test result;
+        4. you can check you test result in 
+          ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file;
           during your test, those files will update case by case.
       	
 how does it work
