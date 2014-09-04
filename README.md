@@ -113,12 +113,13 @@ structure
 how to update your test codec
 ----------------------------
 
-        1. no matter you choose 1 or 2, the macro "WELS_TESTBED" must be enable,so that the reconstrution YUV file 
+        no matter you choose 1 or 2, the macro "WELS_TESTBED" must be enable,so that the reconstrution YUV file 
         will be dumped during the encoding proccess. if you choose 1, you need to open the macro by 
         adding "#define WELS_TESTBED" in file codec/encoder/core/inc/as264_common.h;if you choose 2, auto script
         will do it automatically.
         
-        2. 
+        for both 1 or 2. you need to disable function called "runUnpdateCodec", just comment it out in script file 
+        ./run_PrepareAllTestData.sh like  #runUnpdateCodec in runMain function.
 
 -	1.update your test codec manually
         build your private openh264, and copied  h264enc, h264dec, layer2.cfg, welsenc.cfg to folder ./Codec manually.
