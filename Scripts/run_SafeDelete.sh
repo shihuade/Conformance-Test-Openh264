@@ -247,14 +247,14 @@ runDeleteItem()
 		fi
 		
 		echo "deleted folder is:  $DeleteItem"
-		#rm -rf ${DeleteItem}
+		rm -rf ${DeleteItem}
 		let "DeleteFlag=$?"
 	elif [ -f $DeleteItem ]
 	then		
 		runGetFileName
 		DeleteItem="${FullPath}/${FileName}"
 		echo "deleted file is :  $DeleteItem"
-		#rm  ${DeleteItem}
+		rm  ${DeleteItem}
 		let "DeleteFlag=$?"
 	fi
 	if [ ! ${DeleteFlag} -eq 0 ]

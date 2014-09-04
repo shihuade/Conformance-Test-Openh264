@@ -109,7 +109,7 @@ runGetAllSGEJobID()
 	let "CurrentSGEJobNum=${LineIndex}"
 }
 #comparison between  current SGE job list and the submitted list 
-#to check that whether all submit jobs are not in current running list
+#to check that whether all submitted jobs are not in current running list
 runSGEJobCheck()
 {
 	
@@ -131,18 +131,15 @@ runSGEJobCheck()
 			fi
 		done
 		
+		#job is still waiting or running 
 		if [ ${JonRunningFlag} -eq 1 ]
 		then
-			echo ""
-			echo  -e "\033[32m  Job ${SubmitId} is still running \033[0m"
-			echo  -e "\033[32m  Job info is:----${aSubmitJobList[$i]} \033[0m"
-			echo ""
+			echo  -e "\033[31m  Job ${SubmitId} is still running \033[0m"
+			echo  -e "\033[31m        Job info is:----${aSubmitJobList[$i]} \033[0m"
 			let "RunningJobNum++"
 		else
-			echo ""
 			echo  -e "\033[32m  Job ${SubmitId} has been finished! \033[0m"
-			echo  -e "\033[32m  Job info is:----${aSubmitJobList[$i]} \033[0m"
-			echo ""
+			echo  -e "\033[32m        Job info is:----${aSubmitJobList[$i]} \033[0m"
 		fi
 	done
 	
@@ -156,29 +153,41 @@ runSGEJobCheck()
 }
 runSGETest()
 {
-	runSGEJobSubmit
+	local SGEQueneName="Openh264SGE"	
 	
+	runSGEJobSubmit
 	#check whether all job have finished
 	let "AllJobFinishedFlag=0"
 	while [ ${AllJobFinishedFlag} -eq 0 ]
 	do
+		CurrentTime=`date`
+		CurrentTestStatus=`qstat  -q Openh264SGE`
+		
 		runGetAllSGEJobID
 		runSGEJobCheck
 		if [ $? -eq 0 ]
 		then
 			let "AllJobFinishedFlag=1"
 			echo ""
+			echo  -e "\033[32m *************************************************************** \033[0m"
 			echo  -e "\033[32m  All jobs have be finished! \033[0m"
+			echo  -e "\033[32m  Date: ${CurrentTime}   \033[0m"
+			echo  -e "\033[32m *************************************************************** \033[0m"
 			echo ""
 		else
 			let "AllJobFinishedFlag=0"
 			echo ""
-			echo  -e "\033[32m *************************************************************** \033[0m"
-			echo  -e "\033[32m  Not all jobs have be finished yet! \033[0m"
-			echo  -e "\033[32m  Please wait! \033[0m"
-			echo  -e "\033[32m *************************************************************** \033[0m"
+			echo  -e "\033[34m *************************************************************** \033[0m"
+			echo  -e "\033[34m  Not all jobs have be finished yet! \033[0m"
+			echo  -e "\033[34m  Please wait! SGE jobs' status will be updated after 60 minutes! \033[0m"
+			echo  -e "\033[34m  Date: ${CurrentTime}   \033[0m"
+			echo  -e "\033[34m *************************************************************** \033[0m"
 			echo ""
-			sleep 20
+			echo  -e "\033[34m *************************************************************** \033[0m"
+			echo  -e "\033[34m Current SGE job for openh264 test are listed as below: \033[0m"
+			qstat  -q  ${SGEQueneName}
+			echo  -e "\033[34m *************************************************************** \033[0m"
+			sleep 3600
 		fi 
 	done
 	
