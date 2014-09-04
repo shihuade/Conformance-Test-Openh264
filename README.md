@@ -52,23 +52,21 @@ how does it work
 -   step 3. prepare all test space for each test YUV;
 -   step 4. run all test cases for all test YUVs;
 -   step 5. for SGE test, script will detectced that whether all submitted jobs have be finished very 60 minutes.
--           the test time based on the capability of SGE system;
+            the test time depends on the capability of SGE system;
 -   step 6. for loacl test, script will test all YUVs one by one,
-            so the run time depends on how many cases and how many test YUV in your configure file.
--   step 7. final test result for all test YUVs will be copied to folder ./FinalResult and ./SHA1Table
+            so the run time depends on how many cases and how many test YUV in your configure file;
+-   step 7. final test result for all test YUVs will be copied to folder ./FinalResult and ./SHA1Table.
 
-
-
-     
 
 supported features
 ------------------
 -  SGE system based test(mulit-jobs running under diffierent hosts)
 -  Local single host runnig for all jobs
--  SCC 
--  SVC single spatial layer
--  SVC multiple spatial layers
--  for how to run above test, please got to section "how to configure test case"
+
+	SCC 
+	SVC single spatial layer
+	SVC multiple spatial layers
+
 	  
 structure
 ---------
