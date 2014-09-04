@@ -19,8 +19,7 @@ about
 how to use
 ----------
 
--  SGE system based test
-   each test YUV as single job and will be asigned to different host
+-  SGE system based test----each test YUV as single job and will be asigned to different host
 
 
         1. change your test configure by editing file CaseConfigure/case_XXX.cfg;
@@ -32,8 +31,7 @@ how to use
           ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file;
           during your test, those files will update case by case.
       	
-- Local test:
-  run all test yuv under single host
+- Local test----run all test yuv under single host
 
 
         1. change your test configure by editing file CaseConfigure/case_XXX.cfg;
@@ -48,24 +46,20 @@ how to use
 how does it work
 ----------------
 
--   step 1. configure your test case if you do not use default test case.
-          for how to generate your personal test case, please refer to section "how to configure test case"
--   step 2. update your test codec in folder ./Codec, for how to update, please refer to section 
-	  "how to update your test codec";
--   step 3. run shell script file: ./run_Main.sh ./CaseConfigure/case.csf,ignore the warning info during the test.
-	   test time  depends on how many cases you are running and 
-	   how many test sequences you used in the test
--   step 4. go to folder ./FinalResult t for the final test result.
-          SHA1 table files are under folder ./SHA1Table	
+-   step 1. script will clone latest openh264 codec from  offical branch to local host;
+-   step 2. script will automatically build and updaed openh264 codec in folder ./Codec;
+-   for step 1~2,please refer to section "how to update your test codec";
+-   step 3. prepare all test space for each test YUV;
+-   step 4. run all test cases for all test YUVs;
+-   step 5. for SGE test, script will detectced that whether all submitted jobs have be finished very 60 minutes.
+-           the test time based on the capability of SGE system;
+-   step 6. for loacl test, script will test all YUVs one by one,
+            so the run time depends on how many cases and how many test YUV in your configure file.
+-   step 7. final test result for all test YUVs will be copied to folder ./FinalResult and ./SHA1Table
 
 
-        eg.
-        1. ./run_UpdateCodec.sh  $YourOpenh264Dir
-        2. change your test configure by editing file CaseConfigure/case.cfg
-        3. ./run_Main.sh CaseConfigure/case.cfg
-        4. wait for the final test result.
-        5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file
-          during your test, those files will update case by case.
+
+     
 
 supported features
 ------------------
@@ -109,7 +103,7 @@ structure
         XXX_.TestLog    test log of each test bit stream
         XXX_.Summary    test summary of each test bit stream
 
--   Script
+-   Scripts
    
     the script files 
 	
