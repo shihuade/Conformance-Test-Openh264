@@ -41,9 +41,11 @@ how to use
 
 supported features
 ------------------
--  SCC 
--  SVC single spatial layer
--  SVC  multiple spatial layers
+-  SGE system based test(mulit-jobs running under diffierent hosts)
+-  Local single host runnig for all jobs
+    --SCC 
+    --SVC single spatial layer
+    --SVC  multiple spatial layers
 -  for how to run above test, please got to section "how to configure test case"
 	  
 structure
