@@ -20,12 +20,15 @@ how to use
 ----------
 
 -   step 1. configure your test case if you do not use default test case.
-          for how to generate your personal test case, please refer to section "how to configure test case"
--   step 2. run shell script file: ./run_Main.sh ./CaseConfigure/case.csf,ignore the warning info during the test.
-	   test time  depends on how many cases you are running and 
-	   how many test sequences you used in the test
--   step 3. go to folder ./FinalResult t for the final test result.
-          SHA1 table files are under folder ./SHA1Table	
+-   
+       eg.
+        1. ./run_UpdateCodec.sh  $YourOpenh264Dir
+        2. change your test configure by editing file CaseConfigure/case.cfg
+        3. ./run_Main.sh CaseConfigure/case.cfg
+        4. wait for the final test result.
+        5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file
+          during your test, those files will update case by case.
+      	
         eg.
 
         eg.
