@@ -26,7 +26,7 @@ how to use
 	   how many test sequences you used in the test
 -   step 3. go to folder ./FinalResult t for the final test result.
           SHA1 table files are under folder ./SHA1Table	
-
+        eg.
 
         eg.
         1. ./run_UpdateCodec.sh  $YourOpenh264Dir
