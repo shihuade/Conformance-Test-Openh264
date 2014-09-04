@@ -63,9 +63,9 @@ supported features
 -  SGE system based test(mulit-jobs running under diffierent hosts)
 -  Local single host runnig for all jobs
 
-	SCC 
-	SVC single spatial layer
-	SVC multiple spatial layers
+	1. SCC
+	2. SVC single spatial layer
+	3. SVC multiple spatial layers
 
 	  
 structure
