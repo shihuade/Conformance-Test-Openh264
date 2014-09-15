@@ -227,26 +227,30 @@ runGetTestSummary()
 {
 	echo "">${AllTestSummary}
 		
-	let "AllPassedFlag=1"
+	let "AllPassedFlag=0"
 	for TestYUV in ${aTestYUVList[@]}
 	do
-		
-		if [ -e  ${FinalResultDir}/${TestYUV}.Summary ]
+		echo -e "\033[32m final checking for ${TestYUV}  \033[0m"
+		echo ""
+		if [ -e  ${FinalResultDir}/TestReport_${TestYUV}.report ]
 		then
 	
 			while read line
 			do
 				if [[  $line =~ ^Failed ]]
 				then
-					let "AllPassedFlag=0"
+					let "AllPassedFlag=1"
 					break			
 				fi
 				break	
-			done <${FinalResultDir}/${TestYUV}.Summary
+			done <${FinalResultDir}/TestReport_${TestYUV}.report
 			
 			echo "">>${AllTestSummary}
-			cat ${FinalResultDir}/${TestYUV}.Summary >>${AllTestSummary}
-		fi	
+			cat ${FinalResultDir}/TestReport_${TestYUV}.report >>${AllTestSummary}
+		else
+			echo -e "\033[31m  ${FinalResultDir}/TestReport_${TestYUV}.report does not exist! \033[0m"
+			let "AllPassedFlag=1"
+		fi
 	done
 	
 	echo ""
