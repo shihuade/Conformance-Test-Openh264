@@ -185,9 +185,9 @@ runSGETest()
 			echo ""
 			echo  -e "\033[34m *************************************************************** \033[0m"
 			echo  -e "\033[34m Current SGE job for openh264 test are listed as below: \033[0m"
-			qstat  -q  ${SGEQueneName}
+			#qstat  -q  ${SGEQueneName}
 			echo  -e "\033[34m *************************************************************** \033[0m"
-			sleep 3600
+			sleep 1200
 		fi 
 	done
 	
