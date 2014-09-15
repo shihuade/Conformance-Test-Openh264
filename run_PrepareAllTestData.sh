@@ -235,6 +235,11 @@ runMain()
 	CurrentDir=`pwd`
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
+	
+	cd ${FinalResultDir}
+	FinalResultDir=`pwd`
+	cd  ${CurrentDir}
+	
 	Openh264GitAddr="https://github.com/cisco/openh264"
 	declare -a aTestYUVList
 	#folder for eache test sequence
