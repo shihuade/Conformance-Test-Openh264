@@ -179,7 +179,7 @@ runSGETest()
 			echo ""
 			echo  -e "\033[34m *************************************************************** \033[0m"
 			echo  -e "\033[34m  Not all jobs have be finished yet! \033[0m"
-			echo  -e "\033[34m  Please wait! SGE jobs' status will be updated after 60 minutes! \033[0m"
+			echo  -e "\033[34m  Please wait! SGE jobs' status will be updated after 20 minutes! \033[0m"
 			echo  -e "\033[34m  Date: ${CurrentTime}   \033[0m"
 			echo  -e "\033[34m *************************************************************** \033[0m"
 			echo ""
