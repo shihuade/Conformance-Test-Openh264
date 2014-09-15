@@ -373,12 +373,12 @@ runMain()
 		exit 1
 	fi
 
-	echo "-------------------2. JSVM Check--JSCM Decode Check"
+	echo "-------------------2. JSVM Check--JSVM Decode Check"
 	runJSVMDecodedFailedCheck
 	if [  ! $? -eq 0 ]
 	then
 		echo ""
-		echo -e "\033[31m failed to extract  bit stream ! \033[0m"
+		echo -e "\033[31m JSVM decoded failed ! \033[0m"
 		echo ""
 		EncoderCheckResult="1-Encoder failed!-JSVM decode failed!"
 		DecoderCheckResult="3-Decoder cannot be checked!"
@@ -387,7 +387,7 @@ runMain()
 	fi
 
 	#check RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV
-	echo "-------------------3. JSVM Check--WelsDecodee Decode Check"
+	echo "-------------------3. JSVM Check--WelsDecoder Decode Check"
 	runWelsDecodedFailedCheck  >${TempDir}/WelsDecTemp.log
 
 	runGenerateSHA1String
