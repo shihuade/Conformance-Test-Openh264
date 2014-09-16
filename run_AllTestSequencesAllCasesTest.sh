@@ -55,10 +55,10 @@ runGetTestYUVList()
 		TestSet6=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet7  ]]
 	then
-		TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		TestSet7=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	elif  [[ "$line" =~ ^TestSet8  ]]
 	then
-		TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+		TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 	fi
 	done <${ConfigureFile}
 	echo "${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8}   "

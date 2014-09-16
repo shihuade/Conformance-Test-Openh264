@@ -94,6 +94,11 @@ runPrepareALlFolder()
 	fi
 	mkdir ${SHA1TableFolder}
 	mkdir ${FinalResultDir}
+	
+	cd ${FinalResultDir}
+	FinalResultDir=`pwd`
+	cd  ${CurrentDir}
+	
 	echo ""
 	echo "preparing All test data folders...."
 	echo ""
