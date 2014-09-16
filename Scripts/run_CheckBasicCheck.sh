@@ -64,7 +64,7 @@ runEncodedNumCheck()
 
 		if [ ! $? -eq 0 ]
 		then
-			EncoderCheckResult="1-Encoder failed!"
+			EncoderCheckResult="1-Encoder failed!Encoded number does not match with setting"
 			DecoderCheckResult="3-Decoder cannot be checked!"
 			runOutputFailedCheckLog >${CheckLog}
 			return 1
