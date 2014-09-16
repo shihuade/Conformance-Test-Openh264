@@ -277,7 +277,7 @@ runBasicCheck()
 							${aInputYUVSizeLayer[@]} ${aRecYUVFileList[@]} ${aRecCropYUVFileList[@]}  ${aEncodedPicW[@]} ${aEncodedPicH[@]}
 	#copy bit stream file to ./issue folder
 	#$? = 2 are those cases RecYUV does not exist!
-	if [ ! $? -eq 0  -o ! $? -eq 2 ]
+	if [ ! $? -eq 0  -a ! $? -eq 2 ]
 	then
 		if [ -e ${BitStreamFile}  ]
 		then
