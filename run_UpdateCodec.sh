@@ -6,7 +6,6 @@
 #       
 #date:  5/08/2014 Created
 #***************************************************************************************
-
 runYUVDumpMacroOpen()
 {
 	if [ ! $# -eq 1 ]
@@ -39,36 +38,36 @@ runYUVDumpMacroOpen()
 #useage: ./runBuildCodec  ${Openh264Dir}
 runBuildCodec()
 {
-  if [ ! $# -eq 1 ]
-  then
-    echo "useage: ./runBuildCodec  \${Openh264Dir}"
-    return 1
-  fi
-  local OpenH264Dir=$1
-  local CurrentDir=`pwd`
-  local BuildLog="${CurrentDir}/build.log"
-  if [  ! -d ${OpenH264Dir} ]
-  then
-    echo "openh264 dir is not right!"
-    return 1
-  fi
-  cd ${OpenH264Dir}
-  make clean  >${BuildLog}
-  make >>${BuildLog}
-  if [ ! -e h264enc  ]
-  then
-    echo "encoder build failed"
-    cd ${CurrentDir}
-    return 1
-  elif [ ! -e h264dec  ]
-  then
-    echo "decoder build failed"
-    cd ${CurrentDir}
-    return 1
-  else
-    cd ${CurrentDir}
-    return 0
-  fi
+	if [ ! $# -eq 1 ]
+	then
+		echo "useage: ./runBuildCodec  \${Openh264Dir}"
+		return 1
+	fi
+	local OpenH264Dir=$1
+	local CurrentDir=`pwd`
+	local BuildLog="${CurrentDir}/build.log"
+	if [  ! -d ${OpenH264Dir} ]
+	then
+		echo "openh264 dir is not right!"
+		return 1
+	fi
+	cd ${OpenH264Dir}
+	make clean  >${BuildLog}
+	make >>${BuildLog}
+	if [ ! -e h264enc  ]
+	then
+		echo "encoder build failed"
+		cd ${CurrentDir}
+		return 1
+	elif [ ! -e h264dec  ]
+	then
+		echo "decoder build failed"
+		cd ${CurrentDir}
+		return 1
+	else
+		cd ${CurrentDir}
+		return 0
+	fi
 }
 #useage:  runCopyFile  ${Openh264Dir}
 runCopyFile()
@@ -93,7 +92,7 @@ runMain()
 {
 	if [ ! $# -eq 1 ]
 	then
-		echo "useage: ./run_CodecBitStreamUpdate.sh   \${Openh264Dir}"
+		echo "useage: ./run_UpdateCodec.sh   \${Openh264Dir}"
 		return 1
 	fi
 	local Openh264Dir=$1

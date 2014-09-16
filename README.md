@@ -18,33 +18,60 @@ about
  
 how to use
 ----------
--   step 1. update your test codec in folder ./Codec, for how to update, please refer to section 
-	  "how to update your test codec";
--   step 2. configure your test case if you do not use default test case.
-          for how to generate your personal test case, please refer to section "how to configure test case"	
--   step 3. run shell script file: ./run_Main.sh ./CaseConfigure/case.csf,ignore the warning info during the test.
-	   test time  depends on how many cases you are running and 
-	   how many test sequences you used in the test
--   step 4. go to folder ./FinalResult t for the final test result.
-          SHA1 table files are under folder ./SHA1Table	
+
+-  SGE system based test----each test YUV as single job and will be asigned to different host
 
 
-        eg.
-        1. ./run_UpdateCodec.sh  $YourOpenh264Dir
-        2. change your test configure by editing file CaseConfigure/case.cfg
-        3. ./run_Main.sh CaseConfigure/case.cfg
-        4. wait for the final test result.
-        5. you can check you test result in ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file
+        1. change your test configure by editing file CaseConfigure/case_XXX.cfg;
+        2. for how to generate your personal test case, please refer to section 
+           "how to configure test case";
+        3. ./run_Main.sh  SGETest  ./CaseConfigure/case_XXX.cfg;
+        4. wait for the final test result;
+        5. you can check you test result in 
+          ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file;
           during your test, those files will update case by case.
       	
+- Local test----run all test yuv under single host
+
+
+        1. change your test configure by editing file CaseConfigure/case_XXX.cfg;
+        2. for how to generate your personal test case, please refer to section 
+           "how to configure test case";
+        3. ./run_Main.sh  LocalTest  ./CaseConfigure/case_XXX.cfg;
+        4. wait for the final test result;
+        5. you can check you test result in 
+          ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file;
+          during your test, those files will update case by case.
+      	
+how does it work
+----------------
+
+-   step 1. script will clone latest openh264 codec from  offical branch to local host;
+-   step 2. script will automatically build and updaed openh264 codec in folder ./Codec;
+-   for step 1~2,please refer to section "how to update your test codec";
+-   step 3. prepare all test space for each test YUV;
+-   step 4. run all test cases for all test YUVs;
+-   step 5. for SGE test, script will detectced that whether all submitted jobs have be finished very 60 minutes.
+            the test time depends on the capability of SGE system;
+-   step 6. for loacl test, script will test all YUVs one by one,
+            so the run time depends on how many cases and how many test YUV in your configure file;
+-   step 7. final test result for all test YUVs will be copied to folder ./FinalResult and ./SHA1Table.
 
 
 supported features
 ------------------
--  SCC 
--  SVC single spatial layer
--  SVC  multiple spatial layers
--  for how to run above test, please got to section "how to configure test case"
+-  SGE system based test(mulit-jobs running under diffierent hosts)
+
+	1. SCC
+	2. SVC single spatial layer
+	3. SVC multiple spatial layers
+
+-  Local single host runnig for all jobs
+
+	1. SCC
+	2. SVC single spatial layer
+	3. SVC multiple spatial layers
+
 	  
 structure
 ---------
@@ -79,7 +106,7 @@ structure
         XXX_.TestLog    test log of each test bit stream
         XXX_.Summary    test summary of each test bit stream
 
--   Script
+-   Scripts
    
     the script files 
 	
@@ -90,15 +117,24 @@ structure
 
 how to update your test codec
 ----------------------------
-        no matter you choose 1 or 2, the macro "WELS_TESTBED" must be enable,so that the reconstrution YUV file 
-        will be dumped during the encoding proccess. if you choose 1, you need to open the macro by 
-        adding "#define WELS_TESTBED" in file codec/encoder/core/inc/as264_common.h;if you choose 2, auto script
-        will do it automatically.
 
--	1.update your test codec manually
+        1. no matter you choose A or B, the macro "WELS_TESTBED" must be enable,
+           so that the reconstrution YUV file will be dumped during the encoding proccess. 
+        2. if you choose A, you need to open the macro by 
+           adding "#define WELS_TESTBED" in file codec/encoder/core/inc/as264_common.h;
+        3. if you choose B, script
+           will do it automatically.
+        
+        4. for both A or B. you need to disable function called "runUnpdateCodec", 
+            just comment it out in script file 
+             ./run_PrepareAllTestData.sh like  #runUnpdateCodec in runMain function.
+
+-	A 
+-	update your test codec manually
         build your private openh264, and copied  h264enc, h264dec, layer2.cfg, welsenc.cfg to folder ./Codec manually.
 
--	2.update automatically
+-	B
+-	update automatically
         just given your openh264 repository's directory, and run script file 
 
         ./run_UpdateCodec.sh  ${YourOpenH264Dir}
@@ -106,8 +142,7 @@ how to update your test codec
         ----enable macro for dump reconstructed YUV in codec/encoder/core/inc/as264_common.h
         ----build codec
         ----copy h264enc h264dec layer2.cfg welsenc.cfg to ./Codec
-        ----copy test bit stream from openh264/res  to ./BitStreamForTest
-		
+
 
 how to configure test case
 --------------------------

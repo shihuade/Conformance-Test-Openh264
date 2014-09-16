@@ -43,26 +43,27 @@ runGetYUVFullPath()
 		echo "detected by run_TestYUV.sh"
 		return 1
 	fi
-	local TestYUVName=$1
-	local FinalResultDir=$2
-	local ConfigureFile=$3
-
+	
+	TestYUVName=$1
+	FinalResultDir=$2
+	ConfigureFile=$3
 	TestYUVFullPath=""
-	local CurrentDir=`pwd`
-	local OutPutCaseFile=""
+	TestReport="${FinalResultDir}/TestReport_${TestYUVName}.report"
+	CurrentDir=`pwd`
+	OutPutCaseFile=""
 	ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
 	OutPutCaseFile=${TestYUVName}_AllCase.csv
 	echo ""
 	echo  "TestYUVName is ${TestYUVName}"
 	echo "OutPutCaseFile is  ${OutPutCaseFile}"
-
-
 	runGetYUVFullPath  ${TestYUVName}  ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
 		echo ""
 		echo  -e "\033[31m  can not find test yuv file ${TestYUVName} \033[0m"
 		echo ""
+		echo "Failed!">${TestReport}
+		echo "can not find test yuv file ${TestYUVName}">>${TestReport}
 		exit 1
 	else
 		echo ""
@@ -79,6 +80,8 @@ runGetYUVFullPath()
 		echo ""
 		echo  -e "\033[31m  failed to generate cases ! \033[0m"
 		echo ""
+		echo "Failed!">${TestReport}
+		echo "failed to generate cases !">>${TestReport}
 		exit 1
 	fi
 	#generate SHA-1 table
@@ -87,9 +90,17 @@ runGetYUVFullPath()
 	./run_TestAllCases.sh  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${OutPutCaseFile}
 	if [  ! $? -eq 0 ]
 	then
+		echo "Failed!">${TestReport}
+		echo "Not all Cases passed the test!">>${TestReport}
+		cat  ./result/${TestYUVName}.Summary >>${TestReport}
+		
 		cp  ./result/*    ${FinalResultDir}
 		exit 1
 	else
+		echo "Succeed!">${TestReport}
+		echo "All Cases passed the test!">>${TestReport}
+		cat  ./result/${TestYUVName}.Summary >>${TestReport}
+		
 		cp  ./result/*    ${FinalResultDir}
 		exit 0
 	fi
@@ -98,5 +109,4 @@ TestYUVName=$1
 FinalResultDir=$2
 ConfigureFile=$3
 runMain ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
-
 
