@@ -61,13 +61,14 @@ runUnpdateCodec()
 }
 runPrepareSGEJobFile()
 {
-	if [ ! $# -eq 2 ]
+	if [ ! $# -eq 3 ]
 	then
-		echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName "
+		echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName \$QueueIndex "
 		return 1
 	fi
 	TestSequenceDir=$1
 	TestYUVName=$2
+	QueueIndex=$3
 	
 	if [ -d ${TestSequenceDir} ]
 	then
@@ -79,7 +80,7 @@ runPrepareSGEJobFile()
 		exit 1
 	fi
 	
-	SGEQueue="Openh264SGE"
+	SGEQueue="Openh264SGE_${QueueIndex}"
 	SGEName="${TestYUVName}_SGE_Test"
 	SGEModelFile="${CurrentDir}/${ScriptFolder}/SGEModel.sge"
 	SGEJobFile="${TestSequenceDir}/${TestYUV}.sge"
@@ -92,6 +93,7 @@ runPrepareSGEJobFile()
 	echo "">${SGEJobFile}
 	while read line
 	do
+		
 		if [[ $line =~ ^"#$ -q"  ]]
 		then
 			echo "#$ -q ${SGEQueue}  # Select the queue">>${SGEJobFile}
@@ -162,6 +164,9 @@ runPrepareTestSpace()
 {
 	
 	#now prepare for test space for all test sequences
+	#for SGE test, use 3 test queues so that can support more parallel jobs
+	let "YUVIndex=0"
+	let "QueueIndex=0"
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataFolder}/${TestYUV}"
@@ -182,9 +187,12 @@ runPrepareTestSpace()
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
 		
+		let "YUVIndex++"
+		let "QueueIndex = ${YUVIndex}%3"
+		
 		if [ ${TestType} = "SGETest"  ]
 		then
-			runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}
+			runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${QueueIndex}
 		fi 		
 	done
 	
