@@ -7,13 +7,12 @@
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
-
 #usage:  runParseYUVInfo  ${YUVName}
 runParseYUVInfo()
 {
 	if [ ! $# -eq 1 ]
 	then
-		echo "usage:  runParseYUVInfo  \${YUVName}"
+		echo "usage: runParseYUVInfo  \${YUVName}"
 		return 1
 	fi
 	declare -a aYUVInfo
@@ -55,14 +54,15 @@ runGlobalVariableInital()
 	fi
 	local  TestSequence=$1
 	local  OutputCaseFile=$2
-	let   " FramesToBeEncoded = 0"
-	let   " MaxNalSize = 0"
+	let " FramesToBeEncoded = 0"
+	let " MaxNalSize = 0"
 	let   "Multiple16Flag=0"
 	declare -a  aNumSpatialLayer
 	declare -a  aNumTempLayer
 	declare -a  aUsageType
 	declare -a  aRCMode
 	declare -a  aIntraPeriod
+	declare -a  aGOPSize
 	declare -a  aTargetBitrateSet
 	declare -a  aInitialQP
 	declare -a  aSliceMode
@@ -103,19 +103,18 @@ runMultiLayerInitial()
 	if [  ${MultiLayerFlag} -eq 0  ]
 	then
 		aNumSpatialLayer=( 1 )
-	elif  [  ${MultiLayerFlag} -eq 1  ]
+	elif [  ${MultiLayerFlag} -eq 1  ]
 	then
 		aNumSpatialLayer=( ${MultiLayerNum} )
-	elif  [  ${MultiLayerFlag} -eq 2  ]
+	elif [  ${MultiLayerFlag} -eq 2 ]
 	then
-		if [  ${MultiLayerNum} -gt 1 ]
+		if [ ${MultiLayerNum} -gt 1 ]
 		then
-			aNumSpatialLayer=( 1 ${MultiLayerNum} )
+			aNumSpatialLayer=( 1  ${MultiLayerNum} )
 		else
-			aNumSpatialLayer=( 1 )
+			aNumSpatialLayer=(1)
 		fi
 	fi
-
 	#set spatial layer resolution
 	#may look like 360 640   720 1280   0 0   0 0
 	aSpatialLayerResolutionSet1=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 1 ${Multiple16Flag}`)
@@ -246,6 +245,9 @@ runParseCaseConfigure()
 		elif [[ "$line" =~ ^IntraPeriod ]]
 		then
 			aIntraPeriod=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
+		elif [[ "$line" =~ ^GOPSize ]]
+		then
+			aGOPSize=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^RCMode ]]
 		then
 			aRCMode=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
@@ -274,10 +276,7 @@ runParseCaseConfigure()
 		then
 			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		fi
-
 	done <$ConfigureFile
-
-
 }
 #usage: runGetSliceNum  $SliceMd
 runGetSliceNum()
@@ -288,7 +287,6 @@ runGetSliceNum()
 		return 1
 	fi
 	local SlicMdIndex=$1
-
 	if [ ${SlicMdIndex} -eq 0 ]
 	then
 		echo ${aSliceNum0[@]}
@@ -310,7 +308,6 @@ runGetSliceNum()
 runFirstStageCase()
 {
     declare -a aQPforTest
-
 	for ScreenSignal in ${aUsageType[@]}
 	do
 		for NumSpatialLayer in ${aNumSpatialLayer[@]}
@@ -372,45 +369,47 @@ runSecondStageCase()
 				else
 				  ThreadNumber=( ${aMultipleThreadIdc[@]} )
 				fi
-
 				if [  $SlcMode -eq 4  ]
 				then
 					let "TempNalSize=${MaxNalSize}"
 				else
 					let "TempNalSize= 0"
 				fi
-
 				for SlcNum in ${aSliceNumber[@]}
 				do
 					for  IntraPeriodIndex in ${aIntraPeriod[@]}
 					do
-						for ThreadNum in ${ThreadNumber[@]}
+						for GOPSize in ${aGOPSize}
 						do
-							if [ ${SlcMode} -eq 1 -a ${SlcNum} -eq 4   ]
-							then
-								echo "$FirstStageCase\
-								1,4,\
-								1,1,\
-								1,1,\
-								1,1,\
-								${TempNalSize},\
-								$IntraPeriodIndex,\
-								$ThreadNum">>$casefile_02
-							else
-								echo "$FirstStageCase\
-								${SlcMode}, ${SlcNum},\
-								${SlcMode}, ${SlcNum},\
-								${SlcMode}, ${SlcNum},\
-								${SlcMode}, ${SlcNum},\
-								${TempNalSize},\
-								${IntraPeriodIndex},\
-								${ThreadNum}">>$casefile_02
-							fi
-
-						done #threadNum loop
-					done #aSliceNum loop
-				done #Slice Mode loop
-			done # Entropy loop
+							for ThreadNum in ${ThreadNumber[@]}
+							do
+								if [ ${SlcMode} -eq 1 -a ${SlcNum} -eq 4   ]
+								then
+									echo "$FirstStageCase\
+									1,4,\
+									1,1,\
+									1,1,\
+									1,1,\
+									${TempNalSize}, ${TempNalSize},\
+									${TempNalSize}, ${TempNalSize},\
+									$IntraPeriodIndex, ${GOPSize}, \
+									$ThreadNum">>$casefile_02
+								else
+									echo "$FirstStageCase\
+									${SlcMode}, ${SlcNum},\
+									${SlcMode}, ${SlcNum},\
+									${SlcMode}, ${SlcNum},\
+									${SlcMode}, ${SlcNum},\
+									${TempNalSize}, ${TempNalSize}, \
+									${TempNalSize}, ${TempNalSize}, \
+									${IntraPeriodIndex},${GOPSize}, \
+									${ThreadNum}">>$casefile_02
+								fi
+							done #threadNum loop
+						done #GOPS size loop
+					done #IntraPeriod loop
+				done #aSliceNum loop
+			done #Slice Mode loop
 		fi
   done <$casefile_01
 }
@@ -423,7 +422,6 @@ runThirdStageCase()
 	local BackgroundFlag=""
 	local AQFlag=""
 	declare -a CaseInfo
-
 	while read SecondStageCase
 	do
 		if [[ $SecondStageCase =~ ^[-0-9]  ]]
@@ -470,6 +468,7 @@ runOutputParseResult()
 	echo "aRCMode=            ${aRCMode[@]}"
 	echo "aInitialQP=         ${aInitialQP[@]}"
 	echo "aIntraPeriod=       ${aIntraPeriod}"
+	echo "aGOPSize=           ${aGOPSize[@]}"
 	echo "aSliceMode=         ${aSliceMode[@]}"
 	echo "aSliceNum0=         ${aSliceNum0[@]}"
 	echo "aSliceNum1=         ${aSliceNum1[@]}"
@@ -532,8 +531,12 @@ runBeforeGenerate()
 		SliceNmuLayer2,\
 		SliceMdLayer3, \
 		SliceNmuLayer3,\
-		MaxNalSize,\
+		MaxSlcSize0,\
+		MaxSlcSize1,\
+		MaxSlcSize2,\
+		MaxSlcSize3,\
 		IntraPeriod,\
+		GOPSize,\
 		MultipleThreadIdc,\
 		EnableLongTermReference,\
 		LoopFilterDisableIDC,\
@@ -541,7 +544,6 @@ runBeforeGenerate()
 		SceneChangeFlag,\
 		BackgroundFlag,\
 		AQFlag"
-
   echo $headline>$casefile
   echo $headline>$casefile_01
   echo $headline>$casefile_02
@@ -563,12 +565,9 @@ runMain()
   local ConfigureFile=$1
   local TestSequence=$2
   local OutputCaseFile=$3
-
   runGlobalVariableInital  $TestSequence  $OutputCaseFile
-
   runParseCaseConfigure  ${ConfigureFile}
   runMultiLayerInitial
-
   runBeforeGenerate
   runOutputParseResult
   runFirstStageCase
@@ -582,5 +581,4 @@ OutputCaseFile=$3
 echo ""
 echo "case generating ......"
 runMain  ${ConfigureFile}   ${TestSequence}   ${OutputCaseFile}
-
 
