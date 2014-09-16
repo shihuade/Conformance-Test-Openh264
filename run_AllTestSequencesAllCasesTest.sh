@@ -106,7 +106,7 @@ runGetAllSGEJobID()
 		let "LineIndex++"
 	done <${SGEJObList}
 	
-	let "CurrentSGEJobNum=${LineIndex}"
+	let "CurrentSGEJobNum=${JobIDIndex}"
 }
 #comparison between  current SGE job list and the submitted list 
 #to check that whether all submitted jobs are not in current running list
