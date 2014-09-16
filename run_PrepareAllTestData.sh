@@ -236,9 +236,6 @@ runMain()
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
 	
-	cd ${FinalResultDir}
-	FinalResultDir=`pwd`
-	cd  ${CurrentDir}
 	
 	Openh264GitAddr="https://github.com/cisco/openh264"
 	declare -a aTestYUVList
@@ -256,6 +253,10 @@ runMain()
 	mkdir ${SHA1TableFolder}
 	mkdir ${FinalResultDir}
 	mkdir ${SourceFolder}
+	
+	cd ${FinalResultDir}
+	FinalResultDir=`pwd`
+	cd  ${CurrentDir}
 	
 	#update codec
 	runUnpdateCodec
