@@ -54,10 +54,10 @@ runGetTestYUVList()
 			TestSet6=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 		elif  [[ "$line" =~ ^TestSet7  ]]
 		then
-			TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+			TestSet7=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 		elif  [[ "$line" =~ ^TestSet8  ]]
 		then
-			TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+			TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
 		fi
 	done <${ConfigureFile}
 	
@@ -106,7 +106,7 @@ runGetAllSGEJobID()
 		let "LineIndex++"
 	done <${SGEJObList}
 	
-	let "CurrentSGEJobNum=${LineIndex}"
+	let "CurrentSGEJobNum=${JobIDIndex}"
 }
 #comparison between  current SGE job list and the submitted list 
 #to check that whether all submitted jobs are not in current running list
@@ -179,14 +179,14 @@ runSGETest()
 			echo ""
 			echo  -e "\033[34m *************************************************************** \033[0m"
 			echo  -e "\033[34m  Not all jobs have be finished yet! \033[0m"
-			echo  -e "\033[34m  Please wait! SGE jobs' status will be updated after 60 minutes! \033[0m"
+			echo  -e "\033[34m  Please wait! SGE jobs' status will be updated after 20 minutes! \033[0m"
 			echo  -e "\033[34m  Date: ${CurrentTime}   \033[0m"
 			echo  -e "\033[34m *************************************************************** \033[0m"
 			echo ""
-			echo  -e "\033[34m *************************************************************** \033[0m"
-			echo  -e "\033[34m Current SGE job for openh264 test are listed as below: \033[0m"
+			#echo  -e "\033[34m *************************************************************** \033[0m"
+			#echo  -e "\033[34m Current SGE job for openh264 test are listed as below: \033[0m"
 			#qstat  -q  ${SGEQueneName}
-			echo  -e "\033[34m *************************************************************** \033[0m"
+			#echo  -e "\033[34m *************************************************************** \033[0m"
 			sleep 1200
 		fi 
 	done

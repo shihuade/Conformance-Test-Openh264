@@ -1,6 +1,6 @@
 
 #!/bin/bash
-#!/bin/bash
+
 #*******************************************************************************
 #brief:  get actual spatial layer resolution based on actual spatial number
 #

@@ -26,8 +26,8 @@ how to use
         2. for how to generate your personal test case, please refer to section 
            "how to configure test case";
         3. ./run_Main.sh  SGETest  ./CaseConfigure/case_XXX.cfg;
-        3. wait for the final test result;
-        4. you can check you test result in 
+        4. wait for the final test result;
+        5. you can check you test result in 
           ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file;
           during your test, those files will update case by case.
       	
@@ -38,8 +38,8 @@ how to use
         2. for how to generate your personal test case, please refer to section 
            "how to configure test case";
         3. ./run_Main.sh  LocalTest  ./CaseConfigure/case_XXX.cfg;
-        3. wait for the final test result;
-        4. you can check you test result in 
+        4. wait for the final test result;
+        5. you can check you test result in 
           ./AllTestData/XXX.yuv/result/XXX.Testlog or XXX_AllCasesOutput.csv file;
           during your test, those files will update case by case.
       	
@@ -61,6 +61,11 @@ how does it work
 supported features
 ------------------
 -  SGE system based test(mulit-jobs running under diffierent hosts)
+
+	1. SCC
+	2. SVC single spatial layer
+	3. SVC multiple spatial layers
+
 -  Local single host runnig for all jobs
 
 	1. SCC
@@ -115,9 +120,9 @@ how to update your test codec
 
         1. no matter you choose A or B, the macro "WELS_TESTBED" must be enable,
            so that the reconstrution YUV file will be dumped during the encoding proccess. 
-        2. if you choose 1, you need to open the macro by 
+        2. if you choose A, you need to open the macro by 
            adding "#define WELS_TESTBED" in file codec/encoder/core/inc/as264_common.h;
-        3. if you choose 2, script
+        3. if you choose B, script
            will do it automatically.
         
         4. for both A or B. you need to disable function called "runUnpdateCodec", 
@@ -137,8 +142,7 @@ how to update your test codec
         ----enable macro for dump reconstructed YUV in codec/encoder/core/inc/as264_common.h
         ----build codec
         ----copy h264enc h264dec layer2.cfg welsenc.cfg to ./Codec
-        ----copy test bit stream from openh264/res  to ./BitStreamForTest
-		
+
 
 how to configure test case
 --------------------------
