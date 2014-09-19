@@ -4,9 +4,10 @@
 #brief:
 #  --for multiple layer test, generate input YUV for another spacial layer
 #
+#  usage: ./run_PrepareMultiLayerInputYUV.sh  ${OutputDir}  ${InputYUV} ${SpatialLayerNum} ${LogFileName}
 #  --eg:
-#    input:  run_PrepareMultiLayerInputYUV.sh  ../../ABC_1080X720_30fps.yuv   3  prepare.log
-#    output: there will be tow down sample YUV generated under current directory.
+#    input:  run_PrepareMultiLayerInputYUV.sh  /opt/GuanYUn ../../ABC_1080X720_30fps.yuv   3  prepare.log
+#    output: there will be tow down sample YUV generated under /opt/GuanYu/
 #            ----ABC_540X360_30fps.yuv
 #            ----ABC_270X180_30fps.yuv
 #            ----prepare.log
@@ -161,10 +162,10 @@ runSetLayerInfo()
 	OutputYUVLayer_1=`runRenameOutPutYUV  ${OriginYUVName}   ${aLayerWidth[2]} ${aLayerHeight[2]}`
 	OutputYUVLayer_2=`runRenameOutPutYUV  ${OriginYUVName}   ${aLayerWidth[1]} ${aLayerHeight[1]}`
 	OutputYUVLayer_3=`runRenameOutPutYUV  ${OriginYUVName}   ${aLayerWidth[0]} ${aLayerHeight[0]}`
-   aOutputLayerName=( ${OutputYUVLayer_3} ${OutputYUVLayer_2} ${OutputYUVLayer_1} ${OutputYUVLayer_0} )
+	aOutputLayerName=( ${OutputYUVLayer_3} ${OutputYUVLayer_2} ${OutputYUVLayer_1} ${OutputYUVLayer_0} )
 
 
-    echo "OutputYUVLayer_0 ${OutputYUVLayer_0}"
+	echo "OutputYUVLayer_0 ${OutputYUVLayer_0}"
 	echo "OutputYUVLayer_1 ${OutputYUVLayer_1}"
 	echo "OutputYUVLayer_2 ${OutputYUVLayer_2}"
 	echo "OutputYUVLayer_3 ${OutputYUVLayer_3}"
@@ -208,9 +209,9 @@ runSetLayerYUVSize()
 	aLayerYUVList=( ${OutputYUVLayer_3}  ${OutputYUVLayer_2} ${OutputYUVLayer_1} ${OutputYUVLayer_0} )
 	for ((i=0; i<4; i++ ))
 	do
-		if [ -e ${aLayerYUVList[$i]}  ]
+		if [ -e ${OutPutDir}/${aLayerYUVList[$i]}  ]
 		then
-			aYUVSize[$i]=`runGetFileSize  ${aLayerYUVList[$i]}`
+			aYUVSize[$i]=`runGetFileSize  ${OutPutDir}/${aLayerYUVList[$i]}`
 		else
 			aYUVSize[$i]="0"
 		fi
@@ -223,29 +224,36 @@ runOutputPrepareLog()
 	for ((i=0; i<4; i++ ))
 	do
 		let "LayerIndex=3-$i"
-		echo "LayerName_${LayerIndex}:  ${aLayerYUVList[$i]}">>${PrepareLog}
-		echo "LayerSize_${LayerIndex}:  ${aYUVSize[$i]}">>${PrepareLog}
+		echo "LayerName_${LayerIndex}:${aLayerYUVList[$i]}">>${PrepareLog}
+		echo "LayerSize_${LayerIndex}:${aYUVSize[$i]}">>${PrepareLog}
 	done
 }
 #usage: run_PrepareMultiLayerInputYUV.sh ${OriginYUV} ${NumberLayer} ${PrepareLog} ${Multiple16Flag}
 runMain()
 {
-	if [ ! $# -eq 4 ]
+	if [ ! $# -eq 5 ]
 	then
-		echo "usage: run_PrepareMultiLayerInputYUV.sh \${OriginYUV} \${NumberLayer} \${PrepareLog} \${Multiple16Flag}"
+		echo "usage: run_PrepareMultiLayerInputYUV.sh \${OutPutDir} \${OriginYUV} \${NumberLayer} \${PrepareLog} \${Multiple16Flag}"
 		exit 1
 	fi
 
-	OriginYUV=$1
-	NumberLayer=$2
-	PrepareLog=$3
-	Multiple16Flag=$4
+	OutPutDir=$1
+	OriginYUV=$2
+	NumberLayer=$3
+	PrepareLog=$4
+	Multiple16Flag=$5
 	let "PrepareFlag=0"
 
 	runGlobalVariableInitial ${OriginYUV}
 	if [ ! -f ${OriginYUV}  ]
 	then
 		echo "origin yuv does not exist! please double check!--${OriginYUV}"
+		exit 1
+	fi
+	
+	if [ ! -d  ${OutPutDir} ]
+	then
+		echo "output directory does not exist! please double check!--${OriginYUV}"
 		exit 1
 	fi
 
@@ -259,16 +267,16 @@ runMain()
 	runSetLayerInfo
 	for ((i=1; i<4; i++ ))
 	do
-		if [ -e ${aOutputLayerName[i]} ]
+		if [ -e ${OutPutDir}/${aOutputLayerName[i]} ]
 		then
-			./run_SafeDelete.sh  ${aOutputLayerName[i]}
+			./run_SafeDelete.sh  ${OutPutDir}/${aOutputLayerName[i]}
 		fi
 	done
 
 	#down sample 
 	for ((i=0; i<${NumberLayer}; i++ ))
 	do
-		./${DownSampleExe}  ${OriginWidth} ${OriginHeight} ${OriginYUV}  ${aLayerWidth[$i]} ${aLayerHeight[i]}  ${aOutputLayerName[i]}
+		./${DownSampleExe}  ${OriginWidth} ${OriginHeight} ${OriginYUV}  ${aLayerWidth[$i]}  ${aLayerHeight[i]}  ${OutPutDir}/${aOutputLayerName[i]}
 		if [ ! $? -eq 0 ]
 		then
 			let "PrepareFlag=1"
@@ -290,10 +298,9 @@ runMain()
 
 	return 0
 }
-OriginYUV=$1
-NumberLayer=$2
-PrepareLog=$3
-Multiple16Flag=$4
-runMain   ${OriginYUV}  ${NumberLayer} ${PrepareLog} ${Multiple16Flag}
-
-
+OutPutDir=$1
+OriginYUV=$2
+NumberLayer=$3
+PrepareLog=$4
+Multiple16Flag=$5
+runMain   ${OutPutDir} ${OriginYUV}  ${NumberLayer} ${PrepareLog} ${Multiple16Flag}
