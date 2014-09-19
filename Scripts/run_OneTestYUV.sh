@@ -2,7 +2,7 @@
 #***************************************************************************************
 # brief:
 #      --start point of one test sequence
-#      --usage: run_OneBitStream.sh ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+#      --usage: run_OneBitStream.sh ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
 #
 #
 #date:  5/08/2014 Created
@@ -34,36 +34,36 @@ runGetYUVFullPath()
 	TestYUVFullPath=`./run_GetYUVPath.sh  ${TestYUVName}  ${YUVDir}`
 	return $?
 }
-#usage:  runMain ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
- runMain()
- {
-	if [ ! $# -eq 3 ]
-	then
-		echo "usage: runMain \${TestYUVName}  \${FinalResultDir}  \${ConfigureFile} "
-		echo "detected by run_TestYUV.sh"
-		return 1
-	fi
+
+
+runDeleteYUV()
+{
+	for YUVFile  in ${LocalWorkingDir}/*.yuv
+	do
+		./run_SafeDelete.sh ${YUVFile} 
+	done
 	
-	TestYUVName=$1
-	FinalResultDir=$2
-	ConfigureFile=$3
-	TestYUVFullPath=""
-	TestReport="${FinalResultDir}/TestReport_${TestYUVName}.report"
-	CurrentDir=`pwd`
-	OutPutCaseFile=""
-	ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
-	OutPutCaseFile=${TestYUVName}_AllCase.csv
+}
+
+runTestOneYUV()
+{
+
 	echo ""
 	echo  "TestYUVName is ${TestYUVName}"
 	echo "OutPutCaseFile is  ${OutPutCaseFile}"
+	echo ""
+	echo -e "\033[32m ********************************************************************** \033[0m">${TestReport}
+	echo -e "\033[32m  Test report for YUV ${TestYUVName}  \033[0m">>${TestReport}
+	echo "">>${TestReport}
+	
 	runGetYUVFullPath  ${TestYUVName}  ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
 		echo ""
 		echo  -e "\033[31m  can not find test yuv file ${TestYUVName} \033[0m"
 		echo ""
-		echo "Failed!">${TestReport}
-		echo "can not find test yuv file ${TestYUVName}">>${TestReport}
+		echo -e "\033[31m Failed!\033[0m">>${TestReport}
+		echo -e "\033[31m can not find test yuv file ${TestYUVName}  under host ${HostName} \033[0m">>${TestReport}
 		exit 1
 	else
 		echo ""
@@ -80,33 +80,109 @@ runGetYUVFullPath()
 		echo ""
 		echo  -e "\033[31m  failed to generate cases ! \033[0m"
 		echo ""
-		echo "Failed!">${TestReport}
-		echo "failed to generate cases !">>${TestReport}
-		exit 1
+		echo -e "\033[31m Failed! \033[0m">>${TestReport}
+		echo -e "\033[31m failed to generate cases ! \033[0m">>${TestReport}
+		return 1
 	fi
+	
 	#generate SHA-1 table
 	echo ""
 	echo " TestYUVFullPath  is ${TestYUVFullPath}"
-	./run_TestAllCases.sh  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${OutPutCaseFile}
+	./run_TestAllCases.sh  ${LocalWorkingDir}  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${OutPutCaseFile}
 	if [  ! $? -eq 0 ]
 	then
-		echo "Failed!">${TestReport}
-		echo "Not all Cases passed the test!">>${TestReport}
-		cat  ./result/${TestYUVName}.Summary >>${TestReport}
+		echo -e "\033[31m Failed! \033[0m">>${TestReport}
+		echo -e "\033[31m Not all Cases passed the test! \033[0m">>${TestReport}
+		cat  ${LocalWorkingDir}/result/${TestYUVName}.Summary >>${TestReport}
 		
-		cp  ./result/*    ${FinalResultDir}
-		exit 1
+		cp   ${LocalWorkingDir}/result/*.csv    ${FinalResultDir}
+		
+		runDeleteYUV
+		return 1
 	else
-		echo "Succeed!">${TestReport}
-		echo "All Cases passed the test!">>${TestReport}
-		cat  ./result/${TestYUVName}.Summary >>${TestReport}
+		echo -e "\033[32m Succeed! \033[0m">>${TestReport}
+		echo -e "\033[32m All Cases passed the test! \033[0m">>${TestReport}
+		cat  ${LocalWorkingDir}/result/${TestYUVName}.Summary >>${TestReport}
 		
-		cp  ./result/*    ${FinalResultDir}
-		exit 0
+		cp   ${LocalWorkingDir}/result/*.csv    ${FinalResultDir}
+		
+		runDeleteYUV
+		return 0
 	fi
-}
-TestYUVName=$1
-FinalResultDir=$2
-ConfigureFile=$3
-runMain ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
 
+}
+
+
+#create local test space
+runSetLocalWorkingDir()
+{
+	TempDataDir="/home"
+	
+	if [ ${TestType} = "SGETest" ]
+	then
+		SGEJobID=$JOB_ID
+		LocalWorkingDir="${TempDataDir}/${HostName}/SGEJobID_${SGEJobID}"
+		echo ""
+		echo "SGETest local data dir is ${LocalWorkingDir}"
+		echo ""
+		mkdir -p ${LocalWorkingDir}
+		cp -f ./*   ${LocalWorkingDir}	
+	else
+		LocalWorkingDir=`pwd`
+	fi	
+}
+
+#usage:  runMain ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+ runMain()
+ {
+	if [ ! $# -eq 4 ]
+	then
+		echo "usage: runMain \${TestYUVName} \${TestType} \${FinalResultDir}  \${ConfigureFile} "
+		echo "detected by run_TestYUV.sh"
+		return 1
+	fi
+	
+	TestType=$1
+	TestYUVName=$2
+	FinalResultDir=$3
+	ConfigureFile=$4
+	
+	HostName=`hostname`
+	TestYUVFullPath=""
+	TestReport="${FinalResultDir}/TestReport_${TestYUVName}.report"
+	CurrentDir=`pwd`
+	OutPutCaseFile=""
+	ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
+	OutPutCaseFile=${TestYUVName}_AllCase.csv
+	
+	
+	
+	#for both SGE data and local test, in order to decrease tho sge-master's workload,
+	#need local data folder for each job/testYUV
+	LocalWorkingDir=""
+	runSetLocalWorkingDir
+	
+	echo ""
+	echo "test ${TestYUVName}  under ${HostName}"
+	echo "test type is ${TestType}"
+	echo "local host test directory is ${LocalWorkingDir} "
+	echo ""
+	
+	if [ ${TestType} = "SGETest" ]
+	then
+		cd ${LocalWorkingDir}
+		runTestOneYUV
+		PassedFlag=$?		
+		cd ${CurrentDir}
+	else
+		runTestOneYUV
+		PassedFlag=$?		
+	fi		
+	return ${PassedFlag}
+}
+
+TestType=$1
+TestYUVName=$2
+FinalResultDir=$3
+ConfigureFile=$4
+runMain  ${TestType} ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
