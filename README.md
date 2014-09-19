@@ -131,7 +131,8 @@ how to update your test codec
 
 -	A 
 -	update your test codec manually
-        build your private openh264, and copied  h264enc, h264dec, layer2.cfg, welsenc.cfg to folder ./Codec manually.
+        build your private openh264, and copied  h264enc, h264dec, layer0.cfg layer1.cfg layer2.cfg 
+	layer3.cfg welsenc.cfg, welsenc.cfg to folder ./Codec manually.
 
 -	B
 -	update automatically
@@ -141,7 +142,7 @@ how to update your test codec
         and the script file will complete below tasks:
         ----enable macro for dump reconstructed YUV in codec/encoder/core/inc/as264_common.h
         ----build codec
-        ----copy h264enc h264dec layer2.cfg welsenc.cfg to ./Codec
+        ----copy h264enc h264dec layer0.cfg layer1.cfg layer2.cfg layer3.cfg welsenc.cfg to ./Codec
 
 
 how to configure test case
@@ -178,6 +179,17 @@ how to configure test case
             MultiLayer:    0            # 0 single layer  1 multi layer
             UsageType:     1            #0: camera video 1:screen content
 
+
+-6. TestYUV 
+
+          input yuv setting, change the dir based on your test sequence folder.
+	  TestYUVDir:   /home/Video/YUV
+           
+	  and script will prepare (down sample for multiple layers etc.)
+          final test input yuv under:
+              --SGE test, under /home/$SGEhost/SGEJobID_$SGEJobID/
+              --LocalTest. under ./AllTestData/$TestYUVName/
+              
 
 how to verify test case
 ---------------------------
