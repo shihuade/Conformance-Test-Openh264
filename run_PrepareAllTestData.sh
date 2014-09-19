@@ -109,7 +109,7 @@ runPrepareSGEJobFile()
 	
 	done <${SGEModelFile}
 	
-	echo "${TestSequenceDir}/${SGEJobScript}   ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}">>${SGEJobFile}
+	echo "${TestSequenceDir}/${SGEJobScript}  ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}">>${SGEJobFile}
 	
 	return 0
 }
@@ -180,9 +180,7 @@ runPrepareTestSpace()
 			continue
 		fi
 		mkdir -p ${SubFolder}
-		mkdir -p ${SubFolder}/${IssueFolder}
-		mkdir -p ${SubFolder}/${TempDataFolder}
-		mkdir -p ${SubFolder}/${ResultFolder}
+
 		cp  ${CodecFolder}/*    ${SubFolder}
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
@@ -250,9 +248,6 @@ runMain()
 	#folder for eache test sequence
 	SubFolder=""
 	SGEJobFile=""
-	IssueFolder="issue"
-	TempDataFolder="TempData"
-	ResultFolder="result"
 	
 	#check input parameters
 	runCheck
