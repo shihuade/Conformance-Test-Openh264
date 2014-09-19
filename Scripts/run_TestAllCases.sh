@@ -3,6 +3,7 @@
 # brief:
 #       --Test all cases for one sequence 
 #       --output info can be found  in ../AllTestData/${TestSequence}/result/
+#                                     or for SGE test, in /opt/$hostName/SGEJObID
 #            pass case number, unpass case number total case number
 #            ${TestSetIndex}_${TestYUVName}_AllCaseOutput.csv
 #            ${AllCasesConsoleLogFile}
@@ -16,10 +17,21 @@
 runGlobalVariableInitial()
 {
 	CurrentDir=`pwd`
-	#test data space
-	ResultPath="result"
-	IssueDataPath="issue"
-	TempDataPath="TempData"
+	
+	#for SGETest, add local data directory
+	if [ ${LocalDataDir} != ${CurrentDir}  ]
+	then
+		#test data space
+		ResultPath="${LocalDataDir}/result"
+		IssueDataPath="${LocalDataDir}/issue"
+		TempDataPath="${LocalDataDir}/TempData"
+	else
+		#test data space
+		ResultPath="result"
+		IssueDataPath="issue"
+		TempDataPath="TempData"	
+	fi
+	
 	mkdir -p ${ResultPath}
 	mkdir -p ${IssueDataPath}
 	mkdir -p ${TempDataPath}
@@ -92,7 +104,7 @@ runParseConfigure()
 }
 runPrepareMultiLayerInputYUV()
 {
-	local PrepareLog="${TestYUVName}_MultiLayerInputYUVPrepare.log"
+	local PrepareLog="${LocalDataDir}/${TestYUVName}_MultiLayerInputYUVPrepare.log"
 	declare -a aYUVInfo
 
 	aYUVInfo=(`./run_ParseYUVInfo.sh  ${TestYUVName}`)
@@ -101,7 +113,7 @@ runPrepareMultiLayerInputYUV()
 	#generate input YUV file for each layer
 	MaxSpatialLayerNum=`./run_GetSpatialLayerNum.sh ${PicW} ${PicH}`
 
-	./run_PrepareMultiLayerInputYUV.sh ${InputYUV} ${MaxSpatialLayerNum} ${PrepareLog} ${Multiple16Flag}
+	./run_PrepareMultiLayerInputYUV.sh  ${LocalDataDir}  ${InputYUV} ${MaxSpatialLayerNum} ${PrepareLog} ${Multiple16Flag}
 
 	if [ ! $? -eq 0 ]
 	then
@@ -140,6 +152,21 @@ runPrepareMultiLayerInputYUV()
 			YUVSizeLayer3=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
 		fi
 	done <${PrepareLog}
+	
+	
+	#for SGE Test, add LocalData directory 
+	if [ "${LocalDataDir}" != "${CurrentDir}" ]
+	then
+		echo "SGE Test,data dir is ${LocalDataDir}"
+		YUVFileLayer0="${LocalDataDir}/${YUVFileLayer0}"
+		YUVFileLayer1="${LocalDataDir}/${YUVFileLayer1}"
+		YUVFileLayer2="${LocalDataDir}/${YUVFileLayer2}"
+		YUVFileLayer3="${LocalDataDir}/${YUVFileLayer3}"
+	else
+		echo "local  Test,data dir is ${LocalDataDir}"
+	fi
+	
+	
 	echo "YUVFileLayer3:  ${YUVFileLayer3}"
 	echo "YUVSizeLayer3:  ${YUVSizeLayer3}"
 	echo "YUVFileLayer2:  ${YUVFileLayer2}"
@@ -269,15 +296,21 @@ runOutputPassNum()
 	echo "detail result  can be found in  ./AllTestData/${TestFolder}/${ResultPath}"
 	echo  -e "\033[32m *********************************************************** \033[0m"
 	echo ""
+	echo "  --issue bitstream can be found in  ${LocalDataDir}/issue" 
+	echo "  --detail result  can be found in   ${LocalDataDir}/${ResultPath}" 
+	echo  -e "\033[32m *********************************************************** \033[0m"
+	echo ""
 	echo "...............Test summary for ${TestYUVName}...........................">${CaseSummaryFile}
-	echo "  total case  Num     ,  ${TotalCaseNum}" >>${CaseSummaryFile}
-	echo "  EncoderPassedNum    ,  ${EncoderPassedNum}" >>${CaseSummaryFile}
-	echo "  EncoderUnPassedNum  ,  ${EncoderUnPassedNum} " >>${CaseSummaryFile}
-	echo "  DecoderPassedNum    ,  ${DecoderPassedNum}" >>${CaseSummaryFile}
-	echo "  DecoderUpPassedNum  ,  ${DecoderUpPassedNum}" >>${CaseSummaryFile}
-	echo "  DecoderUnCheckNum   ,  ${DecoderUnCheckNum}" >>${CaseSummaryFile}
-	echo "  detail files can be found  in ./AllTestData/${TestFolder}/${ResultPath}" >>${CaseSummaryFile}
-	echo "..........................................................................">>${CaseSummaryFile}
+	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}\033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}\033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}\033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}\033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum}\033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}\033[0m">>${CaseSummaryFile}
+	echo "" >>${CaseSummaryFile}
+	echo "  --issue bitstream can be found in  ${LocalDataDir}/issue" >>${CaseSummaryFile}
+	echo "  --detail result  can be found in   ${LocalDataDir}/${ResultPath}" >>${CaseSummaryFile}
+
 	echo  -e "\033[32m *********************************************************** \033[0m"
 
 	if [  ! ${EncoderUnPassedNum} -eq 0  ]
@@ -292,16 +325,17 @@ runOutputPassNum()
 # usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $AllCaseFile
 runMain()
 {
-	if [ ! $# -eq 4  ]
+	if [ ! $# -eq 5  ]
 	then
-		echo "usage: run_TestAllCase.sh  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AllCaseFile"
+		echo "usage: run_TestAllCase.sh \${LocalDataDir}  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AllCaseFile"
 	return 1
 	fi
 
-	ConfigureFile=$1
-	TestYUVName=$2
-	InputYUV=$3
-	AllCaseFile=$4
+	LocalDataDir=$1
+	ConfigureFile=$2
+	TestYUVName=$3
+	InputYUV=$4
+	AllCaseFile=$5
 	runGlobalVariableInitial
 	runParseConfigure
 
@@ -312,10 +346,11 @@ runMain()
 	runAllCaseTest 
 	runOutputPassNum
 }
-ConfigureFile=$1
-TestYUVName=$2
-InputYUV=$3
-AllCaseFile=$4
-runMain  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AllCaseFile}
+LocalDataDir=$1
+ConfigureFile=$2
+TestYUVName=$3
+InputYUV=$4
+AllCaseFile=$5
+runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AllCaseFile}
 
 
