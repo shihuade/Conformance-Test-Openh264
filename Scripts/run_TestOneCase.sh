@@ -164,6 +164,16 @@ runEncodeOneCase()
 	else
 		let "EncoderFlag=1"
 	fi
+	
+	#delete the core down file as core down files for disk space limitation
+	for file in  ./core*
+	do
+		if [ -e ${file} ]
+		then
+			./run_SafeDelete.sh  ${file}
+		fi
+	done
+	
 	cat  ${EncoderLog}
 	return 0
 
