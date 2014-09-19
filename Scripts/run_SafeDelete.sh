@@ -181,9 +181,14 @@ runDeleteItemCheck()
 runFolderLocationCheck()
 {
 	local ItemDirDepth=`echo ${FullPath} | awk 'BEGIN {FS="/"} {print NF}'`
+	local HostName=`hostname`
+	
 	#only item  under  /home/, /root/, /opt/ can be delete!
 	let "FolderFlag=0"
 	if [[ ${FullPath} =~ ^/opt/sge62u2_1/SGE_room2 ]]
+	then
+		let "FolderFlag=0"
+	elif [[ ${FullPath} =~ ^/opt/${HostName}  ]]
 	then
 		let "FolderFlag=0"
 	elif [[ ${FullPath} =~ ^/home/  ]]
@@ -254,7 +259,7 @@ runDeleteItem()
 		runGetFileName
 		DeleteItem="${FullPath}/${FileName}"
 		echo "deleted file is :  $DeleteItem"
-		rm  ${DeleteItem}
+		rm  -f ${DeleteItem}
 		let "DeleteFlag=$?"
 	fi
 	if [ ! ${DeleteFlag} -eq 0 ]
@@ -304,4 +309,3 @@ DeleteItem=$1
 echo ""
 runMain $DeleteItem
 echo ""
-
