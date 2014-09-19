@@ -182,11 +182,11 @@ how to configure test case
 
 -6. TestYUV 
 
-          input yuv setting, change the dir based on your test sequence folder.
-	  TestYUVDir:   /home/Video/YUV
+	input yuv setting, change the dir based on your test sequence folder.
+	TestYUVDir:   /home/Video/YUV
            
-	  and script will prepare (down sample for multiple layers etc.)
-          final test input yuv under:
+	and script will prepare (down sample for multiple layers etc.)
+	final test input yuv under:
               --SGE test, under /home/$SGEhost/SGEJobID_$SGEJobID/
               --LocalTest. under ./AllTestData/$TestYUVName/
               
