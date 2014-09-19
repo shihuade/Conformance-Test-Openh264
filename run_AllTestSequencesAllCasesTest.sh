@@ -209,7 +209,7 @@ runLocalTest()
 		echo ""
 		echo "test YUV is ${TestYUV}"
 		echo ""
-		./run_OneTestYUV.sh  ${TestYUV}  ${FinalResultDir}  ${ConfigureFile}
+		./run_OneTestYUV.sh  ${TestType}  ${TestYUV}  ${FinalResultDir}  ${ConfigureFile}
 		if [  ! $? -eq 0 ]
 		then
 			echo -e "\033[31m not all test cases have been passed! \033[0m"
@@ -235,14 +235,20 @@ runGetTestSummary()
 		if [ -e  ${FinalResultDir}/TestReport_${TestYUV}.report ]
 		then
 	
+			let "ReportLineIndex=0"
 			while read line
 			do
-				if [[  $line =~ ^Failed ]]
+				if [ ${ReportLineIndex}  -eq 3 ]
 				then
-					let "AllPassedFlag=1"
-					break			
+					if [[  $line =~ "Failed!" ]]
+					then
+						let "AllPassedFlag=1"
+					fi
+					break
 				fi
-				break	
+				
+				let "ReportLineIndex ++"
+				
 			done <${FinalResultDir}/TestReport_${TestYUV}.report
 			
 			echo "">>${AllTestSummary}
