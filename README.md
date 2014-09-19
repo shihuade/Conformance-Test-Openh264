@@ -162,10 +162,10 @@ how to configure test case
         please refer to script file ./Scripts/run_GenerateCase.sh and change the script if you want.
 
 -3. SVC single sptatial layer
-          
-            chane setting in case.cfg as below:
-            MultiLayer:    0            # 0 single layer  1 multi layer
-            UsageType:     0            #0: camera video 1:screen content
+
+          chane setting in case.cfg as below:
+          MultiLayer:    0            # 0 single layer  1 multi layer
+          UsageType:     0            #0: camera video 1:screen content
 
 -4. SVC multiple spatial layers
 
@@ -182,11 +182,11 @@ how to configure test case
 
 -6. TestYUV 
 
-	input yuv setting, change the dir based on your test sequence folder.
-	TestYUVDir:   /home/Video/YUV
+          input yuv setting, change the dir based on your test sequence folder.
+          TestYUVDir:   /home/Video/YUV
            
-	and script will prepare (down sample for multiple layers etc.)
-	final test input yuv under:
+          and script will prepare (down sample for multiple layers etc.)
+          final test input yuv under:
               --SGE test, under /home/$SGEhost/SGEJobID_$SGEJobID/
               --LocalTest. under ./AllTestData/$TestYUVName/
               
