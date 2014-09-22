@@ -244,6 +244,25 @@ runParsetCaseCheckLog()
 			InputYUVMD5String=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
 		fi
 	done <${CheckLog}
+	
+	#generate SHA1 string for bit stream and input YUV no matter failed or not
+	if [ -e ${BitStreamFile} ]
+	then
+		BitStreamSHA1String=`openssl sha1  ${BitStream}`
+		BitStreamSHA1String=`echo ${BitStreamSHA1String}  | awk '{print $2}' `
+
+		BitStreamMD5String=`openssl md5   ${BitStream}`
+		BitStreamMD5String=`echo ${BitStreamMD5String}  | awk '{print $2}' `
+	fi
+	if [ -e  ${InputYUV} ]
+	then
+		InputYUVSHA1String=`openssl sha1  ${OringInputYUV} `
+		InputYUVSHA1String=`echo ${InputYUVSHA1String}  | awk '{print $2}' `
+
+		InputYUVMD5String=`openssl md5  ${OringInputYUV}`
+		InputYUVMD5String=`echo ${InputYUVMD5String}  | awk '{print $2}' `
+	fi
+	
 }
 runOutputCaseCheckStatus()
 {
