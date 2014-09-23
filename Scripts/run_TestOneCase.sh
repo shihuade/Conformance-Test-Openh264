@@ -266,6 +266,8 @@ runParsetCaseCheckLog()
 }
 runOutputCaseCheckStatus()
 {
+	#date info
+	date
 	local TestTime=`date`
 	
 	 echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AllCasesSHATableFile}
