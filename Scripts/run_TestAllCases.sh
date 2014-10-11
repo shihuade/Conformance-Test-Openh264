@@ -316,10 +316,14 @@ runOutputPassNum()
 	if [  ! ${EncoderUnPassedNum} -eq 0  ]
 	then
 		FlagFile="${ResultPath}/${TestYUVName}.unpassFlag"
+		touch ${FlagFile}
+		return 1
 	else
 		FlagFile="${ResultPath}/${TestYUVName}.passFlag"
+		touch ${FlagFile}
+		return 0
 	fi
-	touch ${FlagFile}
+	
 }
 #***********************************************************
 # usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $AllCaseFile
@@ -345,6 +349,7 @@ runMain()
 	echo  -e "\033[32m  testing all cases, please wait!...... \033[0m"
 	runAllCaseTest 
 	runOutputPassNum
+	return $?
 }
 LocalDataDir=$1
 ConfigureFile=$2
