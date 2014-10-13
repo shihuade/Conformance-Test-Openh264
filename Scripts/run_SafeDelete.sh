@@ -30,7 +30,7 @@ runUserNameCheck()
 	then
 		echo ""
 		echo  -e "\033[31m delete files under root is not allowed \033[0m"
-		echo  -e "\033[31m detected by run_SafeDelere.sh \033[0m"
+		echo  -e "\033[31m detected by run_SafeDelete.sh \033[0m"
 		echo ""
 		exit 1
 	fi
@@ -173,7 +173,7 @@ runDeleteItemCheck()
 	then
 		echo  -e "\033[31m delete item does not exist or permission denied! \033[0m"
 		echo  -e "\033[31m please double check!  \033[0m"
-		echo  -e "\033[31m detected by run_SafeDelere.sh \033[0m"
+		echo  -e "\033[31m detected by run_SafeDelete.sh \033[0m"
 		exit 1
 	fi
 	return 0
@@ -206,7 +206,7 @@ runFolderLocationCheck()
 		echo ""
 		echo -e "\033[31m deleting item's fullPath is ${FullPath} \033[0m"
 		echo -e "\033[31m only item  under  /home/Folder/xxx, /root/Folder/XXX, /opt/sge62u2_1/SGE_room2/xxx can be delete, please double check!  \033[0m"
-		echo -e "\033[31m detected by run_SafeDelere.sh \033[0m"
+		echo -e "\033[31m detected by run_SafeDelete.sh \033[0m"
 		echo -e "\033[31m for change this constraint, please modify script in run_SafeDelere.sh \033[0m"
 		exit 1		
 	fi	
@@ -221,7 +221,7 @@ runFolderLocationCheck()
 		echo -e "\033[31m FileDepth is  $ItemDirDepth not matched the minimum depth(4) \033[0m"
 		echo -e "\033[31m 				should looks like /XXX/XXX/XXX/DeleteItem \033[0m"
 		echo -e "\033[31m unsafe delete! try to delete non-project items under: $FullPath \033[0m"
-		echo -e "\033[31m detected by run_SafeDelere.sh \033[0m"
+		echo -e "\033[31m detected by run_SafeDelete.sh \033[0m"
 		exit  1
 	fi
 	
@@ -231,7 +231,7 @@ runFolderLocationCheck()
 		echo -e "\033[31m DeleteItem is ${DeleteItem} \033[0m"
 		echo -e "\033[31m DeletingPatth--CurrentPath: ${FullPath} -- ${CurrentDir} \033[0m"
 		echo -e "\033[31m trying to delete current dir, it is not allow! \033[0m"
-		echo -e "\033[31m detected by run_SafeDelere.sh \033[0m"
+		echo -e "\033[31m detected by run_SafeDelete.sh \033[0m"
 		exit 1
 	fi
 		
