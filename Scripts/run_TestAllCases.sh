@@ -261,7 +261,7 @@ runAllCaseTest()
 			export YUVFileLayer2
 			export YUVFileLayer3
 
-			./run_TestOneCase.sh  ${CheckLogFile}  ${CaseData}      >>${AllCasesConsoleLogFile}
+			./run_TestOneCase.sh  ${CaseData}      >>${AllCasesConsoleLogFile}
 
 			runParseCaseCheckLog  ${CheckLogFile}  >>${AllCasesConsoleLogFile}
 			echo "" >>${AllCasesConsoleLogFile}
