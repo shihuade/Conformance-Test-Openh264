@@ -87,7 +87,7 @@ runCopyFile()
 	cp -f ${OpenH264Dir}/testbin/layer2.cfg      ${CodecDir}/layer3.cfg
 	cp -f ${OpenH264Dir}/testbin/welsenc.cfg     ${CodecDir}
 }
-#useage: ./run_CodecBitStreamUpdate.sh   ${Openh264Dir}
+#useage: ./run_UpdateCodec.sh   ${Openh264Dir}
 runMain()
 {
 	if [ ! $# -eq 1 ]
@@ -104,7 +104,7 @@ runMain()
 	if [ ! -d  ${Openh264Dir} ]
 	then
 		echo "openh264 dir  ${Openh264Dir}  does not exist!"
-		echo "useage: ./run_CodecBitStreamUpdate.sh   \${Openh264Dir}"
+		echo "useage: ./run_UpdateCodec.sh   \${Openh264Dir}"
 		exit 1
 	fi
 	cd ${Openh264Dir}
