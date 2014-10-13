@@ -349,6 +349,7 @@ runMain()
 	fi
 	#for test sequence info
 	TestCaseInfo=$@
+	CheckLogFile="${TempDataPath}/CaseCheck.log"
 	runGlobalVariableInitial
 	runEncoderCommandInital
 	runParseCaseInfo ${TestCaseInfo}
