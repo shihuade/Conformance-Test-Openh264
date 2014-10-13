@@ -2,7 +2,7 @@
 #***************************************************************************************
 # brief:
 #      --start point of one test sequence
-#      --usage: run_OneBitStream.sh ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+#      --usage: run_OneTestYUV.sh ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
 #
 #
 #date:  5/08/2014 Created
@@ -132,13 +132,13 @@ runSetLocalWorkingDir()
 	fi	
 }
 
-#usage:  runMain ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+#usage:  runMain ${TestType} ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
  runMain()
  {
 	if [ ! $# -eq 4 ]
 	then
-		echo "usage: runMain \${TestYUVName} \${TestType} \${FinalResultDir}  \${ConfigureFile} "
-		echo "detected by run_TestYUV.sh"
+		echo "usage: runMain \${TestType}  \${TestYUVName} \${FinalResultDir}  \${ConfigureFile} "
+		echo "detected by run_OneTestYUV.sh"
 		return 1
 	fi
 	
