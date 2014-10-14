@@ -31,7 +31,7 @@ runRemovedPreviousTestData()
 	fi
 	
 }
-runUnpdateCodec()
+runUpdateCodec()
 {
 	echo ""
 	echo -e "\033[32m openh264 repository cloning... \033[0m"
@@ -44,7 +44,11 @@ runUnpdateCodec()
 		echo ""
 		exit 1
 	fi
-		
+	
+	cd ${SourceFolder}
+	git checkout ${Branch}
+	cd ${CurrentDir}
+	
 	echo ""
 	echo -e "\033[32m openh264 codec building... \033[0m"
 	echo ""
@@ -244,6 +248,8 @@ runMain()
 	
 	
 	Openh264GitAddr="https://github.com/cisco/openh264"
+	Branch="master"
+	
 	declare -a aTestYUVList
 	#folder for eache test sequence
 	SubFolder=""
@@ -262,7 +268,7 @@ runMain()
 	cd  ${CurrentDir}
 	
 	#update codec
-	runUnpdateCodec
+	runUpdateCodec
 	
 	echo "Preparing test space for all test sequences!"
 	runGetTestYUVList
