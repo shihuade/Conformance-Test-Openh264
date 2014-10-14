@@ -208,12 +208,12 @@ runParseEncoderLog()
 		fi
 	done < ${EncoderLog}
 }
-#usage runParsetCaseCheckLog  ${CheckLog}
-runParsetCaseCheckLog()
+#usage runParseCaseCheckLog  ${CheckLog}
+runParseCaseCheckLog()
 {
 	if [  ! $# -eq 1  ]
 	then
-		echo "usage: runParsetCaseCheckLog  \${CheckLog}"
+		echo "usage: runParseCaseCheckLog  \${CheckLog}"
 		return 1
 	fi
 	local CheckLog=$1
@@ -248,18 +248,18 @@ runParsetCaseCheckLog()
 	#generate SHA1 string for bit stream and input YUV no matter failed or not
 	if [ -e ${BitStreamFile} ]
 	then
-		BitStreamSHA1String=`openssl sha1  ${BitStream}`
+		BitStreamSHA1String=`openssl sha1  ${BitStreamFile}`
 		BitStreamSHA1String=`echo ${BitStreamSHA1String}  | awk '{print $2}' `
 
-		BitStreamMD5String=`openssl md5   ${BitStream}`
+		BitStreamMD5String=`openssl md5   ${BitStreamFile}`
 		BitStreamMD5String=`echo ${BitStreamMD5String}  | awk '{print $2}' `
 	fi
 	if [ -e  ${InputYUV} ]
 	then
-		InputYUVSHA1String=`openssl sha1  ${OringInputYUV} `
+		InputYUVSHA1String=`openssl sha1  ${InputYUV} `
 		InputYUVSHA1String=`echo ${InputYUVSHA1String}  | awk '{print $2}' `
 
-		InputYUVMD5String=`openssl md5  ${OringInputYUV}`
+		InputYUVMD5String=`openssl md5  ${InputYUV}`
 		InputYUVMD5String=`echo ${InputYUVMD5String}  | awk '{print $2}' `
 	fi
 	
@@ -364,7 +364,7 @@ runMain()
 	then
 		echo  -e "\033[31m  case failed! \033[0m"
 		let "BasicCheckFlag=1"
-		runParsetCaseCheckLog ${CheckLogFile}
+		runParseCaseCheckLog ${CheckLogFile}
 		runOutputCaseCheckStatus
 		exit 1
 	fi
@@ -374,14 +374,14 @@ runMain()
 	then
 		echo  -e "\033[31m  case failed! \033[0m"
 		let "JSVMCheckFlag=1"
-		runParsetCaseCheckLog ${CheckLogFile}
+		runParseCaseCheckLog ${CheckLogFile}
 		runOutputCaseCheckStatus
 		exit 1
 	fi
 
 	#get FPS info from encoder log
 	runParseEncoderLog
-	runParsetCaseCheckLog ${CheckLogFile}
+	runParseCaseCheckLog ${CheckLogFile}
 	runOutputCaseCheckStatus
 	return 0
 }
