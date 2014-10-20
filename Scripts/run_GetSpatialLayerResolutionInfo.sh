@@ -27,7 +27,7 @@ runExtendMultiple16()
 	then
 		let  "TempNum=${Num}"
 	else
-		let  "TempNum=${Num} + 16 - ${Remainder}"
+		let  "TempNum=${Num} - ${Remainder}"
 	fi
 
 	echo "${TempNum}"
