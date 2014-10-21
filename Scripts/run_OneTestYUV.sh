@@ -129,6 +129,9 @@ runSetLocalWorkingDir()
 		cp -f ./*   ${LocalWorkingDir}	
 	else
 		LocalWorkingDir=`pwd`
+		echo ""
+		echo "LocalTest local data dir is ${LocalWorkingDir}"
+		echo ""
 	fi	
 }
 
