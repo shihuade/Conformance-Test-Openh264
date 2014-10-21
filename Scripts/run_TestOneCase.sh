@@ -45,7 +45,7 @@ runGlobalVariableInitial()
 runEncoderCommandInital()
 {
 	aEncoderCommandSet=( -utype  -frms  -numl   -numtl \
-					-sh -sw  "-dw 0"  "-dh 0" "-dw 1" "-dh 1" "-dw 2" "-dh 2" "-dw 3" "-dh 3" \
+					-sw -sh  "-dw 0"  "-dh 0" "-dw 1" "-dh 1" "-dw 2" "-dh 2" "-dw 3" "-dh 3" \
 					"-frout 0" "-frout 1" "-frout 2" "-frout 3" \
 					"-lqp 0" "-lqp 1" "-lqp 2" "-lqp 3" \
 					-rc -tarb "-ltarb 0" 	"-ltarb 1" "-ltarb 2" "-ltarb 3" \
