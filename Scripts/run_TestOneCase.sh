@@ -315,7 +315,8 @@ runBasicCheck()
 	then
 		if [ -e ${BitStreamFile}  ]
 		then
-			cp ${BitStreamFile}  ${IssueDataPath}
+			#cp ${BitStreamFile}  ${IssueDataPath}
+			Action="you can open the annotation to save the issue bit stream"
 		fi
 		return 1
 	else
@@ -332,7 +333,8 @@ runJSVMCheck()
 	then
 		if [ -e ${BitStreamFile}  ]
 		then
-			cp ${BitStreamFile}  ${IssueDataPath}
+			#cp ${BitStreamFile}  ${IssueDataPath}
+			Action="you can open the annotation to save the issue bit stream"
 		fi
 		return 1
 	else
