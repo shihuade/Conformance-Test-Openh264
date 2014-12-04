@@ -17,70 +17,27 @@
 	echo -e "\033[31m       --eg:   ./run_AllTestSequencesAllCasesTest.sh  LocalTest AllTestData  FinalResult ./CaseConfigure/case.cfg \033[0m"
  	echo ""
  }
-#usage: runGetTestYUVList 
-runGetTestYUVList()
-{
-	local TestSet0=""
-	local TestSet1=""
-	local TestSet2=""
-	local TestSet3=""
-	local TestSet4=""
-	local TestSet5=""
-	local TestSet6=""
-	local TestSet7=""
-	local TestSet8=""
-	while read line
-	do
-		if [[ "$line" =~ ^TestSet0  ]]
-		then
-			TestSet0=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet1  ]]
-		then
-			TestSet1=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet2  ]]
-		then
-			TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet3  ]]
-		then
-			TestSet3=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet4  ]]
-		then
-			TestSet4=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet5  ]]
-		then
-			TestSet5=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet6  ]]
-		then
-			TestSet6=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet7  ]]
-		then
-			TestSet7=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet8  ]]
-		then
-			TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		fi
-	done <${ConfigureFile}
-	
-	aTestYUVList=(${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8})
-}
+ 
 runSGEJobSubmit()
 {
 	let "JobNum=0" 
-	for TestYUV in ${aTestYUVList[@]}
+	for TestYUV in ${YUVFolderForBitstream}/*.yuv
 	do
-		SubFolder="${AllTestDataDir}/${TestYUV}"
-		TestSubmitFlagFile="${TestYUV}_Submitted.flag"
+		YUVName=`echo ${TestYUV} | awk 'BEGIN {FS="/"} {print $NF}'`
+		
+		SubFolder="${AllTestDataDir}/${YUVName}"
+		TestSubmitFlagFile="${YUVName}_Submitted.flag"
 		echo ""
-		echo "test YUV is ${TestYUV}"
+		echo "test YUV is ${YUVName}"
 		echo ""
 		
-		if [  -e   ${SubFolder}/${TestSubmitFlagFile} ]
+		if [ -e  ${SubFolder}/${TestSubmitFlagFile} ]
 		then
 			continue
 		fi
 		cd  ${SubFolder}
 		echo "submit job"
-		aSubmitJobList[$JobNum]=`qsub ./${TestYUV}.sge `
+		aSubmitJobList[$JobNum]=`qsub ./${YUVName}.sge `
 		echo "submit job is ${aSubmitJobList[$JobNum]} "
 		let "JobNum ++" 
 		touch ${TestSubmitFlagFile}		
@@ -197,19 +154,20 @@ runSGETest()
 runLocalTest()
 {
 	let "Flag=0"
-	for TestYUV in ${aTestYUVList[@]}
+	for TestYUV in ${YUVFolderForBitstream}/*.yuv
 	do
-		SubFolder="${AllTestDataDir}/${TestYUV}"
-		TestFlagFile="${TestYUV}_Tested.flag"
+		YUVName=`echo ${TestYUV} | awk 'BEGIN {FS="/"} {print $NF}'`
+		SubFolder="${AllTestDataDir}/${YUVName}"
+		TestFlagFile="${YUVName}_Tested.flag"
 		if [ -e   ${SubFolder}/${TestFlagFile} ]
 		then
 			continue
 		fi
 		cd  ${SubFolder}
 		echo ""
-		echo "test YUV is ${TestYUV}"
+		echo "test YUV is ${YUVName}"
 		echo ""
-		./run_OneTestYUV.sh  ${TestType}  ${TestYUV}  ${FinalResultDir}  ${ConfigureFile}
+		./run_OneTestYUV.sh  ${TestType}  ${YUVName} ${TestYUV} ${FinalResultDir}  ${ConfigureFile}
 		if [  ! $? -eq 0 ]
 		then
 			echo -e "\033[31m not all test cases have been passed! \033[0m"
@@ -228,11 +186,12 @@ runGetTestSummary()
 	echo "">${AllTestSummary}
 		
 	let "AllPassedFlag=0"
-	for TestYUV in ${aTestYUVList[@]}
+	for TestYUV in ${YUVFolderForBitstream}/*.yuv
 	do
-		echo -e "\033[32m final checking for ${TestYUV}  \033[0m"
+		YUVName=`echo ${TestYUV} | awk 'BEGIN {FS="/"} {print $NF}'`
+		echo -e "\033[32m final checking for ${YUVName}  \033[0m"
 		echo ""
-		if [ -e  ${FinalResultDir}/TestReport_${TestYUV}.report ]
+		if [ -e  ${FinalResultDir}/TestReport_${YUVName}.report ]
 		then
 	
 			let "ReportLineIndex=0"
@@ -249,12 +208,12 @@ runGetTestSummary()
 				
 				let "ReportLineIndex ++"
 				
-			done <${FinalResultDir}/TestReport_${TestYUV}.report
+			done <${FinalResultDir}/TestReport_${YUVName}.report
 			
 			echo "">>${AllTestSummary}
-			cat ${FinalResultDir}/TestReport_${TestYUV}.report >>${AllTestSummary}
+			cat ${FinalResultDir}/TestReport_${YUVName}.report >>${AllTestSummary}
 		else
-			echo -e "\033[31m  ${FinalResultDir}/TestReport_${TestYUV}.report does not exist! \033[0m"
+			echo -e "\033[31m  ${FinalResultDir}/TestReport_${YUVName}.report does not exist! \033[0m"
 			let "AllPassedFlag=1"
 		fi
 	done
@@ -293,6 +252,13 @@ runCheck()
 		echo " usage may looks like:   ./run_Main.sh  ../CaseConfigure/case.cfg "
 		exit 1
 	fi
+	
+	if [ ! -d ${YUVFolderForBitstream} ]
+	then
+		echo -e "\033[31m all test summary listed as below: \033[0m"
+		echo -e "\033[31m ********************************************************** \033[0m"	
+	fi
+	
 	return 0
 }
 #usage: runMain  ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
@@ -309,13 +275,11 @@ runMain()
 	AllTestDataDir=$2
 	FinalResultDir=$3
 	ConfigureFile=$4
-	#check input parameters
-	runCheck
 	
 	CurrentDir=`pwd`
-	
 	TestFlagFile=""
 	AllTestSummary="${FinalResultDir}/AllTestYUVsSummary.txt"
+	YUVFolderForBitstream="YUVForBitStream"
 	let "CurrentSGEJobNum=0"
 	declare -a aTestYUVList
 	declare -a aSubmitJobList
@@ -328,12 +292,17 @@ runMain()
 	cd ${FinalResultDir}
 	FinalResultDir=`pwd`
 	cd  ${CurrentDir}
+	
+	cd ${YUVFolderForBitstream}
+	YUVFolderForBitstream=`pwd`
+	cd ${CurrentDir}
+	
+	#check input parameters
+	runCheck
+	
 	echo ""
 	echo "testing all test sequences......"
 	echo ""
-	
-	#get YUV list
-	runGetTestYUVList
 	
 	#Test 
 	if [ ${TestType} = "SGETest"  ]
