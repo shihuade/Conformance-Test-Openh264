@@ -334,19 +334,19 @@ runMain()
 	
 	#check input parameters
 	runCheck
-	#runRemovedPreviousTestData
+	runRemovedPreviousTestData
 	
 	mkdir ${SHA1TableFolder}
 	mkdir ${FinalResultDir}
 	mkdir ${SourceFolder}
 	mkdir ${YUVFolderForBitstream}
 	
-    runSetAsFullPath
+    	runSetAsFullPath
 	
 	#parse git repository info 
 	runGetGitRepository
 	#update codec
-	#runUpdateCodec
+	runUpdateCodec
 	
 	echo "Preparing test space for all test sequences!"
 	runGetTestBitStreamList
