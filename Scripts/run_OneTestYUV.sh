@@ -2,40 +2,13 @@
 #***************************************************************************************
 # brief:
 #      --start point of one test sequence
-#      --usage: run_OneTestYUV.sh ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+#      --usage: run_OneTestYUV.sh ${TestType}  ${TestYUVName} \${TestYUVFullPath}
+#                                 ${FinalResultDir}  ${ConfigureFile}
 #
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
 #usage: runGetYUVFullPath  ${TestYUVName}  ${ConfigureFile}
-runGetYUVFullPath()
-{
-	if [ ! $# -eq 2  ]
-	then
-		echo "usage: runGetYUVFullPath  \${TestYUVName}  \${ConfigureFile} "
-		return 1
-	fi
-	local TestYUVName=$1
-	local ConfigureFile=$2
-	local YUVDir=""
-	while read line
-	do
-		if [[  $line =~ ^TestYUVDir  ]]
-		then
-			 YUVDir=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-			 break
-		fi
-	done <${ConfigureFile}
-	if [  ! -d ${YUVDir} ]
-	then
-		echo "YUV directory setting is not correct,${YUVDir} does not exist! "
-		exit 1
-	fi
-	TestYUVFullPath=`./run_GetYUVPath.sh  ${TestYUVName}  ${YUVDir}`
-	return $?
-}
-
-
 runDeleteYUV()
 {
 	for YUVFile  in ${LocalWorkingDir}/*.yuv
@@ -44,10 +17,8 @@ runDeleteYUV()
 	done
 	
 }
-
 runTestOneYUV()
 {
-
 	echo ""
 	echo  "TestYUVName is ${TestYUVName}"
 	echo "OutPutCaseFile is  ${OutPutCaseFile}"
@@ -56,11 +27,11 @@ runTestOneYUV()
 	echo -e "\033[32m  Test report for YUV ${TestYUVName}  \033[0m">>${TestReport}
 	echo "">>${TestReport}
 	
-	runGetYUVFullPath  ${TestYUVName}  ${ConfigureFile}
-	if [ ! $? -eq 0 ]
+	if [ ! -e ${TestYUVFullPath} ]
 	then
 		echo ""
-		echo  -e "\033[31m  can not find test yuv file ${TestYUVName} \033[0m"
+		echo  -e "\033[31m  can not find test yuv file ${TestYUVFullPath} \033[0m"
+		echo  -e "\033[31m    it may caused by decode failed when transform bit stream to YUV \033[0m"
 		echo ""
 		echo -e "\033[31m Failed!\033[0m">>${TestReport}
 		echo -e "\033[31m can not find test yuv file ${TestYUVName}  under host ${HostName} \033[0m">>${TestReport}
@@ -109,10 +80,7 @@ runTestOneYUV()
 		runDeleteYUV
 		return 0
 	fi
-
 }
-
-
 #create local test space
 runSetLocalWorkingDir()
 {
@@ -134,24 +102,25 @@ runSetLocalWorkingDir()
 		echo ""
 	fi	
 }
-
-#usage:  runMain ${TestType} ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+#usage:  runMain ${TestType} ${TestYUVName} \${TestYUVFullPath} ${FinalResultDir}  ${ConfigureFile}
  runMain()
  {
-	if [ ! $# -eq 4 ]
+	if [ ! $# -eq 5 ]
 	then
-		echo "usage: runMain \${TestType}  \${TestYUVName} \${FinalResultDir}  \${ConfigureFile} "
+		echo "usage: runMain \${TestType}  \${TestYUVName} \${TestYUVFullPath} \${FinalResultDir}  \${ConfigureFile} \${TestYUVFullPath}"
 		echo "detected by run_OneTestYUV.sh"
 		return 1
 	fi
 	
 	TestType=$1
 	TestYUVName=$2
-	FinalResultDir=$3
-	ConfigureFile=$4
+	TestYUVFullPath=$3
+	FinalResultDir=$4
+	ConfigureFile=$5
+	
 	
 	HostName=`hostname`
-	TestYUVFullPath=""
+	
 	TestReport="${FinalResultDir}/TestReport_${TestYUVName}.report"
 	CurrentDir=`pwd`
 	OutPutCaseFile=""
@@ -183,9 +152,10 @@ runSetLocalWorkingDir()
 	fi		
 	return ${PassedFlag}
 }
-
 TestType=$1
 TestYUVName=$2
-FinalResultDir=$3
-ConfigureFile=$4
-runMain  ${TestType} ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+TestYUVFullPath=$3
+FinalResultDir=$4
+ConfigureFile=$5
+runMain  ${TestType} ${TestYUVName} ${TestYUVFullPath} ${FinalResultDir}  ${ConfigureFile}
+
