@@ -7,7 +7,6 @@
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
-
 #usage:  runParseYUVInfo  ${YUVName}
 runParseYUVInfo()
 {
@@ -115,7 +114,7 @@ runMultiLayerInitial()
 			aNumSpatialLayer=( 1 )
 		fi
 	fi
-
+	
 	#set spatial layer resolution
 	#may look like 360 640   720 1280   0 0   0 0
 	aSpatialLayerResolutionSet1=(`./run_GetSpatialLayerResolutionInfo.sh ${PicW} ${PicH} 1 ${Multiple16Flag}`)
@@ -274,10 +273,7 @@ runParseCaseConfigure()
 		then
 			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		fi
-
 	done <$ConfigureFile
-
-
 }
 #usage: runGetSliceNum  $SliceMd
 runGetSliceNum()
@@ -288,7 +284,6 @@ runGetSliceNum()
 		return 1
 	fi
 	local SlicMdIndex=$1
-
 	if [ ${SlicMdIndex} -eq 0 ]
 	then
 		echo ${aSliceNum0[@]}
@@ -310,9 +305,13 @@ runGetSliceNum()
 runFirstStageCase()
 {
     declare -a aQPforTest
-
 	for ScreenSignal in ${aUsageType[@]}
 	do
+		if [ ${ScreenSignal} -eq 1 ]
+		then
+			aNumSpatialLayer=(1)
+		fi
+		
 		for NumSpatialLayer in ${aNumSpatialLayer[@]}
 		do
 			for NumTempLayer in ${aNumTempLayer[@]}
@@ -372,14 +371,12 @@ runSecondStageCase()
 				else
 				  ThreadNumber=( ${aMultipleThreadIdc[@]} )
 				fi
-
 				if [  $SlcMode -eq 4  ]
 				then
 					let "TempNalSize=${MaxNalSize}"
 				else
 					let "TempNalSize= 0"
 				fi
-
 				for SlcNum in ${aSliceNumber[@]}
 				do
 					for  IntraPeriodIndex in ${aIntraPeriod[@]}
@@ -406,7 +403,6 @@ runSecondStageCase()
 								${IntraPeriodIndex},\
 								${ThreadNum}">>$casefile_02
 							fi
-
 						done #threadNum loop
 					done #aSliceNum loop
 				done #Slice Mode loop
@@ -423,7 +419,6 @@ runThirdStageCase()
 	local BackgroundFlag=""
 	local AQFlag=""
 	declare -a CaseInfo
-
 	while read SecondStageCase
 	do
 		if [[ $SecondStageCase =~ ^[-0-9]  ]]
@@ -541,7 +536,6 @@ runBeforeGenerate()
 		SceneChangeFlag,\
 		BackgroundFlag,\
 		AQFlag"
-
   echo $headline>$casefile
   echo $headline>$casefile_01
   echo $headline>$casefile_02
@@ -563,12 +557,9 @@ runMain()
   local ConfigureFile=$1
   local TestSequence=$2
   local OutputCaseFile=$3
-
   runGlobalVariableInital  $TestSequence  $OutputCaseFile
-
   runParseCaseConfigure  ${ConfigureFile}
   runMultiLayerInitial
-
   runBeforeGenerate
   runOutputParseResult
   runFirstStageCase
@@ -582,5 +573,4 @@ OutputCaseFile=$3
 echo ""
 echo "case generating ......"
 runMain  ${ConfigureFile}   ${TestSequence}   ${OutputCaseFile}
-
 
