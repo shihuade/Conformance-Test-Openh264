@@ -17,8 +17,8 @@
  {
 	echo ""
 	echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \033[0m"
-	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest  ../CaseConfigure/case.cfg\033[0m"
-	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ../CaseConfigure/case.cfg \033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest  ./CaseConfigure/case.cfg\033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ./CaseConfigure/case.cfg \033[0m"
  	echo ""
  }
  
