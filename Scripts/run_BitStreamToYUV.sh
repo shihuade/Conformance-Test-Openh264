@@ -88,6 +88,13 @@ runMain()
 	BitStreameFile=$1
 	OutputDir=$2
 	Decoder=$3
+	if [ ! -e ${BitStreameFile} ]
+	then
+		echo -e "\033[31m bit stream file does not exist! please double check! \033[0m"
+		echo -e "\033[31m   ----bit steam file:${BitStreameFile}  \033[0m"
+		return 1
+	fi
+	
 	if [ ! -d  ${OutputDir} ]
 	then
 		echo -e "\033[31m YUV folder for bitstream does not exist! \033[0m"

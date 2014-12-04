@@ -14,21 +14,26 @@ runRemovedPreviousTestData()
 	
 	if [ -d $AllTestDataFolder ]
 	then
-		./${ScriptFolder}/run_SafeDelete.sh  $AllTestDataFolder
+		${ScriptFolder}/run_SafeDelete.sh  $AllTestDataFolder
 	fi
 	if [ -d $SHA1TableFolder ]
 	then
-		./${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
+		${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
 	fi
 	if [ -d $FinalResultDir ]
 	then
-		./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
+		${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
 	fi
 	
 	if [ -d $SourceFolder ]
 	then
-		./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
+		{ScriptFolder}/run_SafeDelete.sh  $SourceFolder
 	fi
+	if [ -d $YUVFolderForBitstream ]
+	then
+		${ScriptFolder}/run_SafeDelete.sh  $YUVFolderForBitstream
+	fi	
+	
 	
 }
 runUpdateCodec()
@@ -68,14 +73,15 @@ runUpdateCodec()
 }
 runPrepareSGEJobFile()
 {
-	if [ ! $# -eq 3 ]
+	if [ ! $# -eq 4 ]
 	then
-		echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName \$QueueIndex "
+		echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName \$TestYUVFullPath \$QueueIndex "
 		return 1
 	fi
 	TestSequenceDir=$1
 	TestYUVName=$2
-	QueueIndex=$3
+	TestYUVFullPath=$3
+	QueueIndex=$4
 	
 	if [ -d ${TestSequenceDir} ]
 	then
@@ -116,7 +122,7 @@ runPrepareSGEJobFile()
 	
 	done <${SGEModelFile}
 	
-	echo "${TestSequenceDir}/${SGEJobScript}  ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}">>${SGEJobFile}
+	echo "${TestSequenceDir}/${SGEJobScript}  ${TestType}  ${TestYUVName} ${TestYUVFullPath}  ${FinalResultDir}  ${ConfigureFile}">>${SGEJobFile}
 	
 	return 0
 }
@@ -135,7 +141,7 @@ runGetGitRepository()
 	done <${ConfigureFile}
 }
 #usage: runGetTestYUVList 
-runGetTestYUVList()
+runGetTestBitStreamList()
 {
 	local TestSet0=""
 	local TestSet1=""
@@ -179,7 +185,28 @@ runGetTestYUVList()
 		fi
 	done <${ConfigureFile}
 	
-	aTestYUVList=(${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8})
+	aTestBitstreamList=(${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8})
+}
+runTransformBitStreamToYUV()
+{
+	Decoder="${CodecFolder}/h264dec"
+	for Bitstream in ${aTestBitstreamList[@]}
+	do
+		TestBitStream="${TestBitstreamDir}/${Bitstream}"
+		if [ ! -e ${TestBitStream} ]
+		then
+			echo -e "\033[31m bit stream file does not exist, please double check! \033[0m"
+			echo -e "\033[31m   ---- file name: ${TestBitStream} \033[0m"
+			exit 1		
+		fi
+		${ScriptFolder}/run_BitStreamToYUV.sh  ${TestBitStream}  ${YUVFolderForBitstream} ${Decoder}
+		if [ ! $? -eq 0 ]
+		then
+			echo -e "\033[31m failed to transform bit stream into test YUV by h264dec \033[0m"
+			echo -e "\033[31m   ---- file name: ${TestBitStream} \033[0m"
+			exit 1			
+		fi
+	done
 }
 runPrepareTestSpace()
 {
@@ -188,12 +215,14 @@ runPrepareTestSpace()
 	#for SGE test, use 3 test queues so that can support more parallel jobs
 	let "YUVIndex=0"
 	let "QueueIndex=0"
-	for TestYUV in ${aTestYUVList[@]}
+	for TestYUV in ${YUVFolderForBitstream}/*.yuv
 	do
-		SubFolder="${AllTestDataFolder}/${TestYUV}"
+		YUVName=`echo ${TestYUV} | awk 'BEGIN {FS="/"} {print $NF}'`
+		
+		SubFolder="${AllTestDataFolder}/${YUVName}"
 	
 		echo ""
-		echo "Test sequence name is ${TestYUV}"
+		echo "Test sequence name is ${YUVName}"
 		echo "sub folder is  ${SubFolder}"
 		echo ""
 		if [  -d  ${SubFolder}  ]
@@ -210,7 +239,7 @@ runPrepareTestSpace()
 		
 		if [ ${TestType} = "SGETest"  ]
 		then
-			runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${QueueIndex}
+			runPrepareSGEJobFile  ${SubFolder}  ${YUVName} ${TestYUV}  ${QueueIndex}
 		fi 		
 	done
 	
@@ -239,6 +268,36 @@ runCheck()
 	fi
 	return 0
 }
+runSetAsFullPath()
+{
+	cd ${AllTestDataFolder}
+	AllTestDataFolder=`pwd`
+	cd  ${CurrentDir}
+	cd  ${CurrentDir}
+	
+	cd ${SourceFolder}
+	SourceFolder=`pwd`
+	
+	cd ${FinalResultDir}
+	FinalResultDir=`pwd`
+	cd  ${CurrentDir}
+	
+	cd ${YUVFolderForBitstream}
+	YUVFolderForBitstream=`pwd`
+	cd ${CurrentDir}
+	
+	cd ${TestBitstreamDir}
+	TestBitstreamDir=`pwd`
+	cd ${CurrentDir}
+	
+	cd ${CodecFolder}
+	CodecFolder=`pwd`
+	cd ${CurrentDir}
+	
+	cd ${ScriptFolder}
+	ScriptFolder=`pwd`
+	cd ${CurrentDir}
+}
 #usage: runPrepareALlFolder   $TestType $AllTestDataFolder  $TestBitStreamFolder   $CodecFolder  $ScriptFolder  $ConfigureFile/$SH1TableFolder
 runMain()
 {
@@ -261,36 +320,37 @@ runMain()
 	CurrentDir=`pwd`
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
-	
+	YUVFolderForBitstream="YUVForBitStream"
+	TestBitstreamDir="${SourceFolder}/res"
 	
 	Openh264GitAddr=""
 	Branch=""
 	
 	
-	declare -a aTestYUVList
+	declare -a aTestBitstreamList
 	#folder for eache test sequence
 	SubFolder=""
 	SGEJobFile=""
 	
 	#check input parameters
 	runCheck
-	runRemovedPreviousTestData
+	#runRemovedPreviousTestData
 	
 	mkdir ${SHA1TableFolder}
 	mkdir ${FinalResultDir}
 	mkdir ${SourceFolder}
+	mkdir ${YUVFolderForBitstream}
 	
-	cd ${FinalResultDir}
-	FinalResultDir=`pwd`
-	cd  ${CurrentDir}
+    runSetAsFullPath
 	
 	#parse git repository info 
 	runGetGitRepository
 	#update codec
-	runUpdateCodec
+	#runUpdateCodec
 	
 	echo "Preparing test space for all test sequences!"
-	runGetTestYUVList
+	runGetTestBitStreamList
+	runTransformBitStreamToYUV
 	runPrepareTestSpace
 }
 TestType=$1
