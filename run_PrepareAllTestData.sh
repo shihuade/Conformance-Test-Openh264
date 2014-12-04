@@ -35,7 +35,10 @@ runUpdateCodec()
 {
 	echo ""
 	echo -e "\033[32m openh264 repository cloning... \033[0m"
+	echo -e "\033[32m     ----repository is ${Openh264GitAddr} \033[0m"	
+	echo -e "\033[32m     ----branch     is ${Branch} \033[0m"	
 	echo ""
+	
 	./run_CheckoutCiscoOpenh264Codec.sh  ${Openh264GitAddr} ${SourceFolder}
 	if [  ! $? -eq 0 ]
 	then	
@@ -117,6 +120,20 @@ runPrepareSGEJobFile()
 	
 	return 0
 }
+#usage: get git repository address and branch
+runGetGitRepository()
+{
+	while read line
+	do
+		if [[ "$line" =~ ^GitAddress  ]]
+		then
+			Openh264GitAddr=`echo $line | awk '{print $2}' `
+		elif  [[ "$line" =~ ^GitBranch  ]]
+		then
+			Branch=`echo $line | awk '{print $2}' `
+		fi
+	done <${ConfigureFile}
+}
 #usage: runGetTestYUVList 
 runGetTestYUVList()
 {
@@ -184,7 +201,6 @@ runPrepareTestSpace()
 			continue
 		fi
 		mkdir -p ${SubFolder}
-
 		cp  ${CodecFolder}/*    ${SubFolder}
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
@@ -247,8 +263,9 @@ runMain()
 	FinalResultDir="FinalResult"
 	
 	
-	Openh264GitAddr="https://github.com/cisco/openh264"
-	Branch="master"
+	Openh264GitAddr=""
+	Branch=""
+	
 	
 	declare -a aTestYUVList
 	#folder for eache test sequence
@@ -267,6 +284,8 @@ runMain()
 	FinalResultDir=`pwd`
 	cd  ${CurrentDir}
 	
+	#parse git repository info 
+	runGetGitRepository
 	#update codec
 	runUpdateCodec
 	
