@@ -70,7 +70,7 @@ runMain()
 	SourceFolder="Source"
 	CodecFolder="Codec"
 	ScriptFolder="Scripts"
-	SH1TableFolder="SHA1Table"
+	SHA1TableFolder="SHA1Table"
 	ConfigureFolder="CaseConfigure"
 	FinalResultDir="FinalResult"
 	
@@ -96,14 +96,14 @@ runMain()
 		echo ""
 		echo -e "\033[31m failed: not all cases for all test sequences have been passed ! \033[0m"
 		echo ""
-		cp  ${FinalResultDir}/*SHA1_Table.csv  ./${SH1TableFolder}
+		cp  ${FinalResultDir}/*SHA1_Table.csv  ./${SHA1TableFolder}
 		runPromptInfo
 		exit 1
 	else
 		echo ""
 		echo -e "\033[32m all cases of  all test sequences have been passed! \033[0m"
 		echo ""
-		cp  ${FinalResultDir}/*SHA1_Table.csv ./${SH1TableFolder}
+		cp  ${FinalResultDir}/*SHA1_Table.csv ./${SHA1TableFolder}
 		runPromptInfo
 		exit 0
 	fi
