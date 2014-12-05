@@ -93,6 +93,10 @@ runSetLocalWorkingDir()
 		echo ""
 		echo "SGETest local data dir is ${LocalWorkingDir}"
 		echo ""
+		if [ -d ${LocalWorkingDir} ]
+		then
+			./run_SafeDelete.sh  ${LocalWorkingDir} 
+		fi
 		mkdir -p ${LocalWorkingDir}
 		cp -f ./*   ${LocalWorkingDir}	
 	else

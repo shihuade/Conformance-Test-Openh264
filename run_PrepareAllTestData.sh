@@ -27,7 +27,7 @@ runRemovedPreviousTestData()
 	
 	if [ -d $SourceFolder ]
 	then
-		{ScriptFolder}/run_SafeDelete.sh  $SourceFolder
+		${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
 	fi
 	if [ -d $YUVFolderForBitstream ]
 	then
@@ -95,8 +95,8 @@ runPrepareSGEJobFile()
 	
 	SGEQueue="Openh264SGE_${QueueIndex}"
 	SGEName="${TestYUVName}_SGE_Test"
-	SGEModelFile="${CurrentDir}/${ScriptFolder}/SGEModel.sge"
-	SGEJobFile="${TestSequenceDir}/${TestYUV}.sge"
+	SGEModelFile="${ScriptFolder}/SGEModel.sge"
+	SGEJobFile="${TestSequenceDir}/${TestYUVName}.sge"
 	SGEJobScript="run_OneTestYUV.sh"
 	
 	echo ""
@@ -277,6 +277,7 @@ runSetAsFullPath()
 	
 	cd ${SourceFolder}
 	SourceFolder=`pwd`
+	cd  ${CurrentDir}
 	
 	cd ${FinalResultDir}
 	FinalResultDir=`pwd`
@@ -284,10 +285,6 @@ runSetAsFullPath()
 	
 	cd ${YUVFolderForBitstream}
 	YUVFolderForBitstream=`pwd`
-	cd ${CurrentDir}
-	
-	cd ${TestBitstreamDir}
-	TestBitstreamDir=`pwd`
 	cd ${CurrentDir}
 	
 	cd ${CodecFolder}
@@ -336,12 +333,13 @@ runMain()
 	runCheck
 	runRemovedPreviousTestData
 	
+	mkdir ${AllTestDataFolder}
 	mkdir ${SHA1TableFolder}
 	mkdir ${FinalResultDir}
 	mkdir ${SourceFolder}
 	mkdir ${YUVFolderForBitstream}
 	
-    	runSetAsFullPath
+    runSetAsFullPath
 	
 	#parse git repository info 
 	runGetGitRepository
