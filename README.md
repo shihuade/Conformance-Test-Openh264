@@ -23,8 +23,10 @@ how to use
 
 
         1. change your test configure by editing file CaseConfigure/case_XXX.cfg;
-        	--
-        	--
+        	--eg. change your repository address and branch as below in confugre file:
+        		GitAddress  https://github.com/cisco/openh264
+        		GitBranch   master
+        		
         2. for how to generate your personal test case, please refer to section 
            "how to configure test case";
         3. ./run_Main.sh  SGETest  ./CaseConfigure/case_XXX.cfg;
@@ -37,6 +39,10 @@ how to use
 
 
         1. change your test configure by editing file CaseConfigure/case_XXX.cfg;
+        	--eg. change your repository address and branch as below in confugre file:
+        		GitAddress  https://github.com/cisco/openh264
+        		GitBranch   master
+        		
         2. for how to generate your personal test case, please refer to section 
            "how to configure test case";
         3. ./run_Main.sh  LocalTest  ./CaseConfigure/case_XXX.cfg;
