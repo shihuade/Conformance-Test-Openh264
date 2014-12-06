@@ -106,7 +106,7 @@ runParseCaseInfo()
 }
 runSetCaseGlobalParam()
 {
-	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_welsrubyenc.264
+	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_openh264.264
 	let "EncoderNum      = ${aEncoderCommandValue[1]}"
 	let "SpatailLayerNum = ${aEncoderCommandValue[2]}"
 	let "RCMode          = ${aEncoderCommandValue[22]}"
