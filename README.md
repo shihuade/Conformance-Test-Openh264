@@ -46,7 +46,8 @@ how to use
 how does it work
 ----------------
 
--   step 1. script will clone latest openh264 codec from  offical branch to local host;
+-   step 1. script will clone latest openh264 codec from
+             your given github based openh264 address and branch to local host;
 -   step 2. script will automatically build and updaed openh264 codec in folder ./Codec;
 -   for step 1~2,please refer to section "how to update your test codec";
 -   step 3. prepare all test space for each test YUV;
