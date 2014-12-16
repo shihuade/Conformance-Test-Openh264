@@ -65,35 +65,49 @@ runGetTestYUVList()
 }
 runSGEJobSubmit()
 {
-	let "JobNum=0" 
+	let "JobNum=0"
+
+	echo "submitted job info:">${SGEJobInfoLog}
+	date >>${SGEJobInfoLog}
+	
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataDir}/${TestYUV}"
-		TestSubmitFlagFile="${TestYUV}_Submitted.flag"
+		
 		echo ""
 		echo "test YUV is ${TestYUV}"
 		echo ""
 		
-		if [  -e   ${SubFolder}/${TestSubmitFlagFile} ]
-		then
-			continue
-		fi
 		cd  ${SubFolder}
-		echo "submit job"
-		aSubmitJobList[$JobNum]=`qsub ./${TestYUV}.sge `
-		echo "submit job is ${aSubmitJobList[$JobNum]} "
-		let "JobNum ++" 
-		touch ${TestSubmitFlagFile}		
+		
+		for SGEFile in ./${TestYUV}*.sge
+		do
+			TestSubmitFlagFile="${SGEFile}_Submitted.flag"
+	
+			if [  -e ${TestSubmitFlagFile} ]
+			then
+				continue
+			fi
+			echo "submit job"
+			aSubmitJobList[$JobNum]=`qsub ${SGEFile}  `
+			echo "submit job is ${aSubmitJobList[$JobNum]} "
+			echo "submit job is ${aSubmitJobList[$JobNum]} ">>${SGEJobInfoLog}
+			let "JobNum ++" 
+			touch ${TestSubmitFlagFile}		
+		done
+
 		cd  ${CurrentDir}
 	done
+	
 	return 0
 }
 #extract all SGE job ID by using command qstat 
 runGetAllSGEJobID()
 {
-	SGEJObList="Job.list"	
-	qstat >${SGEJObList}
-	
+	SGEJobList="Job.list"	
+	qstat >${SGEJobList}
+	qstat >>${SGEJobInfoLog}
+
 	let "LineIndex=0"
 	let "JobIDIndex=0"
 	while read line
@@ -104,7 +118,7 @@ runGetAllSGEJobID()
 			let "JobIDIndex++"
 		fi
 		let "LineIndex++"
-	done <${SGEJObList}
+	done <${SGEJobList}
 	
 	let "CurrentSGEJobNum=${JobIDIndex}"
 }
@@ -161,7 +175,6 @@ runSGETest()
 	while [ ${AllJobFinishedFlag} -eq 0 ]
 	do
 		CurrentTime=`date`
-		CurrentTestStatus=`qstat  -q Openh264SGE`
 		
 		runGetAllSGEJobID
 		runSGEJobCheck
@@ -187,7 +200,7 @@ runSGETest()
 			#echo  -e "\033[34m Current SGE job for openh264 test are listed as below: \033[0m"
 			#qstat  -q  ${SGEQueneName}
 			#echo  -e "\033[34m *************************************************************** \033[0m"
-			sleep 1200
+			sleep 5
 		fi 
 	done
 	
@@ -318,6 +331,8 @@ runMain()
 	
 	TestFlagFile=""
 	AllTestSummary="${FinalResultDir}/AllTestYUVsSummary.txt"
+	
+	SGEJobInfoLog="SGEJobInfo.log"
 	let "CurrentSGEJobNum=0"
 	declare -a aTestYUVList
 	declare -a aSubmitJobList

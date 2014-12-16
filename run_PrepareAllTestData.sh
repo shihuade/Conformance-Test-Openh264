@@ -86,13 +86,14 @@ runPrepareSGEJobFile()
 		cd ${CurrentDir}
 	else
 		echo -e "\033[31m Job folder does not exist! Please double check! \033[0m"
+		echo -e "\033[31m     --TestSequenceDir is ${TestSequenceDir} \033[0m"
 		exit 1
 	fi
 	
 	SGEQueue="Openh264SGE_${QueueIndex}"
 	SGEName="${TestYUVName}_SGE_Test"
 	SGEModelFile="${CurrentDir}/${ScriptFolder}/SGEModel.sge"
-	SGEJobFile="${TestSequenceDir}/${TestYUV}.sge"
+	SGEJobFile="${TestSequenceDir}/${TestYUV}_${AssignedCaseIndex}.sge"
 	SGEJobScript="run_OneTestYUV.sh"
 	
 	echo ""
@@ -198,7 +199,7 @@ runGenerateCases()
 	local CasesConfigureFile=""
 	CasesConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
 
-	let "SubCasesNum=10"
+	let "SubCasesNum=11"
 
     #Case generation
     echo ""
@@ -219,7 +220,7 @@ runGenerateCases()
 	#SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
     if [ ${TestType} = "SGETest"  ]
     then
-		./run_CasesPartition.sh ${AllCasesFile} ${SubCasesNum} ${TestYUVName}        
+		./run_CasesPartition.sh ${AllCasesFile} ${SubCasesNum} ${TestYUVName}>>${CasePartitionLog}        
     fi
 
 }
@@ -231,11 +232,19 @@ runGetSubCasesSetNum()
 	
 	let "SubCasesSetNum=0"
 	cd ${SubFolder}
-	for file in ${SubFolder}/${TestYUVName}_SubCases_*.csv
-	do
 
+	echo ""
+	echo "get sub cases set num"
+	echo "SubFolder is ${SubFolder}"
+	echo "CurrentDir is ${CurrentDir}"
+	
+	for file in ${SubFolder}/${YUVName}_SubCases_*.csv
+	do
+		echo file is  ${file}
 		let "SubCasesSetNum ++"
 	done
+	echo "subcases Num is ${SubCasesSetNum}"
+	cd ${CurrentDir}
 }
 
 runPrepareTestSpace()
@@ -257,7 +266,12 @@ runPrepareTestSpace()
 		then
 			continue
 		fi
+
 		mkdir -p ${SubFolder}
+		cd ${SubFolder}
+		SubFolder=`pwd`
+		cd ${CurrentDir}
+
 		cp  ${CodecFolder}/*    ${SubFolder}
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
@@ -273,16 +287,16 @@ runPrepareTestSpace()
 		if [ ${TestType} = "SGETest"  ]
 		then
 			#SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
-			runGetSubCasesSetNum
+			runGetSubCasesSetNum ${SubFolder}  ${TestYUV}
 			for((i=0;i<SubCasesSetNum; i++))
 			do
 				AssignedSubCasesIndex=$i
-				AssignedCasesFile="${TestYUVName}_SubCases_${AssignedSubCasesIndex}.csv"			
+				AssignedCasesFile="${TestYUV}_SubCases_${AssignedSubCasesIndex}.csv"			
 				runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${QueueIndex} ${AssignedCasesFile} ${AssignedSubCasesIndex}
 			done
 		fi 		
 	done
-	
+
 	return 0
 }
 runCheck()
@@ -330,7 +344,8 @@ runMain()
 	CurrentDir=`pwd`
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
-	
+
+	CasePartitionLog="Log_SGETestCasesPartitionLog.log"	
 	Openh264GitAddr=""
 	Branch=""
 	

@@ -76,7 +76,7 @@ runTestOneYUV()
 	#generate SHA-1 table
 	echo ""
 	echo " TestYUVFullPath  is ${TestYUVFullPath}"
-	./run_TestAssignedCases.sh  ${LocalWorkingDir}  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${AssignedCasesFile} ${AssignedCasesIndex} 
+	./run_TestAssignedCases.sh ${TestType}  ${LocalWorkingDir}  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${AssignedCasesFile} ${AssignedCasesIndex} 
 	if [  ! $? -eq 0 ]
 	then
 		echo -e "\033[31m Failed! \033[0m">>${TestReport}
@@ -138,12 +138,17 @@ runCheck()
 
 	if [ ! -e ${ConfigureFile} ]
 	then
+		echo "ConfigureFile is ${ConfigureFile}"
+		ls -l
 		echo "configure file does not exist, please double check!"
 		exit 1
 	fi
 
 	if [ ! -e ${AssignedCasesFile} ]
 	then
+		ls -l
+		pwd
+		echo "AssignedCasesFile is ${AssignedCasesFile}"
 		echo "assigned cases file doest not exist,please double check!"
 		exit 1
 	fi

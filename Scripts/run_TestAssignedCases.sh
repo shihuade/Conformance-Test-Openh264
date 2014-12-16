@@ -9,7 +9,9 @@
 #            ${AllCasesConsoleLogFile}
 #            ${CaseSummaryFile}
 #
-#usage:  ./run_TestAllCases.sh $TestYUV  $InputYUV $AssignedCasesFile
+#usage:  ./run_TestAllCases.sh  $TestType ${LocalDataDir}  ${ConfigureFile} \
+#								$TestYUVName $InputYUV  $AssignedCasesFile \
+#							    $AssignedCasesIndex
 #
 #
 #date:  5/08/2014 Created
@@ -19,7 +21,7 @@ runGlobalVariableInitial()
 	CurrentDir=`pwd`
 	
 	#for SGETest, add local data directory
-	if [ ${LocalDataDir} != ${CurrentDir}  ]
+	if [ "${TestType}" = "SGETest"  ]
 	then
 		#test data space
 		ResultPath="${LocalDataDir}/result"
@@ -334,21 +336,23 @@ runOutputPassNum()
 	
 }
 #***********************************************************
-# usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $AssignedCasesFile
+# usage: runMain $TestType ${LocalDataDir}  ${ConfigureFile} $TestYUVName $InputYUV  $AssignedCasesFile $AssignedCasesIndex"
+ 
 runMain()
 {
-	if [ ! $# -eq 6  ]
+	if [ ! $# -eq 7  ]
 	then
-		echo "usage: run_TestAllCase.sh \${LocalDataDir}  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AssignedCasesFile \$AssignedCasesIndex"
+		echo "usage: run_TestAllCase.sh \$TestType \${LocalDataDir}  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AssignedCasesFile \$AssignedCasesIndex"
 	return 1
 	fi
 
-	LocalDataDir=$1
-	ConfigureFile=$2
-	TestYUVName=$3
-	InputYUV=$4
-	AssignedCasesFile=$5
-	AssignedCasesIndex=$6
+	TestType=$1
+	LocalDataDir=$2
+	ConfigureFile=$3
+	TestYUVName=$4
+	InputYUV=$5
+	AssignedCasesFile=$6
+	AssignedCasesIndex=$7
 
 	runGlobalVariableInitial
 	runParseConfigure
@@ -361,12 +365,13 @@ runMain()
 	runOutputPassNum
 	return $?
 }
-LocalDataDir=$1
-ConfigureFile=$2
-TestYUVName=$3
-InputYUV=$4
-AssignedCasesFile=$5
-AssignedCasesIndex=$6
-runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AssignedCasesFile} ${AssignedCasesIndex}
+TestType=$1
+LocalDataDir=$2
+ConfigureFile=$3
+TestYUVName=$4
+InputYUV=$5
+AssignedCasesFile=$6
+AssignedCasesIndex=$7
+runMain  ${TestType} ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AssignedCasesFile} ${AssignedCasesIndex}
 
 
