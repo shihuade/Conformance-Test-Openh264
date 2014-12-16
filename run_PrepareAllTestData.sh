@@ -185,19 +185,24 @@ runGetTestYUVList()
 runGenerateCases()
 {
 
-    if [ ! $# -eq  ]
+    if [ ! $# -eq 1 ]
     then
-
+		echo "usage: runGenerateCases \${TestYUVName}"
+		return 1
     fi
 
     local TestYUVName=$1
-    local OutPutCaseFile=${TestYUVName}_AllCase.csv
+    local AllCasesFile=${TestYUVName}_AllCases.csv
+	local CasesConfigureFile=""
+	CasesConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
+
+	let "SubCasesNum=10"
+
     #Case generation
     echo ""
-    echo "${ConfigureFile}   ${TestYUVName}   ${OutputCaseFile}"
-
-
-    ./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName}   ${OutPutCaseFile}
+	echo "generating all cases file"
+    echo "${ConfigureFile}   ${TestYUVName}   ${AllCasesFile}"
+    ./run_GenerateCase.sh  ${CasesConfigureFile}   ${TestYUVName}   ${AllCasesFile}
     if [  ! $? -eq 0 ]
     then
         echo ""
@@ -208,14 +213,11 @@ runGenerateCases()
         return 1
     fi
 
-
-SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
-let "SubCasesFileIndex ++"
-echo ${HeadLine}
-
+	
+	#SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
     if [ ${TestType} = "SGETest"  ]
     then
-        runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${QueueIndex}
+		./run_CasesPartition.sh ${AllCasesFile} ${SubCasesNum} ${TestYUVName}        
     fi
 
 }
@@ -243,7 +245,11 @@ runPrepareTestSpace()
 		cp  ${CodecFolder}/*    ${SubFolder}
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
-		
+	
+		#generate cases
+		cd ${SubFolder}
+		runGenerateCases  ${TestYUV}
+		cd ${CurrentDir}		
 		let "YUVIndex++"
 		let "QueueIndex = ${YUVIndex}%3"
 		
@@ -326,7 +332,7 @@ runMain()
 	#parse git repository info 
 	runGetGitRepository
 	#update codec
-	runUpdateCodec
+	#runUpdateCodec
 	
 	echo "Preparing test space for all test sequences!"
 	runGetTestYUVList

@@ -197,6 +197,7 @@ runSGETest()
 runLocalTest()
 {
 	let "Flag=0"
+	local AssignedCasesFile=""
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataDir}/${TestYUV}"
@@ -209,7 +210,8 @@ runLocalTest()
 		echo ""
 		echo "test YUV is ${TestYUV}"
 		echo ""
-		./run_OneTestYUV.sh  ${TestType}  ${TestYUV}  ${FinalResultDir}  ${ConfigureFile}
+		AssignedCasesFile=${TestYUV}_AllCases.csv
+		./run_OneTestYUV.sh  ${TestType}  ${TestYUV}  ${FinalResultDir}  ${ConfigureFile} ${AssignedCasesFile} 0 
 		if [  ! $? -eq 0 ]
 		then
 			echo -e "\033[31m not all test cases have been passed! \033[0m"

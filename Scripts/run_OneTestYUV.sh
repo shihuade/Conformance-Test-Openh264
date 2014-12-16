@@ -2,7 +2,9 @@
 #***************************************************************************************
 # brief:
 #      --start point of one test sequence
-#      --usage: run_OneTestYUV.sh ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+#      --usage: run_OneTestYUV.sh ${TestType}  ${TestYUVName} \
+#                                 ${FinalResultDir}  ${ConfigureFile} \
+#                                 ${AssignedCasesFile}
 #
 #
 #date:  5/08/2014 Created
@@ -50,7 +52,7 @@ runTestOneYUV()
 
 	echo ""
 	echo  "TestYUVName is ${TestYUVName}"
-	echo "OutPutCaseFile is  ${OutPutCaseFile}"
+	echo "AssignedCasesFile is  ${AssignedCasesFile}"
 	echo ""
 	echo -e "\033[32m ********************************************************************** \033[0m">${TestReport}
 	echo -e "\033[32m  Test report for YUV ${TestYUVName}  \033[0m">>${TestReport}
@@ -70,25 +72,11 @@ runTestOneYUV()
 		echo  -e "\033[32m  TestYUVFullPath is ${TestYUVFullPath}  \033[0m"
 		echo ""
 	fi
-	#Case generation
-	echo ""
-	echo "CurrentDir is ${CurrentDir}"
-	echo "${ConfigureFile}   ${TestYUVName}   ${OutputCaseFile}"
-	./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName}   ${OutPutCaseFile}
-	if [  ! $? -eq 0 ]
-	then
-		echo ""
-		echo  -e "\033[31m  failed to generate cases ! \033[0m"
-		echo ""
-		echo -e "\033[31m Failed! \033[0m">>${TestReport}
-		echo -e "\033[31m failed to generate cases ! \033[0m">>${TestReport}
-		return 1
-	fi
 	
 	#generate SHA-1 table
 	echo ""
 	echo " TestYUVFullPath  is ${TestYUVFullPath}"
-	./run_TestAssignedCases.sh  ${LocalWorkingDir}  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${OutPutCaseFile}
+	./run_TestAssignedCases.sh  ${LocalWorkingDir}  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${AssignedCasesFile} ${AssignedCasesIndex} 
 	if [  ! $? -eq 0 ]
 	then
 		echo -e "\033[31m Failed! \033[0m">>${TestReport}
@@ -140,12 +128,34 @@ runSetLocalWorkingDir()
 	fi	
 }
 
-#usage:  runMain ${TestType} ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+runCheck()
+{
+	if [ ! -d ${FinalResultDir} ]
+	then
+		echo " finale result directory does not exist,please double check!"
+		exit 1
+	fi
+
+	if [ ! -e ${ConfigureFile} ]
+	then
+		echo "configure file does not exist, please double check!"
+		exit 1
+	fi
+
+	if [ ! -e ${AssignedCasesFile} ]
+	then
+		echo "assigned cases file doest not exist,please double check!"
+		exit 1
+	fi
+
+}
+
+#usage:  runMain ${TestType} ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile} ${AssignedCasesFile}
  runMain()
  {
-	if [ ! $# -eq 4 ]
+	if [ ! $# -eq 6 ]
 	then
-		echo "usage: runMain \${TestType}  \${TestYUVName} \${FinalResultDir}  \${ConfigureFile} "
+		echo "usage: runMain \${TestType}  \${TestYUVName} \${FinalResultDir}  \${ConfigureFile} \${AssignedCasesFile} \${AssignedCasesIndex} "
 		echo "detected by run_OneTestYUV.sh"
 		return 1
 	fi
@@ -154,16 +164,15 @@ runSetLocalWorkingDir()
 	TestYUVName=$2
 	FinalResultDir=$3
 	ConfigureFile=$4
-	
+	AssignedCasesFile=$5
+	AssignedCasesIndex=$6
+
 	HostName=`hostname`
 	TestYUVFullPath=""
-	TestReport="${FinalResultDir}/TestReport_${TestYUVName}.report"
 	CurrentDir=`pwd`
-	OutPutCaseFile=""
 	ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
-	OutPutCaseFile=${TestYUVName}_AllCase.csv
 	
-	
+	runCheck
 	
 	#for both SGE data and local test, in order to decrease tho sge-master's workload,
 	#need local data folder for each job/testYUV
@@ -178,11 +187,13 @@ runSetLocalWorkingDir()
 	
 	if [ ${TestType} = "SGETest" ]
 	then
+		TestReport="${FinalResultDir}/TestReport_${TestYUVName}_${AssignedCasesIndex}.report"
 		cd ${LocalWorkingDir}
 		runTestOneYUV
 		PassedFlag=$?		
 		cd ${CurrentDir}
 	else
+		TestReport="${FinalResultDir}/TestReport_${TestYUVName}.report"
 		runTestOneYUV
 		PassedFlag=$?		
 	fi		
@@ -193,4 +204,6 @@ TestType=$1
 TestYUVName=$2
 FinalResultDir=$3
 ConfigureFile=$4
-runMain  ${TestType} ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}
+AssignedCasesFile=$5
+AssignedCasesIndex=$6
+runMain  ${TestType} ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile} ${AssignedCasesFile}  ${AssignedCasesIndex}

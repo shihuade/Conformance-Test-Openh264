@@ -150,11 +150,11 @@ runEncodeOneCase()
 	echo ""
 	echo "---------------Encode One Case-------------------------------------------"
 	echo "case line is :"
-	EncoderCommand="./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} \
+	EncoderCommand="./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} -trace 1\
 				-drec 0 ${aRecYUVFileList[0]} -drec 1 ${aRecYUVFileList[1]} \
 				-drec 2 ${aRecYUVFileList[2]} -drec 3 ${aRecYUVFileList[3]}  -org ${InputYUV}"
 	echo ${EncoderCommand}
-	./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} \
+	./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} -trace 1 \
 				-drec 0 ${aRecYUVFileList[0]} -drec 1 ${aRecYUVFileList[1]} \
 				-drec 2 ${aRecYUVFileList[2]} -drec 3 ${aRecYUVFileList[3]}  -org ${InputYUV}>${EncoderLog}
 
