@@ -9,7 +9,7 @@
 #            ${AllCasesConsoleLogFile}
 #            ${CaseSummaryFile}
 #
-#usage:  ./run_TestAllCases.sh $TestYUV  $InputYUV $AllCaseFile
+#usage:  ./run_TestAllCases.sh $TestYUV  $InputYUV $AssignedCasesFile
 #
 #
 #date:  5/08/2014 Created
@@ -285,7 +285,7 @@ runAllCaseTest()
 
 		let "LineIndex++"
 		
-	done <$AllCaseFile
+	done <$AssignedCasesFile
 }
 #usage runOutputPassNum
 runOutputPassNum()
@@ -334,12 +334,12 @@ runOutputPassNum()
 	
 }
 #***********************************************************
-# usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $AllCaseFile
+# usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $AssignedCasesFile
 runMain()
 {
 	if [ ! $# -eq 5  ]
 	then
-		echo "usage: run_TestAllCase.sh \${LocalDataDir}  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AllCaseFile"
+		echo "usage: run_TestAllCase.sh \${LocalDataDir}  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AssignedCasesFile"
 	return 1
 	fi
 
@@ -347,7 +347,7 @@ runMain()
 	ConfigureFile=$2
 	TestYUVName=$3
 	InputYUV=$4
-	AllCaseFile=$5
+	AssignedCasesFile=$5
 	runGlobalVariableInitial
 	runParseConfigure
 
@@ -363,8 +363,8 @@ LocalDataDir=$1
 ConfigureFile=$2
 TestYUVName=$3
 InputYUV=$4
-AllCaseFile=$5
+AssignedCasesFile=$5
 
-runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AllCaseFile}
+runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AssignedCasesFile}
 
 
