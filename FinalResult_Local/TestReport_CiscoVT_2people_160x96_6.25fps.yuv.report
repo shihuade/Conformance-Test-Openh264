@@ -1,0 +1,15 @@
+[32m ********************************************************************** [0m
+[32m  Test report for YUV CiscoVT_2people_160x96_6.25fps.yuv  [0m
+
+[32m Succeed! [0m
+[32m All Cases passed the test! [0m
+...............Test summary for CiscoVT_2people_160x96_6.25fps.yuv...........................
+[32m total case  Num     is : 60[0m
+[32m EncoderPassedNum    is : 60[0m
+[31m EncoderUnPassedNum  is : 0[0m
+[32m DecoderPassedNum    is : 60[0m
+[31m DecoderUpPassedNum  is : 0[0m
+[31m DecoderUnCheckNum   is : 0[0m
+
+  --issue bitstream can be found in  /opt/sge62u2_1/SGE_room2/OpenH264ConformanceTest/Openh264ConformanceTest-SCC/AllTestData/CiscoVT_2people_160x96_6.25fps.yuv/issue
+  --detail result  can be found in   /opt/sge62u2_1/SGE_room2/OpenH264ConformanceTest/Openh264ConformanceTest-SCC/AllTestData/CiscoVT_2people_160x96_6.25fps.yuv/result
