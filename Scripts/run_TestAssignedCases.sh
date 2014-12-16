@@ -26,11 +26,11 @@ runGlobalVariableInitial()
 		IssueDataPath="${LocalDataDir}/issue"
 		TempDataPath="${LocalDataDir}/TempData"
 	
-		AllCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput_${}.csv"
-		UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput.csv"
-		AllCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table.csv"
-		AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_0.TestLog"
-		CaseSummaryFile="${ResultPath}/${TestYUVName}.Summary"
+		AllCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput_${AssignedCasesIndex}.csv"
+		UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput_${AssignedCasesIndex}.csv"
+		AllCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table_${AssignedCasesIndex}.csv"
+		AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_${AssignedCasesIndex}.TestLog"
+		CaseSummaryFile="${ResultPath}/${TestYUVName}_${AssignedCasesIndex}.Summary"
 	else
 		#test data space
 		ResultPath="result"
@@ -243,7 +243,7 @@ runAllCaseTest()
 			let "NewLogFileFlag = ${TotalCaseNum}%1000"
 			if [ ${NewLogFileFlag} -eq 0 ]
 			then
-				AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_${LogFileIndex}.TestLog"
+				AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${AssignedCasesIndex}_LogIndex_${LogFileIndex}.TestLog"
 				let "LogFileIndex++"
 				echo "">${AllCasesConsoleLogFile}
 			fi
@@ -337,9 +337,9 @@ runOutputPassNum()
 # usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $AssignedCasesFile
 runMain()
 {
-	if [ ! $# -eq 5  ]
+	if [ ! $# -eq 6  ]
 	then
-		echo "usage: run_TestAllCase.sh \${LocalDataDir}  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AssignedCasesFile"
+		echo "usage: run_TestAllCase.sh \${LocalDataDir}  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AssignedCasesFile \$AssignedCasesIndex"
 	return 1
 	fi
 
@@ -348,6 +348,8 @@ runMain()
 	TestYUVName=$3
 	InputYUV=$4
 	AssignedCasesFile=$5
+	AssignedCasesIndex=$6
+
 	runGlobalVariableInitial
 	runParseConfigure
 
@@ -364,7 +366,7 @@ ConfigureFile=$2
 TestYUVName=$3
 InputYUV=$4
 AssignedCasesFile=$5
-
-runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AssignedCasesFile}
+AssignedCasesIndex=$6
+runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AssignedCasesFile} ${AssignedCasesIndex}
 
 
