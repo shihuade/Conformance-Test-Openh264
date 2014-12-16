@@ -68,14 +68,16 @@ runUpdateCodec()
 }
 runPrepareSGEJobFile()
 {
-	if [ ! $# -eq 3 ]
+	if [ ! $# -eq 5 ]
 	then
-		echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName \$QueueIndex "
+		echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName \$QueueIndex \$AssignedCaseFile \$AssignedCaseIndex"
 		return 1
 	fi
 	TestSequenceDir=$1
 	TestYUVName=$2
 	QueueIndex=$3
+	AssignedCaseFile=$4
+	AssignedCaseIndex=$5
 	
 	if [ -d ${TestSequenceDir} ]
 	then
@@ -116,7 +118,7 @@ runPrepareSGEJobFile()
 	
 	done <${SGEModelFile}
 	
-	echo "${TestSequenceDir}/${SGEJobScript}  ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}">>${SGEJobFile}
+	echo "${TestSequenceDir}/${SGEJobScript}  ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile} ${AssignedCaseFile} ${AssignedCaseIndex}">>${SGEJobFile}
 	
 	return 0
 }
@@ -222,6 +224,20 @@ runGenerateCases()
 
 }
 
+runGetSubCasesSetNum()
+{
+	local SubFolder=$1
+	local YUVName=$2
+	
+	let "SubCasesSetNum=0"
+	cd ${SubFolder}
+	for file in ${SubFolder}/${TestYUVName}_SubCases_*.csv
+	do
+
+		let "SubCasesSetNum ++"
+	done
+}
+
 runPrepareTestSpace()
 {
 	
@@ -250,12 +266,20 @@ runPrepareTestSpace()
 		cd ${SubFolder}
 		runGenerateCases  ${TestYUV}
 		cd ${CurrentDir}		
+
 		let "YUVIndex++"
 		let "QueueIndex = ${YUVIndex}%3"
 		
 		if [ ${TestType} = "SGETest"  ]
 		then
-			runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${QueueIndex}
+			#SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
+			runGetSubCasesSetNum
+			for((i=0;i<SubCasesSetNum; i++))
+			do
+				AssignedSubCasesIndex=$i
+				AssignedCasesFile="${TestYUVName}_SubCases_${AssignedSubCasesIndex}.csv"			
+				runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${QueueIndex} ${AssignedCasesFile} ${AssignedSubCasesIndex}
+			done
 		fi 		
 	done
 	
@@ -307,7 +331,6 @@ runMain()
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
 	
-	
 	Openh264GitAddr=""
 	Branch=""
 	
@@ -316,6 +339,7 @@ runMain()
 	#folder for eache test sequence
 	SubFolder=""
 	SGEJobFile=""
+	let "SubCasesSetNum ++"
 	
 	#check input parameters
 	runCheck

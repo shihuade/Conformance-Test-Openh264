@@ -25,22 +25,30 @@ runGlobalVariableInitial()
 		ResultPath="${LocalDataDir}/result"
 		IssueDataPath="${LocalDataDir}/issue"
 		TempDataPath="${LocalDataDir}/TempData"
+	
+		AllCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput_${}.csv"
+		UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput.csv"
+		AllCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table.csv"
+		AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_0.TestLog"
+		CaseSummaryFile="${ResultPath}/${TestYUVName}.Summary"
 	else
 		#test data space
 		ResultPath="result"
 		IssueDataPath="issue"
 		TempDataPath="TempData"	
+
+		AllCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput.csv"
+		UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput.csv"
+		AllCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table.csv"
+		AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_0.TestLog"
+		CaseSummaryFile="${ResultPath}/${TestYUVName}.Summary"
 	fi
 	
 	mkdir -p ${ResultPath}
 	mkdir -p ${IssueDataPath}
 	mkdir -p ${TempDataPath}
 	#test cfg file and test info output file
-	AllCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput.csv"
-	UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput.csv"
-	AllCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table.csv"
-	AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_0.TestLog"
-	CaseSummaryFile="${ResultPath}/${TestYUVName}.Summary"
+	
 	HeadLine1="EncoderFlag, DecoderFlag, FPS, BitSreamSHA1, BitSreamMD5, InputYUVSHA1, InputYUVMD5,\
 			-utype,  -frms,  -numl,  -numtl, -sw, -sh,\
 			-dw 0, -dh 0, -dw 1, -dh 1, -dw 2, -dh 2, -dw 3, -dh 3,\
@@ -356,6 +364,7 @@ ConfigureFile=$2
 TestYUVName=$3
 InputYUV=$4
 AllCaseFile=$5
+
 runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AllCaseFile}
 
 
