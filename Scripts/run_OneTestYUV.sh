@@ -88,7 +88,7 @@ runTestOneYUV()
 	#generate SHA-1 table
 	echo ""
 	echo " TestYUVFullPath  is ${TestYUVFullPath}"
-	./run_TestAllCases.sh  ${LocalWorkingDir}  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${OutPutCaseFile}
+	./run_TestAssignedCases.sh  ${LocalWorkingDir}  ${ConfigureFile}  ${TestYUVName}  ${TestYUVFullPath}  ${OutPutCaseFile}
 	if [  ! $? -eq 0 ]
 	then
 		echo -e "\033[31m Failed! \033[0m">>${TestReport}

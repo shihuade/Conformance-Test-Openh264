@@ -181,6 +181,45 @@ runGetTestYUVList()
 	
 	aTestYUVList=(${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8})
 }
+
+runGenerateCases()
+{
+
+    if [ ! $# -eq  ]
+    then
+
+    fi
+
+    local TestYUVName=$1
+    local OutPutCaseFile=${TestYUVName}_AllCase.csv
+    #Case generation
+    echo ""
+    echo "${ConfigureFile}   ${TestYUVName}   ${OutputCaseFile}"
+
+
+    ./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName}   ${OutPutCaseFile}
+    if [  ! $? -eq 0 ]
+    then
+        echo ""
+        echo  -e "\033[31m  failed to generate cases ! \033[0m"
+        echo ""
+        echo -e "\033[31m Failed! \033[0m">>${TestReport}
+        echo -e "\033[31m failed to generate cases ! \033[0m">>${TestReport}
+        return 1
+    fi
+
+
+SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
+let "SubCasesFileIndex ++"
+echo ${HeadLine}
+
+    if [ ${TestType} = "SGETest"  ]
+    then
+        runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${QueueIndex}
+    fi
+
+}
+
 runPrepareTestSpace()
 {
 	
