@@ -287,7 +287,7 @@ runMain()
 	#parse git repository info 
 	runGetGitRepository
 	#update codec
-	runUpdateCodec
+    #runUpdateCodec
 	
 	echo "Preparing test space for all test sequences!"
 	runGetTestYUVList

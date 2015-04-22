@@ -90,7 +90,7 @@ runMain()
 	echo "running all test cases for all test sequences......"
 	echo ""
 	##                                     ${TestType}  ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
-	./run_AllTestSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
+    #./run_AllTestSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
 		echo ""
