@@ -1,12 +1,18 @@
-#!/bin/sh
-
-#  Script.sh
-#  
+#!/bin/bash
+#********************************************************************************
+# Brief: split all cases set into small sets and generate sub-set cases files
 #
-#  Created by huashi on 12/10/14.
+# Usage: run_CasesPartition.sh  ${AllCasesFile} ${SubCasesNum}
+#                               ${TestYUVName}
+# e.g.:
+#       inputt: run_CasesPartition.sh  ABC.YUV_AllCases.csv  1000  ABC.YUV
+#       output: ABC.YUV_SubCases_0.csv   ABC.YUV_SubCases_1.csv
+#       output: ABC.YUV_SubCases_2.csv   ABC.YUV_SubCases_3.csv
+#       (suppose there are 3800 cases)
 #
-
-
+#
+#date:  12/10/2014 Created
+#*********************************************************************************
 
 
 runUsage()
@@ -57,15 +63,15 @@ runPartitionAllCasesIntoSubCasesFile()
         fi
 
         let "CaseIndex = LineIndex -1"
-        let "NewFileFlag = CaseIndex% ${SubCasesNum}"
+        let "NewFileFlag = CaseIndex % ${SubCasesNum}"
         if [ ${NewFileFlag} -eq 0 ]
         then
             SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
             let "SubCasesFileIndex ++"
-            echo ${HeadLine}
-            echo ${LineIndex}
-            echo ${CaseIndex}
-            echo $line
+            #echo ${HeadLine}
+            #echo ${LineIndex}
+            #echo ${CaseIndex}
+            #echo $line
             echo ${HeadLine} >${SubCasesFileName}
         fi
         echo ${line} >>${SubCasesFileName}
@@ -76,7 +82,7 @@ runPartitionAllCasesIntoSubCasesFile()
 
 }
 
-runMian()
+runMain()
 {
     if [ ! $# -eq 3 ]
     then
@@ -98,7 +104,7 @@ runMian()
 AllCasesFile=$1
 SubCasesNum=$2
 TestYUVName=$3
-runMian ${AllCasesFile} ${SubCasesNum}  ${TestYUVName}
+runMain ${AllCasesFile} ${SubCasesNum}  ${TestYUVName}
 
 
 
