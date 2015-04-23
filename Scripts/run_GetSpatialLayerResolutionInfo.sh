@@ -39,9 +39,10 @@ runMain()
 	then
 		echo "usage: run_GetSpatialLayerResolutionInfo.s  \$PicW \$PicH  \$SpatialNum \${Multiple16Flag}"
 		exit  1
-	elif [  $1 -le 0  -o $2 -le 0 ]
+	elif [  $1 -le 0  -o $2 -le 0 -o $3 -gt 4 ]
 	then
-		echo "usage: runGetLayerNum  \$PicW  \$PicH"
+        echo "usage: run_GetSpatialLayerResolutionInfo.s  \$PicW \$PicH  \$SpatialNum \${Multiple16Flag}"
+        echo "spatial layer number should be among 1~4"
 		exit  1
 	fi
 	local PicW=$1

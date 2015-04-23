@@ -1,12 +1,14 @@
 #!/bin/bash
 #***************************************************************************************
 # brief:
-#      --generate  case based on cade configure file
-#      usage: ./run_GenerateCase.sh  $Case.cfg   $TestSequence  $OutputCaseFile
-#      eg:      run_GenerateCase.sh  case.cfg  ABC_1920X1080.yuv  AllCase.csv
+#      generate  case based on case configure file and given test sequence
+#
+#      usage: ./run_GenerateCase.sh  $Case.cfg   $TestSequence      $OutputCaseFile
+#      e.g.:  ./run_GenerateCase.sh  case.cfg    ABC_1920X1080.yuv  AllCase.csv
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
+
 #usage:  runParseYUVInfo  ${YUVName}
 runParseYUVInfo()
 {
@@ -28,9 +30,9 @@ runParseYUVInfo()
 	if [  ${FPS} -eq 0  ]
 	then
 		let "FPS=10"
-	elif [  ${FPS} -gt 50  ]
+	elif [  ${FPS} -gt 60  ]
 		then
-		let "FPS=50"
+		let "FPS=60"
 	fi
 	return 0
 }
@@ -49,14 +51,14 @@ runGlobalVariableInital()
 {
 	if [ ! $# -eq 2 ]
 	then
-	echo "usage:   runGlobalVariableInital  \$TestSequence  \$OutputCaseFile "
-	return 1
+        echo "usage:   runGlobalVariableInital  \$TestSequence  \$OutputCaseFile "
+        return 1
 	fi
 	local  TestSequence=$1
 	local  OutputCaseFile=$2
 	let   " FramesToBeEncoded = 0"
 	let   " MaxNalSize = 0"
-	let   "Multiple16Flag=0"
+	let   " Multiple16Flag=0"
 	declare -a  aNumSpatialLayer
 	declare -a  aNumTempLayer
 	declare -a  aUsageType
@@ -127,6 +129,7 @@ runMultiLayerInitial()
 	aSpatialLayerBRSet3=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  3 $ConfigureFile ${Multiple16Flag}`)
 	aSpatialLayerBRSet4=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  4 $ConfigureFile ${Multiple16Flag}`)
 }
+
 #usage:  runGenerateMultiLayerBRSet ${SpatialNum}
 #e.g:    --input:  runGenerateMultiLayerBRSet 2
 #        --output: "1000,200,800,0, 0,"  "1500,500,1000,0,0"

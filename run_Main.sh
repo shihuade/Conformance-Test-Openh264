@@ -103,8 +103,8 @@ runMain()
 		echo ""
 		echo -e "\033[32m all cases of  all test sequences have been passed! \033[0m"
 		echo ""
-		cp  ${FinalResultDir}/*SHA1_Table.csv ./${SHA1TableFolder}
-		runPromptInfo
+        #cp  ${FinalResultDir}/*SHA1_Table.csv ./${SHA1TableFolder}
+        #runPromptInfo
 		exit 0
 	fi
 }
