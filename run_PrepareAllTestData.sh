@@ -181,9 +181,44 @@ runGetTestYUVList()
 	
 	aTestYUVList=(${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8})
 }
+runGenerateCaseFiles()
+{
+    if [ ! $# -eq 1 ]
+    then
+        echo -e "\033[31m usage: runGenerateCaseFiles \${TestYUVName}\033[0m"
+        return 1
+    fi
+
+    TestYUVName=$1
+    AllCasesFile=${TestYUVName}_AllCase.csv
+    SubCaseInfoLog=${TestYUVName}_SubCasesFile.log
+    let "SubCaseNum=500"
+
+    ./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName} ${AllCasesFile}
+    if [ ! $? -eq 0  ]
+    then
+        echo ""
+        echo  -e "\033[31m  failed to generate cases ! \033[0m"
+        echo ""
+        return 1
+    fi
+
+    ./run_CasesPartition.sh  ${AllCasesFile}  ${SubCaseNum}    \
+                             ${TestYUVName}   ${SubCaseInfoLog}
+
+    if [ ! $? -eq 0  ]
+    then
+        echo ""
+        echo  -e "\033[31m  failed to split all cases into sub cases ! \033[0m"
+        echo ""
+        return 1
+    fi
+
+}
+
 runPrepareTestSpace()
 {
-	
+
 	#now prepare for test space for all test sequences
 	#for SGE test, use 3 test queues so that can support more parallel jobs
 	let "YUVIndex=0"

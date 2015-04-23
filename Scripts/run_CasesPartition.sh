@@ -19,7 +19,8 @@ runUsage()
 {
     echo ""
     echo -e "\033[31m Usage: \033[0m"
-    echo -e "\033[31m    --./run_CasesPartition.sh \${AllCasesFile} \${SubCasesNum} \${TestYUVName}\033[0m"
+    echo -e "\033[31m    --./run_CasesPartition.sh \${AllCasesFile} \${SubCasesNum}    \033[0m"
+    echo -e "\033[31m                              \${TestYUVName}  \${SubCaseInfoLog} \033[0m"
     echo ""
 }
 
@@ -73,6 +74,7 @@ runPartitionAllCasesIntoSubCasesFile()
             #echo ${CaseIndex}
             #echo $line
             echo ${HeadLine} >${SubCasesFileName}
+            echo ${SubCasesFileName}>>${SubCaseInfoLog}
         fi
         echo ${line} >>${SubCasesFileName}
 
@@ -84,7 +86,7 @@ runPartitionAllCasesIntoSubCasesFile()
 
 runMain()
 {
-    if [ ! $# -eq 3 ]
+    if [ ! $# -eq 4 ]
     then
         runUsage
         exit 1
@@ -93,10 +95,13 @@ runMain()
     AllCasesFile=$1
     SubCasesNum=$2
     TestYUVName=$3
+    SubCaseInfoLog=$4
+    let "SubCasesFileIndex = 0"
 
     runCheck
 
     runPartitionAllCasesIntoSubCasesFile
+    echo ${SubCasesFileIndex}>>${SubCasesFileName}
 
     return 0
 }
@@ -104,7 +109,8 @@ runMain()
 AllCasesFile=$1
 SubCasesNum=$2
 TestYUVName=$3
-runMain ${AllCasesFile} ${SubCasesNum}  ${TestYUVName}
+SubCaseInfoLog=$4
+runMain ${AllCasesFile} ${SubCasesNum}  ${TestYUVName} ${SubCaseInfoLog}
 
 
 
