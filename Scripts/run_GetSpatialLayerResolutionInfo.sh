@@ -2,11 +2,30 @@
 #!/bin/bash
 
 #*******************************************************************************
-#brief:  get actual spatial layer resolution based on actual spatial number
+# brief:  get actual spatial layer resolution based on actual spatial number
 #
-#usage:  input:   run_GetSpatialLayerResolutionInfo.sh $PicW $PicH  $SpatialNum
-#          output:  LayerWidth_0  LayerHeight_0  LayerWidth_1  LayerHeight_1  \
-#                   LayerWidth_2  LayerHeight_2  LayerWidth_3  LayerHeight_3
+# usage:  input:   run_GetSpatialLayerResolutionInfo.sh $PicW $PicH  $SpatialNum
+#
+#         output:   LayerWidth_0  LayerHeight_0  \
+#                   LayerWidth_1  LayerHeight_1  \
+#                   LayerWidth_2  LayerHeight_2  \
+#                   LayerWidth_3  LayerHeight_3
+#
+#  e.g:
+#         --input : 1280 720  4  1 ( 4 layer and align with 16)
+#           output: 160  80  320  176  640  352 1280  720
+#
+#         --input : 1280 720  4  0 ( 4 layer and not align with 16)
+#           output: 160  90  320  180  640  360 1280  720
+#
+#         --input : 1280 720  3  0 ( 3 layer and not align with 16)
+#           output: 320  180 640  360 1280  720  0  0
+#
+#         --input : 1280 720  2  0 ( 2 layer and not align with 16)
+#           output: 640  360 1280  720 0  0 0  0
+#
+#         --input : 1280 720  1  0 ( 1 layer and not align with 16)
+#           output: 1280  720 0 0  0 0 0 0
 #
 #date:  5/08/2014 Created
 #*******************************************************************************
