@@ -360,6 +360,8 @@ runSecondStageCase()
 	declare -a aSliceNumber
 	declare -a ThreadNumber
 	local TempNalSize=""
+    let  "SliceMode3MaxH = 35*16"
+
 	while read FirstStageCase
 	do
 		if  [[ $FirstStageCase =~ ^[-0-9]  ]]
@@ -396,7 +398,10 @@ runSecondStageCase()
 								${TempNalSize},\
 								$IntraPeriodIndex,\
 								$ThreadNum">>$casefile_02
-							else
+                            else if [ ${SlcMode} -eq 3 -a ${PicH} -ge ${SliceMode3MaxH} ]
+                            then
+                                continue
+                            else
 								echo "$FirstStageCase\
 								${SlcMode}, ${SlcNum},\
 								${SlcMode}, ${SlcNum},\
