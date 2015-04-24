@@ -398,7 +398,7 @@ runSecondStageCase()
 								${TempNalSize},\
 								$IntraPeriodIndex,\
 								$ThreadNum">>$casefile_02
-                            else if [ ${SlcMode} -eq 3 -a ${PicH} -ge ${SliceMode3MaxH} ]
+                            elif [ ${SlcMode} -eq 3 -a ${PicH} -ge ${SliceMode3MaxH} ]
                             then
                                 continue
                             else
@@ -562,9 +562,18 @@ runMain()
     echo "usage:   runMain   \$Case.cfg   \$TestSequence  \$OutputCaseFile  "
     return 1
   fi
-  local ConfigureFile=$1
-  local TestSequence=$2
-  local OutputCaseFile=$3
+
+  ConfigureFile=$1
+  TestSequence=$2
+  OutputCaseFile=$3
+
+  ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
+  if [ -f ${ConfigureFile} ]
+  then
+    echo "configure file does not exist, please double check!"
+    echo "${ConfigureFile} for cases generation!"
+  fi
+
   runGlobalVariableInital  $TestSequence  $OutputCaseFile
   runParseCaseConfigure  ${ConfigureFile}
   runMultiLayerInitial
