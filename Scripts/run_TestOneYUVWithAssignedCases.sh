@@ -121,7 +121,7 @@ runSetLocalWorkingDir()
                     ./run_SafeDelete.sh  ${LocalWorkingDir}
                 fi
 		mkdir -p ${LocalWorkingDir}
-		cp -f ./*   ${LocalWorkingDir}	
+		cp -f ./*   ${LocalWorkingDir}
 	else
 		LocalWorkingDir=`pwd`
 		echo ""
