@@ -68,30 +68,26 @@ runUpdateCodec()
 }
 runPrepareSGEJobFile()
 {
-	if [ ! $# -eq 3 ]
+	if [ ! $# -eq 5 ]
 	then
-		echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName \$QueueIndex "
+        echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName "
+        echo "                              \$YUVIndex        \$SubCaseIndex \$SubCaseFile"
 		return 1
 	fi
 	TestSequenceDir=$1
 	TestYUVName=$2
-	QueueIndex=$3
-	
-	if [ -d ${TestSequenceDir} ]
-	then
-		cd ${TestSequenceDir}
-		TestSequenceDir=`pwd`
-		cd ${CurrentDir}
-	else
-		echo -e "\033[31m Job folder does not exist! Please double check! \033[0m"
-		exit 1
-	fi
-	
-	SGEQueue="Openh264SGE_${QueueIndex}"
-	SGEName="${TestYUVName}_SGE_Test"
+	YUVIndex=$3
+    SubCaseIndex=$4
+    SubCaseFile=$5
+
+
+    let "SGEQueueIndex = SGEJobNum % 3"
+
+	SGEQueue="Openh264SGE_${SGEQueueIndex}"
+	SGEName="${TestYUVName}_SGE_Test_SubCaseIndex_${SubCaseIndex}"
 	SGEModelFile="${CurrentDir}/${ScriptFolder}/SGEModel.sge"
-	SGEJobFile="${TestSequenceDir}/${TestYUV}.sge"
-	SGEJobScript="run_OneTestYUV.sh"
+	SGEJobFile="${TestSequenceDir}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}.sge"
+	SGEJobScript="run_TestOneYUVWithAssignedCases.sh"
 	
 	echo ""
 	echo -e "\033[32m creating SGE job file : ${SGEJobFile} ......\033[0m"
@@ -116,10 +112,44 @@ runPrepareSGEJobFile()
 	
 	done <${SGEModelFile}
 	
-	echo "${TestSequenceDir}/${SGEJobScript}  ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile}">>${SGEJobFile}
-	
+	echo "${TestSequenceDir}/${SGEJobScript}  ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile} ${SubCaseIndex} ${SubCaseFile} ">>${SGEJobFile}
+
 	return 0
 }
+
+runGenerateSGEJobFileForOneYUV()
+{
+    if [ ! $# -eq 3 ]
+    then
+        echo "usage: runGenerateSGEJobFileForOneYUV  \$TestSequenceDir  \$TestYUVName \$YUVIndex "
+        return 1
+    fi
+
+    TestSequenceDir=$1
+    TestYUVName=$2
+    YUVIndex=$3
+    let "SubCaseIndex = 0"
+
+    if [ -d ${TestSequenceDir} ]
+    then
+        cd ${TestSequenceDir}
+        TestSequenceDir=`pwd`
+        cd ${CurrentDir}
+    else
+        echo -e "\033[31m Job folder does not exist! Please double check! \033[0m"
+        exit 1
+    fi
+
+    for vSubCaseFile in ${TestSequenceDir}/${TestYUVName}_SubCases_*.csv
+    do
+        let "SubCaseIndex ++"
+        let "SGEJobNum ++"
+        runPrepareSGEJobFile ${TestSequenceDir} ${TestYUVName} ${YUVIndex} ${SubCaseIndex} ${vSubCaseFile}
+    done
+
+    return 0
+}
+
 #usage: get git repository address and branch
 runGetGitRepository()
 {
@@ -181,6 +211,7 @@ runGetTestYUVList()
 	
 	aTestYUVList=(${TestSet0} ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7}  ${TestSet8})
 }
+
 runGenerateCaseFiles()
 {
     if [ ! $# -eq 1 ]
@@ -203,17 +234,21 @@ runGenerateCaseFiles()
         return 1
     fi
 
-    ./run_CasesPartition.sh  ${AllCasesFile}  ${SubCaseNum}    \
-                             ${TestYUVName}   ${SubCaseInfoLog}
-
-    if [ ! $? -eq 0  ]
+    if [ ${TestType} == "SGETest"  ]
     then
-        echo ""
-        echo  -e "\033[31m  failed to split all cases into sub cases ! \033[0m"
-        echo ""
-        return 1
+        ./run_CasesPartition.sh ${AllCasesFile}  ${SubCaseNum}    \
+                                ${TestYUVName}   ${SubCaseInfoLog}
+
+        if [ ! $? -eq 0  ]
+        then
+            echo ""
+            echo  -e "\033[31m  failed to split all cases set into sub-set cases ! \033[0m"
+            echo ""
+            return 1
+        fi
     fi
 
+    return 0
 }
 
 runPrepareTestSpace()
@@ -222,7 +257,6 @@ runPrepareTestSpace()
 	#now prepare for test space for all test sequences
 	#for SGE test, use 3 test queues so that can support more parallel jobs
 	let "YUVIndex=0"
-	let "QueueIndex=0"
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataFolder}/${TestYUV}"
@@ -239,13 +273,15 @@ runPrepareTestSpace()
 		cp  ${CodecFolder}/*    ${SubFolder}
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
-		
+
+        cd ${SubFolder}
+        runGenerateCaseFiles ${TestYUV}
+        cd ${CurrentDir}
+
 		let "YUVIndex++"
-		let "QueueIndex = ${YUVIndex}%3"
-		
 		if [ ${TestType} = "SGETest"  ]
 		then
-			runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${QueueIndex}
+			runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${YUVIndex}
 		fi 		
 	done
 	
@@ -296,12 +332,11 @@ runMain()
 	CurrentDir=`pwd`
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
-	
-	
+	let "SGEJobNum =0 "
+
 	Openh264GitAddr=""
 	Branch=""
-	
-	
+
 	declare -a aTestYUVList
 	#folder for eache test sequence
 	SubFolder=""
