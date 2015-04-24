@@ -568,10 +568,11 @@ runMain()
   OutputCaseFile=$3
 
   ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
-  if [ -f ${ConfigureFile} ]
+  if [ ! -f ${ConfigureFile} ]
   then
     echo "configure file does not exist, please double check!"
     echo "${ConfigureFile} for cases generation!"
+    exit 1
   fi
 
   runGlobalVariableInital  $TestSequence  $OutputCaseFile

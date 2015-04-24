@@ -222,7 +222,7 @@ runGenerateCaseFiles()
 
     TestYUVName=$1
     AllCasesFile=${TestYUVName}_AllCase.csv
-    SubCaseInfoLog=${TestYUVName}_SubCasesFile.log
+    SubCaseInfoLog=${TestYUVName}_SubCasesInfo.log
     let "SubCaseNum=500"
 
     ./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName} ${AllCasesFile}
@@ -281,7 +281,7 @@ runPrepareTestSpace()
 		let "YUVIndex++"
 		if [ ${TestType} = "SGETest"  ]
 		then
-			runPrepareSGEJobFile  ${SubFolder}  ${TestYUV}  ${YUVIndex}
+			runGenerateSGEJobFileForOneYUV  ${SubFolder}  ${TestYUV}  ${YUVIndex}
 		fi 		
 	done
 	

@@ -101,7 +101,7 @@ runMain()
     runCheck
 
     runPartitionAllCasesIntoSubCasesFile
-    echo ${SubCasesFileIndex}>>${SubCasesFileName}
+    echo ${SubCasesFileIndex}>>${SubCaseInfoLog}
 
     return 0
 }
