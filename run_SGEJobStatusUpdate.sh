@@ -17,114 +17,11 @@
 	echo -e "\033[31m       --eg:   ./run_AllTestSequencesAllCasesTest.sh  LocalTest AllTestData  FinalResult ./CaseConfigure/case.cfg \033[0m"
  	echo ""
  }
-#usage: runGetTestYUVList 
-runGetTestYUVList()
-{
-	local TestSet0=""
-	local TestSet1=""
-	local TestSet2=""
-	local TestSet3=""
-	local TestSet4=""
-	local TestSet5=""
-	local TestSet6=""
-	local TestSet7=""
-	local TestSet8=""
-	while read line
-	do
-		if [[ "$line" =~ ^TestSet0  ]]
-		then
-			TestSet0=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet1  ]]
-		then
-			TestSet1=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet2  ]]
-		then
-			TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet3  ]]
-		then
-			TestSet3=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet4  ]]
-		then
-			TestSet4=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet5  ]]
-		then
-			TestSet5=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet6  ]]
-		then
-			TestSet6=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet7  ]]
-		then
-			TestSet7=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet8  ]]
-		then
-			TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		fi
-	done <${ConfigureFile}
-	
-	aTestYUVList=(${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8})
-}
-runInitialSGEJobInfoFile()
-{
-    echo "***********************************************************************************************"
-    echo "    "
-    echo "    This file is used for SGE job status detction."
-    echo "    "
-    echo "    You can add new SGE job info in this file if you want to add "
-    echo "    new jobs into current test or restart jobs before all"
-    echo "    test jobs are completed"
-    echo "    "
-    echo "    Job info format should looks like as below:"
-    echo "      Your job 534 ("CREW_176x144_30.yuv_SGE_Test_SubCaseIndex_1") has been submitted"
-    echo "    "
-    date
-    echo "*************************************************************************************************"
-    echo ""
-    echo "    All SGE jobs info List As below"
-    echo ""
-    echo "*************************************************************************************************"
 
-}
-runSGEJobSubmit()
-{
-	let "JobNum=0"
-    runInitialSGEJobInfoFile >${SGEJobListFile}
-
-	for TestYUV in ${aTestYUVList[@]}
-	do
-        SubFolder="${AllTestDataDir}/${TestYUV}"
-        echo ""
-        echo "test YUV is ${TestYUV}"
-        echo ""
-        echo "******************************************************************************" >>${SGEJobListFile}
-        echo "test YUV is ${TestYUV}" >>${SGEJobListFile}
-        echo "******************************************************************************" >>${SGEJobListFile}
-
-        for vSGEFile in ${SubFolder}/${TestYUV}*.sge
-        do
-            TestSubmitFlagFile="${vSGEFile}_Submitted.flag"
-
-            if [  -e  ${SubFolder}/${TestSubmitFlagFile} ]
-            then
-                continue
-            fi
-
-            echo "submitting job ......"
-            # e.g.: Your job 534 ("CREW_176x144_30.yuv_SGE_Test_SubCaseIndex_1") has been submitted
-            aSubmitJobList[$JobNum]=`qsub  ${vSGEFile} `
-            echo "submit job is ${aSubmitJobList[$JobNum]} "
-            echo "${aSubmitJobList[$JobNum]}" >>${SGEJobListFile}
-            let "JobNum ++"
-            touch ${TestSubmitFlagFile}
-            #cd  ${CurrentDir}
-
-        done
-	done
-	return 0
-}
 #extract all SGE job ID by using command qstat 
-runGetAllSGEJobID()
+runGetRunningSGEJobID()
 {
-	SGEJObList="Job.list"	
+	SGEJobList="SGEJobList.Temp"
 	qstat >${SGEJObList}
 	
 	let "LineIndex=0"
@@ -137,10 +34,19 @@ runGetAllSGEJobID()
 			let "JobIDIndex++"
 		fi
 		let "LineIndex++"
-	done <${SGEJObList}
+	done <${SGEJobList}
 	
 	let "CurrentSGEJobNum=${JobIDIndex}"
 }
+
+runParseSGEJobID()
+{
+
+
+
+}
+
+
 #comparison between  current SGE job list and the submitted list 
 #to check that whether all submitted jobs are not in current running list
 runSGEJobCheck()
