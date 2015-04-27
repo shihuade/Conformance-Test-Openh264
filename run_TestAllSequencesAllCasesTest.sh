@@ -17,6 +17,26 @@
 	echo -e "\033[31m       --eg:   ./run_AllTestSequencesAllCasesTest.sh  LocalTest AllTestData  FinalResult ./CaseConfigure/case.cfg \033[0m"
  	echo ""
  }
+runGlobalInit()
+{
+    CurrentDir=`pwd`
+
+    TestFlagFile=""
+    SGEJobListFile="AllSGEJobsInfo.log"
+
+    let "CurrentSGEJobNum=0"
+    declare -a aTestYUVList
+
+    #get full path info
+    cd ${AllTestDataDir}
+    AllTestDataDir=`pwd`
+    cd  ${CurrentDir}
+    cd ${FinalResultDir}
+    FinalResultDir=`pwd`
+    cd  ${CurrentDir}
+
+}
+
 
 runSGETest()
 {
@@ -108,35 +128,15 @@ runMain()
 	ConfigureFile=$4
 	#check input parameters
 	runCheck
-	
-	CurrentDir=`pwd`
-	
-	TestFlagFile=""
-    SGEJobListFile="AllSGEJobsInfo.log"
 
-	let "CurrentSGEJobNum=0"
-	declare -a aTestYUVList
-
-	#get full path info
-	cd ${AllTestDataDir}
-	AllTestDataDir=`pwd`
-	cd  ${CurrentDir}
-	cd ${FinalResultDir}
-	FinalResultDir=`pwd`
-	cd  ${CurrentDir}
-	echo ""
-	echo "testing all test sequences......"
-	echo ""
-	
-	#get YUV list
+    #get YUV list
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
 
-	
-	#Test 
-	if [ ${TestType} = "SGETest"  ]
+	#Test
+	if [ ${TestType} = "SGETest" ]
 	then
 		runSGETest
-	elif [ ${TestType} = "LocalTest"  ]
+	elif [ ${TestType} = "LocalTest" ]
 	then
 		runLocalTest
 	fi
