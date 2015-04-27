@@ -17,52 +17,7 @@
 	echo -e "\033[31m       --eg:   ./run_AllTestSequencesAllCasesTest.sh  LocalTest AllTestData  FinalResult ./CaseConfigure/case.cfg \033[0m"
  	echo ""
  }
-#usage: runGetTestYUVList 
-runGetTestYUVList()
-{
-	local TestSet0=""
-	local TestSet1=""
-	local TestSet2=""
-	local TestSet3=""
-	local TestSet4=""
-	local TestSet5=""
-	local TestSet6=""
-	local TestSet7=""
-	local TestSet8=""
-	while read line
-	do
-		if [[ "$line" =~ ^TestSet0  ]]
-		then
-			TestSet0=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet1  ]]
-		then
-			TestSet1=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet2  ]]
-		then
-			TestSet2=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet3  ]]
-		then
-			TestSet3=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet4  ]]
-		then
-			TestSet4=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet5  ]]
-		then
-			TestSet5=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet6  ]]
-		then
-			TestSet6=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet7  ]]
-		then
-			TestSet7=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		elif  [[ "$line" =~ ^TestSet8  ]]
-		then
-			TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		fi
-	done <${ConfigureFile}
-	
-	aTestYUVList=(${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8})
-}
+
 runInitialSGEJobInfoFile()
 {
     echo "***********************************************************************************************"
@@ -371,7 +326,8 @@ runMain()
 	echo ""
 	
 	#get YUV list
-	runGetTestYUVList
+    aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
+
 	
 	#Test 
 	if [ ${TestType} = "SGETest"  ]
