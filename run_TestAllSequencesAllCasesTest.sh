@@ -239,10 +239,12 @@ runLocalTest()
 			continue
 		fi
 		cd  ${SubFolder}
+        CasesFile=${TestYUV}_AllCase.csv
 		echo ""
 		echo "test YUV is ${TestYUV}"
 		echo ""
-		./run_OneTestYUV.sh  ${TestType}  ${TestYUV}  ${FinalResultDir}  ${ConfigureFile}
+		./run_TestOneYUVWithAssignedCases.sh  ${TestType}      ${TestYUV}  ${FinalResultDir} \
+                                              ${ConfigureFile} AllCases    ${CasesFile}
 		if [  ! $? -eq 0 ]
 		then
 			echo -e "\033[31m not all test cases have been passed! \033[0m"
@@ -326,6 +328,7 @@ runCheck()
 		echo " usage may looks like:   ./run_Main.sh  ../CaseConfigure/case.cfg "
 		exit 1
 	fi
+
 	return 0
 }
 #usage: runMain  ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
