@@ -101,7 +101,7 @@ runMain()
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
     if [ ! $? -ea 0 ]
     then
-        echo -e "\033[31m  Failed to parse test YUV set. please duuble check! \033[0m"
+        echo -e "\033[31m  Failed to parse test YUV set. please double check! \033[0m"
         echo -e "\033[31m  detected by $0 \033[0m"
         exit 1
     fi
