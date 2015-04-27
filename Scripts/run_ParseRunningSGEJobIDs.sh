@@ -2,7 +2,7 @@
 #***************************************************************************************
 # brief:
 #      --print all running SGE jobs' IDs
-#      --usage:  run_GetRunningSGEJobsID.sh
+#      --usage:  run_ParseRunningSGEJobIDs.sh
 #
 #date: 04/26/2015 Created
 #***************************************************************************************
