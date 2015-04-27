@@ -1,7 +1,7 @@
 #!/bin/bash
 #***************************************************************************************
 # brief:
-#      --parse all submitted SGE IDs from submitted log file
+#      --parse all submitted SGE name lists from submitted log file
 #      --usage:  ./run_ParseSGEJobIDs.sh ${SGEJobSubmittedLogFile}
 #
 #date: 05/08/2014 Created
@@ -14,7 +14,7 @@
  }
 
 #extract all SGE job ID by parsing the SGE submit log file
-runGetAllSGEJobID()
+runGetAllSGEJobNames()
 {
 
 	let "LineIndex=0"
@@ -25,10 +25,10 @@ runGetAllSGEJobID()
         # e.g.: Your job 534 ("CREW_176x144_30.yuv_SGE_Test_SubCaseIndex_1") has been submitted
 		if [[ "$line" =~ "Your job"  ]]
 		then
-			aAllSGEJobIDList[${JobIDIndex}]=`echo $line | awk '{print $3}'`
+			TempName=`echo $line | awk '{print $4}'`
+            aAllSGEJobNameList[${JobIDIndex}]=`echo $TempName | awk 'BEGIN {FS="[()]"} {print $2 }'`
 			let "JobIDIndex++"
 		fi
-
         #echo "line is  $line"
         #echo "LineIndex is ${LineIndex}"
 		let "LineIndex++"
@@ -53,11 +53,11 @@ runMain()
         exit 1
     fi
 
-	declare -a aAllSGEJobIDList
+	declare -a aAllSGEJobNameList
 
-    runGetAllSGEJobID
+    runGetAllSGEJobNames
 
-    echo ${aAllSGEJobIDList[@]}
+    echo ${aAllSGEJobNameList[@]}
 
 }
 
