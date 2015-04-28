@@ -114,7 +114,7 @@ runMain()
 		echo ""
  	fi
 
-    runPromptInfo
+
     return ${AllTestFlag}
 
 }
