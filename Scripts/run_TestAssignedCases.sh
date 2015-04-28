@@ -301,6 +301,8 @@ runOutputPassNum()
 	echo  -e "\033[32m *********************************************************** \033[0m"
 	echo ""
 	echo "...............Test summary for ${TestYUVName}...........................">${CaseSummaryFile}
+    echo  -e "\033[32m TestStartTime is         ${StartTime}   \033[0m">>${CaseSummaryFile}
+    echo  -e "\033[32m TestEndTime   is         ${EndTime}     \033[0m">>${CaseSummaryFile}
 	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}\033[0m">>${CaseSummaryFile}
 	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}\033[0m">>${CaseSummaryFile}
 	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}\033[0m">>${CaseSummaryFile}
@@ -310,7 +312,6 @@ runOutputPassNum()
 	echo "" >>${CaseSummaryFile}
 	echo "  --issue bitstream can be found in  ${LocalDataDir}/issue" >>${CaseSummaryFile}
 	echo "  --detail result  can be found in   ${LocalDataDir}/${ResultPath}" >>${CaseSummaryFile}
-
 	echo  -e "\033[32m *********************************************************** \033[0m"
 
 	if [  ! ${EncoderUnPassedNum} -eq 0  ]
@@ -342,6 +343,9 @@ runMain()
 	InputYUV=$4
     SubCaseIndex=$5
 	GivenCaseFile=$6
+    StartTime=""
+    EndTime=""
+
 	runGlobalVariableInitial
 	runParseConfigure
 
@@ -349,7 +353,15 @@ runMain()
 
 	echo ""
 	echo  -e "\033[32m  testing all cases, please wait!...... \033[0m"
-	runAllCaseTest 
+    #get time info
+    date
+    StartTime=`date`
+
+	runAllCaseTest
+    #get time info
+    date
+    EndTime=`date`
+
 	runOutputPassNum
 	return $?
 }
