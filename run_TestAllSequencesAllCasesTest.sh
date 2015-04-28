@@ -128,6 +128,7 @@ runMain()
     declare -a aTestYUVList
 	#check input parameters
 	runCheck
+    runGlobalInit
 
     #get YUV list
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
