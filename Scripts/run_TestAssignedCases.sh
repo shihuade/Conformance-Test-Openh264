@@ -332,8 +332,8 @@ runMain()
 {
 	if [ ! $# -eq 6  ]
 	then
-		echo "usage: run_TestAllCase.sh \${LocalDataDir}  \${ConfigureFile} \${TestYUVName}   "
-        echo "                          \${InputYUV}       \${SubCaseIndex}  \${GivenCaseFile} "
+		echo "usage: run_TestAssignedCases.sh \${LocalDataDir}  \${ConfigureFile}  \${TestYUVName}   "
+        echo "                                \${InputYUV}       \${SubCaseIndex}  \${GivenCaseFile} "
         return 1
 	fi
 
@@ -371,7 +371,9 @@ TestYUVName=$3
 InputYUV=$4
 SubCaseIndex=$5
 GivenCaseFile=$6
-echo $@
+echo $1 $2
+echo $3 $4
+echo $5 $6
 runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV} ${SubCaseIndex} ${GivenCaseFile}
 
 
