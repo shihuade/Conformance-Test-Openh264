@@ -164,6 +164,20 @@ runGetGitRepository()
 		fi
 	done <${ConfigureFile}
 }
+#usage: get git repository address and branch
+runGetGitRepository()
+{
+    while read line
+    do
+        if [[ "$line" =~ ^SubCaseNum  ]]
+        then
+            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
+            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
+            let "SGEJobSubCasesNum= ${TempString}"
+        fi
+    done <${ConfigureFile}
+}
+
 
 runGenerateCaseFiles()
 {
@@ -176,7 +190,7 @@ runGenerateCaseFiles()
     TestYUVName=$1
     AllCasesFile=${TestYUVName}_AllCase.csv
     SubCaseInfoLog=${TestYUVName}_SubCasesInfo.log
-    let "SubCaseNum=500"
+    let "SGEJobSubCasesNum=500"
 
     ./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName} ${AllCasesFile}
     if [ ! $? -eq 0  ]
@@ -189,7 +203,7 @@ runGenerateCaseFiles()
 
     if [ ${TestType} == "SGETest"  ]
     then
-        ./run_CasesPartition.sh ${AllCasesFile}  ${SubCaseNum}    \
+        ./run_CasesPartition.sh ${AllCasesFile}  ${SGEJobSubCasesNum}    \
                                 ${TestYUVName}   ${SubCaseInfoLog}
 
         if [ ! $? -eq 0  ]
@@ -286,6 +300,7 @@ runMain()
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
 	let "SGEJobNum =0 "
+    let "SGEJobSubCasesNum=0"
 
 	Openh264GitAddr=""
 	Branch=""

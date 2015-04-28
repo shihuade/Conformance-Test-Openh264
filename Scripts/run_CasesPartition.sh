@@ -33,7 +33,7 @@ runCheck()
         exit 1
     fi
 
-    if [ ${SubCasesNum} -le 10  ]
+    if [ ${SubCasesNum} -le 5  ]
     then
         echo -e "\033[31m sub cases number should larger than 10!  \033[0m"
         exit 1
