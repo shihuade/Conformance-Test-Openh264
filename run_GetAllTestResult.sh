@@ -2,57 +2,75 @@
 #***************************************************************************************
 # brief:
 #      --test all cases of all sequences 
-#      --usage:  run_AllBitStreamALlCasesTest  ${AllTestDataDir} \
-#                                              ${FinalResultDir} \
-#                                              ${ConfigureFile}
+#      --usage:  run_GetAllTestResult.sh  ${TestType} \
+#                                         ${FinalResultDir} \
+#                                         ${ConfigureFile}
 #
 #
-#date: 05/08/2014 Created
+#date: 04/28/2015 Created
 #***************************************************************************************
  runUsage()
  {
 	echo ""
-	echo -e "\033[31m usage: ./run_AllTestSequencesAllCasesTest.sh   \${TestType}  \${AllTestDataDir}  \${FinalResultDir} \${ConfigureFile} \033[0m"
-	echo -e "\033[31m       --eg:   ./run_AllTestSequencesAllCasesTest.sh  SGETest   AllTestData  FinalResult ./CaseConfigure/case.cfg \033[0m"
-	echo -e "\033[31m       --eg:   ./run_AllTestSequencesAllCasesTest.sh  LocalTest AllTestData  FinalResult ./CaseConfigure/case.cfg \033[0m"
- 	echo ""
+    echo -e "\033[31m usage: ./run_AllTestSequencesAllCasesTest.sh   \${TestType}       \033[0m"
+    echo -e "\033[31m usage:                                         \${FinalResultDir} \033[0m"
+    echo -e "\033[31m usage:                                          \${ConfigureFile} \033[0m"
+    echo ""
  }
-runGetTestSummary()
+
+
+runGetAllYUVTestResult()
 {
-	echo "">${AllTestSummary}
-		
-	let "AllPassedFlag=0"
-	for TestYUV in ${aTestYUVList[@]}
-	do
-		echo -e "\033[32m final checking for ${TestYUV}  \033[0m"
-		echo ""
-		if [ -e  ${FinalResultDir}/TestReport_${TestYUV}.report ]
-		then
-	
-			let "ReportLineIndex=0"
-			while read line
-			do
-				if [ ${ReportLineIndex}  -eq 3 ]
-				then
-					if [[  $line =~ "Failed!" ]]
-					then
-						let "AllPassedFlag=1"
-					fi
-					break
-				fi
-				
-				let "ReportLineIndex ++"
-				
-			done <${FinalResultDir}/TestReport_${TestYUV}.report
-			
-			echo "">>${AllTestSummary}
-			cat ${FinalResultDir}/TestReport_${TestYUV}.report >>${AllTestSummary}
-		else
-			echo -e "\033[31m  ${FinalResultDir}/TestReport_${TestYUV}.report does not exist! \033[0m"
-			let "AllPassedFlag=1"
-		fi
-	done
-	
+    echo "">${AllTestSummary}
+    echo "">${AllSGESlaveInfoFile}
+    for TestYUV in ${aTestYUVList[@]}
+    do
+        # combine sub-cases files into single all cases file
+        echo ""
+        echo "combining sub-set cases files into single all cases file..."
+        echo ""
+        DetailSummaryFile="${TestYUV}_SubCasesIndex__AllCases.Summary"
+        SummaryFile="${FinalResultDir}/${TestYUV}_TestResult.Summary"
+        SHA1TableFile="${FinalResultDir}/${TestYUV}_AllCases_SHA1_Table_SubCasesIndex_AllCases.csv"
+        ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 0
+        ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 1
+        ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
+        ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 3
+        ./Scripts/run_SubCasesToAllCasesSummary.sh ${TestYUV} ${DetailSummaryFile} ${SummaryFile}
+        if [ ! $? -eq 0]
+        then
+            let "AllTestFlag=1"
+        fi
+
+        cp -f {SHA1TableFile} ${SHA1TableDir}
+
+        #print test sequence's test summary
+        cat ${SummaryFile} >>${AllTestSummary}
+
+        if [ ${TestType} = "SGTest" ]
+        then
+            SGESlaveInfoFile="${FinalResultDir}/${TestYUV}_SGESlaveInfo.log"
+            ./Scripts/run_SubCasesToAllCasesCombination.sh ${FinalResultDir} ${TestYUV} \
+                                                           ${SGESlaveInfoFile}
+            #print test sequence's slave info
+            cat ${SGESlaveInfoFile} >>${AllSGESlaveInfoFile}
+        fi
+
+    done
+
+}
+
+runPromptInfo()
+{
+    echo ""
+    echo  -e "\033[32m Final result can be found in ./FinaleRestult \033[0m"
+    echo  -e "\033[32m SHA1  table  can be found in ./SHA1Table \033[0m"
+    echo ""
+}
+
+runOutputSummary()
+{
+
 	echo ""
 	echo -e "\033[32m ********************************************************** \033[0m"
 	echo -e "\033[32m all test summary listed as below: \033[0m"
@@ -62,15 +80,10 @@ runGetTestSummary()
 	echo ""
 	echo -e "\033[32m ********************************************************** \033[0m"
 	echo ""
-	
-	return ${AllPassedFlag}
 }
  
-
-#usage: runMain  ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
 runMain()
 {
-	#parameter check!
 	if [ ! $# -eq 4  ]
 	then
 		runUsage
@@ -78,52 +91,39 @@ runMain()
 	fi
 	
 	TestType=$1
-	AllTestDataDir=$2
-	FinalResultDir=$3
+	FinalResultDir=$2
+    SHA1TableDir=$3
 	ConfigureFile=$4
 	#check input parameters
 	runCheck
 	
 	CurrentDir=`pwd`
-	
-	TestFlagFile=""
-	AllTestSummary="${FinalResultDir}/AllTestYUVsSummary.txt"
-	let "CurrentSGEJobNum=0"
+
+    AllTestSummary="${FinalResultDir}/AllTestYUVsSummary.txt"
+    AllSGESlaveInfoFile="${FinalResultDir}/AllTestYUVsSGESlaveInfo.txt"
+    let "AllTestFlag=0"
 	declare -a aTestYUVList
-	declare -a aSubmitJobList
-	declare -a aAllSGEJobIDList
-	
+
+
 	#get full path info
-	cd ${AllTestDataDir}
-	AllTestDataDir=`pwd`
-	cd  ${CurrentDir}
 	cd ${FinalResultDir}
 	FinalResultDir=`pwd`
 	cd  ${CurrentDir}
-	echo ""
-	echo "testing all test sequences......"
-	echo ""
-	
-	#get YUV list
-	runGetTestYUVList
-	
-	#Test 
-	if [ ${TestType} = "SGETest"  ]
-	then
-		runSGETest
-	elif [ ${TestType} = "LocalTest"  ]
-	then
-		runLocalTest
-	fi
-	
+    cd ${SHA1TableDir}
+    SHA1TableDir=`pwd`
+    cd ${CurrentDir}
+    #get YUV list
+    aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
+
 	#get all test summary
 	runGetTestSummary
-	return $?
-	
+    runPromptInfo
+    return ${AllTestFlag}
+
 }
 TestType=$1
-AllTestDataDir=$2
-FinalResultDir=$3
+FinalResultDir=$2
+SHA1TableDir=$3
 ConfigureFile=$4
-runMain  ${TestType}  ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
+runMain  ${TestType} ${FinalResultDir}  ${SHA1TableDir} ${ConfigureFile}
 

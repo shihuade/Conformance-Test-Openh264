@@ -22,14 +22,23 @@
  	echo ""
  }
  
- runPromptInfo()
- {
-	echo ""
-	echo  -e "\033[32m Final result can be found in ./FinaleRestult \033[0m"
-	echo  -e "\033[32m SHA1 table can be found in ./SHA1Table \033[0m"
-	echo ""
- }
- 
+runGetFinalTestResult()
+{
+    #check test type
+    if [ ${TestType} = "SGETest" ]
+    then
+        echo ""
+        echo " please run below command to get final result when all SGE jobs have been completed!"
+        echo "        ./run_GetAllTestResult.sh  \${TestType}        \${FinalResultDir}"
+        echo "                                   \${SHA1TableFolder} \${ConfigureFile}"
+        echo ""
+        return 0
+    elif [ ${TestType} = "LocalTest" ]
+    then
+        ./run_GetAllTestResult.sh  ${TestType}  ${FinalResultDir} ${SHA1TableFolder} ${ConfigureFile}
+        let "AllTestFlag =$?"
+    fi
+}
 runCheck()
 {
 	#check test type
@@ -73,7 +82,10 @@ runMain()
 	SHA1TableFolder="SHA1Table"
 	ConfigureFolder="CaseConfigure"
 	FinalResultDir="FinalResult"
-	
+
+    let "AllTestFlag =0"
+
+
 	echo ""
 	echo ""
 	echo "prepare for all test data......."
@@ -90,23 +102,21 @@ runMain()
 	echo "running all test cases for all test sequences......"
 	echo ""
 	##                                     ${TestType}  ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
-    #./run_AllTestSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
+    ./run_TestAllSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
 		echo ""
-		echo -e "\033[31m failed: not all cases for all test sequences have been passed ! \033[0m"
+		echo -e "\033[31m failed to run all cases for all test sequences \033[0m"
 		echo ""
-		cp  ${FinalResultDir}/*SHA1_Table.csv  ./${SHA1TableFolder}
-		runPromptInfo
-		exit 1
-	else
+    else
 		echo ""
 		echo -e "\033[32m all cases of  all test sequences have been passed! \033[0m"
 		echo ""
-        #cp  ${FinalResultDir}/*SHA1_Table.csv ./${SHA1TableFolder}
-        #runPromptInfo
-		exit 0
-	fi
+ 	fi
+
+    runPromptInfo
+    return ${AllTestFlag}
+
 }
 TestType=$1
 ConfigureFile=$2

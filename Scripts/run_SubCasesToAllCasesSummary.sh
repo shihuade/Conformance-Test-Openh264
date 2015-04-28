@@ -9,8 +9,9 @@
  runUsage()
  {
 	echo ""
-    echo -e "\033[31m usage:  ./run_SubCasesToAllCasesSummary.sh \${YUVName}     033[0m"
-    echo -e "\033[31m                                            \${SummaryFile} 033[0m"
+    echo -e "\033[31m usage:  ./run_SubCasesToAllCasesSummary.sh \${YUVName}     \ 033[0m"
+    echo -e "\033[31m                                            \${SummaryFile} \ 033[0m"
+    echo -e "\033[31m                                            \${OutputFile}  033[0m"
     echo ""
  }
 
@@ -18,6 +19,15 @@ runSummarizeAllTestResult()
 {
     let "TempNum = 0"
     TempString=""
+
+...............Test summary for CREW_352x288_30.yuv...........................
+[32m total case  Num     is : 8448[0m
+[32m EncoderPassedNum    is : 4224[0m
+[31m EncoderUnPassedNum  is : 4224[0m
+[32m DecoderPassedNum    is : 4224[0m
+[31m DecoderUpPassedNum  is : 0[0m
+[31m DecoderUnCheckNum   is : 4224[0m
+
 
     while read line
     do
@@ -48,16 +58,18 @@ runSummarizeAllTestResult()
 
 }
 
-runGetTestSummary()
+runOutputTestSummary()
 {
 
     if [ ! ${EncoderUnPassedNum} -eq 0 ]
     then
         SummaryString="\033[31m   Not all Cases passed the test! [0m"
         FinalResult="\033[32m     Succed! [0m"
+        let "TestFlag=1"
     else
         SummaryString="\033[32m   All Cases passed the test! [0m"
         FinalResult="\033[31m     Failed! [0m"
+        let "TestFlag=0"
     fi
 
 
@@ -75,6 +87,10 @@ runGetTestSummary()
     echo -e "\033[32m ********************************************************************** [0m"
     echo -e "\033[32m ********************************************************************** [0m"
     echo -e "\033[32m ********************************************************************** [0m"
+
+}
+runOutputDetailResult()
+{
     echo ""
     echo ""
     echo -e "\033[32m ********************************************************************** [0m"
@@ -98,7 +114,7 @@ runCheck()
 
 runMain()
 {
-    if [ ! $# -eq 2 ]
+    if [ ! $# -eq 3 ]
 	then
 		runUsage
 		exit 1
@@ -106,6 +122,9 @@ runMain()
 
     YUVName=$1
     SummaryFile=$2
+    OutputFile=$3
+
+    let "TestFlag=0"
 
     let "TotalNum = 0"
     let "EncoderPassedNum =0"
@@ -118,13 +137,15 @@ runMain()
     runCheck
 
     runSummarizeAllTestResult
-    runGetTestSummary >${TempFile}
+    runOutputTestSummary   >${TempFile}
+    runOutputDetailResult  >>${TempFile}
+    runOutputTestSummary   >${OutputFile}
 
     #deleted temp file
     ./Script/run_SafeDelete.sh ${SummaryFile}
     mv ${TempFile}  ${SummaryFile}
 
-    return 0
+    return ${TestFlag}
 
 
 }

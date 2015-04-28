@@ -115,7 +115,6 @@ runCheck()
 #usage: runMain  ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
 runMain()
 {
-	#parameter check!
 	if [ ! $# -eq 4  ]
 	then
 		runUsage
@@ -126,6 +125,7 @@ runMain()
 	AllTestDataDir=$2
 	FinalResultDir=$3
 	ConfigureFile=$4
+    declare -a aTestYUVList
 	#check input parameters
 	runCheck
 
