@@ -73,7 +73,7 @@ runLocalTest()
 		echo "test YUV is ${TestYUV}"
 		echo ""
 		./run_TestOneYUVWithAssignedCases.sh  ${TestType}      ${TestYUV}  ${FinalResultDir} \
-                                              ${ConfigureFile} AllCases    ${CasesFile}
+                                              ${ConfigureFile}  AllCases   ${CasesFile}
 		if [  ! $? -eq 0 ]
 		then
 			echo -e "\033[31m not all test cases have been passed! \033[0m"

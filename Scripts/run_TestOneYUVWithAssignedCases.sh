@@ -152,7 +152,6 @@ runSetLocalWorkingDir()
 	TestReport="${FinalResultDir}/TestReport_${TestYUVName}_SubCaseIndex_${SubCaseIndex}.report"
     TestSummaryFileName="${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary"
 	CurrentDir=`pwd`
-	AssignedCasesFile=""
 	ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
 	
 	#for both SGE data and local test, in order to decrease tho sge-master's workload,
