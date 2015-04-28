@@ -2,7 +2,7 @@
 #***************************************************************************************
 # brief:
 #      --combine subcase files into single files for all test cases
-#      --usage:  run_CombinSubCasesFileIntoAllCasesFile.sh ${SubCasesFileDir} \
+#      --usage:  run_SubCasesToAllCasesCombination.sh ${SubCasesFileDir} \
 #                                                          ${TestYUVName}     \
 #                                                          ${FileIndex}#
 #
@@ -11,13 +11,13 @@
  runUsage()
  {
 	echo ""
-    echo -e "\033[31m usage:  ./run_CombinSubCasesFileIntoAllCasesFile.sh \${SubCasesFileDir} \033[0m"
-    echo -e "\033[31m                                                     \${TestYUVName}     \033[0m"
-    echo -e "\033[31m                                                     \${FileIndex}       \033[0m"
-	echo -e "\033[31m   FileIndex: 0--AssignedCasesPassStatusFile         \033[0m"
-    echo -e "\033[31m   FileIndex: 1--UnPassedCasesFile                   \033[0m"
-    echo -e "\033[31m   FileIndex: 2--AssignedCasesSHATableFile           \033[0m"
-    echo -e "\033[31m   FileIndex: 3--CaseSummaryFile                     \033[0m"
+    echo -e "\033[31m usage:  ./run_SubCasesToAllCasesCombination.sh \${SubCasesFileDir}  \033[0m"
+    echo -e "\033[31m                                                \${TestYUVName}      \033[0m"
+    echo -e "\033[31m                                                \${FileIndex}        \033[0m"
+	echo -e "\033[31m   FileIndex: 0--AssignedCasesPassStatusFile    \033[0m"
+    echo -e "\033[31m   FileIndex: 1--UnPassedCasesFile              \033[0m"
+    echo -e "\033[31m   FileIndex: 2--AssignedCasesSHATableFile      \033[0m"
+    echo -e "\033[31m   FileIndex: 3--CaseSummaryFile                \033[0m"
  }
 
 runCopySubCaseFileToAllCasesFile()
@@ -114,7 +114,7 @@ runCheck()
 
 runMain()
 {
-    if [ ! $# -eq 4 ]
+    if [ ! $# -eq 3 ]
 	then
 		runUsage
 		exit 1
