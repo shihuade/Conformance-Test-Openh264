@@ -300,9 +300,9 @@ runOutputPassNum()
 	echo "  --detail result  can be found in   ${LocalDataDir}/${ResultPath}" 
 	echo  -e "\033[32m *********************************************************** \033[0m"
 	echo ""
-	echo "...............Test summary for ${TestYUVName}...........................">${CaseSummaryFile}
-    echo  -e "\033[32m TestStartTime is         ${StartTime}   \033[0m">>${CaseSummaryFile}
-    echo  -e "\033[32m TestEndTime   is         ${EndTime}     \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m ..................Test summary for ${TestYUVName}....................\033[0m">${CaseSummaryFile}
+    echo  "     TestStartTime is ${StartTime}  ">>${CaseSummaryFile}
+    echo  "     TestEndTime   is ${EndTime}    ">>${CaseSummaryFile}
 	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}\033[0m">>${CaseSummaryFile}
 	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}\033[0m">>${CaseSummaryFile}
 	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}\033[0m">>${CaseSummaryFile}

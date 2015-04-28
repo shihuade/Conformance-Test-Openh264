@@ -118,7 +118,7 @@ runMain()
     runCheck
 
     runSummarizeAllTestResult
-    runGetTestSummary
+    runGetTestSummary >${TempFile}
 
     #deleted temp file
     ./Script/run_SafeDelete.sh ${SummaryFile}
