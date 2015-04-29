@@ -9,9 +9,9 @@
  runUsage()
  {
 	echo ""
-    echo -e "\033[31m usage:  ./run_SubCasesToAllCasesSummary.sh \${YUVName}     \ 033[0m"
-    echo -e "\033[31m                                            \${SummaryFile} \ 033[0m"
-    echo -e "\033[31m                                            \${OutputFile}  033[0m"
+    echo -e "\033[31m usage:  ./run_SubCasesToAllCasesSummary.sh \${YUVName}     \033[0m"
+    echo -e "\033[31m                                            \${SummaryFile} \033[0m"
+    echo -e "\033[31m                                            \${OutputFile}  \033[0m"
     echo ""
  }
 
