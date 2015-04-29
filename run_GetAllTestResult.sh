@@ -11,8 +11,8 @@
  runUsage()
  {
 	echo ""
-    echo -e "\033[31m usage: ./run_AllTestSequencesAllCasesTest.sh   \${TestType}       \033[0m"
-    echo -e "\033[31m usage:                                         \${ConfigureFile}  \033[0m"
+    echo -e "\033[31m usage: ./run_GetAllTestResult.sh   \${TestType}       \033[0m"
+    echo -e "\033[31m                                    \${ConfigureFile}  \033[0m"
     echo ""
  }
 
@@ -145,5 +145,8 @@ runMain()
 }
 TestType=$1
 ConfigureFile=$2
+echo $1
+echo $2
+echo "runMain  ${TestType} ${ConfigureFile}"
 runMain  ${TestType} ${ConfigureFile}
 
