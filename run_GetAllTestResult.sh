@@ -2,8 +2,7 @@
 #***************************************************************************************
 # brief:
 #      --test all cases of all sequences 
-#      --usage:  run_GetAllTestResult.sh  ${TestType} \
-#                                         ${FinalResultDir} \
+#      --usage:  run_GetAllTestResult.sh  ${TestType}     \
 #                                         ${ConfigureFile}
 #
 #
@@ -13,8 +12,7 @@
  {
 	echo ""
     echo -e "\033[31m usage: ./run_AllTestSequencesAllCasesTest.sh   \${TestType}       \033[0m"
-    echo -e "\033[31m usage:                                         \${FinalResultDir} \033[0m"
-    echo -e "\033[31m usage:                                          \${ConfigureFile} \033[0m"
+    echo -e "\033[31m usage:                                         \${ConfigureFile}  \033[0m"
     echo ""
  }
 
@@ -29,9 +27,9 @@ runGetAllYUVTestResult()
         echo ""
         echo "combining sub-set cases files into single all cases file..."
         echo ""
-        DetailSummaryFile="${TestYUV}_SubCasesIndex__AllCases.Summary"
+        DetailSummaryFile="${TestYUV}_AllCasesAllSlaves.Summary"
         SummaryFile="${FinalResultDir}/${TestYUV}_TestResult.Summary"
-        SHA1TableFile="${FinalResultDir}/${TestYUV}_AllCases_SHA1_Table_SubCasesIndex_AllCases.csv"
+        SHA1TableFile="${FinalResultDir}/${TestYUV}_AllCases_SHA1_Table.csv"
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 0
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 1
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
@@ -81,19 +79,45 @@ runOutputSummary()
 	echo -e "\033[32m ********************************************************** \033[0m"
 	echo ""
 }
- 
+
+runCheck()
+{
+    echo ""
+    echo -e "\033[32m ********************************************************** \033[0m"
+    echo -e "\033[32m     getting final test result... \033[0m"
+    echo -e "\033[32m     CurrentDir is :${CurrentDir}\033[0m"
+    echo -e "\033[32m ********************************************************** \033[0m"
+    echo ""
+    if [ ! -d ${FinalResultDir} ]
+    then
+        echo ""
+        echo -e "\033[31m ${FinalResultDir} does does not exist, please double check! \033[0m"
+        echo ""
+        exit 1
+
+    fi
+    if [ ! -d ${SHA1TableDir} ]
+    then
+        echo ""
+        echo -e "\033[31m ${SHA1TableDir} does does not exist, please double check! \033[0m"
+        echo ""
+        exit 1
+    fi
+}
+
 runMain()
 {
-	if [ ! $# -eq 4  ]
+	if [ ! $# -eq 2  ]
 	then
 		runUsage
 		exit 1
 	fi
 	
 	TestType=$1
-	FinalResultDir=$2
-    SHA1TableDir=$3
-	ConfigureFile=$4
+	ConfigureFile=$2
+	FinalResultDir=FinalResult
+    SHA1TableDir=SHA1Table
+
 	#check input parameters
 	runCheck
 	
@@ -125,5 +149,5 @@ TestType=$1
 FinalResultDir=$2
 SHA1TableDir=$3
 ConfigureFile=$4
-runMain  ${TestType} ${FinalResultDir}  ${SHA1TableDir} ${ConfigureFile}
+runMain  ${TestType} ${ConfigureFile}
 

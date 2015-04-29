@@ -17,7 +17,7 @@
  {
 	echo ""
 	echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \033[0m"
-	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest  ./CaseConfigure/case.cfg\033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest    ./CaseConfigure/case.cfg \s033[0m"
 	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ./CaseConfigure/case.cfg \033[0m"
  	echo ""
  }
@@ -27,15 +27,19 @@ runGetFinalTestResult()
     #check test type
     if [ ${TestType} = "SGETest" ]
     then
+
         echo ""
-        echo " please run below command to get final result when all SGE jobs have been completed!"
-        echo "        ./run_GetAllTestResult.sh  \${TestType}        \${FinalResultDir}"
-        echo "                                   \${SHA1TableFolder} \${ConfigureFile}"
+        echo -e "\033[31m ****************************************************************************\033[0m"
+        echo ""
+        echo "       please run below command to get final result when all SGE jobs have been completed!"
+        echo ""
+        echo "           ./run_GetAllTestResult.sh  \${TestType}  \${ConfigureFile}"
+        echo -e "\033[31m ****************************************************************************\033[0m"
         echo ""
         return 0
     elif [ ${TestType} = "LocalTest" ]
     then
-        ./run_GetAllTestResult.sh  ${TestType}  ${FinalResultDir} ${SHA1TableFolder} ${ConfigureFile}
+        ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile}
         let "AllTestFlag =$?"
     fi
 }
@@ -90,7 +94,7 @@ runMain()
 	echo ""
 	echo "prepare for all test data......."
 	echo ""
-	# prepare for all test data  //$TestType  $SourceFolder $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile
+	# prepare for all test data
 	./run_PrepareAllTestData.sh   ${TestType}  ${SourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
@@ -101,7 +105,7 @@ runMain()
 	echo ""
 	echo "running all test cases for all test sequences......"
 	echo ""
-	##                                     ${TestType}  ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
+	##
     ./run_TestAllSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
 	if [ ! $? -eq 0 ]
 	then
@@ -114,6 +118,7 @@ runMain()
 		echo ""
  	fi
 
+    runGetFinalTestResult
 
     return ${AllTestFlag}
 

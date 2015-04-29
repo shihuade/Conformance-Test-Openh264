@@ -72,27 +72,27 @@ runGetTestSummary()
 runGenerateFilePreFixBasedIndex()
 {
 
-    AssignedCasesPassStatusFile="${TestYUVName}_AllCasesOutput_SubCasesIndex_"
-    UnPassedCasesFile="${TestYUVName}_UnpassedCasesOutput_SubCasesIndex_"
-    AssignedCasesSHATableFile="${TestYUVName}_AllCases_SHA1_Table_SubCasesIndex_"
-    CaseSummaryFile="${TestYUVName}_SubCasesIndex_"
+    AssignedCasesPassStatusFile="${TestYUVName}_AllCasesOutput"
+    UnPassedCasesFile="${TestYUVName}_UnpassedCasesOutput"
+    AssignedCasesSHATableFile="${TestYUVName}_AllCases_SHA1_Table"
+    CaseSummaryFile="${TestYUVName}"
 
     if [ ${FileIndex}  -eq 0 ]
     then
-        FileNamePrefix="${AssignedCasesPassStatusFile}"
-        OutputFileName=${FileNamePrefix}_AllCases.csv
+        FileNamePrefix="${AssignedCasesPassStatusFile}_SubCasesIndex_"
+        OutputFileName=${AssignedCasesPassStatusFile}.csv
     elif[ ${FileIndex}  -eq 1 ]
     then
-        FileNamePrefix="${UnPassedCasesFile}"
-        OutputFileName=${FileNamePrefix}_AllCases.csv
+        FileNamePrefix="${UnPassedCasesFile}_SubCasesIndex_"
+        OutputFileName=${UnPassedCasesFile}.csv
     elif [ ${FileIndex}  -eq 2 ]
     then
-        FileNamePrefix="${AssignedCasesSHATableFile}"
-        OutputFileName=${FileNamePrefix}_AllCases.csv
+        FileNamePrefix="${AssignedCasesSHATableFile}_SubCasesIndex_"
+        OutputFileName=${AssignedCasesSHATableFile}.csv
     elif [ ${FileIndex}  -eq 3 ]
     then
-        FileNamePrefix="${CaseSummaryFile}"
-        OutputFileName=${FileNamePrefix}_AllCases.Summary
+        FileNamePrefix="${CaseSummaryFile}_SubCasesIndex_"
+        OutputFileName=${CaseSummaryFile}_AllCasesAllSlaves.Summary
     fi
 
     OutputFile=${SubCasesFileDir}/${OutputFileName}

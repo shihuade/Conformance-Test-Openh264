@@ -20,15 +20,6 @@ runSummarizeAllTestResult()
     let "TempNum = 0"
     TempString=""
 
-...............Test summary for CREW_352x288_30.yuv...........................
-[32m total case  Num     is : 8448[0m
-[32m EncoderPassedNum    is : 4224[0m
-[31m EncoderUnPassedNum  is : 4224[0m
-[32m DecoderPassedNum    is : 4224[0m
-[31m DecoderUpPassedNum  is : 0[0m
-[31m DecoderUnCheckNum   is : 4224[0m
-
-
     while read line
     do
         TempString=`echo $line | awk'BEGIN {FS=":"} {print $2}'`
