@@ -22,7 +22,7 @@
 
 runCopySubCaseFileToAllCasesFile()
 {
-    if [ ! $# -eq 1]
+    if [ ! $# -eq 1 ]
     then
         echo -e "\033[31m usage: runCopySubCaseFileToAllCasesFile \${SubCasesFile}  \033[0m"
         return 0
@@ -104,6 +104,13 @@ runCheck()
     if [ ! -d ${SubCasesFileDir} ]
     then
         echo -e "\033[31m File directory ${SubCasesFileDir} does not exist,please double check! \033[0m"
+        exit 1
+    fi
+
+    if [ ${FileIndex} -lt 0 -o ${FileIndex} -gt 3 ]
+    then
+        echo -e "\033[31m File index shoule be chosen from 0~3 \033[0m"
+        runUsage
         exit 1
     fi
 
