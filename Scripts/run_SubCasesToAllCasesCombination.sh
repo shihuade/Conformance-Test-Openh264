@@ -81,7 +81,7 @@ runGenerateFilePreFixBasedIndex()
     then
         FileNamePrefix="${AssignedCasesPassStatusFile}_SubCasesIndex_"
         OutputFileName=${AssignedCasesPassStatusFile}.csv
-    elif[ ${FileIndex}  -eq 1 ]
+    elif [ ${FileIndex}  -eq 1 ]
     then
         FileNamePrefix="${UnPassedCasesFile}_SubCasesIndex_"
         OutputFileName=${UnPassedCasesFile}.csv

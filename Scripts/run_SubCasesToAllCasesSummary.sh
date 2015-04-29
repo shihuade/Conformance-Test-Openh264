@@ -38,10 +38,10 @@ runSummarizeAllTestResult()
         elif [[ ${line} =~ "DecoderPassedNum" ]]
         then
             let "DecoderPassedNum += ${TempNum}"
-        elif[[ ${line} =~ "DecoderUpPassedNum" ]]
+        elif [[ ${line} =~ "DecoderUpPassedNum" ]]
         then
             let "DecoderUpPassedNum += ${TempNum}"
-        elif[[ ${line} =~ "DecoderUnCheckNum" ]]
+        elif [[ ${line} =~ "DecoderUnCheckNum" ]]
         then
             let "DecoderUnCheckNum += ${TempNum}"
         fi
