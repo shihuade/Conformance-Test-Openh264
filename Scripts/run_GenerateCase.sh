@@ -12,13 +12,9 @@
 #usage:  runParseYUVInfo  ${YUVName}
 runParseYUVInfo()
 {
-	if [ ! $# -eq 1 ]
-	then
-		echo "usage:  runParseYUVInfo  \${YUVName}"
-		return 1
-	fi
-	declare -a aYUVInfo
-	aYUVInfo=(`./run_ParseYUVInfo.sh  ${TestSequence}`)
+    TestYUVName=${TestSequence}
+    declare -a aYUVInfo
+	aYUVInfo=(`./run_ParseYUVInfo.sh  ${TestYUVName}`)
 	PicW=${aYUVInfo[0]}
 	PicH=${aYUVInfo[1]}
 	FPS=${aYUVInfo[2]}
@@ -450,6 +446,7 @@ runThirdStageCase()
 										${SceneChangeFlag},\
 										${BackgroundFlag},\
 										${AQFlag}">>$casefile
+                                        let "TotalCasesNum ++"
 								done
 							done
 						done
@@ -463,6 +460,10 @@ runThirdStageCase()
 runOutputParseResult()
 {
     echo ""
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m Test cases generation result for ${TestSequence} \033[0m"
+    echo -e "\033[32m TotalCasesNum is ${TotalCasesNum}"
+    echo -e "\033[32m ********************************************************************* \033[0m"
 	echo "PicWxPicH_FPS is ${PicW}x${PicH}_${FPS}"
 	echo "all case info has been  output to file $casefile "
 	echo "aUsageType=         ${aUsageType[@]}"
@@ -496,6 +497,8 @@ runOutputParseResult()
 	echo "aSpatialLayerBRSet2 is ${aSpatialLayerBRSet2[@]}"
 	echo "aSpatialLayerBRSet3 is ${aSpatialLayerBRSet3[@]}"
 	echo "aSpatialLayerBRSet4 is ${aSpatialLayerBRSet4[@]}"
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo ""
 }
 runBeforeGenerate()
 {
@@ -566,6 +569,8 @@ runMain()
   ConfigureFile=$1
   TestSequence=$2
   OutputCaseFile=$3
+  let "TotalCasesNum=0"
+
 
   ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
   if [ ! -f ${ConfigureFile} ]

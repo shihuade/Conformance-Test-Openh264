@@ -117,11 +117,9 @@ runMain()
 	ConfigureFile=$2
 	FinalResultDir=FinalResult
     SHA1TableDir=SHA1Table
-
+	CurrentDir=`pwd`
 	#check input parameters
 	runCheck
-	
-	CurrentDir=`pwd`
 
     AllTestSummary="${FinalResultDir}/AllTestYUVsSummary.txt"
     AllSGESlaveInfoFile="${FinalResultDir}/AllTestYUVsSGESlaveInfo.txt"
