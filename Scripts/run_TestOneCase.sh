@@ -270,8 +270,8 @@ runOutputCaseCheckStatus()
 	date
 	local TestTime=`date`
 	
-	 echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AllCasesSHATableFile}
-	 echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} ">>${AllCasesPassStatusFile}
+     echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AssignedCasesSHATableFile}
+	 echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} ">>${AssignedCasesPassStatusFile}
 
 	if [ ${BasicCheckFlag} -eq 1 -o  ${JSVMCheckFlag} -eq 1 ]
 	then
