@@ -138,15 +138,13 @@ runMain()
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
 
 	#get all test summary
-	runGetTestSummary
+	runGetAllYUVTestResult
+    runOutputSummary
     runPromptInfo
     return ${AllTestFlag}
 
 }
 TestType=$1
 ConfigureFile=$2
-echo $1
-echo $2
-echo "runMain  ${TestType} ${ConfigureFile}"
 runMain  ${TestType} ${ConfigureFile}
 

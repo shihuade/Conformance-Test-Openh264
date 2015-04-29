@@ -584,7 +584,7 @@ runMain()
   runParseCaseConfigure  ${ConfigureFile}
   runMultiLayerInitial
   runBeforeGenerate
-s  runFirstStageCase
+  runFirstStageCase
   runSecondStageCase
   runThirdStageCase
   runAfterGenerate
