@@ -144,8 +144,6 @@ runMain()
 
 }
 TestType=$1
-FinalResultDir=$2
-SHA1TableDir=$3
-ConfigureFile=$4
+ConfigureFile=$2
 runMain  ${TestType} ${ConfigureFile}
 

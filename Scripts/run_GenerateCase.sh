@@ -584,11 +584,11 @@ runMain()
   runParseCaseConfigure  ${ConfigureFile}
   runMultiLayerInitial
   runBeforeGenerate
-  runOutputParseResult
-  runFirstStageCase
+s  runFirstStageCase
   runSecondStageCase
   runThirdStageCase
   runAfterGenerate
+  runOutputParseResult
 }
 ConfigureFile=$1
 TestSequence=$2
