@@ -223,8 +223,8 @@ runParseCaseCheckLog()
 #usage  runAllCaseTest
 runAllCaseTest()
 {
-	local CheckLogFile="${TempDataPath}/CaseCheck_SubCaseIndex_${SubCaseIndex}.log"
-	let "TotalCaseNum=0"
+    local CheckLogFile="${TempDataPath}/CaseCheck.log"
+    let "TotalCaseNum=0"
 	let "LineIndex=0"
 	let "LogFileIndex=0"
 	while read CaseData
