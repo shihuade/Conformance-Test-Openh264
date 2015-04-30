@@ -86,8 +86,6 @@ runTestOneYUV()
 		cat  ${LocalWorkingDir}/result/${TestSummaryFileName} >>${TestReport}
 		
 		cp  -f ${LocalWorkingDir}/result/*.csv       ${FinalResultDir}
-        cp  -f ${LocalWorkingDir}/result/*.Summary   ${FinalResultDir}
-
 		runDeleteYUV
 		return 1
 	else
@@ -96,9 +94,8 @@ runTestOneYUV()
 		cat  ${LocalWorkingDir}/result/${TestSummaryFileName} >>${TestReport}
 		
 		cp  -f ${LocalWorkingDir}/result/*.csv    ${FinalResultDir}
-        cp  -f ${LocalWorkingDir}/result/*.Summary   ${FinalResultDir}
 
-		runDeleteYUV
+        runDeleteYUV
 		return 0
 	fi
 

@@ -64,6 +64,7 @@ runGetTestSummary()
         echo "      SubFile      is ${file}"
         echo -e "\033[32m ********************************************************* \033[0m"
         runCopySubCaseFileToAllCasesFile ${file}
+        mv ${file}  ${SubCasesBackupDir}
 
         let "SubFileIndex ++"
     done
@@ -92,7 +93,7 @@ runGenerateFilePreFixBasedIndex()
         OutputFileName=${AssignedCasesSHATableFile}.csv
     elif [ ${FileIndex}  -eq 3 ]
     then
-        FileNamePrefix="${CaseSummaryFile}_SubCasesIndex_"
+        FileNamePrefix="TestReport_${CaseSummaryFile}_SubCasesIndex_"
         OutputFileName=${CaseSummaryFile}_AllCasesAllSlaves.Summary
     fi
 
@@ -118,6 +119,14 @@ runCheck()
     cd ${SubCasesFileDir}
     SubCasesFileDir=`pwd`
     cd ${CurrentDir}
+    SubCasesBackupDir=${SubCasesFileDir}/AllSubCaseData
+
+    if [ -d ${SubCasesBackupDir} ]
+    then
+        ./Scripts/run_SafeDete.sh ${SubCasesBackupDir}
+    fi
+
+    mkdir ${SubCasesBackupDir}
 }
 
 runMain()
@@ -137,6 +146,7 @@ runMain()
     OutputFileName=""
     OutputFile=""
     CurrentDir=`pwd`
+    SubCasesBackupDir=""
 
     let "SubFileIndex = 0"
     let "NewFileFlag  = 0"
