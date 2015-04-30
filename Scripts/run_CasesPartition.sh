@@ -86,6 +86,7 @@ runPartitionAllCasesIntoSubCasesFile()
 
     done < ${AllCasesFile}
 
+    let "CaseIndex ++"
     echo -e "\033[32m Total cases num for partition is     ${CaseIndex} \033[0m"
     echo -e "\033[32m SubCasesNum in one sub-cases set is  ${SubCasesNum} \033[0m"
     echo -e "\033[32m Total sub cases file num is          ${SubCasesFileIndex} \033[0m"
