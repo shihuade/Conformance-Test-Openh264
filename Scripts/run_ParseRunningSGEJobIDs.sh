@@ -10,7 +10,7 @@
 #extract all SGE job ID by using command qstat 
 runGetRunningSGEJobID()
 {
-	SGEJobList="SGEJobList.Temp"
+	SGEJobList="SGEJobList_running.log"
 
     if [ ! -e ${SGEJobList} ]
     then

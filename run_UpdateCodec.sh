@@ -45,7 +45,7 @@ runBuildCodec()
 	fi
 	local OpenH264Dir=$1
 	local CurrentDir=`pwd`
-	local BuildLog="${CurrentDir}/build.log"
+	local BuildLog="${CurrentDir}/CodecBuildInfo.log"
 	if [  ! -d ${OpenH264Dir} ]
 	then
 		echo "openh264 dir is not right!"

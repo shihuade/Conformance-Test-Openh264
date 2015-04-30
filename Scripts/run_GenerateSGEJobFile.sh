@@ -123,6 +123,7 @@ runMain()
     let "SubCaseIndex = 0"
     CurrentDir=`pwd`
 
+    runCheck
 
     runGenerateSGEJobFileForOneYUV
 
