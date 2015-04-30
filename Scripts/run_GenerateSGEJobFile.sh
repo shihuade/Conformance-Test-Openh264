@@ -2,7 +2,7 @@
 #***************************************************************************************
 # brief:
 #      --generate SGE job file based on SGE template
-#      --usage: run_GenerateSGEJobFile.sh  $TestSequenceDir  $TestYUVName $YUVIndex "
+#      --usage: run_GenerateSGEJobFile.sh  $TestSequenceDir  $TestYUVName $ConfigureFile"
 #
 #
 #date:  04/30/2015 Created
@@ -62,32 +62,16 @@ runGenerateSGEJobFileForOneYUV()
 
     for vSubCaseFile in ${TestSequenceDir}/${TestYUVName}_SubCases_*.csv
     do
+        runPrepareSGEJobFile ${SubCaseIndex} ${vSubCaseFile}
         let "SubCaseIndex ++"
         let "SGEJobNum ++"
-        runPrepareSGEJobFile ${SubCaseIndex} ${vSubCaseFile}
     done
 
     return 0
 }
 
-
-runMain()
+runCheck()
 {
-    if [ ! $# -eq 3 ]
-    then
-        echo "usage: run_GenerateSGEJobFile.sh  \$TestSequenceDir  \$TestYUVName \$YUVIndex "
-        return 1
-    fi
-
-    TestSequenceDir=$1
-    TestYUVName=$2
-    YUVIndex=$3
-
-    ScriptFolder="Scripts"
-
-    let "SubCaseIndex = 0"
-    CurrentDir=`pwd`
-
     if [ -d ${TestSequenceDir} ]
     then
         cd ${TestSequenceDir}
@@ -98,6 +82,48 @@ runMain()
         exit 1
     fi
 
+    if [ -d ${ScriptFolder} ]
+    then
+        cd ${ScriptFolder}
+        ScriptFolder=`pwd`
+        cd ${CurrentDir}
+    else
+        echo -e "\033[31m Scripts folder--${ScriptFolder} does not exist! Please double check! \033[0m"
+        exit 1
+    fi
+
+
+    if [ -d ${FinalResultDir} ]
+    then
+        cd ${FinalResultDir}
+        FinalResultDir=`pwd`
+        cd ${CurrentDir}
+    else
+        echo -e "\033[31m Final result folder--${FinalResultDir} does not exist! Please double check! \033[0m"
+        exit 1
+    fi
+
+}
+
+runMain()
+{
+    if [ ! $# -eq 3 ]
+    then
+        echo "usage: run_GenerateSGEJobFile.sh  \$TestSequenceDir  \$TestYUVName \$ConfigureFile"
+        return 1
+    fi
+
+    TestSequenceDir=$1
+    TestYUVName=$2
+    ConfigureFile=$3
+
+    ScriptFolder="Scripts"
+    FinalResultDir="FinalResult"
+
+    let "SubCaseIndex = 0"
+    CurrentDir=`pwd`
+
+
     runGenerateSGEJobFileForOneYUV
 
     return $?
@@ -105,6 +131,6 @@ runMain()
 }
 TestSequenceDir=$1
 TestYUVName=$2
-YUVIndex=$3
-runMain ${TestSequenceDir} ${TestYUVName} ${YUVIndex}
+ConfigureFile=$3
+runMain ${TestSequenceDir} ${TestYUVName} ${ConfigureFile}
 

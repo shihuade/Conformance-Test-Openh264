@@ -66,15 +66,15 @@ runGenerateSGEJobFileForOneYUV()
 {
     if [ ! $# -eq 3 ]
     then
-        echo "usage: runGenerateSGEJobFileForOneYUV  \$TestSequenceDir  \$TestYUVName \$YUVIndex "
+        echo "usage: runGenerateSGEJobFileForOneYUV  \$TestSequenceDir  \$TestYUVName \$ConfigureFile "
         return 1
     fi
 
     TestSequenceDir=$1
     TestYUVName=$2
-    YUVIndex=$3
+    ConfigureFile=$3
 
-    ./Scripts/run_GenerateSGEJobFile.sh  ${TestSequenceDir} ${TestYUVName} ${YUVIndex}
+    ./Scripts/run_GenerateSGEJobFile.sh  ${TestSequenceDir} ${TestYUVName} ${ConfigureFile}
 
     return 0
 }

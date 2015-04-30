@@ -134,8 +134,9 @@ runSetLocalWorkingDir()
  {
 	if [ ! $# -eq 6 ]
 	then
-		echo "usage: runMain \${TestType}  \${TestYUVName} \${FinalResultDir}  \${ConfigureFile} \${SubCaseIndex}\${SubCaseFile}"
-		echo "detected by run_TestOneYUVWithAssignedCases.sh"
+		echo -e "\033[32m usage: runMain  \${TestType}      \${TestYUVName}  \${FinalResultDir} \033[0m"
+        echo -e "\033[32m                 \${ConfigureFile} \${SubCaseIndex} \${SubCaseFile}    \033[0m"
+		echo -e "\033[32m  detected by run_TestOneYUVWithAssignedCases.sh \033[0m"
 		return 1
 	fi
 	
