@@ -112,7 +112,12 @@ runSetLocalWorkingDir()
 		SGEJobID=$JOB_ID
 		LocalWorkingDir="${TempDataDir}/${HostName}/SGEJobID_${SGEJobID}"
 		echo ""
-		echo "SGETest local data dir is ${LocalWorkingDir}"
+        echo -e "\033[32m ****************************************************************************** \033[0m"
+        echo -e "\033[32m ****************************************************************************** \033[0m"
+		echo -e "\033[32m    SGETest local data dir is ${LocalWorkingDir} \033[0m"
+        echo -e "\033[32m ****************************************************************************** \033[0m"
+        echo -e "\033[32m ****************************************************************************** \033[0m"
+
 		echo ""
 		
 		if [ -d ${LocalWorkingDir} ]
@@ -124,7 +129,11 @@ runSetLocalWorkingDir()
 	else
 		LocalWorkingDir=`pwd`
 		echo ""
-		echo "LocalTest local data dir is ${LocalWorkingDir}"
+        echo -e "\033[32m ****************************************************************************** \033[0m"
+        echo -e "\033[32m ****************************************************************************** \033[0m"
+		echo -e "\033[32m  LocalTest local data dir is ${LocalWorkingDir} \033[0m"
+        echo -e "\033[32m ****************************************************************************** \033[0m"
+        echo -e "\033[32m ****************************************************************************** \033[0m"
 		echo ""
 	fi	
 }
