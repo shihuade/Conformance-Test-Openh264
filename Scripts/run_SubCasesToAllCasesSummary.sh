@@ -23,7 +23,7 @@ runSummarizeAllTestResult()
     do
         TempNum=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
         TempNum=`echo $TempNum | awk 'BEGIN {FS="["} {print $1}'`
-        TempNum=`echo $TempNum | awk  {print $1}'`
+        TempNum=`echo $TempNum | awk '{print $1}'`
 
         if [[ ${line} =~ "total case  Num" ]]
         then
@@ -51,23 +51,21 @@ runSummarizeAllTestResult()
 runOutputTestSummary()
 {
 
-    if [ ! ${EncoderUnPassedNum} -eq 0 ]
-    then
-        SummaryString="\033[31m   Not all Cases passed the test! [0m"
-        FinalResult="\033[32m     Succed! [0m"
-        let "TestFlag=1"
-    else
-        SummaryString="\033[32m   All Cases passed the test! [0m"
-        FinalResult="\033[31m     Failed! [0m"
-        let "TestFlag=0"
-    fi
-
 
     echo -e "\033[32m ********************************************************************** [0m"
     echo -e "\033[32m *        Test report of all cases for YUV ${YUVName}  [0m"
     echo -e "\033[32m ********************************************************************** [0m"
-    echo ${FinalResult}
-    echo ${SummaryString}
+    if [ ! ${EncoderUnPassedNum} -eq 0 ]
+    then
+        echo -e "\033[31m   Not all Cases passed the test! [0m"
+        echo -e "\033[32m     Succed! [0m"
+        let "TestFlag=1"
+    else
+        echo -e "\033[32m   All Cases passed the test! [0m"
+        echo -e "\033[31m     Failed! [0m"
+        let "TestFlag=0"
+    fi
+
     echo -e "\033[32m total case  Num     is : ${TotalNum} [0m"
     echo -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum} [0m"
     echo -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum} [0m"
