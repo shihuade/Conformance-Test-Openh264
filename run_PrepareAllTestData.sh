@@ -174,7 +174,6 @@ runPrepareTestSpace()
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
 
-        echo "ConfigureFile is ${ConfigureFile}"
         cd ${SubFolder}
         runGenerateCaseFiles ${TestYUV}
         cd ${CurrentDir}
@@ -182,7 +181,7 @@ runPrepareTestSpace()
 		let "YUVIndex++"
 		if [ ${TestType} = "SGETest"  ]
 		then
-			runGenerateSGEJobFileForOneYUV  ${SubFolder}  ${TestYUV}  ${YUVIndex}
+			runGenerateSGEJobFileForOneYUV  ${SubFolder}  ${TestYUV}  ${ConfigureFile}
 		fi 		
 	done
 	
