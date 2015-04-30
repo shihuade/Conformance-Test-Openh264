@@ -39,19 +39,19 @@ runPrepareSGEJobFile()
 	while read line
 	do
 		
-		if [[ $line =~ ^"#$ -q"  ]]
+		if [[ "$line" =~ "#$ -q"  ]]
 		then
 			echo "#$ -q ${SGEQueue}  # Select the queue">>${SGEJobFile}
-		elif [[ $line =~ ^"#$ -N"  ]]
+		elif [[ "$line" =~ "#$ -N"  ]]
 		then
-			echo "#$ -N ${SGEName} # The name of job">>${SGEJobFile}
-		elif [ $line =~ ^"##$ -o"  ]]
+			echo "#$ -N ${SGEName} # The name of job"   >>${SGEJobFile}
+		elif [[ "$line" =~ "##$ -o"  ]]
         then
             echo "#$ -o ${SGEOutputFile}    # terminal output file ">>${SGEJobFile}
-        elif [[ $line =~ ^"##$ -e"  ]]
+        elif [[ "$line" =~ "##$ -e"  ]]
         then
             echo "#$ -e ${SGEErrorLogFile}  # terminal error file ">>${SGEJobFile}
-        elif[[ $line =~ ^"#$ -wd"  ]]
+        elif [[ "$line" =~ "#$ -wd"  ]]
 		then
 			echo "#$ -wd ${TestSequenceDir}">>${SGEJobFile}
 		else
