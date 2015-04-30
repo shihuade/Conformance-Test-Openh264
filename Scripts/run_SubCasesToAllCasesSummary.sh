@@ -82,7 +82,7 @@ runOutputDetailResult()
     echo ""
     echo ""
     echo -e "\033[32m **********************************************************************   \033[0m"
-    echo -e "\033[32m *     Test report below for sub-cases set of YUV ${SummaryFile}          \033[0m"
+    echo -e "\033[32m *     Test report below for sub-cases set of YUV ${YUVName}              \033[0m"
     echo -e "\033[32m **********************************************************************   \033[0m"
     cat  ${SummaryFile}
     echo -e "\033[32m **********************************************************************   \033[0m"
