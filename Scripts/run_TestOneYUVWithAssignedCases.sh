@@ -85,8 +85,9 @@ runTestOneYUV()
 		echo -e "\033[31m Not all Cases passed the test! \033[0m">>${TestReport}
 		cat  ${LocalWorkingDir}/result/${TestSummaryFileName} >>${TestReport}
 		
-		cp  -f ${LocalWorkingDir}/result/*.csv    ${FinalResultDir}
-		
+		cp  -f ${LocalWorkingDir}/result/*.csv       ${FinalResultDir}
+        cp  -f ${LocalWorkingDir}/result/*.Summary   ${FinalResultDir}
+
 		runDeleteYUV
 		return 1
 	else
@@ -95,7 +96,8 @@ runTestOneYUV()
 		cat  ${LocalWorkingDir}/result/${TestSummaryFileName} >>${TestReport}
 		
 		cp  -f ${LocalWorkingDir}/result/*.csv    ${FinalResultDir}
-		
+        cp  -f ${LocalWorkingDir}/result/*.Summary   ${FinalResultDir}
+
 		runDeleteYUV
 		return 0
 	fi
