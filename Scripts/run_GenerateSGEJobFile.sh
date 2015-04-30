@@ -25,7 +25,7 @@ runPrepareSGEJobFile()
 
 	SGEQueue="Openh264SGE_${SGEQueueIndex}"
 	SGEName="${TestYUVName}_SGE_Test_SubCaseIndex_${SubCaseIndex}"
-	SGEModelFile="${CurrentDir}/${ScriptFolder}/SGEModel.sge"
+	SGEModelFile="${ScriptFolder}/SGEModel.sge"
 	SGEJobFile="${TestSequenceDir}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}.sge"
 	SGEJobScript="run_TestOneYUVWithAssignedCases.sh"
     SGEOutputFile="${SGEJobFile}.o"
