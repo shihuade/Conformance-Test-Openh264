@@ -114,7 +114,6 @@ runGenerateCaseFiles()
     TestYUVName=$1
     AllCasesFile=${TestYUVName}_AllCase.csv
     SubCaseInfoLog=${TestYUVName}_SubCasesInfo.log
-    let "SGEJobSubCasesNum=500"
 
     ./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName} ${AllCasesFile}
     if [ ! $? -eq 0  ]
