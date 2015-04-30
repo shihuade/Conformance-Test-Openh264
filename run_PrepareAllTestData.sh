@@ -277,7 +277,7 @@ runMain()
 	#parse git repository info 
 	runParseConfigureFile
 	#update codec
-    #runUpdateCodec
+    runUpdateCodec
 
 	echo "Preparing test space for all test sequences!"
 
