@@ -228,8 +228,14 @@ runMain()
 	if [ ! $# -ge 6  ]
 	then
 		echo ""
-		echo -e "\033[31musage: run_PrepareAllTestFolder.sh   \$TestType  \$SourceFolder  \$AllTestDataFolder  \$CodecFolder  \$ScriptFolder \$ConfigureFile \033[0m"
-		echo ""
+        echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType   \$SourceFolder  \$AllTestDataFolder  \033[0m"
+        echo -e "\033[31m                                     \$CodecFolder \$ScriptFolder \$ConfigureFile      \033[0m"
+        echo ""
+        echo -e "\033[31m or:  \033[0m"
+        echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType   \$SourceFolder  \$AllTestDataFolder  \033[0m"
+        echo -e "\033[31m                                     \$CodecFolder \$ScriptFolder \$ConfigureFile      \033[0m"
+        echo -e "\033[31m                                     \$OpenH264Branch \$OpenH264Repos       \033[0m"
+        echo ""
 		return 1
 	fi
 	
