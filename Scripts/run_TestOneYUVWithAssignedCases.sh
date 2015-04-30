@@ -148,7 +148,7 @@ runSetLocalWorkingDir()
 
 	HostName=`hostname`
 	TestYUVFullPath=""
-	TestReport="${FinalResultDir}/TestReport_${TestYUVName}_SubCaseIndex_${SubCaseIndex}.report"
+	TestReport="${FinalResultDir}/TestReport_${TestYUVName}_SubCasesIndex_${SubCaseIndex}.report"
     TestSummaryFileName="${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary"
 	CurrentDir=`pwd`
 	ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`

@@ -121,12 +121,11 @@ runCheck()
     cd ${CurrentDir}
     SubCasesBackupDir=${SubCasesFileDir}/AllSubCaseData
 
-    if [ -d ${SubCasesBackupDir} ]
+    if [ ! -d ${SubCasesBackupDir} ]
     then
-        ./Scripts/run_SafeDete.sh ${SubCasesBackupDir}
+        mkdir ${SubCasesBackupDir}
     fi
 
-    mkdir ${SubCasesBackupDir}
 }
 
 runMain()
