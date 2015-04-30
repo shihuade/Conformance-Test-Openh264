@@ -33,6 +33,13 @@ runGetAllYUVTestResult()
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 0
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 1
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
+
+echo "SummaryFile info after summary...."
+cat ${DetailSummaryFile}
+echo ""
+echo ""
+
+
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 3
 
         echo "SummaryFile info after summary...."

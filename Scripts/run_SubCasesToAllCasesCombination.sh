@@ -51,6 +51,8 @@ runCopySubCaseFileToAllCasesFile()
         let "LineIndex ++"
     done < ${SubCasesFile}
 
+    echo ${HeadLine}
+
 }
 
 runGetTestSummary()
