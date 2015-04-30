@@ -33,12 +33,7 @@ runRemovedPreviousTestData()
 }
 runUpdateCodec()
 {
-	echo ""
-	echo -e "\033[32m openh264 repository cloning... \033[0m"
-	echo -e "\033[32m     ----repository is ${Openh264GitAddr} \033[0m"	
-	echo -e "\033[32m     ----branch     is ${Branch} \033[0m"	
-	echo ""
-	
+
 	./run_CheckoutCiscoOpenh264Codec.sh  ${Openh264GitAddr} ${SourceFolder}
 	if [  ! $? -eq 0 ]
 	then	
@@ -94,13 +89,22 @@ runParseConfigureFile()
 		elif  [[ "$line" =~ ^GitBranch  ]]
 		then
 			Branch=`echo $line | awk '{print $2}' `
-        elif [[ "$line" =~ ^SubCaseNum  ]]
+        elif [[ "$line" =~ ^SubCasesNum  ]]
         then
             TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
             TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
             let "SGEJobSubCasesNum= ${TempString}"
         fi
 	done <${ConfigureFile}
+
+    echo ""
+    echo -e "\033[32m openh264 repository cloning...             \033[0m"
+    echo -e "\033[32m     ----repository is ${Openh264GitAddr}   \033[0m"
+    echo -e "\033[32m     ----branch     is ${Branch}            \033[0m"
+    echo -e "\033[32m SGEJobSubCasesNum  is ${SGEJobSubCasesNum} \033[0m"
+    echo ""
+
+
 }
 
 runGenerateCaseFiles()
