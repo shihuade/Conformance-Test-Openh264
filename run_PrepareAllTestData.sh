@@ -250,7 +250,7 @@ runMain()
 	cd  ${CurrentDir}
 	
 	#parse git repository info 
-	runGetGitRepository
+	runParseConfigureFile
 	#update codec
     #runUpdateCodec
 
