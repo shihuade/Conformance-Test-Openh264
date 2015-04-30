@@ -28,7 +28,9 @@ runPrepareSGEJobFile()
 	SGEModelFile="${CurrentDir}/${ScriptFolder}/SGEModel.sge"
 	SGEJobFile="${TestSequenceDir}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}.sge"
 	SGEJobScript="run_TestOneYUVWithAssignedCases.sh"
-	
+    SGEOutputFile="${SGEJobFile}.o"
+    SGEErrorLogFile="${SGEJobFile}.e"
+
 	echo ""
 	echo -e "\033[32m creating SGE job file : ${SGEJobFile} ......\033[0m"
 	echo ""
@@ -43,7 +45,13 @@ runPrepareSGEJobFile()
 		elif [[ $line =~ ^"#$ -N"  ]]
 		then
 			echo "#$ -N ${SGEName} # The name of job">>${SGEJobFile}
-		elif [[ $line =~ ^"#$ -wd"  ]]
+		elif [ $line =~ ^"##$ -o"  ]]
+        then
+            echo "#$ -o ${SGEOutputFile}    # terminal output file ">>${SGEJobFile}
+        elif [[ $line =~ ^"##$ -e"  ]]
+        then
+            echo "#$ -e ${SGEErrorLogFile}  # terminal error file ">>${SGEJobFile}
+        elif[[ $line =~ ^"#$ -wd"  ]]
 		then
 			echo "#$ -wd ${TestSequenceDir}">>${SGEJobFile}
 		else
