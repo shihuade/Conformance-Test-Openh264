@@ -595,5 +595,7 @@ TestSequence=$2
 OutputCaseFile=$3
 echo ""
 echo "case generating ......"
+echo "before cases generation ConfigureFile is {ConfigureFile}"
 runMain  ${ConfigureFile}   ${TestSequence}   ${OutputCaseFile}
+echo "after cases generation ConfigureFile is {ConfigureFile}"
 
