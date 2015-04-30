@@ -29,12 +29,12 @@ runGetFinalTestResult()
     then
 
         echo ""
-        echo -e "\033[31m ****************************************************************************\033[0m"
+        echo -e "\033[32m ****************************************************************************\033[0m"
         echo ""
-        echo "       please run below command to get final result when all SGE jobs have been completed!"
+        echo -e "\033[32m please run below command to get final result when all SGE jobs have been completed!"
         echo ""
-        echo "           ./run_GetAllTestResult.sh  \${TestType}  \${ConfigureFile}"
-        echo -e "\033[31m ****************************************************************************\033[0m"
+        echo -e "\033[32m     ./run_GetAllTestResult.sh  \${TestType}  \${ConfigureFile}"
+        echo -e "\033[32m ****************************************************************************\033[0m"
         echo ""
         return 0
     elif [ ${TestType} = "LocalTest" ]
