@@ -17,14 +17,12 @@
 
 runSummarizeAllTestResult()
 {
-    let "TempNum = 0"
     TempString=""
 
     while read line
     do
-        TempString=`echo $line | awk'BEGIN {FS=":"} {print $2}'`
-        TempString=`echo $TempString | awk'BEGIN {FS="["} {print $1}'`
-        let "TempNum = ${TempString}"
+        TempNum=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
+        TempNum=`echo $TempNum | awk 'BEGIN {FS="["} {print $1}'`
 
         if [[ ${line} =~ "total case  Num" ]]
         then
@@ -133,7 +131,7 @@ runMain()
     runOutputTestSummary   >${OutputFile}
 
     #deleted temp file
-    ./Script/run_SafeDelete.sh ${SummaryFile}
+    ./Scripts/run_SafeDelete.sh ${SummaryFile}
     mv ${TempFile}  ${SummaryFile}
 
     return ${TestFlag}
