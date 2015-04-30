@@ -22,8 +22,8 @@ runSummarizeAllTestResult()
     while read line
     do
         TempNum=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
-        TempNum=`echo $TempNum | awk 'BEGIN {FS="["} {print $1}'`
-        TempNum=`echo $TempNum | awk '{print $1}'`
+        TempNum=`echo $TempNum | awk ' {print $1}'`
+
 
         if [[ ${line} =~ "total case  Num" ]]
         then

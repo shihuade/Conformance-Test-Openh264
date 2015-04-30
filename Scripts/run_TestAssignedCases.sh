@@ -286,12 +286,12 @@ runOutputPassNum()
 	TestFolder=`echo $CurrentDir | awk 'BEGIN {FS="/"} { i=NF; print $i}'`
 	echo ""
 	echo  -e "\033[32m *********************************************************** \033[0m"
-	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}\033[0m"
-	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}\033[0m"
-	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}\033[0m"
-	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}\033[0m"
-	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum}\033[0m"
-	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}\033[0m"
+	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}       \033[0m"
+	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}   \033[0m"
+	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum} \033[0m"
+	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}   \033[0m"
+	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum} \033[0m"
+	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}  \033[0m"
 	echo "issue bitstream can be found in ./AllTestData/${TestFolder}/issue"
 	echo "detail result  can be found in  ./AllTestData/${TestFolder}/${ResultPath}"
 	echo  -e "\033[32m *********************************************************** \033[0m"
@@ -303,12 +303,12 @@ runOutputPassNum()
 	echo  -e "\033[32m ..................Test summary for ${TestYUVName}....................\033[0m">${CaseSummaryFile}
     echo  "     TestStartTime is ${StartTime}  ">>${CaseSummaryFile}
     echo  "     TestEndTime   is ${EndTime}    ">>${CaseSummaryFile}
-	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}\033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}        \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}    \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}  \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}    \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum}  \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}   \033[0m">>${CaseSummaryFile}
 	echo "" >>${CaseSummaryFile}
 	echo "  --issue bitstream can be found in  ${LocalDataDir}/issue" >>${CaseSummaryFile}
 	echo "  --detail result  can be found in   ${LocalDataDir}/${ResultPath}" >>${CaseSummaryFile}
