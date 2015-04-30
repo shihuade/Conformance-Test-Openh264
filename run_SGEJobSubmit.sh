@@ -86,7 +86,7 @@ runMain()
 
     AllTestDataDir=$1
 	ConfigureFile=$2
-    SGEJobInfoFile=$3
+    SGEJobListFile=$3
 	CurrentDir=`pwd`
 
 	let "CurrentSGEJobNum=0"
@@ -113,6 +113,6 @@ runMain()
 }
 AllTestDataDir=$1
 ConfigureFile=$2
-SGEJobInfoFile=$3
-runMain  ${AllTestDataDir}  ${ConfigureFile} ${SGEJobInfoFile}
+SGEJobListFile=$3
+runMain  ${AllTestDataDir}  ${ConfigureFile} ${SGEJobListFile}
 

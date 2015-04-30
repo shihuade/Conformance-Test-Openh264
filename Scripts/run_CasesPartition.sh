@@ -53,6 +53,10 @@ runPartitionAllCasesIntoSubCasesFile()
     let "LineIndex   = 0"
     let "NewFileFlag = 0"
 
+    echo ""
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m partition all cases into small cases set for ${TestYUVName} \033[0m"
+
     SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
     while read line
     do
@@ -81,6 +85,10 @@ runPartitionAllCasesIntoSubCasesFile()
         let "LineIndex ++"
 
     done < ${AllCasesFile}
+
+    echo -e "\033[32m Total sub cases file num is ${SubCasesFileIndex}"
+    echo -e "\033[32m ********************************************************************* \033[0m"
+
 
 }
 
