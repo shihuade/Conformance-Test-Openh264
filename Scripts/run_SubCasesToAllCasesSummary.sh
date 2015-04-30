@@ -52,42 +52,42 @@ runOutputTestSummary()
 {
 
 
-    echo -e "\033[32m ********************************************************************** [0m"
-    echo -e "\033[32m *        Test report of all cases for YUV ${YUVName}  [0m"
-    echo -e "\033[32m ********************************************************************** [0m"
+    echo -e "\033[32m **********************************************************************   \033[0m
+    echo -e "\033[32m *        Test report of all cases for YUV ${YUVName}    \033[0m
+    echo -e "\033[32m **********************************************************************   \033[0m
     if [ ! ${EncoderUnPassedNum} -eq 0 ]
     then
-        echo -e "\033[31m   Not all Cases passed the test! [0m"
-        echo -e "\033[31m     Failed! [0m"
+        echo -e "\033[31m   Not all Cases passed the test!   \033[0m
+        echo -e "\033[31m     Failed!   \033[0m
         let "TestFlag=1"
     else
-        echo -e "\033[32m   All Cases passed the test! [0m"
-        echo -e "\033[32m     Succed! [0m"
+        echo -e "\033[32m   All Cases passed the test!   \033[0m
+        echo -e "\033[32m     Succed!   \033[0m
         let "TestFlag=0"
     fi
 
-    echo -e "\033[32m total case  Num     is : ${TotalNum} [0m"
-    echo -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum} [0m"
-    echo -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum} [0m"
-    echo -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum} [0m"
-    echo -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum} [0m"
-    echo -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum} [0m"
-    echo -e "\033[32m ********************************************************************** [0m"
-    echo -e "\033[32m ********************************************************************** [0m"
-    echo -e "\033[32m ********************************************************************** [0m"
+    echo -e "\033[32m total case  Num     is : ${TotalNum}            \033[0m"
+    echo -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}    \033[0m"
+    echo -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}  \033[0m"
+    echo -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}    \033[0m"
+    echo -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum}  \033[0m"
+    echo -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}   \033[0m"
+    echo -e "\033[32m **********************************************************************   \033[0m
+    echo -e "\033[32m **********************************************************************   \033[0m
+    echo -e "\033[32m **********************************************************************   \033[0m
 
 }
 runOutputDetailResult()
 {
     echo ""
     echo ""
-    echo -e "\033[32m ********************************************************************** [0m"
-    echo -e "\033[32m *     Test report below for sub-cases set of YUV ${SummaryFile}[0m"
-    echo -e "\033[32m ********************************************************************** [0m"
+    echo -e "\033[32m **********************************************************************   \033[0m
+    echo -e "\033[32m *     Test report below for sub-cases set of YUV ${SummaryFile}          \033[0m
+    echo -e "\033[32m **********************************************************************   \033[0m
     cat  ${SummaryFile}
-    echo -e "\033[32m ********************************************************************** [0m"
-    echo -e "\033[32m ********************************************************************** [0m"
-    echo -e "\033[32m ********************************************************************** [0m"
+    echo -e "\033[32m **********************************************************************   \033[0m
+    echo -e "\033[32m **********************************************************************   \033[0m
+    echo -e "\033[32m **********************************************************************   \033[0m
 
 }
 

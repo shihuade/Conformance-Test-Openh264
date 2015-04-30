@@ -65,6 +65,22 @@ runPromptInfo()
     echo  -e "\033[32m Final result can be found in ./FinaleRestult \033[0m"
     echo  -e "\033[32m SHA1  table  can be found in ./SHA1Table \033[0m"
     echo ""
+
+    if [ ${AllTestFlag} -eq 0  ]
+    then
+        echo ""
+        echo -e "\033[32m ************************************************************************** \033[0m"
+        echo -e "\033[32m    All test succed!    \033[0m"
+        echo -e "\033[32m **************************************************************************** \033[0m"
+        echo ""
+    else
+        echo ""
+        echo -e "\033[31m ************************************************************************** \033[0m"
+        echo -e "\033[31m  Not all cases passed!  \033[0m"
+        echo -e "\033[31m **************************************************************************** \033[0m"
+        echo ""
+    fi
+
 }
 
 runOutputSummary()
