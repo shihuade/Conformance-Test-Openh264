@@ -22,7 +22,7 @@ runGlobalInit()
     CurrentDir=`pwd`
 
     TestFlagFile=""
-    SGEJobListFile="AllSGEJobsInfo.log"
+    SGEJobListFile="SGEJobsSubmittedInfo.log"
 
     let "CurrentSGEJobNum=0"
     declare -a aTestYUVList
@@ -42,7 +42,7 @@ runSGETest()
 {
 	local SGEQueneName="Openh264SGE"	
 	
-    ./run_SGEJobSubmit.sh        ${AllTestDataDir} ${ConfigureFile} ${SGEJobListFile}
+    ./run_SGEJobSubmit.sh  ${AllTestDataDir} ${ConfigureFile} ${SGEJobListFile}
 
     if [ ! $? -eq 0 ]
     then
@@ -51,7 +51,7 @@ runSGETest()
 
     fi
 
-    ./run_SGEJobStatusUpdate.sh  ${${SGEJobListFile}}
+    ./run_SGEJobStatusUpdate.sh  ${SGEJobListFile}
 	
 	return $?
 	
