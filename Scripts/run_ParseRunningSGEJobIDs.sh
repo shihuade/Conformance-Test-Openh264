@@ -17,7 +17,7 @@ runGetRunningSGEJobID()
         touch ${SGEJobList}
     fi
 
-	qstat >${SGEJObList}
+	qstat > ${SGEJobList}
 	
 	let "LineIndex=0"
 	let "JobIDIndex=0"

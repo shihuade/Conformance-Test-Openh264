@@ -2,9 +2,9 @@
 #***************************************************************************************
 # brief:
 #      --combine subcase files into single files for all test cases
-#      --usage:  run_SubCasesToAllCasesCombination.sh ${SubCasesFileDir}      \
-#                                                          ${TestYUVName}     \
-#                                                          ${SGESlaveInfoFile}
+#      --usage:  run_SubCasesToAllCasesCombination.sh ${SubCasesFileDir}  \
+#                                                     ${TestYUVName}      \
+#                                                     ${SGESlaveInfoFile}
 #
 #
 #date: 05/08/2014 Created
