@@ -103,4 +103,8 @@ runMain()
     return $?
 
 }
+TestSequenceDir=$1
+TestYUVName=$2
+YUVIndex=$3
+runMain ${TestSequenceDir} ${TestYUVName} ${YUVIndex}
 

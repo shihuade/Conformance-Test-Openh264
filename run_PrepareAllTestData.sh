@@ -66,56 +66,6 @@ runUpdateCodec()
 	
 	return 0
 }
-runPrepareSGEJobFile()
-{
-	if [ ! $# -eq 5 ]
-	then
-        echo "usage: runPrepareSGEJobFile  \$TestSequenceDir  \$TestYUVName "
-        echo "                              \$YUVIndex        \$SubCaseIndex \$SubCaseFile"
-		return 1
-	fi
-	TestSequenceDir=$1
-	TestYUVName=$2
-	YUVIndex=$3
-    SubCaseIndex=$4
-    SubCaseFile=$5
-
-
-    let "SGEQueueIndex = SGEJobNum % 3"
-
-	SGEQueue="Openh264SGE_${SGEQueueIndex}"
-	SGEName="${TestYUVName}_SGE_Test_SubCaseIndex_${SubCaseIndex}"
-	SGEModelFile="${CurrentDir}/${ScriptFolder}/SGEModel.sge"
-	SGEJobFile="${TestSequenceDir}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}.sge"
-	SGEJobScript="run_TestOneYUVWithAssignedCases.sh"
-	
-	echo ""
-	echo -e "\033[32m creating SGE job file : ${SGEJobFile} ......\033[0m"
-	echo ""
-	
-	echo "">${SGEJobFile}
-	while read line
-	do
-		
-		if [[ $line =~ ^"#$ -q"  ]]
-		then
-			echo "#$ -q ${SGEQueue}  # Select the queue">>${SGEJobFile}
-		elif [[ $line =~ ^"#$ -N"  ]]
-		then
-			echo "#$ -N ${SGEName} # The name of job">>${SGEJobFile}
-		elif [[ $line =~ ^"#$ -wd"  ]]
-		then
-			echo "#$ -wd ${TestSequenceDir}">>${SGEJobFile}
-		else
-			echo $line >>${SGEJobFile}
-		fi
-	
-	done <${SGEModelFile}
-	
-	echo "${TestSequenceDir}/${SGEJobScript}  ${TestType}  ${TestYUVName}  ${FinalResultDir}  ${ConfigureFile} ${SubCaseIndex} ${SubCaseFile} ">>${SGEJobFile}
-
-	return 0
-}
 
 runGenerateSGEJobFileForOneYUV()
 {
@@ -128,30 +78,13 @@ runGenerateSGEJobFileForOneYUV()
     TestSequenceDir=$1
     TestYUVName=$2
     YUVIndex=$3
-    let "SubCaseIndex = 0"
 
-    if [ -d ${TestSequenceDir} ]
-    then
-        cd ${TestSequenceDir}
-        TestSequenceDir=`pwd`
-        cd ${CurrentDir}
-    else
-        echo -e "\033[31m Job folder does not exist! Please double check! \033[0m"
-        exit 1
-    fi
-
-    for vSubCaseFile in ${TestSequenceDir}/${TestYUVName}_SubCases_*.csv
-    do
-        let "SubCaseIndex ++"
-        let "SGEJobNum ++"
-        runPrepareSGEJobFile ${TestSequenceDir} ${TestYUVName} ${YUVIndex} ${SubCaseIndex} ${vSubCaseFile}
-    done
+    ./Scripts/run_GenerateSGEJobFile.sh  ${TestSequenceDir} ${TestYUVName} ${YUVIndex}
 
     return 0
 }
 
-#usage: get git repository address and branch
-runGetGitRepository()
+runParseConfigureFile()
 {
 	while read line
 	do
@@ -161,23 +94,14 @@ runGetGitRepository()
 		elif  [[ "$line" =~ ^GitBranch  ]]
 		then
 			Branch=`echo $line | awk '{print $2}' `
-		fi
-	done <${ConfigureFile}
-}
-#usage: get git repository address and branch
-runGetGitRepository()
-{
-    while read line
-    do
-        if [[ "$line" =~ ^SubCaseNum  ]]
+        elif [[ "$line" =~ ^SubCaseNum  ]]
         then
             TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
             TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
             let "SGEJobSubCasesNum= ${TempString}"
         fi
-    done <${ConfigureFile}
+	done <${ConfigureFile}
 }
-
 
 runGenerateCaseFiles()
 {
