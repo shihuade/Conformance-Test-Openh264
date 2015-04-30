@@ -107,16 +107,6 @@ runMain()
 	echo ""
 	##
     ./run_TestAllSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
-	if [ ! $? -eq 0 ]
-	then
-		echo ""
-		echo -e "\033[31m failed to run all cases for all test sequences \033[0m"
-		echo ""
-    else
-		echo ""
-		echo -e "\033[32m all cases of  all test sequences have been passed! \033[0m"
-		echo ""
- 	fi
 
     runGetFinalTestResult
 

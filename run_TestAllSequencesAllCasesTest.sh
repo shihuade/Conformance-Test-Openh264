@@ -51,7 +51,7 @@ runSGETest()
 
     fi
 
-    ./run_SGEJobStatusUpdate.sh  ${SGEJobListFile}
+    #./run_SGEJobStatusUpdate.sh  ${SGEJobListFile}
 	
 	return $?
 	
