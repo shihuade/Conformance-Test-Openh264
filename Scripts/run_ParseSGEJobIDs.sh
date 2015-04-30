@@ -27,7 +27,7 @@ runGetAllSGEJobID()
 		if [[ "$line" =~ "Your job"  ]]
 		then
             # skip the first info which is e.g. info for SGE job
-            if [ ${ExampleLineJobInfoFlag} -eq 0]
+            if [ ${ExampleLineJobInfoFlag} -eq 0 ]
             then
                 let "ExampleLineJobInfoFlag = 1"
             else
