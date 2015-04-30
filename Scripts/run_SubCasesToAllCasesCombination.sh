@@ -39,7 +39,12 @@ runCopySubCaseFileToAllCasesFile()
 
         if [ ${NewFileFlag} -eq 0 ]
         then
-            echo ${HeadLine}  >${OutputFile}
+            if [ ! ${FileIndex} -eq 3 ]
+            then
+
+                echo ${HeadLine}  >${OutputFile}
+            fi
+
             let "NewFileFlag  = 1"
         fi
 
@@ -50,8 +55,6 @@ runCopySubCaseFileToAllCasesFile()
 
         let "LineIndex ++"
     done < ${SubCasesFile}
-
-    echo ${HeadLine}
 
 }
 

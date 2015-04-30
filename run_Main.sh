@@ -19,6 +19,9 @@
 	echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \033[0m"
 	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest    ./CaseConfigure/case.cfg \s033[0m"
 	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ./CaseConfigure/case.cfg \033[0m"
+    echo ""
+    echo -e "\033[31m or  \033[0m"
+    echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \$Branch \$GitRepos \033[0m"
  	echo ""
  }
  
@@ -73,14 +76,17 @@ runCheck()
 }
 runMain()
  {
-	if [ ! $# -eq 2 ]
+	if [ ! $# -ge 2 ]
 	then
 		runUsage
 		exit 1
 	fi
 	TestType=$1
 	ConfigureFile=$2
-	
+    OpenH264Branch=$3
+    OpenH264Repos=$4
+
+
 	runCheck
 	
 	#dir translation
@@ -100,7 +106,7 @@ runMain()
 	echo "prepare for all test data......."
 	echo ""
 	# prepare for all test data
-	./run_PrepareAllTestData.sh   ${TestType}  ${SourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile}
+	./run_PrepareAllTestData.sh   ${TestType}  ${SourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile} ${OpenH264Branch} "${OpenH264Repos}"
 	if [ ! $? -eq 0 ]
 	then
 		echo "failed to prepared  test space for all test data!"
@@ -120,5 +126,7 @@ runMain()
 }
 TestType=$1
 ConfigureFile=$2
-runMain  ${TestType} ${ConfigureFile}
+OpenH264Branch=$3
+OpenH264Repos=$4
+runMain  ${TestType} ${ConfigureFile} ${OpenH264Branch} "${OpenH264Repos}"
 

@@ -97,6 +97,17 @@ runParseConfigureFile()
         fi
 	done <${ConfigureFile}
 
+    if [ ! -z ${OpenH264Repos} ]
+    then
+        Openh264GitAddr="${OpenH264Repos}"
+    fi
+
+    if [ ! -z ${OpenH264Branch} ]
+    then
+        Branch="${OpenH264Branch}"
+    fi
+
+
     echo ""
     echo -e "\033[32m openh264 repository cloning...             \033[0m"
     echo -e "\033[32m     ----repository is ${Openh264GitAddr}   \033[0m"
@@ -214,7 +225,7 @@ runCheck()
 runMain()
 {
 	#parameter check!
-	if [ ! $# -eq 6  ]
+	if [ ! $# -ge 6  ]
 	then
 		echo ""
 		echo -e "\033[31musage: run_PrepareAllTestFolder.sh   \$TestType  \$SourceFolder  \$AllTestDataFolder  \$CodecFolder  \$ScriptFolder \$ConfigureFile \033[0m"
@@ -228,7 +239,9 @@ runMain()
 	CodecFolder=$4
 	ScriptFolder=$5
 	ConfigureFile=$6
-	
+    OpenH264Branch=$7
+    OpenH264Repos=$8
+
 	CurrentDir=`pwd`
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
@@ -272,5 +285,7 @@ AllTestDataFolder=$3
 CodecFolder=$4
 ScriptFolder=$5
 ConfigureFile=$6
-runMain  $TestType  $SourceFolder $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile
+OpenH264Branch=$7
+OpenH264Repos=$8
+runMain  $TestType  $SourceFolder $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile ${OpenH264Branch} "${OpenH264Repos}"
 
