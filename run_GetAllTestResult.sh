@@ -35,12 +35,12 @@ runGetAllYUVTestResult()
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 3
         ./Scripts/run_SubCasesToAllCasesSummary.sh ${TestYUV} ${DetailSummaryFile} ${SummaryFile}
-        if [ ! $? -eq 0]
+        if [ ! $? -eq 0 ]
         then
             let "AllTestFlag=1"
         fi
 
-        cp -f {SHA1TableFile} ${SHA1TableDir}
+        cp -f ${SHA1TableFile} ${SHA1TableDir}
 
         #print test sequence's test summary
         cat ${SummaryFile} >>${AllTestSummary}

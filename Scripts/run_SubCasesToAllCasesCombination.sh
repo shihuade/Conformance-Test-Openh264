@@ -59,6 +59,7 @@ runGetTestSummary()
     for file in ${SubCasesFileDir}/${FileNamePrefix}*
     do
         echo -e "\033[32m ********************************************************* \033[0m"
+        echo "      Combine file type is ${FileIndex}"
         echo "      SubFileIndex is ${SubFileIndex}"
         echo "      SubFile      is ${file}"
         echo -e "\033[32m ********************************************************* \033[0m"
