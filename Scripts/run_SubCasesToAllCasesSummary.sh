@@ -23,6 +23,7 @@ runSummarizeAllTestResult()
     do
         TempNum=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
         TempNum=`echo $TempNum | awk 'BEGIN {FS="["} {print $1}'`
+        TempNum=`echo $TempNum | awk  {print $1}'`
 
         if [[ ${line} =~ "total case  Num" ]]
         then
@@ -65,8 +66,8 @@ runOutputTestSummary()
     echo -e "\033[32m ********************************************************************** [0m"
     echo -e "\033[32m *        Test report of all cases for YUV ${YUVName}  [0m"
     echo -e "\033[32m ********************************************************************** [0m"
-    echo -e ${FinalResult}
-    echo -e ${SummaryString}
+    echo ${FinalResult}
+    echo ${SummaryString}
     echo -e "\033[32m total case  Num     is : ${TotalNum} [0m"
     echo -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum} [0m"
     echo -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum} [0m"
