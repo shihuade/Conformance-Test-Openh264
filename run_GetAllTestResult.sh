@@ -27,7 +27,7 @@ runGetAllYUVTestResult()
         echo ""
         echo "combining sub-set cases files into single all cases file..."
         echo ""
-        DetailSummaryFile="${TestYUV}_AllCasesAllSlaves.Summary"
+        DetailSummaryFile="${FinalResultDir}/${TestYUV}_AllCasesAllSlaves.Summary"
         SummaryFile="${FinalResultDir}/${TestYUV}_TestResult.Summary"
         SHA1TableFile="${FinalResultDir}/${TestYUV}_AllCases_SHA1_Table.csv"
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 0
