@@ -465,7 +465,7 @@ runOutputParseResult()
     echo -e "\033[32m TotalCasesNum is ${TotalCasesNum}"
     echo -e "\033[32m ********************************************************************* \033[0m"
 	echo "PicWxPicH_FPS is ${PicW}x${PicH}_${FPS}"
-	echo "all case info has been  output to file $casefile "
+	echo "all cases info have been  output to file $casefile "
 	echo "aUsageType=         ${aUsageType[@]}"
 	echo "Frames=             $FramesToBeEncoded"
 	echo "aNumSpatialLayer=   ${aNumSpatialLayer[@]}"

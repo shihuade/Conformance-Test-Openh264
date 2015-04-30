@@ -142,5 +142,6 @@ runMain()
 }
 YUVName=$1
 SummaryFile=$2
-runMain  ${YUVName} ${SummaryFile}
+OutputFile=$3
+runMain  ${YUVName} ${SummaryFile} ${OutputFile}
 

@@ -35,6 +35,7 @@ runGetAllYUVTestResult()
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 3
         ./Scripts/run_SubCasesToAllCasesSummary.sh ${TestYUV} ${DetailSummaryFile} ${SummaryFile}
+
         if [ ! $? -eq 0 ]
         then
             let "AllTestFlag=1"
