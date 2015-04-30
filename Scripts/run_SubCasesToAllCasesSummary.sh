@@ -27,22 +27,22 @@ runSummarizeAllTestResult()
 
         if [[ ${line} =~ "total case  Num" ]]
         then
-            let "TotalNum += ${TempNum}"
+            let " TotalNum += ${TempNum} "
         elif [[ ${line} =~ "EncoderPassedNum" ]]
         then
-            let "EncoderPassedNum += ${TempNum}"
+            let " EncoderPassedNum += ${TempNum} "
         elif [[ ${line} =~ "EncoderUnPassedNum" ]]
         then
-            let "EncoderUnPassedNum += ${TempNum}"
+            let " EncoderUnPassedNum += ${TempNum} "
         elif [[ ${line} =~ "DecoderPassedNum" ]]
         then
-            let "DecoderPassedNum += ${TempNum}"
+            let " DecoderPassedNum += ${TempNum} "
         elif [[ ${line} =~ "DecoderUpPassedNum" ]]
         then
-            let "DecoderUpPassedNum += ${TempNum}"
+            let " DecoderUpPassedNum += ${TempNum} "
         elif [[ ${line} =~ "DecoderUnCheckNum" ]]
         then
-            let "DecoderUnCheckNum += ${TempNum}"
+            let " DecoderUnCheckNum += ${TempNum} "
         fi
     done < ${SummaryFile}
 
@@ -58,11 +58,11 @@ runOutputTestSummary()
     if [ ! ${EncoderUnPassedNum} -eq 0 ]
     then
         echo -e "\033[31m   Not all Cases passed the test! [0m"
-        echo -e "\033[32m     Succed! [0m"
+        echo -e "\033[31m     Failed! [0m"
         let "TestFlag=1"
     else
         echo -e "\033[32m   All Cases passed the test! [0m"
-        echo -e "\033[31m     Failed! [0m"
+        echo -e "\033[32m     Succed! [0m"
         let "TestFlag=0"
     fi
 
