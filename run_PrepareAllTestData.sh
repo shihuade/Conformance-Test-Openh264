@@ -174,6 +174,7 @@ runPrepareTestSpace()
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
 
+        echo "ConfigureFile is ${ConfigureFile}"
         cd ${SubFolder}
         runGenerateCaseFiles ${TestYUV}
         cd ${CurrentDir}
