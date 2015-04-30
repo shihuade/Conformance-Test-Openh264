@@ -150,16 +150,22 @@ runPrepareTestSpace()
 
 	#now prepare for test space for all test sequences
 	#for SGE test, use 3 test queues so that can support more parallel jobs
-	let "YUVIndex=0"
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m    Preparing all test spaces for eache test sequence \033[0m"
+    echo -e "\033[32m ********************************************************************* \033[0m"
+
+    let "YUVIndex=0"
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataFolder}/${TestYUV}"
-	
-		echo ""
-		echo "Test sequence name is ${TestYUV}"
-		echo "sub folder is  ${SubFolder}"
-		echo ""
-		if [  -d  ${SubFolder}  ]
+
+        echo -e "\033[32m ********************************************************************* \033[0m"
+        echo -e "\033[32m    Test sequence name is ${TestYUV} \033[0m"
+        echo -e "\033[32m    Test sequence name is ${TestYUV} \033[0m"
+        echo -e "\033[32m    Sub folder is  ${SubFolder}"
+        echo -e "\033[32m ********************************************************************* \033[0m"
+
+        if [  -d  ${SubFolder}  ]
 		then
 			continue
 		fi
