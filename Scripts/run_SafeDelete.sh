@@ -197,7 +197,10 @@ runFolderLocationCheck()
 	elif [[ ${FullPath} =~ ^/root/  ]]
 	then
 		let "FolderFlag=0"
-	else
+    elif [[ ${FullPath} =~ ^/Users/jenkins/  ]]
+    then
+        let "FolderFlag=0"
+    else
 		let "FolderFlag=1"
 	fi
 	
