@@ -2,8 +2,9 @@
 #***************************************************************************************
 # brief:
 #      --test all cases of all sequences 
-#      --usage:  run_GetAllTestResult.sh  ${TestType}     \
-#                                         ${ConfigureFile}
+#      --usage:  run_GetAllTestResult.sh  ${TestType}       \
+#                                         ${ConfigureFile}  \
+#                                         ${AllTestResultPassFlag}
 #
 #
 #date: 04/28/2015 Created
@@ -11,8 +12,10 @@
  runUsage()
  {
 	echo ""
-    echo -e "\033[31m usage: ./run_GetAllTestResult.sh   \${TestType}       \033[0m"
-    echo -e "\033[31m                                    \${ConfigureFile}  \033[0m"
+    echo -e "\033[31m usage: ./run_GetAllTestResult.sh   \${TestType}               \033[0m"
+    echo -e "\033[31m                                    \${ConfigureFile}          \033[0m"
+    echo -e "\033[31m                                    \${AllTestResultPassFlag}  \033[0m"
+    echo -e "\033[31m \${AllTestResultPassFlag} will be generated if all test cases passed!   \033[0m"
     echo ""
  }
 
@@ -34,18 +37,7 @@ runGetAllYUVTestResult()
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 1
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
 
-echo "SummaryFile info after summary...."
-cat ${DetailSummaryFile}
-echo ""
-echo ""
-
-
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 3
-
-        echo "SummaryFile info after summary...."
-cat ${DetailSummaryFile}
-echo ""
-echo ""
         ./Scripts/run_SubCasesToAllCasesSummary.sh ${TestYUV} ${DetailSummaryFile} ${SummaryFile}
 
         if [ ! $? -eq 0 ]
@@ -77,7 +69,6 @@ runPromptInfo()
     echo  -e "\033[32m Final result can be found in ./FinaleRestult \033[0m"
     echo  -e "\033[32m SHA1  table  can be found in ./SHA1Table \033[0m"
     echo ""
-
     if [ ${AllTestFlag} -eq 0  ]
     then
         echo ""
@@ -136,7 +127,7 @@ runCheck()
 
 runMain()
 {
-	if [ ! $# -eq 2  ]
+	if [ ! $# -eq 3  ]
 	then
 		runUsage
 		exit 1
@@ -144,6 +135,8 @@ runMain()
 	
 	TestType=$1
 	ConfigureFile=$2
+    AllTestResultPassFlag=$3
+
 	FinalResultDir=FinalResult
     SHA1TableDir=SHA1Table
 	CurrentDir=`pwd`
@@ -170,10 +163,21 @@ runMain()
 	runGetAllYUVTestResult
     runOutputSummary
     runPromptInfo
-    return ${AllTestFlag}
+
+    if [ -e ${AllTestResultPassFlag} ]
+    then
+        ./Scripts/run_SafeDelete.sh ${AllTestResultPassFlag}
+    fi
+
+    if [ ${AllTestFlag} -eq 0  ]
+    then
+        touch ${AllTestResultPassFlag}
+    fi
+    return 0
 
 }
 TestType=$1
 ConfigureFile=$2
-runMain  ${TestType} ${ConfigureFile}
+AllTestResultPassFlag=$3
+runMain  ${TestType} ${ConfigureFile} ${AllTestResultPassFlag}
 

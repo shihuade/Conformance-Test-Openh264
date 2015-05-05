@@ -32,22 +32,22 @@ runGetFinalTestResult()
     then
 
         echo ""
-        echo -e "\033[32m ****************************************************************************\033[0m"
+        echo -e "\033[32m **************************************************************************************\033[0m"
         echo ""
         echo -e "\033[32m please run below command to check whether all SGE jobs have been completed!"
         echo ""
-        echo -e "\033[32m     ./run_SGEJobStatusUpdate.sh  SGEJobsSubmittedInfo.log "
+        echo -e "\033[32m     ./run_SGEJobStatusUpdate.sh  SGEJobsSubmittedInfo.log ${AllJobsCompletedFlagFile} "
         echo ""
         echo ""
         echo -e "\033[32m please run below command to get final result when all SGE jobs have been completed!"
         echo ""
-        echo -e "\033[32m     ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile}"
-        echo -e "\033[32m ****************************************************************************\033[0m"
+        echo -e "\033[32m     ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile} ${AllTestResultPassFlag}"
+        echo -e "\033[32m **************************************************************************************\033[0m"
         echo ""
         return 0
     elif [ ${TestType} = "LocalTest" ]
     then
-        ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile}
+        ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile} ${AllTestResultPassFlag}
         let "AllTestFlag =$?"
     fi
 }
@@ -97,6 +97,8 @@ runMain()
 	SHA1TableFolder="SHA1Table"
 	ConfigureFolder="CaseConfigure"
 	FinalResultDir="FinalResult"
+    AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
+    AllTestResultPassFlag="AllCasesPass.flag"
 
     let "AllTestFlag =0"
 

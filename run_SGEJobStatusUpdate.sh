@@ -3,6 +3,7 @@
 # brief:
 #      --check that whether all submitted SGE jobs have been completed
 #      --usage:  ./run_SGEJobStatusUpdate.sh  ${SGEJobSubmittedLogFile}
+#                                             ${SGEJobsFinishFlagFile}
 #
 #
 #date: 04/26/2015 Created
@@ -10,7 +11,9 @@
  runUsage()
  {
 	echo ""
-	echo -e "\033[31m usage: usage:  ./run_SGEJobStatusUpdate.sh  \${SGEJobSubmittedLogFile} \033[0m"
+    echo -e "\033[31m usage: usage:  ./run_SGEJobStatusUpdate.sh  \${SGEJobSubmittedLogFile} \033[0m"
+    echo -e "\033[31m usage: usage:                               \${SGEJobsFinishFlagFile}  \033[0m"
+    echo -e "\033[32m when all SGE test jobs have been completd, \${SGEJobsFinishFlagFile} will be generated! \033[0m"
  	echo ""
  }
 
@@ -89,13 +92,14 @@ runSGEJobCheck()
 
 runMain()
 {
-	if [ ! $# -eq 1  ]
+	if [ ! $# -eq 2  ]
 	then
 		runUsage
 		exit 1
 	fi
 
 	SGEJobSubmittedLogFile=$1
+    SGEJobsFinishFlagFile=$2
 
     if [ ! -e ${SGEJobSubmittedLogFile} ]
     then
@@ -103,12 +107,22 @@ runMain()
         exit 1
     fi
 
+    if [ -e ${SGEJobsFinishFlagFile} ]
+    then
+        ./Scripts/run_SafeDelete.sh  ${SGEJobsFinishFlagFile}
+    fi
+
     runSGEJobCheck
-    return $?
+
+    if [ $? -eq 0 ]
+    then
+        touch ${SGEJobsFinishFlagFile}
+    fi
+    return 0
 
 }
 SGEJobSubmittedLogFile=$1
-
-runMain  ${SGEJobSubmittedLogFile}
+SGEJobsFinishFlagFile=$2
+runMain  ${SGEJobSubmittedLogFile} ${SGEJobsFinishFlagFile}
 
 
