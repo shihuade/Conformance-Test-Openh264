@@ -104,7 +104,8 @@ runMain()
     if [ ! -e ${SGEJobSubmittedLogFile} ]
     then
         echo  -e "\033[31m  ${SGEJobSubmittedLogFile} does not exist, please double check!\033[0m"
-        exit 1
+        touch ${SGEJobsFinishFlagFile}
+        return 0
     fi
 
     if [ -e ${SGEJobsFinishFlagFile} ]
