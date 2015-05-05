@@ -35,9 +35,13 @@ runSGEJobCheck()
 
     echo  -e "\033[32m SubmittedJobNum          is ${SubmittedJobNum}              \033[0m"
     echo  -e "\033[32m CurrentRunningJobNum     is ${CurrentRunningJobNum}         \033[0m"
+    echo  ""
     echo  -e "\033[32m aSubmittedSGEJobIDList   is ${aSubmittedSGEJobIDList[@]}    \033[0m"
-    echo  -e "\033[32m aSubmittedSGEJobNameList is ${aSubmittedSGEJobNameList[@]}  \033[0m"
+    echo  ""
     echo  -e "\033[32m aRunningSGEJobIDList     is ${aRunningSGEJobIDList[@]}      \033[0m"
+    echo  ""
+    echo  -e "\033[32m aSubmittedSGEJobNameList is ${aSubmittedSGEJobNameList[@]}  \033[0m"
+    echo  ""
 
 	let "RunningJobNum=0"
 	for((i=0;i<${SubmittedJobNum};i++))
