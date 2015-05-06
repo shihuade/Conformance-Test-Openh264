@@ -1,7 +1,7 @@
 #!/bin/bash
 #***************************************************************************************
 # brief:
-#      --Get SGE host and master name based on configure file
+#      --Get SGE host and master IP based on configure file
 #      --usage:  run_ParseSGEHostsIP.sh  ${SGEConfigureFile}
 #
 #

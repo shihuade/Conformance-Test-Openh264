@@ -56,7 +56,7 @@ runMain()
         exit 1
     fi
 
-    declare -a aHostIPList
+    declare -a aHostNameList
     let "HostNum = 0"
 
     runPareseHostName
