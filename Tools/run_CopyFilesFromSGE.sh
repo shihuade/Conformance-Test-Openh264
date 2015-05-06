@@ -1,12 +1,38 @@
 #!/bin/bash
+#***************************************************************************************
+# brief:
+#      --copy file from SGE host/master  based on configure file
+#      --usage:  run_CopyFilesFromSGE.sh  ${HostOption} \
+#                                         \${HostType}  \
+#                                         \${FileName}  \
+#                                         \${DestDir}
+#
+#date: 05/06/2015 Created
+#***************************************************************************************
 
 
 runUsage()
 {
     echo ""
-    echo -e "\033[31m Usage: run_CopyFilesFromSGE.sh  \${SGEConfigureFile}   \033[0m"
+    echo -e "\033[31m Usage: run_CopyFilesFromSGE.sh  \${HostOption}   \033[0m"
+    echo -e "\033[31m                                 \${HostType}     \033[0m"
+    echo -e "\033[31m                                 \${FileName}     \033[0m"
+    echo -e "\033[31m                                 \${DestDir}      \033[0m"
     echo ""
-    echo -e "\033[32m  e.g.: run_CopyFilesFromSGE.sh  SGE.cfg                \033[0m"
+    echo -e "\033[32m  e.g.: run_CopyFilesFromSGE.sh  Host-GuanYu 733 *.csv  ./TestData              \033[0m"
+    echo -e "\033[32m        copy all .csv test result files from host GuanYU with SGE job ID 733    \033[0m"
+    echo ""
+    echo -e "\033[32m  e.g.: run_CopyFilesFromSGE.sh  Host-GuanYu 733  test.summary ./TestData       \033[0m"
+    echo -e "\033[32m        copy all .csv test result files from host GuanYU with SGE job ID 733    \033[0m"
+    echo ""
+    echo -e "\033[32m  e.g.: run_CopyFilesFromSGE.sh  Master  SVC  *.csv  ./AllSVCTestData            \033[0m"
+    echo -e "\033[32m        copy test.summary result files in folder ./FinalResult from SGE master   \033[0m"
+    echo ""
+    echo -e "\033[32m  e.g.: run_CopyFilesFromSGE.sh  Master  SCC  *.csv  ./AllSCCTestData            \033[0m"
+    echo -e "\033[32m        copy all test .csv result files in folder ./FinalResult from SGE master  \033[0m"
+    echo ""
+    echo -e "\033[32m  Test data dir for host   is /home/\${HostName}/SGEJobID_\${JobID}/result       \033[0m"
+    echo -e "\033[32m  Test data dir for master is /\${TestSpace}\Finalresult                         \033[0m"
     echo ""
 }
 
@@ -147,5 +173,4 @@ then
     runUsage
     exit 1
 fi
-
 runMain
