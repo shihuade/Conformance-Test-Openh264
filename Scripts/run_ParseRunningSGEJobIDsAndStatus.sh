@@ -57,9 +57,9 @@ runGetRunningSGEJobID()
             aAllSGEJobStatusList[${JobIDIndex}]=`echo $line | awk '{print $5}'`
 
             let "IDAndStatusIndex = 2 * JobIDIndex"
-            aAllSGEJobIDAndStatusList[${IDAndStatusIndex}]=aAllSGEJobIDList[${JobIDIndex}]
+            aAllSGEJobIDAndStatusList[${IDAndStatusIndex}]=${aAllSGEJobIDList[${JobIDIndex}]}
             let "IDAndStatusIndex ++"
-            aAllSGEJobIDAndStatusList[${IDAndStatusIndex}]=aAllSGEJobStatusList[${JobIDIndex}]
+            aAllSGEJobIDAndStatusList[${IDAndStatusIndex}]=${aAllSGEJobStatusList[${JobIDIndex}]}
 
             let "JobIDIndex++"
 		fi
