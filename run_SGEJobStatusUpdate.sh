@@ -44,7 +44,7 @@ runParseJobsInfo()
 
     #list info include ID and status
     #e.g.:aCurrentSGEQueueJobIDList=(501 r 502 r 503 w 504 qw)
-    aCurrentSGEQueueJobIDList=(`./Scripts/run_ParseRunningSGEJobIDs.sh IDAndStatus`)
+    aCurrentSGEQueueJobIDList=(`./Scripts/run_ParseRunningSGEJobIDsAndStatus.sh IDAndStatus`)
 
     let "SubmittedJobNum       = ${#aSubmittedSGEJobIDList[@]}"
     let "CurrentSGEQueueJobNum = ${#aCurrentSGEQueueJobIDList[@]}/2"
