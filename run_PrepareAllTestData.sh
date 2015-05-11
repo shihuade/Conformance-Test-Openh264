@@ -29,7 +29,27 @@ runRemovedPreviousTestData()
 	then
 		./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
 	fi
-	
+
+    for file in ${CurrentDir}/*.log
+    do
+
+    done
+
+    for file in ${CurrentDir}/*.log
+    do
+        ./${ScriptFolder}/run_SafeDelete.sh  ${file}
+    done
+
+    for file in ${CurrentDir}/*.txt
+    do
+        ./${ScriptFolder}/run_SafeDelete.sh  ${file}
+    done
+
+    for file in ${CurrentDir}/*.flag
+    do
+        ./${ScriptFolder}/run_SafeDelete.sh  ${file}
+    done
+
 }
 runUpdateCodec()
 {
