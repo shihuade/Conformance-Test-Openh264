@@ -27,6 +27,17 @@ runInitial()
     declare -a aWaitingJobIDList
     declare -a aCompletedJobIDList
 
+    declare -a aFailedJobIDList
+    declare -a aFailedJobNameList
+    declare -a aFailedJobUnpassedCasesNumList
+
+    declare -a aSuccedJobIDList
+    declare -a aSuccedJobNameList
+    declare -a aSuccedJobUnpassedCasesNumList
+
+
+
+
     let "SubmittedJobNum       = 0"
     let "CurrentSGEQueueJobNum = 0"
 
@@ -120,6 +131,19 @@ runSGEJobCheck()
 
 }
 
+runUpdateSGEJobPassedStatus()
+{
+    #aOptionList=(FailedJobID FailedJobName FailedJobUnPassedNum SuccedJobID SuccedJobName SuccedJobPassedNum)
+
+    aFailedJobIDList=(`run_ParseSGEJobPassStatus.sh   FailedJobID `)
+    aFailedJobNameList=(`run_ParseSGEJobPassStatus.sh FailedJobName `)
+    aFailedJobUnpassedCasesNumList=(`run_ParseSGEJobPassStatus.sh FailedJobUnPassedNum `)
+
+    aSuccedJobIDList=(`run_ParseSGEJobPassStatus.sh   SuccedJobID `)
+    aSuccedJobNameList=(`run_ParseSGEJobPassStatus.sh SuccedJobName `)
+    aSuccedJobUnpassedCasesNumList=(`run_ParseSGEJobPassStatus.sh SuccedJobPassedNum `)
+}
+
 runOutputStatusSummary()
 {
 
@@ -128,7 +152,24 @@ runOutputStatusSummary()
         echo  -e "\033[32m  ****************************************************** \033[0m"
         echo  -e "\033[32m       All submitted SGE jobs have completed all test \033[0m"
         echo  -e "\033[32m  ****************************************************** \033[0m"
-
+        echo  ""
+        echo ""
+        echo  -e "\033[32m  ********************************************************************  \033[0m"
+        echo  -e "\033[32m      Completed jobs passed status info                                 \033[0m"
+        echo  -e "\033[32m  ********************************************************************  \033[0m"
+        echo  ""
+        echo  -e "\033[32m Succed job num   is ${#aSuccedJobIDList[@]}                            \033[0m"
+        echo  ""
+        echo  -e "\033[32m Succed job ID    is ${aSuccedJobIDList[@]}                             \033[0m"
+        echo  ""
+        echo  -e "\033[31m Failed job num   is ${#aFailedJobIDList[@]}                            \033[0m"
+        echo  ""
+        echo  -e "\033[31m Failed job ID    is ${aFailedJobIDList[@]}                             \033[0m"
+        echo  ""
+        echo  -e "\033[31m Failed job un-passed num list is  ${aFailedJobUnpassedCasesNumList[@]} \033[0m"
+        echo  ""
+        echo  -e "\033[31m  ********************************************************************* \033[0m"
+        echo  ""
         return 0
     else
         echo  -e "\033[31m  ****************************************************** \033[0m"
@@ -142,6 +183,7 @@ runOutputStatusSummary()
         echo  -e "\033[33m     --Waiting job num     is ${WaitingJobNum}           \033[0m"
         echo ""
         echo  -e "\033[31m  ****************************************************** \033[0m"
+        echo  -e "\033[31m  ****************************************************** \033[0m"
         echo  ""
         echo  -e "\033[32m Completed job ID  is ${aCompletedJobIDList[@]}          \033[0m"
         echo  ""
@@ -150,6 +192,23 @@ runOutputStatusSummary()
         echo  -e "\033[33m Waiting job ID    is ${aWaitingJobIDList[@]}            \033[0m"
         echo  ""
         echo  -e "\033[31m  ****************************************************** \033[0m"
+        echo  ""
+        echo ""
+        echo  -e "\033[32m  ********************************************************************  \033[0m"
+        echo  -e "\033[32m      Completed jobs passed status info                                 \033[0m"
+        echo  -e "\033[32m  ********************************************************************  \033[0m"
+        echo  ""
+        echo  -e "\033[32m Succed job num   is ${#aSuccedJobIDList[@]}                            \033[0m"
+        echo  ""
+        echo  -e "\033[32m Succed job ID    is ${aSuccedJobIDList[@]}                             \033[0m"
+        echo  ""
+        echo  -e "\033[31m Failed job num   is ${#aFailedJobIDList[@]}                            \033[0m"
+        echo  ""
+        echo  -e "\033[31m Failed job ID    is ${aFailedJobIDList[@]}                             \033[0m"
+        echo  ""
+        echo  -e "\033[31m Failed job un-passed num list is  ${aFailedJobUnpassedCasesNumList[@]} \033[0m"
+        echo  ""
+        echo  -e "\033[31m  ********************************************************************* \033[0m"
         echo  ""
 
         return 1
@@ -182,6 +241,7 @@ runMain()
     runParseJobsInfo
     runOutputParseInfo
     runSGEJobCheck
+    runUpdateSGEJobPassedStatus
     runOutputStatusSummary
     if [ $? -eq 0 ]
     then
