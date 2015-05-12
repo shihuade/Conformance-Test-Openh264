@@ -73,23 +73,24 @@ echo ""
 echo >${SVCJobReportLog}
 for file in ${SVCTestSpace}/${FinalResultDir}/TestReport*
 do
-if [ -e ${file} ]
-then
-cat ${SVCTestSpace}/${FinalResultDir}/TestReport* >>${SVCJobReportLog}
-fi
+    if [ -e ${file} ]
+    then
+        echo "report file: ${file}">>${SVCJobReportLog}
+        cat ${file} >>${SVCJobReportLog}
+    fi
 done
 cat ${SVCJobReportLog}
 #get summary
 if [ -e ${AllJobsCompletedFlagFile} ]
 then
-echo ""
-echo "*****************************************************************************"
-echo         Final summary for all jobs ---- SVC
-echo "*****************************************************************************"
-echo ""
-./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SVC.cfg ${AllTestResultPassFlag}
-cat  ${SVCTestSpace}/${FinalResultDir}/${AllTestSummary}
-cp   ${SVCTestSpace}/${FinalResultDir}/${AllTestSummary}  ${AttachmentsDir}/${SVCAllTestSummary}
+    echo ""
+    echo "*****************************************************************************"
+    echo         Final summary for all jobs ---- SVC
+    echo "*****************************************************************************"
+    echo ""
+    ./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SVC.cfg ${AllTestResultPassFlag}
+    cat  ${SVCTestSpace}/${FinalResultDir}/${AllTestSummary}
+    cp   ${SVCTestSpace}/${FinalResultDir}/${AllTestSummary}  ${AttachmentsDir}/${SVCAllTestSummary}
 fi
 cp ${SVCStatusLog}       ${AttachmentsDir}
 cp ${SVCJobReportLog}    ${AttachmentsDir}
@@ -123,23 +124,24 @@ echo ""
 echo >${SCCJobReportLog}
 for file in ${SCCTestSpace}/${FinalResultDir}/TestReport*
 do
-if [ -e ${file} ]
-then
-cat ${SCCTestSpace}/${FinalResultDir}/TestReport* >>${SCCJobReportLog}
-fi
+    if [ -e ${file} ]
+    then
+        echo "report file: ${file}">>${SCCJobReportLog}
+        cat ${file} >>${SCCJobReportLog}
+    fi
 done
 cat ${SCCJobReportLog}
 #get summary
 if [ -e ${AllJobsCompletedFlagFile} ]
 then
-echo ""
-echo "*****************************************************************************"
-echo         Final summary for all jobs ---- SCC
-echo "*****************************************************************************"
-echo ""
-./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SCC.cfg ${AllTestResultPassFlag}
-cat  ${SCCTestSpace}/${FinalResultDir}/${AllTestSummary}
-cp   ${SCCTestSpace}/${FinalResultDir}/${AllTestSummary}  ${AttachmentsDir}/${SCCAllTestSummary}
+    echo ""
+    echo "*****************************************************************************"
+    echo         Final summary for all jobs ---- SCC
+    echo "*****************************************************************************"
+    echo ""
+    ./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SCC.cfg ${AllTestResultPassFlag}
+    cat  ${SCCTestSpace}/${FinalResultDir}/${AllTestSummary}
+    cp   ${SCCTestSpace}/${FinalResultDir}/${AllTestSummary}  ${AttachmentsDir}/${SCCAllTestSummary}
 fi
 cp ${SCCStatusLog}       ${AttachmentsDir}
 cp ${SCCJobReportLog}    ${AttachmentsDir}
