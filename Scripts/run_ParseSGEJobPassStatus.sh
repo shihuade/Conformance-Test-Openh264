@@ -6,8 +6,12 @@
 #      --usage:  ./run_ParseSGEJobPassStatus.sh ${Option}
 #
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh FailedJobID
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh FailedJobName
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh FailedJobUnpassedNum
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobID
-#
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobName
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobUnpassedNum
+
 #
 #date: 05/012/2014 Created
 #***************************************************************************************
@@ -15,17 +19,27 @@
 runUsage()
 {
     echo ""
-    echo -e "\033[31m usage:  ./run_ParseRunningSGEJobIDsAndStatus.sh \${Option}   \033[0m"
+    echo -e "\033[31m usage:  ./run_ParseSGEJobPassStatus.sh \${Option}              \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  1) get all job IDs  \033[0m"
-    echo -e "\033[32m          ./run_ParseRunningSGEJobIDsAndStatus.sh JobID        \033[0m"
+    echo -e "\033[32m e.g.:  1) get failed jobs' ID list                             \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh FailedJobID            \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  2) get all job status  \033[0m"
-    echo -e "\033[32m          ./run_ParseRunningSGEJobIDsAndStatus.sh JobStatus    \033[0m"
+    echo -e "\033[32m e.g.:  2) get failed jobs' name list                           \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh FailedJobName          \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  3) get all job IDs  \033[0m"
-    echo -e "\033[32m          ./run_ParseRunningSGEJobIDsAndStatus.sh IDAndStatus  \033[0m"
+    echo -e "\033[32m e.g.:  3) get failed jobs' un-passed cases num                 \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh FailedJobUnpassedNum   \033[0m"
     echo ""
+    echo -e "\033[32m e.g.:  4) get succed jobs' ID list                             \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobID            \033[0m"
+    echo ""
+    echo -e "\033[32m e.g.:  5) get succed jobs' name list                           \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobName          \033[0m"
+    echo ""
+    echo -e "\033[32m e.g.:  6) get succed jobs' passed cases num                    \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobUnpassedNum   \033[0m"
+    echo ""
+
 }
 
 runInitial()
@@ -125,13 +139,13 @@ runParseStatus()
             TempString=`echo $line | awk 'BEGIN {FS=":"} {print $1}'`
             let "PassedCasesNum = ${TempString}"
 
-        else [[ "$line" =~ "issue bitstream" ]]
+        elif [[ "$line" =~ "issue bitstream" ]]
         then
             # --issue bitstream can be found in  /home/ZhaoYun/SGEJobID_849/issue
             TempString=`echo $line | awk 'BEGIN {FS="/"} {print $4}'`
             TempString=`echo $TempString | awk 'BEGIN {FS="_"} {print $2}'`
             SGEJobID=${TempString}
-        else [[ "$line" =~ "Test report" ]]
+        elif [[ "$line" =~ "Test report" ]]
         then
             # Test report for YUV MSHD_320x192_12fps.yuv
             TempString=`echo $line | awk '{print $5}'`
@@ -199,7 +213,7 @@ runOutputParseResult()
 runOptionValidateCheck()
 {
     declare -a aOptionList
-    aOptionList=()
+    aOptionList=(FailedJobID FailedJobName FailedJobUnPassedNum SuccedJobID SuccedJobName SuccedJobPassedNum)
     let "Flag=1"
 
     for InputOption in ${aOptionList[@]}
