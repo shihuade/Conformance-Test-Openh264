@@ -228,7 +228,7 @@ runOutputParseResult()
 runOptionValidateCheck()
 {
     declare -a aOptionList
-    aOptionList=(FailedJobID FailedJobName FailedJobUnPassedNum SuccedJobID SuccedJobName SuccedJobPassedNum)
+    aOptionList=(FailedJobID FailedJobName FailedJobUnpassedNum SuccedJobID SuccedJobName SuccedJobPassedNum)
     let "Flag=1"
 
     for InputOption in ${aOptionList[@]}
