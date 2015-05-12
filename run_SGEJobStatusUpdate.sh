@@ -135,13 +135,13 @@ runUpdateSGEJobPassedStatus()
 {
     #aOptionList=(FailedJobID FailedJobName FailedJobUnPassedNum SuccedJobID SuccedJobName SuccedJobPassedNum)
 
-    aFailedJobIDList=(`run_ParseSGEJobPassStatus.sh   FailedJobID `)
-    aFailedJobNameList=(`run_ParseSGEJobPassStatus.sh FailedJobName `)
-    aFailedJobUnpassedCasesNumList=(`run_ParseSGEJobPassStatus.sh FailedJobUnPassedNum `)
+    aFailedJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   FailedJobID `)
+    aFailedJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh FailedJobName `)
+    aFailedJobUnpassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh FailedJobUnPassedNum `)
 
-    aSuccedJobIDList=(`run_ParseSGEJobPassStatus.sh   SuccedJobID `)
-    aSuccedJobNameList=(`run_ParseSGEJobPassStatus.sh SuccedJobName `)
-    aSuccedJobUnpassedCasesNumList=(`run_ParseSGEJobPassStatus.sh SuccedJobPassedNum `)
+    aSuccedJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   SuccedJobID `)
+    aSuccedJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobName `)
+    aSuccedJobUnpassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobPassedNum `)
 }
 
 runOutputStatusSummary()
