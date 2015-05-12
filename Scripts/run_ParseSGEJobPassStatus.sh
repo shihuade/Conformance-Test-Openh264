@@ -37,7 +37,7 @@ runUsage()
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobName          \033[0m"
     echo ""
     echo -e "\033[32m e.g.:  6) get succed jobs' passed cases num                    \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobUnpassedNum   \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobPassedNum   \033[0m"
     echo ""
 
 }
@@ -55,13 +55,15 @@ runInitial()
     let "FailedJobNum=0"
     let "SuccedJobNum=0"
 
-    CurrentDir="pwd"
+    CurrentDir=`pwd`
     JobReportFolder="FinalResult"
 
     let "UnpassedCasesNum=0"
     let "PassedCasesNum=0"
     SGEJobID=""
     SGEJobName=""
+
+    let "ReportReadyFlag=0"
 
 }
 
@@ -106,16 +108,17 @@ runCheck()
 runParseStatus()
 {
 
-    if [ $# -eq 1 ]
+    if [ ! $# -eq 1 ]
     then
         echo ""
         echo -e "\033[31m usage:  runParseStatus \${ReportFile}   \033[0m"
         echo ""
-        retunr 1
+        return 1
     fi
+
     ReportFile=$1
 
-    if [ ！-e ${ReportFile} ]
+    if [ ! -e ${ReportFile} ]
     then
         echo ""
         echo -e "\033[31m Report file ${ReportFile} does not exist!  \033[0m"
@@ -125,18 +128,25 @@ runParseStatus()
 
 
     let "UnpassedCasesNum=0"
+    let "PassedCasesNum=0"
+    let "ReportReadyFlag=1"
     SGEJobID=""
     SGEJobName=""
     while read line
     do
         if [[ "$line" =~ "EncoderUnPassedNum" ]]
         then
-            TempString=`echo $line | awk 'BEGIN {FS=":"} {print $1}'`
+            TempString=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
+            TempString=`echo $TempString | awk  ' {print $1}'`
+            #echo "TempString is ${TempString}"
             let "UnpassedCasesNum = ${TempString}"
+
+            let "ReportReadyFlag=0"
 
         elif [[ "$line" =~ "EncoderPassedNum" ]]
         then
-            TempString=`echo $line | awk 'BEGIN {FS=":"} {print $1}'`
+            TempString=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
+            TempString=`echo $TempString | awk '{print $1}'`
             let "PassedCasesNum = ${TempString}"
 
         elif [[ "$line" =~ "issue bitstream" ]]
@@ -148,7 +158,7 @@ runParseStatus()
         elif [[ "$line" =~ "Test report" ]]
         then
             # Test report for YUV MSHD_320x192_12fps.yuv
-            TempString=`echo $line | awk '{print $5}'`
+            TempString=`echo $line | awk '{print $6}'`
             SGEJobName=${TempString}
         fi
     done <${ReportFile}
@@ -180,8 +190,13 @@ runParseAllReportFile()
     do
         if [ -e "${file}" ]
         then
+            #echo "file is ${file}"
             runParseStatus ${file}
-            runCheckJobPassedStatus
+
+            if [ ${ReportReadyFlag} -eq 0 ]
+            then
+                runCheckJobPassedStatus
+            fi
         fi
     done
 
