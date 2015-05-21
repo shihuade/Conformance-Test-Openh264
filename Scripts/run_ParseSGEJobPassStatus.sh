@@ -11,7 +11,8 @@
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobID
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobName
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobUnpassedNum
-
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh UnRunCaseJobID
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh UnRunCaseJobName
 #
 #date: 05/012/2014 Created
 #***************************************************************************************
@@ -37,8 +38,15 @@ runUsage()
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobName          \033[0m"
     echo ""
     echo -e "\033[32m e.g.:  6) get succed jobs' passed cases num                    \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobPassedNum   \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobPassedNum     \033[0m"
     echo ""
+    echo -e "\033[32m e.g.:  4) get un-run case jobs' ID list(e.g.:YUV not found)    \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobID         \033[0m"
+    echo ""
+    echo -e "\033[32m e.g.:  5) get un-run case jobs' name list(e.g.:YUV not found)  \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobName       \033[0m"
+    echo ""
+
 
 }
 
@@ -48,12 +56,16 @@ runInitial()
     declare -a aFailedJobNameList
     declare -a aFailedJobUnpassedCasesNumList
 
+    declare -a aUnRunCaseJobIDList
+    declare -a aUnRunCaseJobNameList
+
     declare -a aSuccedJobIDList
     declare -a aSuccedJobNameList
     declare -a aSuccedJobUnpassedCasesNumList
 
     let "FailedJobNum=0"
     let "SuccedJobNum=0"
+    let "UnRunCaseJobNum=0"
 
     CurrentDir=`pwd`
     JobReportFolder="FinalResult"
@@ -63,7 +75,8 @@ runInitial()
     SGEJobID=""
     SGEJobName=""
 
-    let "ReportReadyFlag=0"
+    let "JobCompletedFlag=0"
+    let "UnrunCasesFlag=0"
 
 }
 
@@ -129,9 +142,12 @@ runParseStatus()
 
     let "UnpassedCasesNum=0"
     let "PassedCasesNum=0"
-    let "ReportReadyFlag=1"
+    let "JobCompletedFlag=0"
+    let "UnrunCasesFlag=0"
+
     SGEJobID=""
     SGEJobName=""
+
     while read line
     do
         if [[ "$line" =~ "EncoderUnPassedNum" ]]
@@ -141,7 +157,7 @@ runParseStatus()
             #echo "TempString is ${TempString}"
             let "UnpassedCasesNum = ${TempString}"
 
-            let "ReportReadyFlag=0"
+            let "JobCompletedFlag=1"
 
         elif [[ "$line" =~ "EncoderPassedNum" ]]
         then
@@ -149,6 +165,18 @@ runParseStatus()
             TempString=`echo $TempString | awk '{print $1}'`
             let "PassedCasesNum = ${TempString}"
 
+        elif [[ "$line" =~ "SGEJobID" ]]
+        then
+            # SGEJobID   is: 533
+            TempString=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
+            TempString=`echo $TempString | awk '{print $1}'`
+            SGEJobID=${TempString}
+        elif [[ "$line" =~ "SGEJobName" ]]
+        then
+            # SGEJobName is: MSHD_320x192_12fps.yuv_SubCasedIndex_1
+            TempString=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
+            TempString=`echo $TempString | awk '{print $1}'`
+            SGEJobName=${TempString}
         elif [[ "$line" =~ "issue bitstream" ]]
         then
             # --issue bitstream can be found in  /home/ZhaoYun/SGEJobID_849/issue
@@ -160,15 +188,28 @@ runParseStatus()
             # Test report for YUV MSHD_320x192_12fps.yuv
             TempString=`echo $line | awk '{print $6}'`
             SGEJobName=${TempString}
+        elif [[ "$line" =~ "can not find test yuv" ]]
+        then
+            # can not find test yuv
+            let "JobCompletedFlag=1"
+            let "UnrunCasesFlag=1"
+
         fi
+
     done <${ReportFile}
 
 }
 
-runCheckJobPassedStatus()
+runUpdateJobPassedStatus()
 {
 
-    if [ ! "${UnpassedCasesNum}" -eq 0 ]
+    if [  "${UnrunCasesFlag}" -eq 1 ]
+    then
+        aUnRunCaseJobIDList[${FailedJobNum}]=${SGEJobID}
+        aUnRunCaseJobNameList[${FailedJobNum}]=${SGEJobName}
+        let "UnRunCaseJobNum ++"
+
+    else [ ! "${UnpassedCasesNum}" -eq 0 ]
     then
         aFailedJobIDList[${FailedJobNum}]=${SGEJobID}
         aFailedJobNameList[${FailedJobNum}]=${SGEJobName}
@@ -193,9 +234,9 @@ runParseAllReportFile()
             #echo "file is ${file}"
             runParseStatus ${file}
 
-            if [ ${ReportReadyFlag} -eq 0 ]
+            if [ ${JobCompletedFlag} -eq 1 ]
             then
-                runCheckJobPassedStatus
+                runUpdateJobPassedStatus
             fi
         fi
     done
@@ -222,6 +263,12 @@ runOutputParseResult()
     elif [ "${Option}" = "SuccedJobPassedNum" ]
     then
         echo ${aSuccedJobUnpassedCasesNumList[@]}
+    elif [ "${Option}" = "UnRunCaseJobID" ]
+    then
+        echo ${aUnRunCaseJobIDList[@]}
+    elif [ "${Option}" = "UnRunCaseJobName" ]
+    then
+        echo ${aUnRunCaseJobNameList[@]}
     fi
 }
 

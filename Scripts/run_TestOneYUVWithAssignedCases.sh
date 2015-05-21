@@ -57,8 +57,10 @@ runTestOneYUV()
 	echo -e "\033[32m ********************************************************************** \033[0m">${TestReport}
 	echo -e "\033[32m  Test report for YUV ${TestYUVName}   \033[0m">>${TestReport}
     echo -e "\033[32m  Sub-Case Index is : ${SubCaseIndex}  \033[0m">>${TestReport}
-    echo -e "\033[32m  HostName is: ${HostName}             \033[0m">>${TestReport}
-    echo -e "\033[32m  SGEJobID is: ${SGEJobID}             \033[0m">>${TestReport}
+    echo -e "\033[32m  HostName   is: ${HostName}             \033[0m">>${TestReport}
+    echo -e "\033[32m  SGEJobID   is: ${SGEJobID}             \033[0m">>${TestReport}
+    echo -e "\033[32m  SGEJobName is: ${JOB_NAME}             \033[0m">>${TestReport}
+
 	echo "">>${TestReport}
 	
 	runGetYUVFullPath  ${TestYUVName}  ${ConfigureFile}
