@@ -35,16 +35,22 @@ runInitial()
     declare -a aSuccedJobNameList
     declare -a aSuccedJobUnpassedCasesNumList
 
+    declare -a aUnRunCaseJobIDList
+    declare -a aUnRunCaseJobNameList
 
+    declare -a aUnknownReasonFailedJobIDList
+    declare -a aUnknownReasonFailedJobNameList
 
-
-    let "SubmittedJobNum       = 0"
+    let "SubmittedJobNum = 0"
     let "CurrentSGEQueueJobNum = 0"
-
     let "NonCompletedJobNum=0"
     let "RunningJobNum=0"
     let "WaitingJobNum=0"
     let "CompletedJobNum=0"
+    let "SuccedJobNum=0"
+    let "FailedJobNum=0"
+    let "UnRunCasesJobNum=0"
+    let "UnKnownReasonFailedJobNum=0"
 
 }
 
@@ -76,7 +82,7 @@ runOutputParseInfo()
 
 #comparison between  current runnig SGE job list and the submitted job list
 #to check that whether all submitted jobs are not in current running list
-runSGEJobCheck()
+runSGEJobStatusCheck()
 {
 
 
@@ -139,9 +145,54 @@ runUpdateSGEJobPassedStatus()
     aFailedJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh FailedJobName `)
     aFailedJobUnpassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh FailedJobUnpassedNum `)
 
+
     aSuccedJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   SuccedJobID `)
     aSuccedJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobName `)
     aSuccedJobUnpassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobPassedNum `)
+
+    aUnRunCaseJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   UnRunCaseJobID `)
+    aUnRunCaseJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh UnRunCaseJobName `)
+
+    let "FailedJobNum=${#aFailedJobIDList[@]}"
+    let "SuccedJobNum=${#aSuccedJobIDList[@]}"
+    let "UnRunCasesJobNum=${#aUnRunCaseJobIDList[@]}"
+
+    let "DetectedJobNum= ${FailedJobNum} + ${SuccedJobNum} + ${UnRunCasesJobNum}"
+    let "UnKnownReasonFailedJobNum=${CompletedJobNum} - ${DetectedJobNum}"
+
+    if [ ! ${UnKnownReasonFailedJobNum} -eq 0  ]
+    then
+        runGetUnknownReasonFailedJobInfo
+    fi
+}
+runGetUnknownReasonFailedJobInfo()
+{
+    declare -a DetectedJobList
+    DetectedJobList=( ${aFailedJobIDList[@]} ${aSuccedJobIDList[@]} ${aUnRunCaseJobIDList[@]} )
+    let "DetectedJobNum =${#DetectedJobList[@]}"
+    let "UnKnownJobIndex=0"
+    for((i=0;i<${SubmittedJobNum}; i++))
+    do
+        let "SubmittedJobID=${aSubmittedSGEJobIDList[$i]}"
+        let "DetectedFlag=0"
+        for ((j=0;i<${DetectedJobNum};j++))
+        do
+            let "DetectedJobID=${DetectedJobList[$j]}"
+            if [ ${SubmittedJobID} -eq {DetectedJobID}]
+            then
+                let "DetectedFlag=1"
+            fi
+        done
+
+        if [ ${DetectedFlag} -eq 0 ]
+        then
+            aUnknownReasonFailedJobIDList[${UnKnownJobIndex}]=${SubmittedJobID}
+            aUnknownReasonFailedJobNameList[${UnKnownJobIndex}]=${aSubmittedSGEJobNameList[$i]}
+
+            let "UnKnownJobIndex ++"
+        fi
+    done
+
 }
 
 runOutputStatusSummary()
@@ -158,30 +209,42 @@ runOutputStatusSummary()
         echo  -e "\033[32m      Completed jobs passed status info                                 \033[0m"
         echo  -e "\033[32m  ********************************************************************  \033[0m"
         echo  ""
-        echo  -e "\033[32m Succed job num   is ${#aSuccedJobIDList[@]}                            \033[0m"
+        echo  -e "\033[32m Succed job num   is ${SuccedJobNum}                                    \033[0m"
         echo  ""
         echo  -e "\033[32m Succed job ID    is ${aSuccedJobIDList[@]}                             \033[0m"
         echo  ""
-        echo  -e "\033[31m Failed job num   is ${#aFailedJobIDList[@]}                            \033[0m"
+        echo  -e "\033[31m Failed job num   is ${FailedJobNum}                                    \033[0m"
         echo  ""
         echo  -e "\033[31m Failed job ID    is ${aFailedJobIDList[@]}                             \033[0m"
         echo  ""
         echo  -e "\033[31m Failed job un-passed num list is  ${aFailedJobUnpassedCasesNumList[@]} \033[0m"
         echo  ""
-        echo  -e "\033[31m  ********************************************************************* \033[0m"
+        echo  -e "\033[33m  ********************************************************************* \033[0m"
+        echo  -e "\033[33m         Spectial jobs  summary                                         \033[0m"
+        echo  -e "\033[33m  ********************************************************************* \033[0m"
+        echo  ""
+        echo  -e "\033[33m no case run job num(e.g. YUV not found)  is ${UnRunCasesJobNum}        \033[0m"
+        echo  ""
+        echo  -e "\033[33m no case run job ID is ${aUnRunCaseJobIDList[@]}                        \033[0m"
+        echo  ""
+        echo  -e "\033[33m Unknown reason failed job num is ${UnKnownReasonFailedJobNum}          \033[0m"
+        echo  ""
+        echo  -e "\033[33m Unknown reason failed job ID  is ${aUnknownReasonFailedJobIDList[@]}   \033[0m"
+        echo  ""
+        echo  -e "\033[32m  ********************************************************************* \033[0m"
         echo  ""
         return 0
     else
         echo  -e "\033[31m  ****************************************************** \033[0m"
         echo  -e "\033[31m       Not all submitted SGE jobs have completed yet \033[0m"
         echo  -e "\033[31m  ****************************************************** \033[0m"
-        echo ""
+        echo  ""
         echo  -e "\033[32m Total submitted job num   is ${SubmittedJobNum}         \033[0m"
         echo  -e "\033[32m Completed job num         is ${CompletedJobNum}         \033[0m"
         echo  -e "\033[31m Non completed job num     is ${NonCompletedJobNum}      \033[0m"
         echo  -e "\033[31m     --Running job num     is ${RunningJobNum}           \033[0m"
         echo  -e "\033[33m     --Waiting job num     is ${WaitingJobNum}           \033[0m"
-        echo ""
+        echo  ""
         echo  -e "\033[31m  ****************************************************** \033[0m"
         echo  -e "\033[31m  ****************************************************** \033[0m"
         echo  ""
@@ -193,7 +256,6 @@ runOutputStatusSummary()
         echo  ""
         echo  -e "\033[31m  ****************************************************** \033[0m"
         echo  ""
-        echo ""
         echo  -e "\033[32m  ********************************************************************  \033[0m"
         echo  -e "\033[32m      Completed jobs passed status info                                 \033[0m"
         echo  -e "\033[32m  ********************************************************************  \033[0m"
@@ -208,7 +270,19 @@ runOutputStatusSummary()
         echo  ""
         echo  -e "\033[31m Failed job un-passed num list is  ${aFailedJobUnpassedCasesNumList[@]} \033[0m"
         echo  ""
-        echo  -e "\033[31m  ********************************************************************* \033[0m"
+        echo  -e "\033[33m  ********************************************************************* \033[0m"
+        echo  -e "\033[32m         Spectial jobs  summary                                         \033[0m"
+        echo  -e "\033[33m  ********************************************************************* \033[0m"
+        echo  ""
+        echo  -e "\033[33m no case run job num(e.g. YUV not found)  is ${UnRunCasesJobNum}        \033[0m"
+        echo  ""
+        echo  -e "\033[33m no case run job ID is ${aUnRunCaseJobIDList[@]}                        \033[0m"
+        echo  ""
+        echo  -e "\033[33m Unknown reason failed job num is ${UnKnownReasonFailedJobNum}          \033[0m"
+        echo  ""
+        echo  -e "\033[33m Unknown reason failed job ID  is ${aUnknownReasonFailedJobIDList[@]}   \033[0m"
+        echo  ""
+        echo  -e "\033[33m  ********************************************************************* \033[0m"
         echo  ""
 
         return 1
@@ -240,7 +314,7 @@ runMain()
     runInitial
     runParseJobsInfo
     runOutputParseInfo
-    runSGEJobCheck
+    runSGEJobStatusCheck
     runUpdateSGEJobPassedStatus
     runOutputStatusSummary
     if [ $? -eq 0 ]

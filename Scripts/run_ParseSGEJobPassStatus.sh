@@ -40,10 +40,10 @@ runUsage()
     echo -e "\033[32m e.g.:  6) get succed jobs' passed cases num                    \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobPassedNum     \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  4) get un-run case jobs' ID list(e.g.:YUV not found)    \033[0m"
+    echo -e "\033[32m e.g.:  7) get un-run case jobs' ID list(e.g.:YUV not found)    \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobID         \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  5) get un-run case jobs' name list(e.g.:YUV not found)  \033[0m"
+    echo -e "\033[32m e.g.:  8) get un-run case jobs' name list(e.g.:YUV not found)  \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobName       \033[0m"
     echo ""
 
@@ -275,7 +275,7 @@ runOutputParseResult()
 runOptionValidateCheck()
 {
     declare -a aOptionList
-    aOptionList=(FailedJobID FailedJobName FailedJobUnpassedNum SuccedJobID SuccedJobName SuccedJobPassedNum)
+    aOptionList=(FailedJobID FailedJobName FailedJobUnpassedNum SuccedJobID SuccedJobName SuccedJobPassedNum UnRunCaseJobID UnRunCaseJobName)
     let "Flag=1"
 
     for InputOption in ${aOptionList[@]}
