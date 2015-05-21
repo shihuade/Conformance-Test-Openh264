@@ -177,12 +177,12 @@ runGetUnknownReasonFailedJobInfo()
     let "UnKnownJobIndex=0"
     for((i=0;i<${SubmittedJobNum}; i++))
     do
-        let "SubmittedJobID=${aSubmittedSGEJobIDList[$i]}"
+        let "SubmittedJobID = ${aSubmittedSGEJobIDList[$i]}"
         let "DetectedFlag=0"
-        for ((j=0;i<${DetectedJobNum};j++))
+        for ((j=0;j<${DetectedJobNum};j++))
         do
-            let "DetectedJobID=${DetectedJobList[$j]}"
-            if [ ${SubmittedJobID} -eq {DetectedJobID}]
+            let "DetectedJobID = ${DetectedJobList[$j]}"
+            if [ "${SubmittedJobID}" = "${DetectedJobID}" ]
             then
                 let "DetectedFlag=1"
             fi
