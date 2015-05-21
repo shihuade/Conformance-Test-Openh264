@@ -168,8 +168,12 @@ runUpdateSGEJobPassedStatus()
 runGetUnknownReasonFailedJobInfo()
 {
     declare -a DetectedJobList
-    DetectedJobList=( ${aFailedJobIDList[@]} ${aSuccedJobIDList[@]} ${aUnRunCaseJobIDList[@]} )
-    let "DetectedJobNum =${#DetectedJobList[@]}"
+    DetectedJobList=( ${aRunningJobIDList[@]} ${aWaitingJobIDList[@]} ${aFailedJobIDList[@]} ${aSuccedJobIDList[@]} ${aUnRunCaseJobIDList[@]} )
+	let "DetectedJobNum =${#DetectedJobList[@]}"
+	echo DetectedJobNum is ${DetectedJobNum}
+    echo DetectedJobList is ${DetectedJobList[@]}
+    echo UnKnownReasonFailedJobNum is ${UnKnownReasonFailedJobNum}
+
     let "UnKnownJobIndex=0"
     for((i=0;i<${SubmittedJobNum}; i++))
     do
