@@ -209,7 +209,7 @@ runUpdateJobPassedStatus()
         aUnRunCaseJobNameList[${FailedJobNum}]=${SGEJobName}
         let "UnRunCaseJobNum ++"
 
-    else [ ! "${UnpassedCasesNum}" -eq 0 ]
+    elif [ ! "${UnpassedCasesNum}" -eq 0 ]
     then
         aFailedJobIDList[${FailedJobNum}]=${SGEJobID}
         aFailedJobNameList[${FailedJobNum}]=${SGEJobName}
