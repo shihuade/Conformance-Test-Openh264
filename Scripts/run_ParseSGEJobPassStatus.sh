@@ -43,8 +43,11 @@ runUsage()
     echo -e "\033[32m e.g.:  7) get un-run case jobs' ID list(e.g.:YUV not found)    \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobID         \033[0m"
     echo ""
+    echo -e "\033[32m e.g.:  8) get all jobs' host name list                         \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh AllHostsName           \033[0m"
+    echo ""
     echo -e "\033[32m e.g.:  8) get un-run case jobs' name list(e.g.:YUV not found)  \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobName       \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh AllJobsID       \033[0m"
     echo ""
 
 
@@ -63,9 +66,13 @@ runInitial()
     declare -a aSuccedJobNameList
     declare -a aSuccedJobUnpassedCasesNumList
 
+    declare -a aAllJobsHostNameList
+    declare -a aAllJobIDList
+
     let "FailedJobNum=0"
     let "SuccedJobNum=0"
     let "UnRunCaseJobNum=0"
+    let "AllJobNum=0"
 
     CurrentDir=`pwd`
     JobReportFolder="FinalResult"
@@ -74,6 +81,7 @@ runInitial()
     let "PassedCasesNum=0"
     SGEJobID=""
     SGEJobName=""
+    SGEJobHost=""
 
     let "JobCompletedFlag=0"
     let "UnrunCasesFlag=0"
@@ -147,6 +155,7 @@ runParseStatus()
 
     SGEJobID=""
     SGEJobName=""
+    SGEJobHost=""
 
     while read line
     do
@@ -182,6 +191,7 @@ runParseStatus()
             TempString=`echo $line | awk 'BEGIN {FS="/"} {print $4}'`
             TempString=`echo $TempString | awk 'BEGIN {FS="_"} {print $2}'`
             SGEJobID=${TempString}
+            SGEJobHost=`echo $line | awk 'BEGIN {FS="/"} {print $3}'`
         elif [[ "$line" =~ "Test report" ]]
         then
             # Test report for YUV MSHD_320x192_12fps.yuv
@@ -192,6 +202,12 @@ runParseStatus()
             # can not find test yuv
             let "JobCompletedFlag=1"
             let "UnrunCasesFlag=1"
+        elif [[ "$line" =~ "Host name" ]]
+        then
+            # Host name    is: ZhaoYun
+            TempString=`echo $line | awk 'BEGIN {FS="/"} {print $2}'`
+            TempString=`echo $TempString | awk '{print $1}'`
+            SGEJobHost=${TempString}
         fi
 
     done <${ReportFile}
@@ -219,6 +235,10 @@ runUpdateJobPassedStatus()
         aSuccedJobUnpassedCasesNumList[${SuccedJobNum}]=${PassedCasesNum}
         let "SuccedJobNum ++"
     fi
+
+    aAllJobsHostNameList[${AllJobNum}]=${SGEJobHost}
+    aAllJobIDList[${AllJobNum}]=${SGEJobID}
+    let "AllJobNum ++"
 
 }
 
@@ -267,13 +287,22 @@ runOutputParseResult()
     elif [ "${Option}" = "UnRunCaseJobName" ]
     then
         echo ${aUnRunCaseJobNameList[@]}
+    elif [ "${Option}" = "AllHostsName" ]
+    then
+        echo ${aAllJobsHostNameList[@]}
+    elif [ "${Option}" = "AllJobsID" ]
+    then
+        echo ${aAllJobIDList[@]}
     fi
 }
 
 runOptionValidateCheck()
 {
     declare -a aOptionList
-    aOptionList=(FailedJobID FailedJobName FailedJobUnpassedNum SuccedJobID SuccedJobName SuccedJobPassedNum UnRunCaseJobID UnRunCaseJobName)
+    aOptionList=(FailedJobID FailedJobName FailedJobUnpassedNum \
+                 SuccedJobID SuccedJobName SuccedJobPassedNum   \
+                 UnRunCaseJobID UnRunCaseJobName \
+                 AllHostsName AllJobsID  )
     let "Flag=1"
 
     for InputOption in ${aOptionList[@]}
