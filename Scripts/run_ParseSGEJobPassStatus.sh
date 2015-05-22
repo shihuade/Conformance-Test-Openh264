@@ -165,15 +165,15 @@ runParseStatus()
             TempString=`echo $TempString | awk '{print $1}'`
             let "PassedCasesNum = ${TempString}"
 
-        elif [[ "$line" =~ "SGEJobID" ]]
+        elif [[ "$line" =~ "SGE job ID" ]]
         then
-            # SGEJobID   is: 533
+            # SGE job ID   is: 533
             TempString=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
             TempString=`echo $TempString | awk '{print $1}'`
             SGEJobID=${TempString}
-        elif [[ "$line" =~ "SGEJobName" ]]
+        elif [[ "$line" =~ "SGE job name" ]]
         then
-            # SGEJobName is: MSHD_320x192_12fps.yuv_SubCasedIndex_1
+            # SGE job name is: MSHD_320x192_12fps.yuv_SubCasedIndex_1
             TempString=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
             TempString=`echo $TempString | awk '{print $1}'`
             SGEJobName=${TempString}
