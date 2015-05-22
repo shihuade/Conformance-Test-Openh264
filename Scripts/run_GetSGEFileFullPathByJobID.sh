@@ -52,7 +52,8 @@ runParseJobInfo()
         if [[ "$line" =~ "${SGEJobID}"  ]]
         then
             SGEJobName=`echo $line | awk 'BEGIN {FS="[()]"} {print $2}'`
-            let "JobExistFlag=1"
+            SGEJobName=`echo ${SGEJobName} | awk 'BEGIN {FS="[\"]"} {print $2}'`
+           let "JobExistFlag=1"
             break
         fi
     done<${SGEJobSubmittedLog}
@@ -63,7 +64,7 @@ runGenerateSGEFileFullPath()
 {
     if [  ${JobExistFlag} -eq 1 ]
     then
-        YUVName=`echo ${SGEJobName}  awk 'BEGINE {FS=".yuv"} {print $1}' `
+        YUVName=`echo ${SGEJobName} | awk 'BEGINE {FS=".yuv"} {print $1}' `
         YUVName=${YUVName}.yuv
         SGEFileFullPath=${TestSpace}/${YUVName}/${SGEJobName}.sge
     else
