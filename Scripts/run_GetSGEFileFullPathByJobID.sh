@@ -93,7 +93,7 @@ runOutputSGEJobFileInfo()
 }
 
 
-runMai()
+runMain()
 {
     runInit
     runCheck
