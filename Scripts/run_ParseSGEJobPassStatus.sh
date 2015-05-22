@@ -46,8 +46,8 @@ runUsage()
     echo -e "\033[32m e.g.:  8) get all jobs' host name list                         \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh AllHostsName           \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  8) get un-run case jobs' name list(e.g.:YUV not found)  \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh AllJobsID       \033[0m"
+    echo -e "\033[32m e.g.:  9) get all jobs' ID list                                \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh AllJobsID              \033[0m"
     echo ""
 
 
