@@ -52,7 +52,7 @@ runParseJobInfo()
         if [[ "$line" =~ "${SGEJobID}"  ]]
         then
             SGEJobName=`echo $line | awk 'BEGIN {FS="[()]"} {print $2}'`
-            SGEJobName=`echo ${SGEJobName} | awk 'BEGIN {FS="[\"]"} {print $2}'`
+            SGEJobName=`echo ${SGEJobName} | awk 'BEGIN {FS="\""} {print $2}'`
            let "JobExistFlag=1"
             break
         fi
@@ -64,8 +64,8 @@ runGenerateSGEFileFullPath()
 {
     if [  ${JobExistFlag} -eq 1 ]
     then
-        YUVName=`echo ${SGEJobName} | awk 'BEGINE {FS=".yuv"} {print $1}' `
-        YUVName=${YUVName}.yuv
+        # SGEJobName: ScreenCaptureDocEditing_320X180_noDuplicate.yuv_SGE_Test_SubCaseIndex_0
+        YUVName=`echo ${SGEJobName} | awk 'BEGINE {FS="_SGE_Test_SubCaseIndex"} {print $1}' `
         SGEFileFullPath=${TestSpace}/${YUVName}/${SGEJobName}.sge
     else
         SGEFileFullPath=""
