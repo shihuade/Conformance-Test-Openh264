@@ -20,6 +20,7 @@ runInit()
     SGEJobSubmittedLog="${CurrentDir}/SGEJobsSubmittedInfo.log"
     SGEJobName=""
     YUVName=""
+    SubCaseIndexInfo=""
     let "JobExistFlag=0"
 }
 
@@ -64,9 +65,11 @@ runGenerateSGEFileFullPath()
 {
     if [  ${JobExistFlag} -eq 1 ]
     then
-        # SGEJobName: ScreenCaptureDocEditing_320X180_noDuplicate.yuv_SGE_Test_SubCaseIndex_0
-        YUVName=`echo ${SGEJobName} | awk 'BEGINE {FS="_SGE_Test_SubCaseIndex"} {print $1}' `
-        SGEFileFullPath=${TestSpace}/${YUVName}/${SGEJobName}.sge
+        # SGEJobName:    ScreenCaptureDocEditing_320X180_noDuplicate.yuv_SGE_Test_SubCaseIndex_0
+        # SGE file name: ScreenCaptureDocEditing_320X180_noDuplicate.yuv_SubCaseIndex_0.sge
+        YUVName=`echo ${SGEJobName}          | awk 'BEGIN {FS="_SGE_Test_"} {print $1}' `
+        SubCaseIndexInfo=`echo ${SGEJobName} | awk 'BEGIN {FS="_SGE_Test_"} {print $2}' `
+        SGEFileFullPath=${TestSpace}/${YUVName}/${YUVName}_${SubCaseIndexInfo}.sge
     else
         SGEFileFullPath=""
     fi
