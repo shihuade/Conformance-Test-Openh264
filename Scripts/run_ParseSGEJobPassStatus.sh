@@ -156,7 +156,6 @@ runParseStatus()
             TempString=`echo $TempString | awk  ' {print $1}'`
             #echo "TempString is ${TempString}"
             let "UnpassedCasesNum = ${TempString}"
-
             let "JobCompletedFlag=1"
 
         elif [[ "$line" =~ "EncoderPassedNum" ]]
@@ -188,12 +187,11 @@ runParseStatus()
             # Test report for YUV MSHD_320x192_12fps.yuv
             TempString=`echo $line | awk '{print $6}'`
             SGEJobName=${TempString}
-        elif [[ "$line" =~ "can not find test yuv" ]]
+        elif [[ "$line" =~ "can not find test yuv file" ]]
         then
             # can not find test yuv
             let "JobCompletedFlag=1"
             let "UnrunCasesFlag=1"
-
         fi
 
     done <${ReportFile}
@@ -205,8 +203,8 @@ runUpdateJobPassedStatus()
 
     if [  "${UnrunCasesFlag}" -eq 1 ]
     then
-        aUnRunCaseJobIDList[${FailedJobNum}]=${SGEJobID}
-        aUnRunCaseJobNameList[${FailedJobNum}]=${SGEJobName}
+        aUnRunCaseJobIDList[${UnRunCaseJobNum}]=${SGEJobID}
+        aUnRunCaseJobNameList[${UnRunCaseJobNum}]=${SGEJobName}
         let "UnRunCaseJobNum ++"
 
     elif [ ! "${UnpassedCasesNum}" -eq 0 ]
