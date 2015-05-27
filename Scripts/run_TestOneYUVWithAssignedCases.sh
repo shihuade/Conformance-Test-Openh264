@@ -37,6 +37,18 @@ runGetYUVFullPath()
 	return $?
 }
 
+runCheckInputYUV()
+{
+
+    if [ ! -s  ${TestYUVFullPath} ]
+    then
+        echo "YUV file size is zero,please double check! "
+        return 1
+    fi
+
+    return 0
+
+}
 
 runDeleteYUV()
 {
@@ -77,6 +89,18 @@ runTestOneYUV()
 		echo  -e "\033[32m  TestYUVFullPath is ${TestYUVFullPath}  \033[0m"
 		echo ""
 	fi
+
+    runCheckInputYUV
+    if [ ! $? -eq 0 ]
+    then
+        echo ""
+        echo  -e "\033[31m  file size of test yuv is 0; please double check! file is --${TestYUVName} \033[0m"
+        echo ""
+        echo -e "\033[31m Failed!\033[0m">>${TestReport}
+        echo -e "\033[31m file size of test yuv is 0! --${TestYUVName}  under host ${HostName} \033[0m">>${TestReport}
+        exit 1
+    fi
+
 
     #generate SHA-1 table
 	echo ""
