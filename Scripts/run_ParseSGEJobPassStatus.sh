@@ -163,6 +163,7 @@ runParseStatus()
         then
             TempString=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
             TempString=`echo $TempString | awk  ' {print $1}'`
+            TempString=`echo $TempString | awk  'BEGIN {FS="\033"} {print $1}'`
             #echo "TempString is ${TempString}"
             let "UnpassedCasesNum = ${TempString}"
             let "JobCompletedFlag=1"
@@ -171,6 +172,7 @@ runParseStatus()
         then
             TempString=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
             TempString=`echo $TempString | awk '{print $1}'`
+            TempString=`echo $TempString | awk  ' BEGIN {FS="\033"} {print $1}'`
             let "PassedCasesNum = ${TempString}"
 
         elif [[ "$line" =~ "SGE job ID" ]]
