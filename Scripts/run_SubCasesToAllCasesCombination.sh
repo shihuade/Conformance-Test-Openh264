@@ -69,7 +69,10 @@ runGetTestSummary()
         echo "      SubFile      is ${file}"
         echo -e "\033[32m ********************************************************* \033[0m"
         runCopySubCaseFileToAllCasesFile ${file}
-        mv ${file}  ${SubCasesBackupDir}
+        if [ ! ${FileIndex}  -eq 3 ]
+        then
+            mv -f ${file}  ${SubCasesBackupDir}
+        fi
 
         let "SubFileIndex ++"
     done
