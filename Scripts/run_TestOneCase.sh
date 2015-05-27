@@ -29,6 +29,7 @@ runGlobalVariableInitial()
 	let "EncoderNum=-1"
 	let "SpatailLayerNum=1"
 	let "RCMode=0"
+    let "MultiThreadFlag=0"
 
 	BitStreamSHA1String="NULL"
 	BitStreamMD5String="NULL"
@@ -106,10 +107,11 @@ runParseCaseInfo()
 }
 runSetCaseGlobalParam()
 {
-	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_welsrubyenc.264
+	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_wels.264
 	let "EncoderNum      = ${aEncoderCommandValue[1]}"
 	let "SpatailLayerNum = ${aEncoderCommandValue[2]}"
 	let "RCMode          = ${aEncoderCommandValue[22]}"
+    let "MultiThreadFlag = ${aEncoderCommandValue[38]}"
 
 	for((i=0;i<4;i++))
 	do
@@ -315,12 +317,19 @@ runBasicCheck()
 	then
 		if [ -e ${BitStreamFile}  ]
 		then
-			#cp ${BitStreamFile}  ${IssueDataPath}
+            #currently, only copy when multi thread is enable
+            if [ ${MultiThreadFlag} -gt 1 ]
+            then
+                cp ${BitStreamFile}  ${IssueDataPath}
+            fi
+            #cp ${BitStreamFile}  ${IssueDataPath}
 			Action="you can open the annotation to save the issue bit stream"
 		fi
 		return 1
-	else
-		return 0
+	elif [ $? -eq 2  ]
+		return 1
+    elif [ $? -eq 0  ]
+        return 0
 	fi
 
 }

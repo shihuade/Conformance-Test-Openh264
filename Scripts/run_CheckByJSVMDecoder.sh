@@ -351,7 +351,7 @@ runMain()
 	if [  ! $? -eq 0 ]
 	then
 		echo ""
-		echo -e "\033[31m run_JSVMCheck.sh parameters are not correct,please double check! \033[0m"
+		echo -e "\033[31m run_CheckByJSVMDecoder.sh parameters are not correct,please double check! \033[0m"
 		echo ""
 		EncoderCheckResult="1-Encoder failed!--Parameters for JSVM check are not correct!"
 		DecoderCheckResult="3-Decoder cannot be checked!"
