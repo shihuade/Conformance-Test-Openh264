@@ -23,7 +23,6 @@
 runGetAllYUVTestResult()
 {
     echo "">${AllTestSummary}
-    echo "">${AllSGESlaveInfoFile}
     for TestYUV in ${aTestYUVList[@]}
     do
         # combine sub-cases files into single all cases file
@@ -50,16 +49,7 @@ runGetAllYUVTestResult()
         #print test sequence's test summary
         cat ${SummaryFile} >>${AllTestSummary}
 
-        if [ ${TestType} = "SGTest" ]
-        then
-            SGESlaveInfoFile="${FinalSummaryDir}/${TestYUV}_SGESlaveInfo.log"
-            ./Scripts/run_SubCasesToAllCasesCombination.sh ${FinalResultDir} ${TestYUV} \
-                                                           ${SGESlaveInfoFile}
-            #print test sequence's slave info
-            cat ${SGESlaveInfoFile} >>${AllSGESlaveInfoFile}
-        fi
-
-    done
+      done
 
 }
 
@@ -141,7 +131,6 @@ runMain()
 	runCheck
 
     AllTestSummary="${FinalSummaryDir}/AllTestYUVsSummary.txt"
-    AllSGESlaveInfoFile="${FinalSummaryDir}/AllTestYUVsSGESlaveInfo.txt"
     let "AllTestFlag=0"
 	declare -a aTestYUVList
 
