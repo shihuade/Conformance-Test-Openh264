@@ -101,6 +101,7 @@ runGenerateFilePreFixBasedIndex()
     fi
 
     OutputFile=${SummaryDir}/${OutputFileName}
+    echo "" >${OutputFile}
 
 }
 
