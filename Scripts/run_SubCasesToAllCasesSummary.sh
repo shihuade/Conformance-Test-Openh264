@@ -22,10 +22,10 @@ runSummarizeAllTestResult()
     while read line
     do
         TempNum=`echo $line | awk 'BEGIN {FS=":"} {print $2}'`
-        TempNum=`echo $TempNum | awk ' {print $1}'`
+        TempNum=`echo $TempNum | awk ' BEGIN {FS="\033"} {print $1}'`
 
 
-        if [[ ${line} =~ "total case  Num" ]]
+        if [[ ${line} =~ "total" ]]
         then
             let " TotalNum += ${TempNum} "
         elif [[ ${line} =~ "EncoderPassedNum" ]]
@@ -130,8 +130,8 @@ runMain()
     runOutputTestSummary   >${OutputFile}
 
     #deleted temp file
-    ./Scripts/run_SafeDelete.sh ${SummaryFile}
-    mv ${TempFile}  ${SummaryFile}
+    #./Scripts/run_SafeDelete.sh ${SummaryFile}
+    #mv ${TempFile}  ${SummaryFile}
 
     return ${TestFlag}
 
