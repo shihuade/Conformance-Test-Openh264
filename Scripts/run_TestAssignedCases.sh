@@ -231,8 +231,8 @@ runAllCaseTest()
 	do
 		if [ ${LineIndex} -gt 0  ]
 		then
-			#to limit log file's size,each log file only records 1000 cases' log 
-			let "NewLogFileFlag = ${TotalCaseNum}%1000"
+			#to limit log file's size,each log file only records 200 cases' log
+			let "NewLogFileFlag = ${TotalCaseNum}%200"
 			if [ ${NewLogFileFlag} -eq 0 ]
 			then
 				AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_${LogFileIndex}.TestLog"
@@ -244,6 +244,7 @@ runAllCaseTest()
 			echo "" >>${AssignedCasesConsoleLogFile}
 			echo "" >>${AssignedCasesConsoleLogFile}
 			echo "****************case index is ${TotalCaseNum}************">>${AssignedCasesConsoleLogFile}
+            echo "     LocalDataDir is: ${LocalDataDir}">>${AssignedCasesConsoleLogFile}
 			export IssueDataPath
 			export TempDataPath
 			export TestYUVName

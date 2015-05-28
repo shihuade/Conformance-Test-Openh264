@@ -361,6 +361,7 @@ runMain()
 
 	runSetGlobalParam
 	echo "-------------------1. JSVM Check--extract bit stream"
+    date
 	./run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
 	if [  ! $? -eq 0 ]
 	then
@@ -374,6 +375,7 @@ runMain()
 	fi
 
 	echo "-------------------2. JSVM Check--JSVM Decode Check"
+    date
 	runJSVMDecodedFailedCheck
 	if [  ! $? -eq 0 ]
 	then
@@ -388,10 +390,12 @@ runMain()
 
 	#check RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV
 	echo "-------------------3. JSVM Check--WelsDecoder Decode Check"
+    date
 	runWelsDecodedFailedCheck  >${TempDir}/WelsDecTemp.log
 
 	runGenerateSHA1String
 	echo "-------------------4. JSVM Check--RecYUV-JSVMDecYUV-WelsDecYUV Comparison"
+    date
 	runRecYUVJSVMDecYUCompare
 	if [ ${FinalCheckFlag} -eq 0 ]
 	then
