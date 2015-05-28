@@ -69,11 +69,6 @@ runGetTestSummary()
         echo "      SubFile      is ${file}"
         echo -e "\033[32m ********************************************************* \033[0m"
         runCopySubCaseFileToAllCasesFile ${file}
-        if [ ! ${FileIndex}  -eq 3 ]
-        then
-            mv -f ${file}  ${SubCasesBackupDir}
-        fi
-
         let "SubFileIndex ++"
     done
 }
@@ -105,7 +100,7 @@ runGenerateFilePreFixBasedIndex()
         OutputFileName=${CaseSummaryFile}_AllCasesAllSlaves.Summary
     fi
 
-    OutputFile=${SubCasesFileDir}/${OutputFileName}
+    OutputFile=${SummaryDir}/${OutputFileName}
 
 }
 
@@ -127,11 +122,10 @@ runCheck()
     cd ${SubCasesFileDir}
     SubCasesFileDir=`pwd`
     cd ${CurrentDir}
-    SubCasesBackupDir=${SubCasesFileDir}/AllSubCaseData
 
-    if [ ! -d ${SubCasesBackupDir} ]
+    if [ ! -d ${SummaryDir} ]
     then
-        mkdir ${SubCasesBackupDir}
+        mkdir ${SummaryDir}
     fi
 
 }
@@ -153,7 +147,7 @@ runMain()
     OutputFileName=""
     OutputFile=""
     CurrentDir=`pwd`
-    SubCasesBackupDir=""
+    SummaryDir=${CurrentDir}/FinalResult_Summary
 
     let "SubFileIndex = 0"
     let "NewFileFlag  = 0"
