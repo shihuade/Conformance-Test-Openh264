@@ -30,9 +30,9 @@ runGetAllYUVTestResult()
         echo ""
         echo "combining sub-set cases files into single all cases file..."
         echo ""
-        DetailSummaryFile="${FinalResultDir}/${TestYUV}_AllCasesAllSlaves.Summary"
-        SummaryFile="${FinalResultDir}/TestReport_${TestYUV}.log"
-        SHA1TableFile="${FinalResultDir}/${TestYUV}_AllCases_SHA1_Table.csv"
+        DetailSummaryFile="${FinalSummaryDir}/${TestYUV}_AllCasesAllSlaves.Summary"
+        SummaryFile="${FinalSummaryDir}/TestReport_${TestYUV}.log"
+        SHA1TableFile="${FinalSummaryDir}/${TestYUV}_AllCases_SHA1_Table.csv"
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 0
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 1
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
@@ -52,7 +52,7 @@ runGetAllYUVTestResult()
 
         if [ ${TestType} = "SGTest" ]
         then
-            SGESlaveInfoFile="${FinalResultDir}/${TestYUV}_SGESlaveInfo.log"
+            SGESlaveInfoFile="${FinalSummaryDir}/${TestYUV}_SGESlaveInfo.log"
             ./Scripts/run_SubCasesToAllCasesCombination.sh ${FinalResultDir} ${TestYUV} \
                                                            ${SGESlaveInfoFile}
             #print test sequence's slave info
@@ -123,39 +123,29 @@ runCheck()
         echo ""
         exit 1
     fi
+    if [ ! -d ${FinalSummaryDir} ]
+    then
+        mkdir ${FinalSummaryDir}
+    fi
+
 }
 
 runMain()
 {
-	if [ ! $# -eq 3  ]
-	then
-		runUsage
-		exit 1
-	fi
-	
-	TestType=$1
-	ConfigureFile=$2
-    AllTestResultPassFlag=$3
-
-	FinalResultDir=FinalResult
-    SHA1TableDir=SHA1Table
-	CurrentDir=`pwd`
-	#check input parameters
+    CurrentDir=`pwd`
+    #get full path info
+    FinalResultDir=${CurrentDir}/FinalResult
+    SHA1TableDir=${CurrentDir}/SHA1Table
+    FinalSummaryDir=${CurrentDir}/FinalResult_Summary
+    #check input parameters
 	runCheck
 
-    AllTestSummary="${FinalResultDir}/AllTestYUVsSummary.txt"
-    AllSGESlaveInfoFile="${FinalResultDir}/AllTestYUVsSGESlaveInfo.txt"
+    AllTestSummary="${FinalSummaryDir}/AllTestYUVsSummary.txt"
+    AllSGESlaveInfoFile="${FinalSummaryDir}/AllTestYUVsSGESlaveInfo.txt"
     let "AllTestFlag=0"
 	declare -a aTestYUVList
 
 
-	#get full path info
-	cd ${FinalResultDir}
-	FinalResultDir=`pwd`
-	cd  ${CurrentDir}
-    cd ${SHA1TableDir}
-    SHA1TableDir=`pwd`
-    cd ${CurrentDir}
     #get YUV list
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
 
@@ -176,8 +166,13 @@ runMain()
     return 0
 
 }
+if [ ! $# -eq 3  ]
+then
+    runUsage
+    exit 1
+fi
+
 TestType=$1
 ConfigureFile=$2
 AllTestResultPassFlag=$3
-runMain  ${TestType} ${ConfigureFile} ${AllTestResultPassFlag}
-
+runMain
