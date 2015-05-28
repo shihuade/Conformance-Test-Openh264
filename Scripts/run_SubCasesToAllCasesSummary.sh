@@ -120,7 +120,7 @@ runMain()
     let "DecoderPassedNum =0"
     let "DecoderUpPassedNum = 0"
     let "DecoderUnCheckNum =0"
-    TempFile=${SummaryFile}.temp
+    TempFile=Summary_${SummaryFile}
 
     runCheck
 
