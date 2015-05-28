@@ -120,7 +120,7 @@ runMain()
 	SourceFolder="Source"
 	CodecFolder="Codec"
 	ConfigureFolder="CaseConfigure"
-	FinalResultFolder="FinalResult"
+	FinalResultFolder="FinalResult_Summary"
 
 	CurrentDir=`pwd`
 	BackupDir="/home/SGETestBackUp/openh264"
