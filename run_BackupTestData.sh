@@ -88,7 +88,10 @@ runBackupTestData()
 	mkdir -p  ${BackupFolder}/${CodecFolder}
 	mkdir -p  ${BackupFolder}/${ConfigureFolder}
 	mkdir -p  ${BackupFolder}/${FinalResultFolder}
-	
+
+    cp -f  ${TestSpaceDir}/*.log                    ${BackupFolder}
+    cp -f  ${TestSpaceDir}/*.txt                    ${BackupFolder}
+    cp -f  ${TestSpaceDir}/*.flag                   ${BackupFolder}
 	cp -f  ${TestSpaceDir}/${CodecFolder}/*         ${BackupFolder}/${CodecFolder}
  	cp -f  ${TestSpaceDir}/${ConfigureFolder}/*     ${BackupFolder}/${ConfigureFolder}
 	cp -f  ${TestSpaceDir}/${FinalResultFolder}/*   ${BackupFolder}/${FinalResultFolder}

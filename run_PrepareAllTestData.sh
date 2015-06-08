@@ -24,16 +24,16 @@ runRemovedPreviousTestData()
 	then
 		./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
 	fi
-	
+
+    if [ -d $SummaryDir ]
+    then
+        ./${ScriptFolder}/run_SafeDelete.sh  $SummaryDir
+    fi
+
 	if [ -d $SourceFolder ]
 	then
 		./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
 	fi
-
-    for file in ${CurrentDir}/*.log
-    do
-
-    done
 
     for file in ${CurrentDir}/*.log
     do
@@ -271,6 +271,7 @@ runMain()
 	CurrentDir=`pwd`
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
+    SummaryDir="FinalResult_Summary"
 	let "SGEJobNum =0 "
     let "SGEJobSubCasesNum=0"
 
