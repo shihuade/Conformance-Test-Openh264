@@ -48,7 +48,7 @@ runFolderCheck()
 	if [ ! -d ${TestSpaceDir}  ]
 	then
 		echo -e "\033[31m  TestSpaceDir----${TestSpaceDir} dose not exist, please double check! \033[0m"
-		exit 1
+		return 1
 	else
 		cd ${TestSpaceDir}
 		TestSpaceDir=`pwd`
@@ -58,25 +58,25 @@ runFolderCheck()
 	if [ ! -d ${TestSpaceDir}/${SourceFolder}  ]
 	then
 		echo -e "\033[31m SourceFolder----${TestSpaceDir}/${SourceFolder}  dose not exist, please double check! \033[0m"
-		exit 1
+		return 1
 	fi
 	
 	if [ ! -d ${TestSpaceDir}/${CodecFolder}  ]
 	then
 		echo -e "\033[31m CodecFolder----${TestSpaceDir}/${CodecFolder}  dose not exist, please double check! \033[0m"
-		exit 1
+		return 1
 	fi
 	
 	if [ ! -d ${TestSpaceDir}/${ConfigureFolder}  ]
 	then
 		echo -e "\033[31m ConfigureFolder----${TestSpaceDir}/${ConfigureFolder}  dose not exist, please double check! \033[0m"
-		exit 1
+		return 1
 	fi	
 	
 	if [ ! -d ${TestSpaceDir}/${FinalResultFolder}  ]
 	then
 		echo -e "\033[31m FinalResultFolder----${TestSpaceDir}/${FinalResultFolder}  dose not exist, please double check! \033[0m"
-		exit 1
+		return 1
 	fi
  
  }
@@ -125,7 +125,7 @@ runMain()
     if [ ! $#  -eq 2 ]
 	then
 		runUsage
-		exit 1
+		return 0
 	fi
 	
     TestSpaceDir=$1
@@ -160,6 +160,7 @@ runMain()
 	#generate backup log
 	runBackupInfo
 	runBackupLog
+    return 0
 	
 }
 TestSpaceDir=$1
