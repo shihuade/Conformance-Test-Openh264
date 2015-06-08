@@ -10,7 +10,7 @@ runUsage()
     echo -e "\033[32m  --./run_BackupTestData.sh  ./   SCC_V1.3                                           \033[0m"
     echo ""
     echo -e "\033[32m  backup folder will be:                                                             \033[0m"
-    echo -e "\033[32m   /home/SGETestBackUp/openh264/\${PreFixInfo}_ConformanceTest\${DateInfo}           \033[0m"
+    echo -e "\033[32m   /home/SGETestBackUp/openh264/\${PreFixInfo}_ConformanceTest_\${DateInfo}          \033[0m"
     echo ""
     echo -e "\033[32m   /home/SGETestBackUp/openh264/SCC_V1.3_ConformanceTest-Fri-Mar-6-21:02:01-CST-2015 \033[0m"
    echo ""
