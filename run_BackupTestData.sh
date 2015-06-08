@@ -2,9 +2,19 @@
 
 runUsage()
 {
-	echo -e "\033[32m **************--usage--************************\033[0m"
-	echo -e "\033[32m  --./run_BackupTestData.sh \${YourTestDataDir} \${PrefixForBackupFolderName}\033[0m"
-	echo -e "\033[32m ***********************************************\033[0m"
+	echo -e "\033[32m **************--usage--************************************************************ \033[0m"
+    echo ""
+	echo -e "\033[32m  --./run_BackupTestData.sh \${YourTestDataDir} \${PrefixForBackupFolderName}        \033[0m"
+    echo ""
+    echo -e "\033[32m  e.g.:                                                                              \033[0m"
+    echo -e "\033[32m  --./run_BackupTestData.sh  ./   SCC_V1.3                                           \033[0m"
+    echo ""
+    echo -e "\033[32m  backup folder will be:                                                             \033[0m"
+    echo -e "\033[32m   /home/SGETestBackUp/openh264/${PreFixInfo}_ConformanceTest${DateInfo}             \033[0m"
+    echo ""
+    echo -e "\033[32m   /home/SGETestBackUp/openh264/SCC_V1.3_ConformanceTest-Fri-Mar-6-21:02:01-CST-2015 \033[0m"
+   echo ""
+	echo -e "\033[32m *********************************************************************************** \033[0m"
 }
 
 runGenerateCodecCommitInfo()
