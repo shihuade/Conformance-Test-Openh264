@@ -38,7 +38,7 @@ runGenerateDateInfo()
 {
 	date
 	TempDateInfo=`date`
-	TempDateInfo=`echo ${TempDateInfo} | awk 'BEGINE {FS="[ :]"}{for(i=1;i<=NF;i++)printf("-%s",$i)}'`
+	TempDateInfo=`echo ${TempDateInfo} | awk 'BEGINE {FS="[ ]"} {for(i=1;i<=NF;i++)printf("-%s",$i)}'`
 	DateInfo=${TempDateInfo}
 }
 
