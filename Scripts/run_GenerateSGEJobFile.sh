@@ -24,9 +24,9 @@ runPrepareSGEJobFile()
     let "SGEQueueIndex = SGEJobNum % 3"
 
 	SGEQueue="Openh264SGE_${SGEQueueIndex}"
-	SGEName="${TestYUVName}_SGE_Test_SubCaseIndex_${SubCaseIndex}"
+	SGEJobName="${TestYUVName}_SubCaseIndex_${SubCaseIndex}"
 	SGEModelFile="${ScriptFolder}/SGEModel.sge"
-	SGEJobFile="${TestSequenceDir}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}.sge"
+	SGEJobFile="${TestSequenceDir}/${SGEJobName}.sge"
 	SGEJobScript="run_TestOneYUVWithAssignedCases.sh"
     SGEOutputFile="${SGEJobFile}.o"
     SGEErrorLogFile="${SGEJobFile}.e"
@@ -44,7 +44,7 @@ runPrepareSGEJobFile()
 			echo "#$ -q ${SGEQueue}  # Select the queue">>${SGEJobFile}
 		elif [[ "$line" =~ "#$ -N"  ]]
 		then
-			echo "#$ -N ${SGEName} # The name of job"   >>${SGEJobFile}
+			echo "#$ -N ${SGEJobName} # The name of job"   >>${SGEJobFile}
 		elif [[ "$line" =~ "##$ -o"  ]]
         then
             echo "#$ -o ${SGEOutputFile}    # terminal output file ">>${SGEJobFile}
