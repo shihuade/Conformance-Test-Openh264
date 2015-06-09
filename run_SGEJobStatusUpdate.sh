@@ -299,6 +299,19 @@ runVaildateCheck()
         return 1
     fi
 
+    if [ ! -s ${SGEJobSubmittedLogFile} ]
+    then
+        echo ""
+        echo  -e "\033[31m  SGEJobSubmittedLogFile ${SGEJobSubmittedLogFile} does not exist! \033[0m"
+        echo  -e "\033[31m  Please double check!\033[0m"
+        echo  -e "\033[32m  --Submit SGE jobs before you detect the SGE jobs status!  \033[0m"
+        echo  -e "\033[32m  --or check the the SGE submitted log file!\033[0m"
+        echo ""
+        touch ${SGEJobSubmittedLogFile}
+        return 1
+    fi
+
+
     if [ -e ${SGEJobsFinishFlagFile} ]
     then
         ./Scripts/run_SafeDelete.sh  ${SGEJobsFinishFlagFile}
