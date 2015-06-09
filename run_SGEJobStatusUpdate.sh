@@ -289,12 +289,14 @@ runVaildateCheck()
 
     if [ ! -e ${SGEJobSubmittedLogFile} ]
     then
+        echo ""
         echo  -e "\033[31m  SGEJobSubmittedLogFile ${SGEJobSubmittedLogFile} does not exist! \033[0m"
         echo  -e "\033[31m  Please double check!\033[0m"
         echo  -e "\033[32m  --Submit SGE jobs before you detect the SGE jobs status!  \033[0m"
         echo  -e "\033[32m  --or check the the SGE submitted log file!\033[0m"
+        echo ""
         touch ${SGEJobSubmittedLogFile}
-        return 0
+        return 1
     fi
 
     if [ -e ${SGEJobsFinishFlagFile} ]
@@ -307,9 +309,17 @@ runMain()
 {
 
     runVaildateCheck
+    if [ $? -eq 0 ]
+    then
+        return 0
+    fi
+
     runInitial
+
     runParseJobsInfo
+
     runOutputParseInfo
+
     runSGEJobStatusCheck
     runUpdateSGEJobPassedStatus
     runOutputStatusSummary
