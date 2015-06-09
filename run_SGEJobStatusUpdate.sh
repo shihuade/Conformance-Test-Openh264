@@ -322,7 +322,7 @@ runMain()
 {
 
     runVaildateCheck
-    if [ $? -eq 0 ]
+    if [ ! $? -eq 0 ]
     then
         return 0
     fi
