@@ -144,6 +144,10 @@ runMain()
 	
 	#check folder 
 	runFolderCheck
+    if [ ! $? -eq 0 ]
+    then
+        return 0
+    fi
 	
 	#generate date info for backup folder
 	runGenerateDateInfo
