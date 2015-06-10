@@ -24,7 +24,7 @@ runGetAllSGEJobNames()
 	while read line
 	do
         # for line contian the job ID info
-        # e.g.: Your job 534 ("CREW_176x144_30.yuvCREW_176x144_30.yuv_SGE_Test_SubCaseIndex_1") has been submitted
+        # e.g.: Your job 534 ("----CREW_176x144_30.yuvCREW_176x144_30.yuv_SGE_Test_SubCaseIndex_1----") has been submitted
 		if [[ "$line" =~ "Your job"  ]]
 		then
 
@@ -34,7 +34,8 @@ runGetAllSGEJobNames()
                 let "ExampleLineJobInfoFlag = 1"
             else
                 TempName=`echo $line | awk '{print $4}'`
-                aAllSGEJobNameList[${JobIDIndex}]=`echo $TempName | awk 'BEGIN {FS="[()]"} {print $2 }'`
+                TempName=`echo $TempName | awk 'BEGIN {FS="[()]"} {print $2 }'`
+                aAllSGEJobNameList[${JobIDIndex}]=`echo $TempName | awk 'BEGIN {FS="----"} {print $2 }'`
                 let "JobIDIndex++"
             fi
 		fi
