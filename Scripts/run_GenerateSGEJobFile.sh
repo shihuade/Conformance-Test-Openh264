@@ -24,7 +24,8 @@ runPrepareSGEJobFile()
     let "SGEQueueIndex = SGEJobNum % 3"
 
 	SGEQueue="Openh264SGE_${SGEQueueIndex}"
-	SGEJobName="${TestYUVName}_SubCaseIndex_${SubCaseIndex}"
+    #add ---- for post log parse
+	SGEJobName="----${TestYUVName}_SubCaseIndex_${SubCaseIndex}----"
 	SGEModelFile="${ScriptFolder}/SGEModel.sge"
 	SGEJobFile="${TestSequenceDir}/${SGEJobName}.sge"
 	SGEJobScript="run_TestOneYUVWithAssignedCases.sh"

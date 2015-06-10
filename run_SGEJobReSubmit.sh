@@ -70,12 +70,18 @@ runInit()
     declare -a aReSubmittedSGEJobFlagFileList
     declare -a aReSubmittedSGEJobErrorInfoFileList
 
+    declare -a aReSubmittedSGEJobSHA1List
+    declare -a aReSubmittedSGEJobAllCasesFileList
+    declare -a aReSubmittedSGEJobErrorCasesFileList
+    declare -a aReSubmittedSGEJobTestReportFileList
+
     declare -a aResubmitSGEJobIDList
 
     let "SubmittedJobNum = 0"
 
     CurrentDir=`pwd`
     TestSpace=${CurrentDir}/AllTestData
+    TestResultDir=${CurrentDir}/FinalResult
     SGEJobSubmitJobLog="${CurrentDir}/SGEJobsSubmittedInfo.log"
 
 }
@@ -203,19 +209,24 @@ runGetSubmittedJobInfoByAllJobs()
 
 runOutputReSubmittedJobInfo()
 {
-    echo -e "\033[32m ****************************************************************************   \033[0m"
+    echo -e "\033[32m ******************************************************************************  \033[0m"
     echo                   ReSubmitted Job info listed as below:
-    echo -e "\033[32m ****************************************************************************   \033[0m"
+    echo -e "\033[32m ******************************************************************************  \033[0m"
 
     for((i=0;i<${ReSubmittedJobNum};i++))
     do
-        echo -e "\033[32m ${aSubmittedSGEJobIDList[$i]}:  ${aSubmittedSGEJobNameList[$i]}            \033[0m"
-        echo -e "\033[32m      sge job file            :  ${aReSubmittedSGEJobFileList[$i]}          \033[0m"
-        echo -e "\033[32m      job output file         :  ${aReSubmittedSGEJobOutFileList[$i]}       \033[0m"
-        echo -e "\033[32m      job error info  file    :  ${aReSubmittedSGEJobErrorInfoFileList[$i]} \033[0m"
-        echo -e "\033[32m      job submitted flag file :  ${aReSubmittedSGEJobFlagFileList[$i]}      \033[0m"
+        echo -e "\033[32m ${aSubmittedSGEJobIDList[$i]}:  ${aSubmittedSGEJobNameList[$i]}             \033[0m"
+        echo -e "\033[32m      sge job file            :  ${aReSubmittedSGEJobFileList[$i]}           \033[0m"
+        echo -e "\033[32m      job output file         :  ${aReSubmittedSGEJobOutFileList[$i]}        \033[0m"
+        echo -e "\033[32m      job error info  file    :  ${aReSubmittedSGEJobErrorInfoFileList[$i]}  \033[0m"
+        echo -e "\033[32m      job submitted flag file :  ${aReSubmittedSGEJobFlagFileList[$i]}       \033[0m"
+        echo ""
+        echo -e "\033[32m      result-SHA1 file        :  ${aReSubmittedSGEJobSHA1List[$i]}           \033[0m"
+        echo -e "\033[32m      result-All cases file   :  ${aReSubmittedSGEJobAllCasesFileList[$i]}   \033[0m"
+        echo -e "\033[32m      result-Failed cases file:  ${aReSubmittedSGEJobErrorCasesFileList[$i]}  \033[0m"
+        echo -e "\033[32m      result-Test report file :  ${aReSubmittedSGEJobTestReportFileList[$i]} \033[0m"
     done
-    echo -e "\033[32m ***************************************************************************    \033[0m"
+    echo -e "\033[32m ******************************************************************************  \033[0m"
 
 }
 
@@ -225,6 +236,10 @@ runGetReSubmittedSGEJobFile()
     for((i=0;i<${ReSubmittedJobNum};i++))
     do
         aReSubmittedSGEJobFileList[$i]=NULL
+        aReSubmittedSGEJobOutFileList[$i]=NULL
+        aReSubmittedSGEJobErrorInfoFileList[$i]=NULL
+        aReSubmittedSGEJobFlagFileList[$i]=NULL
+
     done
 
     for file in ${TestSpace}/*/*.sge*
@@ -263,6 +278,80 @@ runGetReSubmittedSGEJobFile()
     done
 
 }
+#***************************************************************
+#   job test result files listed as below
+#***************************************************************
+# CREW_352x288_30.yuv_AllCasesOutput_SubCasesIndex_0.csv
+# CREW_352x288_30.yuv_AllCases_SHA1_Table_SubCasesIndex_0.csv
+# CREW_352x288_30.yuv_UnpassedCasesOutput_SubCasesIndex_0.csv
+# TestReport_CREW_352x288_30.yuv_SubCasesIndex_0.report
+runGetReSubmittedSGEJobTestRestultFile()
+{
+
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        aReSubmittedSGEJobSHA1List[$i]=NULL
+        aReSubmittedSGEJobAllCasesFileList[$i]=NULL
+        aReSubmittedSGEJobErrorCasesFileList[$i]=NULL
+        aReSubmittedSGEJobTestReportFileList[$i]=NULL
+
+    done
+
+    for file in ${TestResultDir}/*
+    do
+        TempFileName=`echo $file | awk 'BEGIN {FS="/"} {print $NF}'`
+
+        TempYUVName=NULL
+        TempSubCaseIndex=NULL
+        vMatchedPattern=NULL
+
+        if [[ "$file" =~ .csv$ ]]
+        then
+            TempYUVName=`echo $TempFileName          | awk 'BEGIN {FS=".yuv"} {print $1}'`
+            TempSubCaseIndex=`echo $TempFileName     | awk 'BEGIN {FS="SubCasesIndex_"} {print $2}'`
+            TempSubCaseIndex=`echo $TempSubCaseIndex | awk 'BEGIN {FS=".csv"} {print $1}'`
+        elif [[ "$file" =~ .report$ ]]
+        then
+            TempYUVName=`echo $TempFileName          | awk 'BEGIN {FS=".yuv"} {print $1}'`
+            TempYUVName=`echo $TempYUVName           | awk 'BEGIN {FS="TestReport_"} {print $2}'`
+            TempSubCaseIndex=`echo $TempFileName     | awk 'BEGIN {FS="SubCasesIndex_"} {print $2}'`
+            TempSubCaseIndex=`echo $TempSubCaseIndex | awk 'BEGIN {FS=".report"} {print $1}'`
+        fi
+
+        vMatchedPattern="${TempYUVName}.yuv_SubCaseIndex_${TempSubCaseIndex}"
+        echo "vMatchedPattern is ${vMatchedPattern}"
+        #echo file is $file
+        for((i=0;i<${ReSubmittedJobNum};i++))
+        do
+            if [[ "${aSubmittedSGEJobNameList[$i]}" =~ "${vMatchedPattern}" ]]
+            then
+                if [[ "${TempFileName}" =~ "AllCases_SHA1_Table" ]]
+                then
+                    aReSubmittedSGEJobSHA1List[$i]=${file}
+                fi
+
+                if [[ "${TempFileName}" =~ "AllCasesOutput_" ]]
+                then
+                    aReSubmittedSGEJobAllCasesFileList[$i]=${file}
+                fi
+
+                if [[ "${TempFileName}" =~ "UnpassedCasesOutput" ]]
+                then
+                    aReSubmittedSGEJobErrorCasesFileList[$i]=${file}
+                fi
+
+                if [[ "${TempFileName}" =~ .report$ ]]
+                then
+                    aReSubmittedSGEJobTestReportFileList[$i]=${file}
+                fi
+
+            fi
+        done
+
+    done
+
+}
+
 
 runParseOption()
 {
@@ -280,6 +369,7 @@ runMain()
     runInit
     runGetSubmittedJobInfoByIDs
     runGetReSubmittedSGEJobFile
+    runGetReSubmittedSGEJobTestRestultFile
     runOutputReSubmittedJobInfo
 
 #runGetSubmittedJobInfoByYUVs
