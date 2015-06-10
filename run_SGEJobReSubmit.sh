@@ -65,12 +65,14 @@ runInit()
     declare -a aSubmittedSGEJobNameList
     declare -a aReSubmittedYUVList
 
+    declare -a aReSubmittedSGEJobFileList
+
     declare -a aResubmitSGEJobIDList
 
     let "SubmittedJobNum = 0"
 
     CurrentDir=`pwd`
-    TestSpace=${CurrentDir}
+    TestSpace=${CurrentDir}/AllTestData
     SGEJobSubmitJobLog="${CurrentDir}/SGEJobsSubmittedInfo.log"
 
 }
@@ -110,7 +112,7 @@ updateJobRelatedTestFiles()
 #   ......
 runGetSubmittedJobInfoByIDs()
 {
-    aSubmittedSGEJobIDList=(937 936 )
+    aSubmittedSGEJobIDList=(2224 2225 )
 
     let "ReSubmittedJobNum = ${#aSubmittedSGEJobIDList[@]}"
     for((i=0;i<${ReSubmittedJobNum};i++))
@@ -142,7 +144,7 @@ runGetSubmittedJobInfoByIDs()
 
 runGetSubmittedJobInfoByYUVs()
 {
-    aReSubmittedYUVList=(Jiessie_James_talking_1280x720_30.yuv)
+    aReSubmittedYUVList=(candyHF2_640x480.yuv Jiessie_James_talking_1280x720_30.yuv)
 
     let "NumYUV=${#aReSubmittedYUVList[@]}"
     let "ReSubmittedJobNum=0"
@@ -198,16 +200,42 @@ runGetSubmittedJobInfoByAllJobs()
 
 runOutputReSubmittedJobInfo()
 {
-    echo -e "\033[32m ******************************************************************** \033[0m"
+    echo -e "\033[32m ********************************************************************           \033[0m"
     echo                   ReSubmitted Job info listed as below:
-    echo -e "\033[32m ******************************************************************** \033[0m"
+    echo -e "\033[32m ********************************************************************            \033[0m"
 
     for((i=0;i<${ReSubmittedJobNum};i++))
     do
-        echo -e "\033[32m ${aSubmittedSGEJobIDList[$i]}   ${aSubmittedSGEJobNameList[$i]}  \033[0m"
+        echo -e "\033[32m ${aSubmittedSGEJobIDList[$i]}   ${aSubmittedSGEJobNameList[$i]}              \033[0m"
+        echo -e "\033[32m                                 sge file: ${aReSubmittedSGEJobFileList[$i]}  \033[0m"
     done
-    echo -e "\033[32m *******************************************************************  \033[0m"
+    echo -e "\033[32m *******************************************************************               \033[0m"
 
+}
+
+runGetReSubmittedSGEFile()
+{
+
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        aReSubmittedSGEJobFileList[$i]=NULL
+    done
+
+    for file in ${TestSpace}/*/*.sge
+    do
+
+        TempFileName=`echo $file | awk 'BEGIN {FS="/"} {print $NF}'`
+        vMatchedPattern=`echo $TempFileName | awk 'BEGIN {FS=".sge"} {print $1}'`
+
+        for((i=0;i<${ReSubmittedJobNum};i++))
+        do
+            if [[ "${aSubmittedSGEJobNameList[$i]}" =~ "${vMatchedPattern}" ]]
+            then
+                aReSubmittedSGEJobFileList[$i]=${file}
+            fi
+        done
+
+    done
 }
 
 runParseOption()
@@ -240,13 +268,18 @@ runMain()
 
     runInit
     runGetSubmittedJobInfoByIDs
+    runGetReSubmittedSGEFile
     runOutputReSubmittedJobInfo
 
     runGetSubmittedJobInfoByYUVs
+    runGetReSubmittedSGEFile
     runOutputReSubmittedJobInfo
 
-    runGetSubmittedJobInfoByAllJobs
-    runOutputReSubmittedJobInfo
+#runGetSubmittedJobInfoByAllJobs
+#runGetReSubmittedSGEFile
+#runOutputReSubmittedJobInfo
+# runGetReSubmittedSGEFile
+
     return 0
 
 }
