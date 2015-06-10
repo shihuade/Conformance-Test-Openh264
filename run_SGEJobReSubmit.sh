@@ -16,7 +16,7 @@
 #
 #
 #
-#date: 04/26/2015 Created
+#date: 6/09/2015 Created
 #***************************************************************************************
  runUsage()
  {
@@ -63,9 +63,9 @@ runInit()
 {
     declare -a aSubmittedSGEJobIDList
     declare -a aSubmittedSGEJobNameList
+    declare -a aReSubmittedYUVList
 
     declare -a aResubmitSGEJobIDList
-    declare -a aYUVList
 
     let "SubmittedJobNum = 0"
 
@@ -79,13 +79,13 @@ runDelSGEJobs()
 {
 
 
-
+	return 0
 }
 
 runUpdateSubmitJobLog()
 {
 
-
+	return 0
 }
 
 updateJobRelatedTestFiles()
@@ -97,10 +97,126 @@ updateJobRelatedTestFiles()
 
 
 
+	return 0
+}
+#*******************************************************************************
+#      job submitted info in log looks like as below
+# ******************************************************************************
+# test YUV is Doc_simple_1024x768.yuv
+# ******************************************************************************
+# Your job 1636 ("Doc_simple_1024x768.yuv_SubCaseIndex_0") has been submitted
+# Your job 1637 ("Doc_simple_1024x768.yuv_SubCaseIndex_10") has been submitted
+# Your job 1638 ("Doc_simple_1024x768.yuv_SubCaseIndex_11") has been submitted
+#   ......
+runGetSubmittedJobInfoByIDs()
+{
+    aSubmittedSGEJobIDList=(937 936 )
+
+    let "ReSubmittedJobNum = ${#aSubmittedSGEJobIDList[@]}"
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        aSubmittedSGEJobNameList[$i]=NULL
+    done
+
+    while read line
+    do
+        if [[ "$line" =~ ^"Your job" ]]
+        then
+            TempJobID=`echo $line | awk '{print $3}'`
+            TempJobName=`echo $line | awk 'BEGIN {FS="[("")]"} {print $2}'`
+
+            for((i=0;i<${ReSubmittedJobNum};i++))
+            do
+                vSubmmitedJobID=${aSubmittedSGEJobIDList[$i]}
+                if [ "${vSubmmitedJobID}" -eq "${TempJobID}" ]
+                then
+                    aSubmittedSGEJobNameList[$i]=${TempJobName}
+                fi
+            done
+        fi
+
+    done <${SGEJobSubmitJobLog}
+
+    echo "aSubmittedSGEJobNameList is ${aSubmittedSGEJobNameList[@]}"
+}
+
+runGetSubmittedJobInfoByYUVs()
+{
+    aReSubmittedYUVList=(Jiessie_James_talking_1280x720_30.yuv)
+
+    let "NumYUV=${#aReSubmittedYUVList[@]}"
+    let "ReSubmittedJobNum=0"
+    while read line
+    do
+        if [[ "$line" =~ ^"Your job" ]]
+        then
+            TempJobID=`echo $line | awk '{print $3}'`
+            TempJobName=`echo $line | awk 'BEGIN {FS="[("")]"} {print $2}'`
+
+            for((i=0;i<${NumYUV};i++))
+            do
+                vReSubmmitedYUV=${aReSubmittedYUVList[$i]}
+                if [[ "${TempJobName}" =~ "${vReSubmmitedYUV}" ]]
+                then
+                    aSubmittedSGEJobIDList[$ReSubmittedJobNum]=${TempJobID}
+                    aSubmittedSGEJobNameList[$ReSubmittedJobNum]=${TempJobName}
+                    let "ReSubmittedJobNum ++"
+                fi
+            done
+        fi
+
+    done <${SGEJobSubmitJobLog}
 
 }
-run
 
+runGetSubmittedJobInfoByAllJobs()
+{
+
+    let "ReSubmittedJobNum=0"
+    let "ExampleLineFlag=0"
+    while read line
+    do
+        if [[ "$line" =~ ^"Your job" ]]
+        then
+            if [ ${ExampleLineFlag} -eq 0 ]
+            then
+                let "ExampleLineFlag = 1"
+            else
+                TempJobID=`echo $line | awk '{print $3}'`
+                TempJobName=`echo $line | awk 'BEGIN {FS="[("")]"} {print $2}'`
+
+                aSubmittedSGEJobIDList[$ReSubmittedJobNum]=${TempJobID}
+                aSubmittedSGEJobNameList[$ReSubmittedJobNum]=${TempJobName}
+                let "ReSubmittedJobNum ++"
+            fi
+        fi
+
+    done <${SGEJobSubmitJobLog}
+
+ 	return 0
+}
+
+runOutputReSubmittedJobInfo()
+{
+    echo -e "\033[32m ******************************************************************** \033[0m"
+    echo                   ReSubmitted Job info listed as below:
+    echo -e "\033[32m ******************************************************************** \033[0m"
+
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        echo -e "\033[32m ${aSubmittedSGEJobIDList[$i]}   ${aSubmittedSGEJobNameList[$i]}  \033[0m"
+    done
+    echo -e "\033[32m *******************************************************************  \033[0m"
+
+}
+
+runParseOption()
+{
+
+    return 0
+
+
+}
 
 
 
@@ -118,122 +234,28 @@ runParseJobsInfo()
 
 }
 
-runModifiedSGEJobSubmittedFile()
-{
-
-for((i=0;i<${ResubmitJobNum};i++))
-do
-    ResubmitJobID=${aResubmitSGEJobIDList[$i]}
-
-
-
-done
-}
-
-runGetJobSGEFile()
-{
-
-
-
-
-
-}
-runResubmitJob()
-{
-
-for JobID in ${aResubmitSGEJobIDList[@]}
-do
-
-done
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-runSGEJobSubmit()
-{
-	let "JobNum=0"
-    runInitialSGEJobInfoFile >${SGEJobListFile}
-
-	for TestYUV in ${aTestYUVList[@]}
-	do
-        SubFolder="${AllTestDataDir}/${TestYUV}"
-        echo ""
-        echo "test YUV is ${TestYUV}"
-        echo ""
-        echo "******************************************************************************" >>${SGEJobListFile}
-        echo "test YUV is ${TestYUV}" >>${SGEJobListFile}
-        echo "******************************************************************************" >>${SGEJobListFile}
-
-        for vSGEFile in ${SubFolder}/${TestYUV}*.sge
-        do
-            TestSubmitFlagFile="${vSGEFile}_Submitted.flag"
-
-            if [  -e  ${SubFolder}/${TestSubmitFlagFile} ]
-            then
-                continue
-            fi
-
-            echo "submitting job ......"
-            # e.g.: Your job 534 ("CREW_176x144_30.yuv_SGE_Test_SubCaseIndex_1") has been submitted
-            aSubmitJobList[$JobNum]=`qsub  ${vSGEFile} `
-            echo "submit job is ${aSubmitJobList[$JobNum]} "
-            echo "${aSubmitJobList[$JobNum]}" >>${SGEJobListFile}
-            let "JobNum ++"
-            touch ${TestSubmitFlagFile}
-            #cd  ${CurrentDir}
-
-        done
-	done
-	return 0
-}
-
 runMain()
 {
 	CurrentDir=`pwd`
 
-	let "CurrentSGEJobNum=0"
-	declare -a aTestYUVList
+    runInit
+    runGetSubmittedJobInfoByIDs
+    runOutputReSubmittedJobInfo
 
-	#get full path info
-	cd ${AllTestDataDir}
-	AllTestDataDir=`pwd`
-	cd  ${CurrentDir}
+    runGetSubmittedJobInfoByYUVs
+    runOutputReSubmittedJobInfo
 
-	#get YUV list
-    aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
-    if [ ! $? -eq 0 ]
-    then
-        echo -e "\033[31m  Failed to parse test YUV set. please double check! \033[0m"
-        echo -e "\033[31m  detected by $0 \033[0m"
-        exit 1
-    fi
-
-    runSGEJobSubmit
-
+    runGetSubmittedJobInfoByAllJobs
+    runOutputReSubmittedJobInfo
     return 0
 
 }
 #parameter check!
-if [ ! $# -eq 3  ]
+if [  $# -lt 1  ]
 then
-runUsage
+    runUsage
 exit 1
 fi
 
-AllTestDataDir=$1
-ConfigureFile=$2
-SGEJobListFile=$3
-runMain  ${AllTestDataDir}  ${ConfigureFile} ${SGEJobListFile}
+runMain
 
