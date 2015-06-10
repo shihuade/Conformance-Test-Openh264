@@ -27,7 +27,7 @@ runPrepareSGEJobFile()
     #add ---- for post log parse
 	SGEJobName="----${TestYUVName}_SubCaseIndex_${SubCaseIndex}----"
 	SGEModelFile="${ScriptFolder}/SGEModel.sge"
-	SGEJobFile="${TestSequenceDir}/${SGEJobName}.sge"
+	SGEJobFile="${TestSequenceDir}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}.sge"
 	SGEJobScript="run_TestOneYUVWithAssignedCases.sh"
     SGEOutputFile="${SGEJobFile}.o"
     SGEErrorLogFile="${SGEJobFile}.e"
