@@ -66,6 +66,9 @@ runInit()
     declare -a aReSubmittedYUVList
 
     declare -a aReSubmittedSGEJobFileList
+    declare -a aReSubmittedSGEJobOutFileList
+    declare -a aReSubmittedSGEJobFlagFileList
+    declare -a aReSubmittedSGEJobErrorInfoFileList
 
     declare -a aResubmitSGEJobIDList
 
@@ -112,7 +115,7 @@ updateJobRelatedTestFiles()
 #   ......
 runGetSubmittedJobInfoByIDs()
 {
-    aSubmittedSGEJobIDList=(2224 2225 )
+    aSubmittedSGEJobIDList=(1964  1965 )
 
     let "ReSubmittedJobNum = ${#aSubmittedSGEJobIDList[@]}"
     for((i=0;i<${ReSubmittedJobNum};i++))
@@ -200,20 +203,23 @@ runGetSubmittedJobInfoByAllJobs()
 
 runOutputReSubmittedJobInfo()
 {
-    echo -e "\033[32m ********************************************************************           \033[0m"
+    echo -e "\033[32m ****************************************************************************   \033[0m"
     echo                   ReSubmitted Job info listed as below:
-    echo -e "\033[32m ********************************************************************            \033[0m"
+    echo -e "\033[32m ****************************************************************************   \033[0m"
 
     for((i=0;i<${ReSubmittedJobNum};i++))
     do
-        echo -e "\033[32m ${aSubmittedSGEJobIDList[$i]}   ${aSubmittedSGEJobNameList[$i]}              \033[0m"
-        echo -e "\033[32m                                 sge file: ${aReSubmittedSGEJobFileList[$i]}  \033[0m"
+        echo -e "\033[32m ${aSubmittedSGEJobIDList[$i]}:  ${aSubmittedSGEJobNameList[$i]}            \033[0m"
+        echo -e "\033[32m      sge job file            :  ${aReSubmittedSGEJobFileList[$i]}          \033[0m"
+        echo -e "\033[32m      job output file         :  ${aReSubmittedSGEJobOutFileList[$i]}       \033[0m"
+        echo -e "\033[32m      job error info  file    :  ${aReSubmittedSGEJobErrorInfoFileList[$i]} \033[0m"
+        echo -e "\033[32m      job submitted flag file :  ${aReSubmittedSGEJobFlagFileList[$i]}      \033[0m"
     done
-    echo -e "\033[32m *******************************************************************               \033[0m"
+    echo -e "\033[32m ***************************************************************************    \033[0m"
 
 }
 
-runGetReSubmittedSGEFile()
+runGetReSubmittedSGEJobFile()
 {
 
     for((i=0;i<${ReSubmittedJobNum};i++))
@@ -221,7 +227,7 @@ runGetReSubmittedSGEFile()
         aReSubmittedSGEJobFileList[$i]=NULL
     done
 
-    for file in ${TestSpace}/*/*.sge
+    for file in ${TestSpace}/*/*.sge*
     do
 
         TempFileName=`echo $file | awk 'BEGIN {FS="/"} {print $NF}'`
@@ -231,11 +237,31 @@ runGetReSubmittedSGEFile()
         do
             if [[ "${aSubmittedSGEJobNameList[$i]}" =~ "${vMatchedPattern}" ]]
             then
-                aReSubmittedSGEJobFileList[$i]=${file}
+                if [[ "${file}" =~ .sge$ ]]
+                then
+                    aReSubmittedSGEJobFileList[$i]=${file}
+                fi
+
+                if [[ "${file}" =~ .sge.o$ ]]
+                then
+                    aReSubmittedSGEJobOutFileList[$i]=${file}
+                fi
+
+                if [[ "${file}" =~ .sge.e$ ]]
+                then
+                    aReSubmittedSGEJobErrorInfoFileList[$i]=${file}
+                fi
+
+                if [[ "${file}" =~ .sge_Submitted.flag$ ]]
+                then
+                    aReSubmittedSGEJobFlagFileList[$i]=${file}
+                fi
+
             fi
         done
 
     done
+
 }
 
 runParseOption()
@@ -247,33 +273,18 @@ runParseOption()
 }
 
 
-
-
-
-runParseJobsInfo()
-{
-    aSubmittedSGEJobIDList=(`./Scripts/run_ParseSGEJobIDs.sh     ${SGEJobSubmittedLogFile}`)
-    aSubmittedSGEJobNameList=(`./Scripts/run_ParseSGEJobNames.sh ${SGEJobSubmittedLogFile}`)
-
-    #list info include ID and status
-    #e.g.:aCurrentSGEQueueJobIDList=(501 r 502 r 503 w 504 qw)
-    let "SubmittedJobNum       = ${#aSubmittedSGEJobIDList[@]}"
-    let "CurrentSGEQueueJobNum = ${#aCurrentSGEQueueJobIDList[@]}/2"
-
-}
-
 runMain()
 {
 	CurrentDir=`pwd`
 
     runInit
     runGetSubmittedJobInfoByIDs
-    runGetReSubmittedSGEFile
+    runGetReSubmittedSGEJobFile
     runOutputReSubmittedJobInfo
 
-    runGetSubmittedJobInfoByYUVs
-    runGetReSubmittedSGEFile
-    runOutputReSubmittedJobInfo
+#runGetSubmittedJobInfoByYUVs
+# runGetReSubmittedSGEFile
+#  runOutputReSubmittedJobInfo
 
 #runGetSubmittedJobInfoByAllJobs
 #runGetReSubmittedSGEFile
