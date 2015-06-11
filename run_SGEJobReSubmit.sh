@@ -424,6 +424,7 @@ runMain()
     runGetReSubmittedSGEJobFile
     runGetReSubmittedSGEJobTestRestultFile
     runOutputReSubmittedJobInfo
+    runRemoveJobFilesBeforeReSubmit
 
 #runGetSubmittedJobInfoByYUVs
 # runGetReSubmittedSGEFile
