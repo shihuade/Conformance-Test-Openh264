@@ -63,6 +63,7 @@ runInit()
 {
     declare -a aSubmittedSGEJobIDList
     declare -a aSubmittedSGEJobNameList
+    declare -a aSubmittedSGEJobInfoList
     declare -a aReSubmittedYUVList
 
     declare -a aReSubmittedSGEJobFileList
@@ -76,6 +77,8 @@ runInit()
     declare -a aReSubmittedSGEJobTestReportFileList
 
     declare -a aResubmitSGEJobIDList
+    declare -a aResubmitSGEJobNameList
+    declare -a aResubmitSGEJobInfoList
 
     let "SubmittedJobNum = 0"
 
@@ -113,12 +116,13 @@ updateJobRelatedTestFiles()
 #*******************************************************************************
 #      job submitted info in log looks like as below
 # ******************************************************************************
-# test YUV is Doc_simple_1024x768.yuv
 # ******************************************************************************
-# Your job 1636 ("Doc_simple_1024x768.yuv_SubCaseIndex_0") has been submitted
-# Your job 1637 ("Doc_simple_1024x768.yuv_SubCaseIndex_10") has been submitted
-# Your job 1638 ("Doc_simple_1024x768.yuv_SubCaseIndex_11") has been submitted
-#   ......
+# test YUV is Doc_Complex_768x1024.yuv
+# ******************************************************************************
+# Your job 2607 ("----Doc_Complex_768x1024.yuv_SubCaseIndex_0----") has been submitted
+# Your job 2608 ("----Doc_Complex_768x1024.yuv_SubCaseIndex_10----") has been submitted
+# Your job 2609 ("----Doc_Complex_768x1024.yuv_SubCaseIndex_11----") has been submitted
+#  ......
 runGetSubmittedJobInfoByIDs()
 {
     aSubmittedSGEJobIDList=(2590 2608  2612)
@@ -142,6 +146,7 @@ runGetSubmittedJobInfoByIDs()
                 if [ "${vSubmmitedJobID}" -eq "${TempJobID}" ]
                 then
                     aSubmittedSGEJobNameList[$i]=${TempJobName}
+                    aSubmittedSGEJobInfoList[$i]=${line}
                 fi
             done
         fi
@@ -171,6 +176,7 @@ runGetSubmittedJobInfoByYUVs()
                 then
                     aSubmittedSGEJobIDList[$ReSubmittedJobNum]=${TempJobID}
                     aSubmittedSGEJobNameList[$ReSubmittedJobNum]=${TempJobName}
+                    aSubmittedSGEJobInfoList[$i]=${line}
                     let "ReSubmittedJobNum ++"
                 fi
             done
@@ -198,6 +204,7 @@ runGetSubmittedJobInfoByAllJobs()
 
                 aSubmittedSGEJobIDList[$ReSubmittedJobNum]=${TempJobID}
                 aSubmittedSGEJobNameList[$ReSubmittedJobNum]=${TempJobName}
+                aSubmittedSGEJobInfoList[$i]=${line}
                 let "ReSubmittedJobNum ++"
             fi
         fi
@@ -216,6 +223,7 @@ runOutputReSubmittedJobInfo()
     for((i=0;i<${ReSubmittedJobNum};i++))
     do
         echo -e "\033[32m ${aSubmittedSGEJobIDList[$i]}:  ${aSubmittedSGEJobNameList[$i]}             \033[0m"
+        echo -e "\033[32m      sge job submitted info  :  ${aSubmittedSGEJobInfoList[$i]}           \033[0m"
         echo -e "\033[32m      sge job file            :  ${aReSubmittedSGEJobFileList[$i]}           \033[0m"
         echo -e "\033[32m      job output file         :  ${aReSubmittedSGEJobOutFileList[$i]}        \033[0m"
         echo -e "\033[32m      job error info  file    :  ${aReSubmittedSGEJobErrorInfoFileList[$i]}  \033[0m"
@@ -319,8 +327,7 @@ runGetReSubmittedSGEJobTestRestultFile()
         fi
 
         vMatchedPattern="${TempYUVName}.yuv_SubCaseIndex_${TempSubCaseIndex}"
-        echo "vMatchedPattern is ${vMatchedPattern}"
-        #echo file is $file
+
         for((i=0;i<${ReSubmittedJobNum};i++))
         do
             if [ "${aSubmittedSGEJobNameList[$i]}" = "${vMatchedPattern}" ]
@@ -354,9 +361,9 @@ runGetReSubmittedSGEJobTestRestultFile()
 
 runRemoveJobFilesBeforeReSubmit()
 {
-    echo -e "\033m[32m **********************************************************  \033[0m"
-    echo                 delete all job related files before re-submit
-    echo -e "\033m[32m **********************************************************  \033[0m"
+    echo -e "\033[32m **********************************************************  \033[0m"
+    echo    "            delete all job related files before re-submit"
+    echo -e "\033[32m **********************************************************  \033[0m"
 
     for((i=0;i<${ReSubmittedJobNum};i++))
     do
@@ -403,7 +410,79 @@ runRemoveJobFilesBeforeReSubmit()
         fi
     done
 
-    echo -e "\033m[32m **********************************************************  \033[0m"
+    echo -e "\033[32m **********************************************************  \033[0m"
+}
+
+runDelPreviousJob()
+{
+    echo -e "\033[34m **********************************************************  \033[0m"
+    echo    "            del previous jobs"
+    echo -e "\033[34m **********************************************************  \033[0m"
+
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        vTempJobID=${aSubmittedSGEJobIDList[$i]}
+        qdel ${vTempJobID}
+    done
+    echo -e "\033[34m **********************************************************  \033[0m"
+}
+
+runReSubmitSGEJobs()
+{
+    echo -e "\033[32m **********************************************************  \033[0m"
+    echo    "             ReSubmit jobs"
+    echo -e "\033[32m **********************************************************  \033[0m"
+
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+
+        vTempJobID=${aSubmittedSGEJobIDList[$i]}
+        vTempJobName=${aSubmittedSGEJobNameList[$i]}
+        vTempSGEJobFile=${aReSubmittedSGEJobFileList[$i]}
+        vSubmittedFlagFile=${vTempSGEJobFile}_Submitted.flag
+
+        if [ -e ${aReSubmittedSGEJobFileList[$i]} -a ! -e ${vSubmittedFlagFile} ]
+        then
+            vTempJobReSubmitInfo=`qsub ${vSubmittedFlagFile} `
+#vTempJobReSubmitInfo="Your job 2609 (----Doc_Complex_768x1024.yuv_SubCaseIndex_11----) has been submitted"
+            vTempReSubmitJobID=`echo ${vTempJobReSubmitInfo} | awk '{print $3}'`
+            vTempReSubmitJobName=`echo ${vTempJobReSubmitInfo} | awk 'BEGIN {FS="----"} {print $2}'`
+        else
+            vTempReSubmitJobID=NULL
+            vTempReSubmitJobName=NULL
+            vTempJobReSubmitInfo=NULL
+        fi
+
+        aResubmitSGEJobIDList[$i]=${vTempReSubmitJobID}
+        aResubmitSGEJobNameList[$i]=${vTempReSubmitJobName}
+        aResubmitSGEJobInfoList[$i]=${vTempJobReSubmitInfo}
+
+    done
+
+    echo -e "\033[32m **********************************************************  \033[0m"
+
+}
+
+runOutputReSubmitInfo()
+{
+
+    echo -e "\033[32m ***************************************************************  \033[0m"
+    echo    "             ReSubmit job info"
+    echo -e "\033[32m ***************************************************************  \033[0m"
+
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        echo -e "\033[33m **********************************************************   \033[0m"
+        echo -e "\033[33m  job id from--to  : ${aSubmittedSGEJobIDList[$i]}            \033[0m"
+        echo -e "\033[33m                   : ${aResubmitSGEJobIDList[$i]}             \033[0m"
+        echo -e "\033[33m  job name from--to: ${aSubmittedSGEJobNameList[$i]}          \033[0m"
+        echo -e "\033[33m                     ${aResubmitSGEJobNameList[$i]}           \033[0m"
+        echo -e "\033[33m  job info from--to: ${aSubmittedSGEJobInfoList[$i]}          \033[0m"
+        echo -e "\033[33m                     ${aResubmitSGEJobInfoList[$i]}           \033[0m"
+        echo -e "\033[33m **********************************************************   \033[0m"
+
+    done
+    echo -e "\033[33m **********************************************************   \033[0m"
 }
 
 runParseOption()
@@ -425,6 +504,9 @@ runMain()
     runGetReSubmittedSGEJobTestRestultFile
     runOutputReSubmittedJobInfo
     runRemoveJobFilesBeforeReSubmit
+    runDelPreviousJob
+    runReSubmitSGEJobs
+    runOutputReSubmitInfo
 
 #runGetSubmittedJobInfoByYUVs
 # runGetReSubmittedSGEFile
