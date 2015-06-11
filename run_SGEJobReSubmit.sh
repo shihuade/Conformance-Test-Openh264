@@ -121,7 +121,7 @@ updateJobRelatedTestFiles()
 #   ......
 runGetSubmittedJobInfoByIDs()
 {
-    aSubmittedSGEJobIDList=(1964  1965 )
+    aSubmittedSGEJobIDList=(2590 2608  2612)
 
     let "ReSubmittedJobNum = ${#aSubmittedSGEJobIDList[@]}"
     for((i=0;i<${ReSubmittedJobNum};i++))
@@ -134,7 +134,7 @@ runGetSubmittedJobInfoByIDs()
         if [[ "$line" =~ ^"Your job" ]]
         then
             TempJobID=`echo $line | awk '{print $3}'`
-            TempJobName=`echo $line | awk 'BEGIN {FS="[("")]"} {print $2}'`
+            TempJobName=`echo $line | awk 'BEGIN {FS="----"} {print $2}'`
 
             for((i=0;i<${ReSubmittedJobNum};i++))
             do
@@ -153,7 +153,7 @@ runGetSubmittedJobInfoByIDs()
 
 runGetSubmittedJobInfoByYUVs()
 {
-    aReSubmittedYUVList=(candyHF2_640x480.yuv Jiessie_James_talking_1280x720_30.yuv)
+    aReSubmittedYUVList=(Doc_Complex_768x1024.yuv )
 
     let "NumYUV=${#aReSubmittedYUVList[@]}"
     let "ReSubmittedJobNum=0"
@@ -162,7 +162,7 @@ runGetSubmittedJobInfoByYUVs()
         if [[ "$line" =~ ^"Your job" ]]
         then
             TempJobID=`echo $line | awk '{print $3}'`
-            TempJobName=`echo $line | awk 'BEGIN {FS="[("")]"} {print $2}'`
+            TempJobName=`echo $line | awk 'BEGIN {FS="----"} {print $2}'`
 
             for((i=0;i<${NumYUV};i++))
             do
@@ -194,7 +194,7 @@ runGetSubmittedJobInfoByAllJobs()
                 let "ExampleLineFlag = 1"
             else
                 TempJobID=`echo $line | awk '{print $3}'`
-                TempJobName=`echo $line | awk 'BEGIN {FS="[("")]"} {print $2}'`
+                TempJobName=`echo $line | awk 'BEGIN {FS="----"} {print $2}'`
 
                 aSubmittedSGEJobIDList[$ReSubmittedJobNum]=${TempJobID}
                 aSubmittedSGEJobNameList[$ReSubmittedJobNum]=${TempJobName}
@@ -323,7 +323,7 @@ runGetReSubmittedSGEJobTestRestultFile()
         #echo file is $file
         for((i=0;i<${ReSubmittedJobNum};i++))
         do
-            if [[ "${aSubmittedSGEJobNameList[$i]}" =~ "${vMatchedPattern}" ]]
+            if [ "${aSubmittedSGEJobNameList[$i]}" = "${vMatchedPattern}" ]
             then
                 if [[ "${TempFileName}" =~ "AllCases_SHA1_Table" ]]
                 then
