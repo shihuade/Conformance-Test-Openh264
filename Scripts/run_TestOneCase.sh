@@ -311,10 +311,14 @@ runBasicCheck()
 {
 	./run_CheckBasicCheck.sh  ${EncoderFlag}  ${EncoderLog} ${EncoderNum}  ${SpatailLayerNum} ${RCMode} ${CheckLogFile} \
 							${aInputYUVSizeLayer[@]} ${aRecYUVFileList[@]} ${aRecCropYUVFileList[@]}  ${aEncodedPicW[@]} ${aEncodedPicH[@]}
-	#copy bit stream file to ./issue folder
-	#do not copy those cases RecYUV not exist!
-	if [ ! $? -eq 0  -a  ! $? -eq 2  ]
-	then
+	#copy bit stream file to ./issue folder;do not copy those cases which RecYUV does not exist!
+    if [ $? -eq 0  ]
+    then
+        return 0
+    elif [ $? -eq 2  ]  #  $?==2: means rec yuv doest not exist
+    then
+        return 1
+    else
 		if [ -e ${BitStreamFile}  ]
 		then
             #currently, only copy when multi thread is enable
@@ -322,15 +326,10 @@ runBasicCheck()
             then
                 cp ${BitStreamFile}  ${IssueDataPath}
             fi
-            #cp ${BitStreamFile}  ${IssueDataPath}
-			Action="you can open the annotation to save the issue bit stream"
-		fi
+        fi
 		return 1
-	elif [ $? -eq 2  ]
-		return 1
-    elif [ $? -eq 0  ]
-        return 0
-	fi
+    fi
+
 
 }
 runJSVMCheck()
