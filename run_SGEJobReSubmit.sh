@@ -80,6 +80,8 @@ runInit()
     declare -a aResubmitSGEJobNameList
     declare -a aResubmitSGEJobInfoList
 
+    declare -a aUpdateLogFlagList
+
     let "SubmittedJobNum = 0"
 
     CurrentDir=`pwd`
@@ -87,32 +89,14 @@ runInit()
     TestResultDir=${CurrentDir}/FinalResult
     SGEJobSubmitJobLog="${CurrentDir}/SGEJobsSubmittedInfo.log"
 
+
+    date
+    DateInfo=`date`
+    DateInfo=`echo ${DateInfo} | awk '{for(i=1;i<=NF;i++) printf("--%s",$i)}'`
+    BackupSGEJobSubmitJobLog=${SGEJobSubmitJobLog}-${DateInfo}.log
+    ReSubmitLog="${CurrentDir}/ReSubmitInfo_Date-${DateInfo}.log"
 }
 
-runDelSGEJobs()
-{
-
-
-	return 0
-}
-
-runUpdateSubmitJobLog()
-{
-
-	return 0
-}
-
-updateJobRelatedTestFiles()
-{
-
-#SHA1 File
-#report
-#passed Status .csv files
-
-
-
-	return 0
-}
 #*******************************************************************************
 #      job submitted info in log looks like as below
 # ******************************************************************************
@@ -441,10 +425,10 @@ runReSubmitSGEJobs()
         vTempSGEJobFile=${aReSubmittedSGEJobFileList[$i]}
         vSubmittedFlagFile=${vTempSGEJobFile}_Submitted.flag
 
-        if [ -e ${aReSubmittedSGEJobFileList[$i]} -a ! -e ${vSubmittedFlagFile} ]
+        if [ -e ${aReSubmittedSGEJobFileList[$i]} -a  -e ${vSubmittedFlagFile} ]
         then
             vTempJobReSubmitInfo=`qsub ${vSubmittedFlagFile} `
-#vTempJobReSubmitInfo="Your job 2609 (----Doc_Complex_768x1024.yuv_SubCaseIndex_11----) has been submitted"
+            vTempJobReSubmitInfo="Your job 2609 (----Doc_Complex_768x1024.yuv_SubCaseIndex_11----) has been submitted"
             vTempReSubmitJobID=`echo ${vTempJobReSubmitInfo} | awk '{print $3}'`
             vTempReSubmitJobName=`echo ${vTempJobReSubmitInfo} | awk 'BEGIN {FS="----"} {print $2}'`
         else
@@ -479,10 +463,57 @@ runOutputReSubmitInfo()
         echo -e "\033[33m                     ${aResubmitSGEJobNameList[$i]}           \033[0m"
         echo -e "\033[33m  job info from--to: ${aSubmittedSGEJobInfoList[$i]}          \033[0m"
         echo -e "\033[33m                     ${aResubmitSGEJobInfoList[$i]}           \033[0m"
-        echo -e "\033[33m **********************************************************   \033[0m"
+        echo -e "\033[33m  log update flag  : ${aUpdateLogFlagList[$i]}                \033[0m"
+        echo -e "\033[33m ***********************************************************  \033[0m"
 
     done
-    echo -e "\033[33m **********************************************************   \033[0m"
+    echo -e "\033[33m ***************************************************************  \033[0m"
+}
+
+
+runUpdateSubmitLog()
+{
+
+    if [ -e ${SGEJobSubmitJobLog} ]
+    then
+        cp -f ${SGEJobSubmitJobLog} ${BackupSGEJobSubmitJobLog}
+    fi
+
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        aUpdateLogFlagList[$i]="False"
+    done
+
+
+    let "FirstLineFlag=1"
+    vTempLogFile="${SGEJobSubmitJobLog}.Temp"
+    while read line
+    do
+        vOutputLine=$line
+
+        for((i=0;i<${ReSubmittedJobNum};i++))
+        do
+            if [ "${aSubmittedSGEJobInfoList[$i]}" = "$line"  ]
+            then
+                echo $line
+                echo ${aSubmittedSGEJobInfoList[$i]}
+                aUpdateLogFlagList[$i]="True"
+                vOutputLine="${aResubmitSGEJobInfoList[$i]}"
+            fi
+        done
+
+        if [ ${FirstLineFlag} -eq 1 ]
+        then
+            echo "${vOutputLine}" >${vTempLogFile}
+            let "FirstLineFlag=0"
+        else
+            echo "${vOutputLine}" >>${vTempLogFile}
+        fi
+
+    done <${SGEJobSubmitJobLog}
+
+    mv ${vTempLogFile} ${SGEJobSubmitJobLog}
+
 }
 
 runParseOption()
@@ -506,7 +537,10 @@ runMain()
     runRemoveJobFilesBeforeReSubmit
     runDelPreviousJob
     runReSubmitSGEJobs
+    runUpdateSubmitLog
     runOutputReSubmitInfo
+
+    echo "Date info is ${DateInfo}"
 
 #runGetSubmittedJobInfoByYUVs
 # runGetReSubmittedSGEFile
