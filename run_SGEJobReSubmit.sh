@@ -35,30 +35,6 @@
     echo ""
 }
 
-
-runInitialSGEJobInfoFile()
-{
-    echo "***********************************************************************************************"
-    echo "    "
-    echo "    This file is used for SGE job status detction."
-    echo "    "
-    echo "    You can add new SGE job info in this file if you want to add "
-    echo "    new jobs into current test or restart jobs before all"
-    echo "    test jobs are completed"
-    echo "    "
-    echo "    Job info format should looks like as below:"
-    echo "      Your job 534 ("CREW_176x144_30.yuv_SGE_Test_SubCaseIndex_1") has been submitted"
-    echo "    "
-    date
-    echo "*************************************************************************************************"
-    echo ""
-    echo "    All SGE jobs info List As below"
-    echo ""
-    echo "*************************************************************************************************"
-
-}
-
-
 runInit()
 {
     declare -a aSubmittedSGEJobIDList
@@ -82,7 +58,7 @@ runInit()
 
     declare -a aUpdateLogFlagList
 
-    let "SubmittedJobNum = 0"
+    let "ReSubmittedJobNum = 0"
 
     CurrentDir=`pwd`
     TestSpace=${CurrentDir}/AllTestData
@@ -109,7 +85,7 @@ runInit()
 #  ......
 runGetSubmittedJobInfoByIDs()
 {
-    aSubmittedSGEJobIDList=(2590 2608  2612)
+#aSubmittedSGEJobIDList=(2590 2608  2612)
 
     let "ReSubmittedJobNum = ${#aSubmittedSGEJobIDList[@]}"
     for((i=0;i<${ReSubmittedJobNum};i++))
@@ -142,7 +118,7 @@ runGetSubmittedJobInfoByIDs()
 
 runGetSubmittedJobInfoByYUVs()
 {
-    aReSubmittedYUVList=(Doc_Complex_768x1024.yuv )
+#aReSubmittedYUVList=(Doc_Complex_768x1024.yuv )
 
     let "NumYUV=${#aReSubmittedYUVList[@]}"
     let "ReSubmittedJobNum=0"
@@ -516,50 +492,113 @@ runUpdateSubmitLog()
 
 }
 
+runReSubmitSummary()
+{
+
+
+ return 0
+}
+
+runCheck()
+{
+    if [ ! -e ${SGEJobSubmitJobLog} ]
+    then
+        echo -e "\033[31m *********************************************************************  \033[0m"
+        echo    "         SGE job submitted info log file does not exist,please double check"
+        echo -e "\033[31m *********************************************************************  \033[0m"
+        exit 1
+    fi
+
+}
 runParseOption()
 {
 
-    return 0
+    if [ "${aOption[0]}" == "All" ]
+    then
+        return 0
+    elif [ "${aOption[0]}" == "YUV" ]
+    then
+        if [ ${ParamNum} -lt 2 ]
+        then
+            runUsage
+            exit 1
+        fi
 
+        for((i=1;i<ParamNum;i++))
+        do
+            let "j = i-1"
+            aReSubmittedYUVList[$j]=${aOption[$i]}
+        done
+        return 0
+
+    elif [ "${aOption[0]}" == "JobID" ]
+    then
+        if [ ${ParamNum} -lt 2 ]
+        then
+            runUsage
+            exit 1
+        fi
+
+        for((i=1;i<ParamNum;i++))
+        do
+            let "j = i-1"
+            aSubmittedSGEJobIDList[$j]=${aOption[$i]}
+        done
+        return 0
+
+    else
+        runUsage
+        exit 1
+    fi
 
 }
-
 
 runMain()
 {
-	CurrentDir=`pwd`
 
     runInit
-    runGetSubmittedJobInfoByIDs
+    runCheck
+    runParseOption
+
+    if [ "${aOption[0]}" == "All" ]
+    then
+        runGetSubmittedJobInfoByAllJobs
+    elif [ "${aOption[0]}" == "YUV" ]
+    then
+        runGetSubmittedJobInfoByYUVs
+    elif [ "${aOption[0]}" == "JobID" ]
+    then
+        runGetSubmittedJobInfoByIDs
+    fi
+
+
     runGetReSubmittedSGEJobFile
     runGetReSubmittedSGEJobTestRestultFile
-    runOutputReSubmittedJobInfo
-    runRemoveJobFilesBeforeReSubmit
-    runDelPreviousJob
-    runReSubmitSGEJobs
-    runUpdateSubmitLog
-    runOutputReSubmitInfo
 
-    echo "Date info is ${DateInfo}"
+    runOutputReSubmittedJobInfo >${ReSubmitLog}
 
-#runGetSubmittedJobInfoByYUVs
-# runGetReSubmittedSGEFile
-#  runOutputReSubmittedJobInfo
+    runRemoveJobFilesBeforeReSubmit >>${ReSubmitLog}
+    runDelPreviousJob     >>${ReSubmitLog}
+    runReSubmitSGEJobs    >>${ReSubmitLog}
+    runUpdateSubmitLog    >>${ReSubmitLog}
+    runOutputReSubmitInfo >>${ReSubmitLog}
 
-#runGetSubmittedJobInfoByAllJobs
-#runGetReSubmittedSGEFile
-#runOutputReSubmittedJobInfo
-# runGetReSubmittedSGEFile
+    cat ${ReSubmitLog}
 
     return 0
 
 }
+
 #parameter check!
 if [  $# -lt 1  ]
 then
     runUsage
 exit 1
 fi
+
+declare -a aOption
+aOption=($@)
+ParamNum=$#
 
 runMain
 
