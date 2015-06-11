@@ -352,6 +352,59 @@ runGetReSubmittedSGEJobTestRestultFile()
 
 }
 
+runRemoveJobFilesBeforeReSubmit()
+{
+    echo -e "\033m[32m **********************************************************  \033[0m"
+    echo                 delete all job related files before re-submit
+    echo -e "\033m[32m **********************************************************  \033[0m"
+
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        if [ -e ${aReSubmittedSGEJobOutFileList[$i]} ]
+        then
+            echo "delete file: ${aReSubmittedSGEJobOutFileList[$i]}"
+            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobOutFileList[$i]}
+        fi
+
+        if [ -e ${aReSubmittedSGEJobErrorInfoFileList[$i]} ]
+        then
+            echo "delete file: "
+            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorInfoFileList[$i]}
+            fi
+
+        if [ -e ${aReSubmittedSGEJobFlagFileList[$i]} ]
+        then
+            echo "delete file: ${aReSubmittedSGEJobErrorInfoFileList[$i]}"
+            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorInfoFileList[$i]}
+        fi
+
+        if [ -e ${aReSubmittedSGEJobSHA1List[$i]} ]
+        then
+            echo "delete file: ${aReSubmittedSGEJobSHA1List[$i]}"
+            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobSHA1List[$i]}
+        fi
+
+        if [ -e ${aReSubmittedSGEJobAllCasesFileList[$i]} ]
+        then
+            echo "delete file: ${aReSubmittedSGEJobAllCasesFileList[$i]}"
+            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobAllCasesFileList[$i]}
+        fi
+
+        if [ -e ${aReSubmittedSGEJobErrorCasesFileList[$i]} ]
+        then
+            echo "delete file: ${aReSubmittedSGEJobErrorCasesFileList[$i]}"
+            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorCasesFileList[$i]}
+        fi
+
+        if [ -e ${aReSubmittedSGEJobTestReportFileList[$i]} ]
+        then
+            echo "delete file: ${aReSubmittedSGEJobTestReportFileList[$i]}"
+            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobTestReportFileList[$i]}
+        fi
+    done
+
+    echo -e "\033m[32m **********************************************************  \033[0m"
+}
 
 runParseOption()
 {
