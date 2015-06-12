@@ -100,6 +100,7 @@ runSettingInHostSide()
     echo -e "\033[32m   Updating authorized_keys info                      \033[0m"
     echo -e "\033[32m   touch ~/.ssh/authorized_keys                       \033[0m"
     echo -e "\033[32m   cat   ~/.ssh/id_rsa.pub  >> ~/.ssh/authorized_keys \033[0m"
+    ssh-keygen -t rsa
     touch ~/.ssh/authorized_keys
     cat   ~/.ssh/id_rsa.pub  >> ~/.ssh/authorized_keys
 
