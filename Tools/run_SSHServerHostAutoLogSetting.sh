@@ -152,6 +152,7 @@ runMain()
 	if [ ! $# -eq 1 ]
 	then
 		runUasge
+        exit 1
 	fi
 	
 	Option=$1
