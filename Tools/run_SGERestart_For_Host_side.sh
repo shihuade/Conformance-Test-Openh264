@@ -16,13 +16,13 @@
 runGlobleInitial()
 {
         aHostNameList=( "GuanYu" \
-                                        "GuanYu" \
-                                        "ZhangFei" \
-                                        "ZhaoYun" \
-                                        "MaChao" \
-                                        "HuangZhong" \
-                                        "MaDai" \
-                                        "JiangWei")
+                        "GuanYu" \
+                        "ZhangFei" \
+                        "ZhaoYun" \
+                        "MaChao" \
+                        "HuangZhong" \
+                        "MaDai" \
+                        "JiangWei")
         aHostIPList=(   "10.224.203.122" \
                         "10.224.203.59"  \
                         "10.224.203.20" \

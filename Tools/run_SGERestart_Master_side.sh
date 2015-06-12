@@ -53,7 +53,13 @@ runGlobleInitial()
 	SGETestBedFolder="/opt/sge62u2_1/SGE_room2/"
 }
 
+runGetSGEAndHostsInfo()
+{
 
+    RemoteIP=`./run_ParseSGEHostsIP.sh  ${ConfigureFile}  ${HostOption} `
+
+
+}
 
 runNFSRestart()
 {
