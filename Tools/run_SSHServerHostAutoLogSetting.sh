@@ -34,7 +34,9 @@ runGlobleInitial()
     CurrentDir=`pwd`
     UserName="root"
     ConfigureFile="${CurrentDir}/SGE.cfg"
-    ScriptFileName="${CurrentDir}/run_SSHServerHostAutoLogSetting.sh"
+    ScriptFileName1="${CurrentDir}/run_SSHServerHostAutoLogSetting.sh"
+    ScriptFileName2="${CurrentDir}/run_ParseSGEHostsName.sh"
+    ScriptFileName3="${CurrentDir}/run_ParseSGEHostsIP.sh"
 
     if [ ! -e ${onfigureFile} ]
     then
@@ -80,8 +82,10 @@ runSettingInServerSide()
 
         echo -e "\033[32m  copy files from server sinde  \033[0m"
         echo ""
-        scp  ~/.ssh/id_rsa.pub    ${UserName}@${aHostIPList[$i]}:.ssh/id_rsa.pub
-        scp  ${ScriptFileName}    ${UserName}@${aHostIPList[$i]}:~/
+        scp  ~/.ssh/id_rsa.pub    ${UserName}@${aHostIPList[$i]}:~/.ssh/id_rsa.pub
+        scp  ${ScriptFileName1}   ${UserName}@${aHostIPList[$i]}:~/
+        scp  ${ScriptFileName2}   ${UserName}@${aHostIPList[$i]}:~/
+        scp  ${ScriptFileName3}   ${UserName}@${aHostIPList[$i]}:~/
         scp  ${ConfigureFile}     ${UserName}@${aHostIPList[$i]}:~/
 
     done
@@ -100,7 +104,7 @@ runSettingInHostSide()
     echo -e "\033[32m   Updating authorized_keys info                      \033[0m"
     echo -e "\033[32m   touch ~/.ssh/authorized_keys                       \033[0m"
     echo -e "\033[32m   cat   ~/.ssh/id_rsa.pub  >> ~/.ssh/authorized_keys \033[0m"
-    ssh-keygen -t rsa
+    #ssh-keygen -t rsa
     touch ~/.ssh/authorized_keys
     cat   ~/.ssh/id_rsa.pub  >> ~/.ssh/authorized_keys
 

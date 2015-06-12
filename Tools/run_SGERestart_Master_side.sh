@@ -34,7 +34,9 @@ runGlobleInitial()
 
     UserName="root"
     ConfigureFile="${CurrentDir}/SGE.cfg"
-    ScriptFileName="${CurrentDir}/run_SGERestart_For_Host_side.sh"
+    ScriptFileName1="${CurrentDir}/run_SSHServerHostAutoLogSetting.sh"
+    ScriptFileName2="${CurrentDir}/run_ParseSGEHostsName.sh"
+    ScriptFileName3="${CurrentDir}/run_ParseSGEHostsIP.sh"
 
     if [ ! -e ${onfigureFile} ]
     then
@@ -75,7 +77,7 @@ runNFSRestart()
 	echo -e "\033[33m restarting the NFS service.....\033[0m"
 	echo ""
 	/etc/init.d/rpcbind  restart
-	/etc/init.d/nfs  restart
+	/etc/init.d/nfs      restart
 }
 
 runSGEMasterRestart()
@@ -122,8 +124,10 @@ runRestartSGESystem()
 		echo ""
 		echo -e "\033[32m  Copy files to host side                                            \033[0m"
 
-        scp  ${ConfigureFile}   ${UserName}@${aHostIPList[$i]}:~/
-        scp  ${ScriptFileName}  ${UserName}@${aHostIPList[$i]}:~/
+        scp  ${ConfigureFile}    ${UserName}@${aHostIPList[$i]}:~/
+        scp  ${ScriptFileName1}  ${UserName}@${aHostIPList[$i]}:~/
+        scp  ${ScriptFileName2}  ${UserName}@${aHostIPList[$i]}:~/
+        scp  ${ScriptFileName3}  ${UserName}@${aHostIPList[$i]}:~/
 
         echo ""
         echo -e "\033[32m  ****************************************************************** \033[0m"
