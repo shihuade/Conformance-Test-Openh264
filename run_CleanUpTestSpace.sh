@@ -68,7 +68,7 @@ runMain()
 	if [ ! $# -eq 0  ]
 	then
         runUsage
-		return 1
+		return 0
 	fi
 
 	TestType=$1
