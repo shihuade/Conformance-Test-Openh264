@@ -15,85 +15,104 @@
 #************************************************************************************
 runGlobleInitial()
 {
-        aHostNameList=( "GuanYu" \
-                        "GuanYu" \
-                        "ZhangFei" \
-                        "ZhaoYun" \
-                        "MaChao" \
-                        "HuangZhong" \
-                        "MaDai" \
-                        "JiangWei")
-        aHostIPList=(   "10.224.203.122" \
-                        "10.224.203.59"  \
-                        "10.224.203.20" \
-                        "10.224.203.44" \
-                        "10.224.203.92"  \
-                        "10.224.203.40"  \
-                        "10.224.203.38" )
-                                  
-        HostNum=${#aHostIPList[@]}                        
-        CurrentDir=`pwd`
-        SGEMasterIP="10.224.203.72"
-        SGERestarScriptFolder="/opt/sge62u2_1/SVC_SGE1/common/"
-        SGERoomFolder="/opt/sge62u2_1/SVC_SGE1/"
-        SGETestBedFolder="/opt/sge62u2_1/SGE_room2/"
+    declare -a aHostNameList
+    declare -a aHostIPList
+    declare -a aAllSGEIPList
+
+    CurrentDir=`pwd`
+    SGERestarScriptFolder="/opt/sge62u2_1/SVC_SGE1/common/"
+    SGERoomFolder="/opt/sge62u2_1/SVC_SGE1/"
+    SGETestBedFolder="/opt/sge62u2_1/SGE_room2/"
+
+    UserName="root"
+    ConfigureFile="${CurrentDir}/SGE.cfg"
+
+    if [ ! -e ${onfigureFile} ]
+    then
+        echo ""
+        echo -e "\033[31m configure file does not exist,please double check! \033[0m"
+        echo -e "\033[31m configure file is ${ConfigureFile} \033[0m"
+        echo ""
+        exit 1
+    fi
+
 }
+
+
+runGetSGEMasterAndHostsInfo()
+{
+
+    aAllSGEIPList=(`./run_ParseSGEHostsIP.sh   ${ConfigureFile}  All `)
+    SGEMasterIP=(`./run_ParseSGEHostsIP.sh     ${ConfigureFile}  Master `)
+    aHostNameList=(`./run_ParseSGEHostsName.sh ${ConfigureFile} `)
+
+    let " HostNum = ${#aHostNameList[@]}"
+
+    echo ""
+    echo "host Number is ${HostNum}"
+    echo ""
+    for((i=0;i<${HostNum};i++))
+    do
+        let "j=i+1"
+        aHostIPList[$i]=${aAllSGEIPList[$j]}
+        echo "HostName--${aHostNameList[$i]}----IP--${aHostIPList[$i]}"
+    done
+
+}
+
 
 runNFSRestart()
 {
-        echo ""
-        echo -e "\033[33m restarting the NFS service.....\033[0m"
-        echo ""
-        /etc/init.d/rpcbind  restart
-        /etc/init.d/nfs  restart
+    echo ""
+    echo -e "\033[33m restarting the NFS service.....\033[0m"
+    echo ""
+    /etc/init.d/rpcbind  restart
+    /etc/init.d/nfs  restart
 }
 
 
 runMountSGEFolder()
 {
-        echo ""
-        echo -e "\033[33m mounting SGE's folder.....\033[0m"
-        echo ""
-        mount ${SGEMasterIP}:${SGERoomFolder}     ${SGERoomFolder}  
-        mount ${SGEMasterIP}:${SGETestBedFolder}  ${SGETestBedFolder}
+    echo ""
+    echo -e "\033[33m mounting SGE's folder.....\033[0m"
+    echo ""
+    mount ${SGEMasterIP}:${SGERoomFolder}     ${SGERoomFolder}
+    mount ${SGEMasterIP}:${SGETestBedFolder}  ${SGETestBedFolder}
 }
 
 
 
 runSGEHostRestart()
 {
-        echo ""
-        echo -e "\033[33m  running start script for host----$HOSTNAME \033[0m"
-        echo ""
-        #run start script
-        cd ${SGERestarScriptFolder}
-        ./sgeexecd start
-        cd ${CurrentDir}
-
+    echo ""
+    echo -e "\033[33m  running start script for host----$HOSTNAME \033[0m"
+    echo ""
+    #run start script
+    cd ${SGERestarScriptFolder}
+    ./sgeexecd start
+    cd ${CurrentDir}
 }
 
 runMain()
 {
 
-        echo ""
-        echo -e "\033[32m current host name is $HOSTNAME\033[0m"
-        echo ""
+    echo ""
+    echo -e "\033[32m current host name is $HOSTNAME\033[0m"
+    echo ""
 
-        declare -a aHostNameList
-        declare -a aHostIPList
+    runGlobleInitial
+    runGetSGEMasterAndHostsInfo
 
-        runGlobleInitial
+    runNFSRestart
 
-        runNFSRestart
+    runMountSGEFolder
 
-        runMountSGEFolder
+    runSGEHostRestart
 
-        runSGEHostRestart
-
-        echo ""
-        echo -e "\033[32m please type exit back to sge master side if you are using ssh login\033[0m"
-        echo ""
-        return 0
+    echo ""
+    echo -e "\033[32m please type exit back to sge master side if you are using ssh login \033[0m"
+    echo ""
+    return 0
 }
 runMain
 

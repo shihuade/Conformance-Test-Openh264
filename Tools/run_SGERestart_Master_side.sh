@@ -17,47 +17,55 @@ runUasge()
 	echo ""
 	echo -e "\033[31m  usage: \033[0m"
 	echo -e "\033[31m     ./run_SGERestart_Master_side.sh  Reboot  (for reboot all hosts and sge master)  \033[0m"
-	echo -e "\033[31m     ./run_SGERestart_Master_side.sh  Restart (for restart all hosts and sge master)  \033[0m"
+	echo -e "\033[31m     ./run_SGERestart_Master_side.sh  Restart (for restart all hosts and sge master) \033[0m"
 	echo ""
 }
 runGlobleInitial()
 {	
-	aHostNameList=( "GuanYu" \
-			"ZhangFei" \
-			"ZhaoYun" \
-			"MaChao"
-			"HuangZhong" \
-			"MaDai" \
-			"JiangWei")
-	aHostIPList=(   "10.224.203.122" \
-		        "10.224.203.59"  \
-		        "10.224.203.20" \
-		        "10.224.203.44" \
-			"10.224.203.92"  \
-		        "10.224.203.40"  \
-		        "10.224.203.38" )
-				  
-	let " HostNum = ${#aHostNameList[@]}"	
+    declare -a aHostNameList
+    declare -a aHostIPList
+    declare -a aAllSGEIPList
 
-	echo -e "\033[32m initializing ...\033[0m"
-	echo ""
-	echo "host Number is ${HostNum}"
-	echo ""
-	echo "host IP list is  ${aHostIPList[@]}"
-	echo ""
-	echo "host name  list is  ${aHostNameList[@]}"
+
 	CurrentDir=`pwd`
-	SGEMasterIP="10.224.203.72"
 	SGERestarScriptFolder="/opt/sge62u2_1/SVC_SGE1/common/"
 	SGERoomFolder="/opt/sge62u2_1/SVC_SGE1/"
 	SGETestBedFolder="/opt/sge62u2_1/SGE_room2/"
+
+    UserName="root"
+    ConfigureFile="${CurrentDir}/SGE.cfg"
+    ScriptFileName="${CurrentDir}/run_SGERestart_For_Host_side.sh"
+
+    if [ ! -e ${onfigureFile} ]
+    then
+        echo ""
+        echo -e "\033[31m configure file does not exist,please double check! \033[0m"
+        echo -e "\033[31m configure file is ${ConfigureFile} \033[0m"
+        echo ""
+        exit 1
+    fi
+
 }
 
-runGetSGEAndHostsInfo()
+
+runGetSGEMasterAndHostsInfo()
 {
 
-    RemoteIP=`./run_ParseSGEHostsIP.sh  ${ConfigureFile}  ${HostOption} `
+    aAllSGEIPList=(`./run_ParseSGEHostsIP.sh   ${ConfigureFile}  All `)
+    SGEMasterIP=(`./run_ParseSGEHostsIP.sh     ${ConfigureFile}  Master `)
+    aHostNameList=(`./run_ParseSGEHostsName.sh ${ConfigureFile} `)
 
+    let " HostNum = ${#aHostNameList[@]}"
+
+    echo ""
+    echo "host Number is ${HostNum}"
+    echo ""
+    for((i=0;i<${HostNum};i++))
+    do
+        let "j=i+1"
+        aHostIPList[$i]=${aAllSGEIPList[$j]}
+        echo "HostName--${aHostNameList[$i]}----IP--${aHostIPList[$i]}"
+    done
 
 }
 
@@ -90,6 +98,7 @@ runRestartSGESystem()
 {
 
 	runGlobleInitial
+    runGetSGEMasterAndHostsInfo
 
 	echo -e "\033[32m  ********************************************************* \033[0m"
 	echo -e "\033[32m  restarting sge-qmaster... \033[0m"
@@ -105,26 +114,34 @@ runRestartSGESystem()
 	echo "host IP list is  ${aHostIPList[@]}"
 	echo ""
 	echo "host name  list is  ${aHostNameList[@]}"
-	echo -e "\033[32m  ********************************************************* \033[0m"
+	echo -e "\033[32m  ********************************************************************** \033[0m"
 	
 	for((i=0; i<${HostNum}; i++))
 	do
-		echo -e "\033[32m  ********************************************************* \033[0m"
+		echo -e "\033[32m  ****************************************************************** \033[0m"
 		echo ""
-		echo -e "\033[32m  restarting host is ${aHostNameList[$i]}--IP ${aHostIPList[$i]}\033[0m"
+		echo -e "\033[32m  Copy files to host side                                            \033[0m"
+
+        scp  ${ConfigureFile}   ${UserName}@${aHostIPList[$i]}:~/
+        scp  ${ScriptFileName}  ${UserName}@${aHostIPList[$i]}:~/
+
+        echo ""
+        echo -e "\033[32m  ****************************************************************** \033[0m"
+        echo ""
+        echo -e "\033[32m  restarting host is ${aHostNameList[$i]}--IP ${aHostIPList[$i]}     \033[0m"
 		echo ""
-		echo -e "\033[34m  ssh log in please input password! \033[0m"
+		echo -e "\033[34m  ssh log in please input password!                                  \033[0m"
 		echo -e "\033[34m  when login the host, please run below command to restart the host! \033[0m"
-		echo -e "\033[34m     cd                            \033[0m"
-		echo -e "\033[34m     ./run_SGERestart_For_Host_side.sh   \033[0m"
-		echo -e "\033[34m     and type exit back to sge master side  \033[0m"
-		ssh  ${aHostIPList[$i]}
+		echo -e "\033[34m     cd                                                              \033[0m"
+		echo -e "\033[34m     ./run_SGERestart_For_Host_side.sh                               \033[0m"
+		echo -e "\033[34m     and type exit back to sge master side                           \033[0m"
+        ssh  ${UserName}@${aHostIPList[$i]}
 		
 		echo ""
 		echo ""
-		echo -e "\033[32m  back to sge master now! \033[0m"
-		echo -e "\033[32m  restart next host! \033[0m"
-		echo -e "\033[32m  ********************************************************* \033[0m"
+		echo -e "\033[32m  back to sge master now!                                            \033[0m"
+		echo -e "\033[32m  restart next host!                                                 \033[0m"
+		echo -e "\033[32m  ****************************************************************** \033[0m"
 	
 	done
 	
@@ -137,6 +154,8 @@ runRebootAllSGEHostAndMaster()
 {
 
 	runGlobleInitial
+    runGetSGEMasterAndHostsInfo
+
 	echo ""
 	echo -e "\033[32m  reboot all hosts now \033[0m"
 	echo ""
@@ -150,7 +169,7 @@ runRebootAllSGEHostAndMaster()
 		echo -e "\033[34m  when login the host, please run below command to reboot the host! \033[0m"
 		echo -e "\033[34m     reboot                           \033[0m"
 		echo -e "\033[34m     and type exit back to sge master side  \033[0m"
-		ssh  ${aHostIPList[$i]}
+        ssh  ${UserName}@${aHostIPList[$i]}
 		
 		echo ""
 		echo ""
@@ -175,15 +194,12 @@ runMain()
 		runUasge
 	fi
 	
-	Opption=$1
-	
-	declare -a aHostNameList
-	declare -a aHostIPList
-	
-	if [ ${Opption} = "Reboot" ]
+	Option=$1
+
+	if [ ${Option} = "Reboot" ]
 	then
 		runRebootAllSGEHostAndMaster
-	elif [ ${Opption} = "Restart" ]
+	elif [ ${Option} = "Restart" ]
 	then
 		runRestartSGESystem
 	else
@@ -193,6 +209,6 @@ runMain()
 	return 0
 }
 
-Opption=$1
-runMain ${Opption}
+Option=$1
+runMain ${Option}
 
