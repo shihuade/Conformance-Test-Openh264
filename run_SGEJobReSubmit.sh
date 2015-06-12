@@ -59,6 +59,7 @@ runInit()
     declare -a aUpdateLogFlagList
 
     let "ReSubmittedJobNum = 0"
+    let "MatchedJobIDNum = 0"
 
     CurrentDir=`pwd`
     TestSpace=${CurrentDir}/AllTestData
@@ -88,6 +89,7 @@ runGetSubmittedJobInfoByIDs()
 #aSubmittedSGEJobIDList=(2590 2608  2612)
 
     let "ReSubmittedJobNum = ${#aSubmittedSGEJobIDList[@]}"
+    let "MatchedJobIDNum = 0"
     for((i=0;i<${ReSubmittedJobNum};i++))
     do
         aSubmittedSGEJobNameList[$i]=NULL
@@ -108,6 +110,7 @@ runGetSubmittedJobInfoByIDs()
                 then
                     aSubmittedSGEJobNameList[$i]=${TempJobName}
                     aSubmittedSGEJobInfoList[$i]=${line}
+                    let "MatchedJobIDNum ++"
                 fi
             done
         fi
@@ -122,7 +125,8 @@ runGetSubmittedJobInfoByYUVs()
 #aReSubmittedYUVList=(Doc_Complex_768x1024.yuv )
 
     let "NumYUV=${#aReSubmittedYUVList[@]}"
-    let "ReSubmittedJobNum=0"
+    let "ReSubmittedJobNum = 0"
+    let "MatchedJobIDNum = 0"
     while read line
     do
         if [[ "$line" =~ ^"Your job" ]]
@@ -151,42 +155,21 @@ runGetSubmittedJobInfoByYUVs()
                     echo "aSubmittedSGEJobInfoList[$ReSubmittedJobNum] is ${aSubmittedSGEJobInfoList[$ReSubmittedJobNum]}"
 
                     let "ReSubmittedJobNum ++"
+                    let "MatchedJobIDNum ++"
                 fi
             done
         fi
 
     done <${SGEJobSubmitJobLog}
 
-echo "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-echo "  echo    0 aSubmittedSGEJobIDList is ${aSubmittedSGEJobIDList[0]}"
-echo "  echo    1 aSubmittedSGEJobIDList is ${aSubmittedSGEJobIDList[1]}"
-echo "  echo    2 aSubmittedSGEJobIDList is ${aSubmittedSGEJobIDList[2]}"
-
-echo "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-echo   NumYUV is ${NumYUV}
-echo ""
-echo "ReSubmittedJobNum is ${ReSubmittedJobNum}"
-#for((i=0;i<${ReSubmittedJobNum};i++))
-#do
-#echo " --------i is $i"
-echo    aReSubmittedYUVList is ${aReSubmittedYUVList[@]}
-echo ""
-echo    aSubmittedSGEJobIDList is ${aSubmittedSGEJobIDList[@]}
-echo ""
-echo   aSubmittedSGEJobNameList is ${aSubmittedSGEJobNameList[@]}
-echo ""
-echo    aSubmittedSGEJobInfoList is ${aSubmittedSGEJobInfoList[@]}
-echo ""
-echo "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-echo "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-#done
 }
 
 runGetSubmittedJobInfoByAllJobs()
 {
 
-    let "ReSubmittedJobNum=0"
-    let "ExampleLineFlag=0"
+    let "ReSubmittedJobNum =0"
+    let "ExampleLineFlag =0"
+    let "MatchedJobIDNum =0"
     while read line
     do
         if [[ "$line" =~ ^"Your job" ]]
@@ -202,6 +185,7 @@ runGetSubmittedJobInfoByAllJobs()
                 aSubmittedSGEJobNameList[$ReSubmittedJobNum]=${TempJobName}
                 aSubmittedSGEJobInfoList[$ReSubmittedJobNum]=${line}
                 let "ReSubmittedJobNum ++"
+                let "MatchedJobIDNum ++"
             fi
         fi
 
@@ -426,7 +410,7 @@ runDelPreviousJob()
 runReSubmitSGEJobs()
 {
     echo -e "\033[32m **********************************************************  \033[0m"
-    echo    "             ReSubmit jobs"
+    echo    "             ReSubmitting jobs ......"
     echo -e "\033[32m **********************************************************  \033[0m"
 
     for((i=0;i<${ReSubmittedJobNum};i++))
@@ -440,7 +424,7 @@ runReSubmitSGEJobs()
         if [ -e ${aReSubmittedSGEJobFileList[$i]} -a  -e ${vSubmittedFlagFile} ]
         then
             vTempJobReSubmitInfo=`qsub ${vSubmittedFlagFile} `
-            vTempJobReSubmitInfo="Your job 7777 (----Doc_Complex_768x1024.yuv_SubCaseIndex_11----) has been submitted"
+            #vTempJobReSubmitInfo="Your job 2608 (----Doc_Complex_768x1024.yuv_SubCaseIndex_11----) has been submitted"
             vTempReSubmitJobID=`echo ${vTempJobReSubmitInfo} | awk '{print $3}'`
             vTempReSubmitJobName=`echo ${vTempJobReSubmitInfo} | awk 'BEGIN {FS="----"} {print $2}'`
         else
@@ -508,10 +492,11 @@ runUpdateSubmitLog()
         do
             if [ "${aSubmittedSGEJobInfoList[$i]}" = "$line"  ]
             then
-                echo "*************************** i is $i"
-                echo line is $line
-                echo resubmit info ${aSubmittedSGEJobInfoList[$i]}
-                echo "line is ${LineIndex}"
+                #echo "*************************** i is $i"
+                #echo line is $line
+                #echo resubmit info ${aSubmittedSGEJobInfoList[$i]}
+                #echo "line is ${LineIndex}"
+
                 aUpdateLogFlagList[$i]="True"
                 vOutputLine="${aResubmitSGEJobInfoList[$i]}"
             fi
@@ -531,38 +516,33 @@ runUpdateSubmitLog()
 
     mv ${vTempLogFile} ${SGEJobSubmitJobLog}
 
-echo "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-echo "  echo    0 aSubmittedSGEJobIDList is ${aSubmittedSGEJobIDList[0]}"
-echo "  echo    1 aSubmittedSGEJobIDList is ${aSubmittedSGEJobIDList[1]}"
-echo "  echo    2 aSubmittedSGEJobIDList is ${aSubmittedSGEJobIDList[2]}"
-
-echo "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-echo   NumYUV is ${NumYUV}
-echo ""
-echo "ReSubmittedJobNum is ${ReSubmittedJobNum}"
-#for((i=0;i<${ReSubmittedJobNum};i++))
-#do
-#echo " --------i is $i"
-echo    aReSubmittedYUVList is ${aReSubmittedYUVList[@]}
-echo ""
-echo    aSubmittedSGEJobIDList is ${aSubmittedSGEJobIDList[@]}
-echo ""
-echo   aSubmittedSGEJobNameList is ${aSubmittedSGEJobNameList[@]}
-echo ""
-echo    aSubmittedSGEJobInfoList is ${aSubmittedSGEJobInfoList[@]}
-echo ""
-echo "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-echo "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-#done
-
-
 }
 
 runReSubmitSummary()
 {
+    echo -e "\033[32m ************************************************************************ \033[0m"
+    echo "                     Jobs ReSubmit Summary                                    "
+    echo -e "\033[32m ************************************************************************ \033[0m"
+    echo -e "\033[33m Total Resubmit job num is ${ReSubmittedJobNum}                           \033[0m"
+    echo -e "\033[33m Total MatchedJobIDNum job num is ${MatchedJobIDNum}                      \033[0m"
+    if  [ ${MatchedJobIDNum} -eq 0 ]
+    then
+        echo -e "\033[31m Failed! No jobs matched with your option   \033[0m"
+        echo -e "\033[31m Failed! Your option is ${aOption[@]}       \033[0m"
+        return 1
+    fi
 
+    echo -e "\033[32m ************************************************************************ \033[0m"
+    echo -e "\033[33m     JobName----JobIDFrom----JobIDTo----UpdateLogFlag                     \033[0m"
+    echo -e "\033[32m ************************************************************************ \033[0m"
 
- return 0
+    for((i=0;i<${ReSubmittedJobNum};i++))
+    do
+        echo -e "\033[33m   ${aSubmittedSGEJobNameList[$i]}--${aSubmittedSGEJobIDList[$i]}--${aResubmitSGEJobIDList[$i]}--${aUpdateLogFlagList[$i]}\033[0m"
+    done
+    echo -e "\033[32m ************************************************************************ \033[0m"
+
+    return 0
 }
 
 runCheck()
@@ -619,13 +599,8 @@ runParseOption()
 
 }
 
-runMain()
+runGetJobsInfo()
 {
-
-    runInit
-    runCheck
-    runParseOption
-
     if [ "${aOption[0]}" == "All" ]
     then
         runGetSubmittedJobInfoByAllJobs
@@ -637,23 +612,39 @@ runMain()
         runGetSubmittedJobInfoByIDs
     fi
 
+}
+runMain()
+{
 
-    runGetReSubmittedSGEJobFile
-    runGetReSubmittedSGEJobTestRestultFile
+    runInit
+    runCheck
+    runParseOption
 
-    runOutputReSubmittedJobInfo >${ReSubmitLog}
+    runGetJobsInfo >${ReSubmitLog}
+
+    runGetReSubmittedSGEJobFile  >>${ReSubmitLog}
+    runGetReSubmittedSGEJobTestRestultFile  >>${ReSubmitLog}
+
+    runOutputReSubmittedJobInfo >>${ReSubmitLog}
 
     runRemoveJobFilesBeforeReSubmit >>${ReSubmitLog}
     runDelPreviousJob     >>${ReSubmitLog}
     runReSubmitSGEJobs    >>${ReSubmitLog}
     runUpdateSubmitLog    >>${ReSubmitLog}
-#runOutputReSubmitInfo >>${ReSubmitLog}
+    runOutputReSubmitInfo >>${ReSubmitLog}
 
+    echo "">>${ReSubmitLog}
+    echo "*********************************************************" >>${ReSubmitLog}
+    echo "*********************************************************" >>${ReSubmitLog}
+    echo "     after resubmit, job submitted log listed as below   " >>${ReSubmitLog}
+    cat ${SGEJobSubmitJobLog}>>${ReSubmitLog}
+    echo "*********************************************************" >>${ReSubmitLog}
+    echo "**********************************************************" >>${ReSubmitLog}
+    echo "">>${ReSubmitLog}
+    echo "">>${ReSubmitLog}
+    runReSubmitSummary >>${ReSubmitLog}
     cat ${ReSubmitLog}
 
-    echo ${aSubmittedSGEJobIDList[@]}
-    echo ${aResubmitSGEJobIDList[@]}
-    echo ${aSubmittedSGEJobNameList[@]}
 
 
     return 0
