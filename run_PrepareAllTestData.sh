@@ -54,6 +54,7 @@ runRemovedPreviousTestData()
 runUpdateCodec()
 {
 
+
 	./run_CheckoutCiscoOpenh264Codec.sh  ${Openh264GitAddr} ${SourceFolder}
 	if [  ! $? -eq 0 ]
 	then	
@@ -65,6 +66,10 @@ runUpdateCodec()
 	
 	cd ${SourceFolder}
 	git checkout ${Branch}
+    git branch >${CodecInfoLog}
+    git remote -v >>${CodecInfoLog}
+    git log -3 >>${CodecInfoLog}
+
 	cd ${CurrentDir}
 	
 	echo ""
@@ -277,6 +282,7 @@ runMain()
 
 	Openh264GitAddr=""
 	Branch=""
+    CodecInfoLog="${CurrentDir}/CodecInfo.log"
 
 	declare -a aTestYUVList
 	#folder for eache test sequence

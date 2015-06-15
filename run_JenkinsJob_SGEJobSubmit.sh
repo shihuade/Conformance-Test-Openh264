@@ -46,7 +46,7 @@ runInitial()
     AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
 
     ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
-
+    CodecInfoLog="CodecInfo.log"
     SummaryInfo="NULL"
 }
 
@@ -229,6 +229,12 @@ runCopyFilesToAttachedDir()
     then
         cp ${ConfigureFile}    ${AttachmentsDir}/${ConfigureFile}
     fi
+
+    if [ -e ${CodecInfoLog} ]
+    then
+        cp ${CodecInfoLog}    ${AttachmentsDir}/${TestProfile}_${CodecInfoLog}
+    fi
+
     echo ""
     echo "*****************************************************************************"
 
