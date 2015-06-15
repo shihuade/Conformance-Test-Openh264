@@ -350,43 +350,43 @@ runRemoveJobFilesBeforeReSubmit()
         if [ -e ${aReSubmittedSGEJobOutFileList[$i]} ]
         then
             echo "delete file: ${aReSubmittedSGEJobOutFileList[$i]}"
-            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobOutFileList[$i]}
+            ./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobOutFileList[$i]}
         fi
 
         if [ -e ${aReSubmittedSGEJobErrorInfoFileList[$i]} ]
         then
             echo "delete file: "
-            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorInfoFileList[$i]}
+            ./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorInfoFileList[$i]}
             fi
 
         if [ -e ${aReSubmittedSGEJobFlagFileList[$i]} ]
         then
             echo "delete file: ${aReSubmittedSGEJobErrorInfoFileList[$i]}"
-            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorInfoFileList[$i]}
+            ./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorInfoFileList[$i]}
         fi
 
         if [ -e ${aReSubmittedSGEJobSHA1List[$i]} ]
         then
             echo "delete file: ${aReSubmittedSGEJobSHA1List[$i]}"
-            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobSHA1List[$i]}
+            ./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobSHA1List[$i]}
         fi
 
         if [ -e ${aReSubmittedSGEJobAllCasesFileList[$i]} ]
         then
             echo "delete file: ${aReSubmittedSGEJobAllCasesFileList[$i]}"
-            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobAllCasesFileList[$i]}
+            ./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobAllCasesFileList[$i]}
         fi
 
         if [ -e ${aReSubmittedSGEJobErrorCasesFileList[$i]} ]
         then
             echo "delete file: ${aReSubmittedSGEJobErrorCasesFileList[$i]}"
-            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorCasesFileList[$i]}
+            ./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobErrorCasesFileList[$i]}
         fi
 
         if [ -e ${aReSubmittedSGEJobTestReportFileList[$i]} ]
         then
             echo "delete file: ${aReSubmittedSGEJobTestReportFileList[$i]}"
-            #./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobTestReportFileList[$i]}
+            ./Scripts/run_SafeDelete.sh ${aReSubmittedSGEJobTestReportFileList[$i]}
         fi
     done
 
