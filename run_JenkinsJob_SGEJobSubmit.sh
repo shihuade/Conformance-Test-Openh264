@@ -16,16 +16,17 @@ runUsage()
 {
     echo ""
     echo " Usage: run_JenkinsJob_SGEJobSubmit.sh  \${KillRunningJobFlag} \${TestProfile}"
+    echo "                                        \${CodecBranch}        \${ReposAddr}"
     echo ""
     echo " e.g.: "
-    echo "     run_JenkinsJob_SGEJobSubmit.sh  0 SCC"
-    echo "     run_JenkinsJob_SGEJobSubmit.sh  1 SCC"
-    echo "     run_JenkinsJob_SGEJobSubmit.sh  0 SVC"
-    echo "     run_JenkinsJob_SGEJobSubmit.sh  1 SVC"
+    echo "     run_JenkinsJob_SGEJobSubmit.sh  0 SCC master https://github.com/openh264.git"
+    echo "     run_JenkinsJob_SGEJobSubmit.sh  1 SCC master https://github.com/openh264.git"
+    echo "     run_JenkinsJob_SGEJobSubmit.sh  0 SVC master https://github.com/openh264.git"
+    echo "     run_JenkinsJob_SGEJobSubmit.sh  1 SVC master https://github.com/openh264.git"
     echo ""
-    echo "\${KillRunningJobFlag} ==1, kill current running jobs and submit new jobs"
+    echo "     KillRunningJobFlag ==1, kill current running jobs and submit new jobs"
     echo ""
-    echo "\${KillRunningJobFlag} ==0, check current running jobs; "
+    echo "     KillRunningJobFlag ==0, check current running jobs; "
     echo "               1) if jobs have not completed yet, skip job submittion"
     echo "               1) if jobs completed yet,backup test data,clean up test space and submit new jobs"
     echo ""
@@ -40,8 +41,11 @@ runInitial()
     #log file for attachments
     #log file for attachments
     SGEJobSubmittedLog="SGEJobsSubmittedInfo.log"
+    SGEJobCancelJobLog="SGEJobsCancelInfo.log"
     JobsStatusLog="SGEJobStatus.txt"
     AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
+
+    ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
 
     SummaryInfo="NULL"
 }
@@ -60,7 +64,7 @@ runKillJob()
 
     if [ ${KillFlag} -eq 1  ]
     then
-        ./run_SGEJobCancel.sh All
+        ./run_SGEJobCancel.sh All >${SGEJobCancelJobLog}
     fi
     echo ""
     echo ""
@@ -130,7 +134,7 @@ runSGEJobPreviousTestBackup()
         ./run_BackupTestData.sh  ./   ${TestProfile}
     else
         echo "there is no test summary in current dir"
-        echo "it may caused by:""
+        echo "it may caused by:"
         echo "           1) there is no job been submitted for test"
         echo "           2) there are still jobs running for test and have not completed yet"
 
@@ -147,9 +151,7 @@ runSubmitSGEJobs()
 
 
 
-    ./run_Main.sh SGETest  CaseConfigure/case_${TestProfile}.cfg  "${CodecBranch}"  "${ReposAddr}"
-
-    cp ${SGEJobSubmittedLog} ${AttachmentsDir}/${TestProfile}_${SGEJobSubmittedLog}
+    ./run_Main.sh SGETest  ${ConfigureFile}  "${CodecBranch}"  "${ReposAddr}"
 
 
 }
@@ -161,6 +163,8 @@ runCancelAllRunningJobsAndSubmitNewJobs()
     runSGEJobsUpdate
     runSGEJobPreviousTestBackup
     runKillJob
+
+    cat ${SGEJobCancelJobLog}
 
     runCleanUpAllTestData
 
@@ -201,9 +205,30 @@ runCopyFilesToAttachedDir()
     echo "*****************************************************************************"
     echo " copy files to attached dir for ${TestProfile}"
     echo "*****************************************************************************"
-    cp ${SGEJobSubmittedLog}          ${AttachmentsDir}/${TestProfile}_${SGEJobSubmittedLog}
-    cp ${JobsStatusLog}               ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
-    cp ${AllJobsCompletedFlagFile}    ${AttachmentsDir}/${TestProfile}_${AllJobsCompletedFlagFile}
+    if [ -e ${SGEJobSubmittedLog} ]
+    then
+        cp ${SGEJobSubmittedLog}          ${AttachmentsDir}/${TestProfile}_${SGEJobSubmittedLog}
+    fi
+
+    if [ -e ${JobsStatusLog} ]
+    then
+        cp ${JobsStatusLog}               ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
+    fi
+
+    if [ -e ${AllJobsCompletedFlagFile} ]
+    then
+        cp ${AllJobsCompletedFlagFile}    ${AttachmentsDir}/${TestProfile}_${AllJobsCompletedFlagFile}
+    fi
+
+    if [ -e ${SGEJobCancelJobLog} ]
+    then
+        cp ${SGEJobCancelJobLog}    ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
+    fi
+
+    if [ -e ${ConfigureFile} ]
+    then
+        cp ${ConfigureFile}    ${AttachmentsDir}/${ConfigureFile}
+    fi
     echo ""
     echo "*****************************************************************************"
 
@@ -214,20 +239,50 @@ runOutputSUmmary()
 
     echo ""
     echo "*****************************************************************************"
-    echo " TestProfile is ${TestProfile}"
-    echo " KillJobsFlag is ${KillJobsFlag}"
+    echo " TestProfile    is ${TestProfile}"
+    echo " KillJobsFlag   is ${KillJobsFlag}"
+    echo " Configure file is ${ConfigureFile}"
+    echo " Codec branch   is ${CodecBranch}"
+    echo " ReposAddr      is ${ReposAddr}"
     echo ""
     echo " SummaryInfo for this job is ${SummaryInfo}"
     echo "*****************************************************************************"
 
 }
 
+runCheck()
+{
+
+    if [ ! -e ${ConfigureFile} ]
+    then
+        echo ""
+        echo "Configure file ${ConfigureFile} does not exist,please double check!"
+        echo ""
+        exit 1
+    fi
+
+    if [ "${TestProfile}" = "SCC"  ]
+    then
+        return 0
+    elif [ "${TestProfile}" = "SVC"  ]
+    then
+        return 0
+    else
+        echo ""
+        echo " test profile does not support,please refet to the usage!"
+        echo ""
+        runUsage
+        exit 1
+    fi
+
+}
 runMain()
 {
 
     runInitial
+    runCheck
 
-    if [ ${KillJobsFlag} -eq 1 ]
+    if [ ! ${KillJobsFlag} -eq 0 ]
     then
         runCancelAllRunningJobsAndSubmitNewJobs
     else
@@ -241,7 +296,7 @@ runMain()
 
 }
 
-if [ ! $# -eq 2 ]
+if [ ! $# -eq 4 ]
 then
     runUsage
     exit 1
@@ -249,8 +304,10 @@ fi
 
 TestProfile=$1
 KillJobsFlag=$2
+CodecBranch=$3
+ReposAddr=$4
 
-runMain ${TestProfile} ${KillJobsFlag}
+runMain ${TestProfile} ${KillJobsFlag}  "${CodecBranch}"  "${ReposAddr}"
 
 
 
