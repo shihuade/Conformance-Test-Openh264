@@ -147,10 +147,15 @@ runCopyFilesToAchiveDir()
     cp ${SGEJobsStatusLog}    ${AttachmentsDir}
     cp ${SGEJobsReportLog}    ${AttachmentsDir}
 
+    echo "****************************************"
+    echo "AttachmentsDir is ${AttachmentsDir}"
+    echo "****************************************"
+
     if [ -e ${SGEJobSubmittedLog} ]
     then
         cp ${SGEJobSubmittedLog} ${AttachmentsDir}/${TestProfile}_${SGEJobSubmittedLog}
     fi
+
     if [ -e ${CodecInfoLog} ]
     then
         cp ${CodecInfoLog}  ${AttachmentsDir}/${TestProfile}_${CodecInfoLog}
