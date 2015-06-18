@@ -142,6 +142,15 @@ runMain()
 	return 0
 }
 Openh264Dir=$1
+
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
 runMain ${Openh264Dir}
 
 

@@ -149,5 +149,14 @@ TestType=$1
 AllTestDataDir=$2
 FinalResultDir=$3
 ConfigureFile=$4
+
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
 runMain  ${TestType}  ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
 

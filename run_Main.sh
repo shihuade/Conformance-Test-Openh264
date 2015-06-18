@@ -130,5 +130,14 @@ TestType=$1
 ConfigureFile=$2
 OpenH264Branch=$3
 OpenH264Repos=$4
+
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
 runMain  ${TestType} ${ConfigureFile} ${OpenH264Branch} "${OpenH264Repos}"
 

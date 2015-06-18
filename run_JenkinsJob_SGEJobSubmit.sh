@@ -288,7 +288,7 @@ runMain()
     runInitial
     runCheck
 
-    if [ ! ${KillJobsFlag} =  "true" ]
+    if [  ${KillJobsFlag} =  "true" ]
     then
         runCancelAllRunningJobsAndSubmitNewJobs
     else
@@ -312,6 +312,14 @@ TestProfile=$1
 KillJobsFlag=$2
 CodecBranch=$3
 ReposAddr=$4
+
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 
 runMain ${TestProfile} ${KillJobsFlag}  "${CodecBranch}"  "${ReposAddr}"
 

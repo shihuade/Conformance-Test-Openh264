@@ -320,5 +320,14 @@ ScriptFolder=$5
 ConfigureFile=$6
 OpenH264Branch=$7
 OpenH264Repos=$8
+
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
 runMain  $TestType  $SourceFolder $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile ${OpenH264Branch} "${OpenH264Repos}"
 
