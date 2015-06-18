@@ -52,6 +52,12 @@ runInitial()
     let "UnRunCasesJobNum=0"
     let "UnKnownReasonFailedJobNum=0"
 
+    FaildJobInfoLog="FailedJobInfo.txt"
+    if [ -e ${FaildJobInfoLog} ]
+    then
+        ./Scripts/run_SafeDelete.sh ${FaildJobInfoLog}
+    fi
+
 }
 
 runParseJobsInfo()
@@ -339,6 +345,11 @@ runMain()
     if [ $? -eq 0 ]
     then
         touch ${SGEJobsFinishFlagFile}
+    fi
+
+    if [ ! ${FailedJobNum} -eq 0 ]
+    then
+        touch ${FaildJobInfoLog}
     fi
 
     return 0
