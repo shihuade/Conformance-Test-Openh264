@@ -1,151 +1,191 @@
 #!/bin/bash
-#***********************************************
-#  script used in jenkins job confiugre
+#**************************************************************************************
 #
-#***********************************************
+#  Usage:
+#       run_JenkinsSGEJobStatusUpdate.sh  ${TestProfile}
+#
+#  brief:
+#       update jobs status.
+#       if all jobs have been cpmpleted, get test summary and back up test data
+#
+# date: 2015/06/18
+#**************************************************************************************
+
+runUsage()
+{
+    echo ""
+    echo " Usage: run_JenkinsSGEJobStatusUpdate.sh  \${TestProfile}"
+    echo ""
+    echo " e.g.: "
+    echo "     run_JenkinsSGEJobStatusUpdate.sh  SCC "
+    echo "     run_JenkinsSGEJobStatusUpdate.sh  SVC "
+    echo ""
+}
 
 
-JenkinsHomeDir="/Users/jenkins"
-AttachmentsFolder="Openh264-SGETest/Jenkins-Job-Status-Check-Log"
-AttachmentsDir="${JenkinsHomeDir}/${AttachmentsFolder}"
-SCCTestSpace="/opt/sge62u2_1/SGE_room2/OpenH264ConformanceTest/NewSGE-SCC-Test"
-SVCTestSpace="/opt/sge62u2_1/SGE_room2/OpenH264ConformanceTest/NewSGE-SVC-Test"
-FinalResultDir="FinalResult"
 
-#log file for attachments
-SGEJobSubmittedLog="SGEJobsSubmittedInfo.log"
-SCCStatusLog="SCCSGEJobStatus.txt"
-SVCStatusLog="SVCSGEJobStatus.txt"
-SCCJobReportLog="SCCJobReport.txt"
-SVCJobReportLog="SVCJobReport.txt"
-AllTestSummary="AllTestYUVsSummary.txt"
-SCCAllTestSummary="AllTestYUVsSummary_SCC.txt"
-SCCAllTestSummary="AllTestYUVsSummary_SVC.txt"
-AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
-AllTestResultPassFlag="AllCasesPass.flag"
+runInital()
+{
+    CaseConfigureFileDir="CaseConfigure"
+    FinalResultSummaryDir="FinalResult_Summary"
+    FinalResultDir="FinalResult"
+    SGEIPInfoFile="${SCCTestSpace}/Tools/SGE.cfg"
 
-#SGE environment configuration
-#*******************************************
-PATH=$PATH:$HOME/bin:/opt/sge62u2_1:/opt/sge62u2_1/bin/lx24-x86:/opt/SDK/bin:/opt/SDK
-SGE_ROOT=/opt/sge62u2_1;export SGE_ROOT
-SGE_CELL=SVC_SGE1;export SGE_CELL
-SGE_QMASTER_PORT="10536";export SGE_QMASTER_PORT
-SGE_EXECD_PORT="10537";export SGE_EXECD_PORT
-JAVA_HOME=/opt/SDK;export JAVA_HOME
-PATH=$PATH:$SGE_ROOT/bin
-export PATH
-#*******************************************
+    JobFailedFlagFile="FailedJobInfo.txt"
+    JobFailedFlag="False"
+
+    #log file for attachments
+    SGEJobSubmittedLog="SGEJobsSubmittedInfo.log"
+    SGEJobsStatusLog="${TestProfile}_SGEJobStatus.txt"
+    SGEJobsReportLog="${TestProfile}_JobReport.txt"
+    AllTestSummary="AllTestYUVsSummary.txt"
+    SGEJobsAllTestSummary="${TestProfile}_AllTestYUVsSummary.txt"
+    AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
+    AllTestResultPassFlag="AllCasesPass.flag"
+    CodecInfoLog="CodecInfo.log"
+
+}
+
+runOutputBasicInfo()
+{
+    echo ""
+    echo ""
+    echo "*****************************************************************************"
+    echo "*****************************************************************************"
+    echo         SGE jobs status for SVC
+    echo "*****************************************************************************"
+    echo "*****************************************************************************"
+    echo ""
+    echo ""
+}
+
+runUpdateScript()
+{
+
+    git branch
+    git  remote -v
+
+    git fetch origin
+    git checkout NewSGEV1.3
+    git pull origin NewSGEV1.3
+
+}
+
+runUpdateJobStatus()
+{
+
+    ./run_SGEJobStatusUpdate.sh ${SGEJobSubmittedLog} ${AllJobsCompletedFlagFile}>${SGEJobsStatusLog}
+
+    echo ""
+    echo "*****************************************************************************"
+    echo "   jobs  status ---- SVC"
+    echo "*****************************************************************************"
+    echo ""
+
+    cat ${SGEJobsStatusLog}
+    echo "*****************************************************************************"
+    echo ""
+
+}
+
+runGetAllCompletedJobReport()
+{
+    echo ""
+    echo "*****************************************************************************"
+    echo         report for completed jobs ---- SVC
+    echo "*****************************************************************************"
+    echo ""
+
+    echo >${SGEJobsReportLog}
+    for file in ${SVCTestSpace}/${FinalResultDir}/TestReport*
+    do
+        echo file is $file
+        if [ -e ${file} ]
+        then
+
+            echo "report file: ${file}">>${SGEJobsReportLog}
+            cat ${file} >>${SGEJobsReportLog}
+        fi
+    done
+
+    cat ${SGEJobsReportLog}
+
+    echo "*****************************************************************************"
+    echo ""
 
 
-#basic info
-echo "***********************************"
-pwd
-if [ -d ${AttachmentsDir} ]
-then
-${SCCTestSpace}/Scripts/run_SafeDelete.sh ${AttachmentsDir}
-fi
-mkdir -p ${AttachmentsDir}
-echo "***********************************"
+}
 
-echo ""
-echo ""
-echo "*****************************************************************************"
-echo "*****************************************************************************"
-echo         SGE jobs status for SVC
-echo "*****************************************************************************"
-echo "*****************************************************************************"
-echo ""
-echo ""
-cd ${SVCTestSpace}
-pwd
-
-git fetch origin
-git checkout NewSGEV1.2
-git pull origin NewSGEV1.2
-
-./run_SGEJobStatusUpdate.sh ${SGEJobSubmittedLog} ${AllJobsCompletedFlagFile}>${SVCStatusLog}
-cat ${SVCStatusLog}
-echo ""
-echo "*****************************************************************************"
-echo         report for completed jobs ---- SVC
-echo "*****************************************************************************"
-echo ""
-echo >${SVCJobReportLog}
-for file in ${SVCTestSpace}/${FinalResultDir}/TestReport*
-do
-    if [ -e ${file} ]
+runGetSummary()
+{
+    #get summary
+    if [ -e ${AllJobsCompletedFlagFile} ]
     then
-        echo "report file: ${file}">>${SVCJobReportLog}
-        cat ${file} >>${SVCJobReportLog}
+        echo ""
+        echo "*****************************************************************************"
+        echo         Final summary for all jobs ---- SVC
+        echo "*****************************************************************************"
+        echo ""
+        ./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SVC.cfg ${AllTestResultPassFlag}
+        cat  ${SVCTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}
+        cp   ${SVCTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
     fi
-done
-cat ${SVCJobReportLog}
-#get summary
-if [ -e ${AllJobsCompletedFlagFile} ]
-then
-    echo ""
-    echo "*****************************************************************************"
-    echo         Final summary for all jobs ---- SVC
-    echo "*****************************************************************************"
-    echo ""
-    ./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SVC.cfg ${AllTestResultPassFlag}
-    cat  ${SVCTestSpace}/${FinalResultDir}/${AllTestSummary}
-    cp   ${SVCTestSpace}/${FinalResultDir}/${AllTestSummary}  ${AttachmentsDir}/${SVCAllTestSummary}
-fi
-cp ${SVCStatusLog}       ${AttachmentsDir}
-cp ${SVCJobReportLog}    ${AttachmentsDir}
-cp ${SGEJobSubmittedLog} ${AttachmentsDir}/SVC_${SGEJobSubmittedLog}
 
+}
+runCopyFilesToAchiveDir()
+{
+    cp ${SGEJobsStatusLog}       ${AttachmentsDir}
+    cp ${SGEJobsReportLog}    ${AttachmentsDir}
 
-
-echo ""
-echo ""
-echo "*****************************************************************************"
-echo "*****************************************************************************"
-echo         SGE jobs status for SCC
-echo "*****************************************************************************"
-echo "*****************************************************************************"
-echo ""
-echo ""
-cd ${SCCTestSpace}
-
-git fetch origin
-git checkout NewSGEV1.2
-git pull origin NewSGEV1.2
-
-pwd
-./run_SGEJobStatusUpdate.sh ${SGEJobSubmittedLog} ${AllJobsCompletedFlagFile}>${SCCStatusLog}
-cat ${SCCStatusLog}
-echo ""
-echo "*****************************************************************************"
-echo         report for completed jobs ---- SCC
-echo "*****************************************************************************"
-echo ""
-echo >${SCCJobReportLog}
-for file in ${SCCTestSpace}/${FinalResultDir}/TestReport*
-do
-    if [ -e ${file} ]
+    if [ -e ${SGEJobSubmittedLog} ]
     then
-        echo "report file: ${file}">>${SCCJobReportLog}
-        cat ${file} >>${SCCJobReportLog}
+        cp ${SGEJobSubmittedLog} ${AttachmentsDir}/SVC_${SGEJobSubmittedLog}
     fi
-done
-cat ${SCCJobReportLog}
-#get summary
-if [ -e ${AllJobsCompletedFlagFile} ]
+    if [ -e ${CodecInfoLog} ]
+    then
+        cp ${CodecInfoLog}  ${AttachmentsDir}/SVC_${CodecInfoLog}
+    fi
+
+    if [ -e ${CaseConfigureFileDir}/case_SVC.cfg ]
+    then
+        cp ${CaseConfigureFileDir}/case_SVC.cfg  ${AttachmentsDir}
+    fi
+
+    if [ -e ${SGEIPInfoFile} ]
+    then
+        cp ${SGEIPInfoFile}  ${AttachmentsDir}/SGEIPInfo.txt
+    fi
+
+}
+
+runMain()
+{
+    runInital
+    runOutputBasicInfo
+    runUpdateScript
+    runUpdateJobStatus
+
+    runGetAllCompletedJobReport
+
+    runGetSummary
+    runCopyFilesToAchiveDir
+
+}
+
+if [ ! $# -eq 1 ]
 then
-    echo ""
-    echo "*****************************************************************************"
-    echo         Final summary for all jobs ---- SCC
-    echo "*****************************************************************************"
-    echo ""
-    ./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SCC.cfg ${AllTestResultPassFlag}
-    cat  ${SCCTestSpace}/${FinalResultDir}/${AllTestSummary}
-    cp   ${SCCTestSpace}/${FinalResultDir}/${AllTestSummary}  ${AttachmentsDir}/${SCCAllTestSummary}
+    runUsage
+    exit 1
 fi
-cp ${SCCStatusLog}       ${AttachmentsDir}
-cp ${SCCJobReportLog}    ${AttachmentsDir}
-cp ${SGEJobSubmittedLog} ${AttachmentsDir}/SCC_${SGEJobSubmittedLog}
 
+TestProfile=$1
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 
+runMain ${TestProfile}
 
