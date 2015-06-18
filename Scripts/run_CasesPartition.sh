@@ -124,7 +124,7 @@ SubCaseInfoLog=$4
 echo ""
 echo "*********************************************************"
 echo "     call bash file is $0"
-echo "     input parameters is:"
+echo "     input parameters are:"
 echo "        $0 $@"
 echo "*********************************************************"
 echo ""

@@ -70,8 +70,8 @@ runUpdateScript()
     git  remote -v
 
     git fetch origin
-    git checkout NewSGEV1.3
-    git pull origin NewSGEV1.3
+    git checkout master
+    git pull origin master
 
 }
 
