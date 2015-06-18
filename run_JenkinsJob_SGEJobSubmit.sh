@@ -288,7 +288,7 @@ runMain()
     runInitial
     runCheck
 
-    if [ ! ${KillJobsFlag} -eq 0 ]
+    if [ ! ${KillJobsFlag} =  "true" ]
     then
         runCancelAllRunningJobsAndSubmitNewJobs
     else
