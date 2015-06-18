@@ -173,6 +173,7 @@ runDeleteItemCheck()
 	then
 		echo  -e "\033[31m delete item does not exist or permission denied! \033[0m"
 		echo  -e "\033[31m please double check!  \033[0m"
+        echo  -e "\033[31m DeleteItem is ${DeleteItem}  \033[0m"
 		echo  -e "\033[31m detected by run_SafeDelete.sh \033[0m"
 		exit 1
 	fi
