@@ -66,7 +66,7 @@ runKillJob()
     echo ""
     echo ""
 
-    if [ ${KillFlag} -eq 1  ]
+    if [ ${KillJobsFlag} = "true"  ]
     then
         ./run_SGEJobCancel.sh All >${SGEJobCancelJobLog}
     fi
@@ -153,10 +153,7 @@ runSGEJobPreviousTestBackup()
 runSubmitSGEJobs()
 {
 
-
-
     ./run_Main.sh SGETest  ${ConfigureFile}  "${CodecBranch}"  "${ReposAddr}"
-
 
 }
 
