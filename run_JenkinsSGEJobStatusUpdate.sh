@@ -27,10 +27,12 @@ runUsage()
 runInital()
 {
     CurrentDir=`pwd`
+    SGEJobsTestSpace="${CurrentDir}"
+
     CaseConfigureFileDir="CaseConfigure"
     FinalResultSummaryDir="FinalResult_Summary"
     FinalResultDir="FinalResult"
-    SGEIPInfoFile="${SCCTestSpace}/Tools/SGE.cfg"
+    SGEIPInfoFile="${CurrentDir}/Tools/SGE.cfg"
 
     JobFailedFlagFile="FailedJobInfo.txt"
     JobFailedFlag="False"
@@ -53,7 +55,7 @@ runOutputBasicInfo()
     echo ""
     echo "*****************************************************************************"
     echo "*****************************************************************************"
-    echo         SGE jobs status for SVC
+    echo " SGE jobs status for ${TestProfile}"
     echo "*****************************************************************************"
     echo "*****************************************************************************"
     echo ""
@@ -80,7 +82,7 @@ runUpdateJobStatus()
 
     echo ""
     echo "*****************************************************************************"
-    echo "   jobs  status ---- SVC"
+    echo "   jobs  status ---- ${TestProfile}"
     echo "*****************************************************************************"
     echo ""
 
@@ -94,12 +96,12 @@ runGetAllCompletedJobReport()
 {
     echo ""
     echo "*****************************************************************************"
-    echo         report for completed jobs ---- SVC
+    echo " report for completed jobs ---- ${TestProfile}"
     echo "*****************************************************************************"
     echo ""
 
     echo >${SGEJobsReportLog}
-    for file in ${SVCTestSpace}/${FinalResultDir}/TestReport*
+    for file in ${SGEJobsTestSpace}/${FinalResultDir}/TestReport*
     do
         echo file is $file
         if [ -e ${file} ]
@@ -125,12 +127,12 @@ runGetSummary()
     then
         echo ""
         echo "*****************************************************************************"
-        echo         Final summary for all jobs ---- SVC
+        echo " Final summary for all jobs ---- ${TestProfile}"
         echo "*****************************************************************************"
         echo ""
         ./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SVC.cfg ${AllTestResultPassFlag}
-        cat  ${SVCTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}
-        cp   ${SVCTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
+        cat  ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}
+        cp   ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
     fi
 
 }
