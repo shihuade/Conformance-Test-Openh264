@@ -121,6 +121,13 @@ AllCasesFile=$1
 SubCasesNum=$2
 TestYUVName=$3
 SubCaseInfoLog=$4
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain ${AllCasesFile} ${SubCasesNum}  ${TestYUVName} ${SubCaseInfoLog}
 
 

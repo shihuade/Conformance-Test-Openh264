@@ -162,7 +162,8 @@ runMain()
 
 	EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
-
+    echo "CheckLog is ${CheckLog}"
+    echo ""
 	echo "---------------Basic Check--------------------------------------------"
 	echo "-------------------1. Basic Check--Encoded Failed Check"
     date
@@ -207,6 +208,13 @@ runMain()
 	echo ""
 	return 0
 }
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain $@
 
 

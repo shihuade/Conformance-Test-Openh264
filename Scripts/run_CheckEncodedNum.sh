@@ -190,6 +190,13 @@ runMain()
 		return 1
 	fi
 }
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain $@
 
 

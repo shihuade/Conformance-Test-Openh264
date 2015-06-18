@@ -271,9 +271,16 @@ runOutputCaseCheckStatus()
 	#date info
 	date
 	local TestTime=`date`
-	
-     echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AssignedCasesSHATableFile}
-	 echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} ">>${AssignedCasesPassStatusFile}
+
+    echo "line writed to SHA1 talbe is:"
+    echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}"
+
+    echo "line writed to AllCases file is:"
+    echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} "
+
+
+    echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AssignedCasesSHATableFile}
+    echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} ">>${AssignedCasesPassStatusFile}
 
 	if [ ${BasicCheckFlag} -eq 1 -o  ${JSVMCheckFlag} -eq 1 ]
 	then
@@ -396,6 +403,13 @@ runMain()
 	return 0
 }
 CaseInfo=$@
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain  ${CaseInfo}
 
 

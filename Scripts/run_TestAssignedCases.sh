@@ -267,7 +267,13 @@ runAllCaseTest()
 			runParseCaseCheckLog  ${CheckLogFile}  >>${AssignedCasesConsoleLogFile}
 			echo "" >>${AssignedCasesConsoleLogFile}
 			echo "---------------Cat Check Log file------------------------">>${AssignedCasesConsoleLogFile}
-			cat ${CheckLogFile} >>${AssignedCasesConsoleLogFile}
+            if [ -e ${CheckLogFile} ]
+            then
+                cat ${CheckLogFile} >>${AssignedCasesConsoleLogFile}
+            else
+                echo "CheckLogFile ${CheckLogFile} does not exist,please double check"
+            fi
+
 			for file in  ${TempDataPath}/*
 			do
 				./run_SafeDelete.sh  ${file}>>DeletedFile.list
@@ -372,6 +378,13 @@ TestYUVName=$3
 InputYUV=$4
 SubCaseIndex=$5
 GivenCaseFile=$6
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV} ${SubCaseIndex} ${GivenCaseFile}
 
 

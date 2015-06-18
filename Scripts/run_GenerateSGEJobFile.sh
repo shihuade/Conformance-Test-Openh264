@@ -142,5 +142,12 @@ runMain()
 TestSequenceDir=$1
 TestYUVName=$2
 ConfigureFile=$3
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain ${TestSequenceDir} ${TestYUVName} ${ConfigureFile}
 
