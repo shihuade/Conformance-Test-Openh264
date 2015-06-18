@@ -48,6 +48,10 @@ runInitial()
     ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
     CodecInfoLog="CodecInfo.log"
     SummaryInfo="NULL"
+
+    SCCStatusLog="SCCSGEJobStatus.txt"
+    SVCStatusLog="SVCSGEJobStatus.txt"
+    SGEJobStatusLog=NULL
 }
 
 
@@ -86,7 +90,7 @@ runSGEJobsUpdate()
 
     if [ -e ${SGEJobSubmittedLog} ]
     then
-        ./run_SGEJobStatusUpdate.sh ${SGEJobSubmittedLog} ${AllJobsCompletedFlagFile}>${SVCStatusLog}
+        ./run_SGEJobStatusUpdate.sh ${SGEJobSubmittedLog} ${AllJobsCompletedFlagFile}>${SGEJobStatusLog}
     else
         echo "there is no job been sbumitted yet!"
     fi
@@ -269,9 +273,11 @@ runCheck()
 
     if [ "${TestProfile}" = "SCC"  ]
     then
+        SGEJobStatusLog=${SCCStatusLog}
         return 0
     elif [ "${TestProfile}" = "SVC"  ]
     then
+        SGEJobStatusLog=${SVCStatusLog}
         return 0
     else
         echo ""
