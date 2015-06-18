@@ -26,6 +26,7 @@ runUsage()
 
 runInital()
 {
+    CurrentDir=`pwd`
     CaseConfigureFileDir="CaseConfigure"
     FinalResultSummaryDir="FinalResult_Summary"
     FinalResultDir="FinalResult"
@@ -56,6 +57,7 @@ runOutputBasicInfo()
     echo "*****************************************************************************"
     echo "*****************************************************************************"
     echo ""
+    echo "  CurrentDir is ${CurrentDir} "
     echo ""
 }
 
@@ -134,21 +136,28 @@ runGetSummary()
 }
 runCopyFilesToAchiveDir()
 {
-    cp ${SGEJobsStatusLog}       ${AttachmentsDir}
+    cd ${CurrentDir}
+
+    cp ${SGEJobsStatusLog}    ${AttachmentsDir}
     cp ${SGEJobsReportLog}    ${AttachmentsDir}
 
     if [ -e ${SGEJobSubmittedLog} ]
     then
-        cp ${SGEJobSubmittedLog} ${AttachmentsDir}/SVC_${SGEJobSubmittedLog}
+        cp ${SGEJobSubmittedLog} ${AttachmentsDir}/${TestProfile}_${SGEJobSubmittedLog}
     fi
     if [ -e ${CodecInfoLog} ]
     then
-        cp ${CodecInfoLog}  ${AttachmentsDir}/SVC_${CodecInfoLog}
+        cp ${CodecInfoLog}  ${AttachmentsDir}/${TestProfile}_${CodecInfoLog}
     fi
 
     if [ -e ${CaseConfigureFileDir}/case_SVC.cfg ]
     then
         cp ${CaseConfigureFileDir}/case_SVC.cfg  ${AttachmentsDir}
+    fi
+
+    if [ -e ${CaseConfigureFileDir}/case_SCC.cfg ]
+    then
+        cp ${CaseConfigureFileDir}/case_SCC.cfg  ${AttachmentsDir}
     fi
 
     if [ -e ${SGEIPInfoFile} ]
