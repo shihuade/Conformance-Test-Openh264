@@ -29,6 +29,10 @@ runInital()
     CurrentDir=`pwd`
     SGEJobsTestSpace="${CurrentDir}"
 
+    JenkinsHomeDir="/Users/jenkins"
+    AttachmentsFolder="Openh264-SGETest/Jenkins-Job-Status-Check-Log"
+    AttachmentsDir="${JenkinsHomeDir}/${AttachmentsFolder}"
+
     CaseConfigureFileDir="CaseConfigure"
     FinalResultSummaryDir="FinalResult_Summary"
     FinalResultDir="FinalResult"
