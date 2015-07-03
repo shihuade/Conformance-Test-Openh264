@@ -348,6 +348,7 @@ runDelPreviousJob()
     for((i=0;i<${ReSubmittedJobNum};i++))
     do
         vTempJobID=${aSubmittedSGEJobIDList[$i]}
+        echo "Deleted Job ID is ${vTempJobID} "
         qdel ${vTempJobID}
     done
     echo -e "\033[34m **********************************************************  \033[0m"
