@@ -51,6 +51,12 @@ runInital()
     AllTestResultPassFlag="AllCasesPass.flag"
     CodecInfoLog="CodecInfo.log"
 
+    SuccedJobsInfo="SuccedJobsDetailInfo.txt"
+    FailedJobsInfo="FailedJobsDetailInfo.txt"
+    UnRunCasesJobsInfo="UnRunCasesJobsDetailInfo.txt"
+    UnknownReasonJobsInfo="UnknownReasonJobsDetailInfo.txt"
+
+
 }
 
 runOutputBasicInfo()
@@ -174,6 +180,26 @@ runCopyFilesToAchiveDir()
     if [ -e ${SGEIPInfoFile} ]
     then
         cp ${SGEIPInfoFile}  ${AttachmentsDir}/SGEIPInfo.txt
+    fi
+
+    if [ -e ${SuccedJobsInfo} ]
+    then
+        cp ${SuccedJobsInfo}  ${AttachmentsDir}/${TestProfile}_${SuccedJobsInfo}
+    fi
+
+    if [ -e ${FailedJobsInfo} ]
+    then
+        cp ${FailedJobsInfo}  ${AttachmentsDir}/${TestProfile}_${FailedJobsInfo}
+    fi
+
+    if [ -e ${UnRunCasesJobsInfo} ]
+    then
+        cp ${UnRunCasesJobsInfo}  ${AttachmentsDir}/${TestProfile}_${UnRunCasesJobsInfo}
+    fi
+
+    if [ -e ${UnknownReasonJobsInfo} ]
+    then
+        cp ${UnknownReasonJobsInfo}  ${AttachmentsDir}/${TestProfile}_${UnknownReasonJobsInfo}
     fi
 
 }

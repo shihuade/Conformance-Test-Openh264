@@ -47,9 +47,17 @@ runUsage()
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh AllHostsName           \033[0m"
     echo ""
     echo -e "\033[32m e.g.:  9) get all jobs' ID list                                \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh AllJobsID              \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh AllCompletedJobsID     \033[0m"
     echo ""
-
+    echo -e "\033[32m e.g.:  10) get failed jobs' test Dir list                      \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh FailedJobTestDir       \033[0m"
+    echo ""
+    echo -e "\033[32m e.g.:  11) get succed jobs' test Dir list                      \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobTestDir       \033[0m"
+    echo ""
+    echo -e "\033[32m e.g.:  12) get un-runCases jobs' test Dir list                 \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobTestDir    \033[0m"
+    echo ""
 
 }
 
@@ -58,13 +66,18 @@ runInitial()
     declare -a aFailedJobIDList
     declare -a aFailedJobNameList
     declare -a aFailedJobUnpassedCasesNumList
+    declare -a aFailedJobTestDirList
 
     declare -a aUnRunCaseJobIDList
     declare -a aUnRunCaseJobNameList
+    declare -a aUnRunCaseJobTestDirList
+
 
     declare -a aSuccedJobIDList
     declare -a aSuccedJobNameList
     declare -a aSuccedJobUnpassedCasesNumList
+    declare -a aSuccedJobTestDirList
+
 
     declare -a aAllJobsHostNameList
     declare -a aAllJobIDList
@@ -156,6 +169,7 @@ runParseStatus()
     SGEJobID=""
     SGEJobName=""
     SGEJobHost=""
+    TestDir=""
 
     while read line
     do
@@ -214,6 +228,9 @@ runParseStatus()
 
     done <${ReportFile}
 
+    TempDataDir="/home"
+    TestDir="${TempDataDir}/${SGEJobHost}/SGEJobID_${SGEJobID}"
+
 }
 
 runUpdateJobPassedStatus()
@@ -223,6 +240,7 @@ runUpdateJobPassedStatus()
     then
         aUnRunCaseJobIDList[${UnRunCaseJobNum}]=${SGEJobID}
         aUnRunCaseJobNameList[${UnRunCaseJobNum}]=${SGEJobName}
+        aUnRunCaseJobTestDirList[${UnRunCaseJobNum}]=${TestDir}
         let "UnRunCaseJobNum ++"
 
     elif [ ! "${UnpassedCasesNum}" -eq 0 ]
@@ -230,11 +248,15 @@ runUpdateJobPassedStatus()
         aFailedJobIDList[${FailedJobNum}]=${SGEJobID}
         aFailedJobNameList[${FailedJobNum}]=${SGEJobName}
         aFailedJobUnpassedCasesNumList[${FailedJobNum}]=${UnpassedCasesNum}
+
+        aFailedJobTestDirList[${FailedJobNum}]=${TestDir}
         let "FailedJobNum ++"
     else
         aSuccedJobIDList[${SuccedJobNum}]=${SGEJobID}
         aSuccedJobNameList[${SuccedJobNum}]=${SGEJobName}
         aSuccedJobUnpassedCasesNumList[${SuccedJobNum}]=${PassedCasesNum}
+
+        aSuccedJobTestDirList[${SuccedJobNum}]=${TestDir}
         let "SuccedJobNum ++"
     fi
 
@@ -292,19 +314,30 @@ runOutputParseResult()
     elif [ "${Option}" = "AllHostsName" ]
     then
         echo ${aAllJobsHostNameList[@]}
-    elif [ "${Option}" = "AllJobsID" ]
+    elif [ "${Option}" = "AllCompletedJobsID" ]
     then
         echo ${aAllJobIDList[@]}
+    elif [ "${Option}" = "FailedJobTestDir" ]
+    then
+        echo ${aFailedJobTestDirList[@]}
+
+    elif [ "${Option}" = "SuccedJobTestDir" ]
+    then
+        echo ${aSuccedJobTestDirList[@]}
+
+    elif [ "${Option}" = "UnRunCaseJobTestDir" ]
+    then
+        echo ${aUnRunCaseJobTestDirList[@]}
     fi
 }
 
 runOptionValidateCheck()
 {
     declare -a aOptionList
-    aOptionList=(FailedJobID FailedJobName FailedJobUnpassedNum \
-                 SuccedJobID SuccedJobName SuccedJobPassedNum   \
-                 UnRunCaseJobID UnRunCaseJobName \
-                 AllHostsName AllJobsID  )
+    aOptionList=(FailedJobID FailedJobName FailedJobUnpassedNum FailedJobTestDir \
+                 SuccedJobID SuccedJobName SuccedJobPassedNum   SuccedJobTestDir \
+                 UnRunCaseJobID UnRunCaseJobName   UnRunCaseJobTestDir \
+                 AllHostsName AllCompletedJobsID  )
     let "Flag=1"
 
     for InputOption in ${aOptionList[@]}

@@ -21,6 +21,10 @@ runInitial()
 {
     declare -a aSubmittedSGEJobIDList
     declare -a aSubmittedSGEJobNameList
+    declare -a aSubmittedSGEJobYUVNameList
+    declare -a aSubmittedSGEJobSubCasesIndexList
+
+
     declare -a aCurrentSGEQueueJobIDList
 
     declare -a aRunningJobIDList
@@ -41,6 +45,11 @@ runInitial()
     declare -a aUnknownReasonFailedJobIDList
     declare -a aUnknownReasonFailedJobNameList
 
+    declare -a aFailedJobTestDirList
+    declare -a aSuccedJobTestDirList
+    declare -a aUnRunCaseJobTestDirList
+
+
     let "SubmittedJobNum = 0"
     let "CurrentSGEQueueJobNum = 0"
     let "NonCompletedJobNum=0"
@@ -58,6 +67,19 @@ runInitial()
         ./Scripts/run_SafeDelete.sh ${FaildJobInfoLog}
     fi
 
+    CurrentDir=`pwd`
+    TestSpace="${CurrentDir}/AllTestData"
+    SuccedJobsInfo="${CurrentDir}/SuccedJobsDetailInfo.txt"
+    FailedJobsInfo="${CurrentDir}/FailedJobsDetailInfo.txt"
+    UnRunCasesJobsInfo="${CurrentDir}/UnRunCasesJobsDetailInfo.txt"
+    UnknownReasonJobsInfo="${CurrentDir}/UnknownReasonJobsDetailInfo.txt"
+
+    echo "">${SuccedJobsInfo}
+    echo "">${FailedJobsInfo}
+    echo "">${UnRunCasesJobsInfo}
+    echo "">${UnknownReasonJobsInfo}
+
+
 }
 
 runParseJobsInfo()
@@ -73,6 +95,27 @@ runParseJobsInfo()
     let "CurrentSGEQueueJobNum = ${#aCurrentSGEQueueJobIDList[@]}/2"
 
 }
+
+runParseJobsDetailInfo()
+{
+    # job name looks like as below:
+    # ----MSHD_320x192_12fps.yuv_SubCaseIndex_22
+    for((i=0;i<${SubmittedJobNum};i++))
+    do
+        vTempJobName=${aSubmittedSGEJobNameList[$i]}
+        vTempYUVName=`echo ${vTempJobName} | awk 'BEGIN {FS="----"} {print $2}' `
+        vTempYUVName=`echo ${vTempYUVName} | awk 'BEGIN {FS=".yuv"} {print $1}' `
+        vTempYUVName="${vTempYUVName}.yuv"
+
+        vTempSubCasesIndex=`echo ${vTempJobName} | awk 'BEGIN {FS="SubCaseIndex_"} {print $2}' `
+        vTempSubCasesIndex="SubCaseIndex_${vTempSubCasesIndex}"
+
+        aSubmittedSGEJobYUVNameList[$i]=${vTempYUVName}
+        aSubmittedSGEJobSubCasesIndexList[$i]=${vTempSubCasesIndex}
+    done
+
+}
+
 runOutputParseInfo()
 {
     echo  -e "\033[32m Total submitted job num   is ${SubmittedJobNum}                \033[0m"
@@ -159,6 +202,12 @@ runUpdateSGEJobPassedStatus()
     aUnRunCaseJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   UnRunCaseJobID `)
     aUnRunCaseJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh UnRunCaseJobName `)
 
+
+    aFailedJobTestDirList=(`./Scripts/run_ParseSGEJobPassStatus.sh FailedJobTestDir `)
+    aSuccedJobTestDirList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobTestDir `)
+    aUnRunCaseJobTestDirList=(`./Scripts/run_ParseSGEJobPassStatus.sh UnRunCaseJobTestDir `)
+
+
     let "FailedJobNum=${#aFailedJobIDList[@]}"
     let "SuccedJobNum=${#aSuccedJobIDList[@]}"
     let "UnRunCasesJobNum=${#aUnRunCaseJobIDList[@]}"
@@ -201,6 +250,65 @@ runGetUnknownReasonFailedJobInfo()
 
             let "UnKnownJobIndex ++"
         fi
+    done
+
+}
+
+runOutputJobDetailInfoFile()
+{
+
+    for((i=0;i<${SubmittedJobNum}; i++))
+    do
+        let "SubmittedJobID = ${aSubmittedSGEJobIDList[$i]}"
+        vSubCasesIndex="${aSubmittedSGEJobSubCasesIndexList[$i]}"
+        vTestDir="${TestSpace}/${aSubmittedSGEJobYUVNameList[$i]}"
+
+        ## for unknown reason jobs' info
+        for ((j=0;j<${UnKnownReasonFailedJobNum};j++))
+        do
+            let "DetectedJobID = ${aUnknownReasonFailedJobIDList[$j]}"
+            if [ "${SubmittedJobID}" = "${DetectedJobID}" ]
+            then
+                echo "${SubmittedJobID}  ${vSubCasesIndex}  ${vTestDir} ">>${UnknownReasonJobsInfo}
+
+            fi
+        done
+
+        ## for failed  jobs' info
+        for ((j=0;j<${FailedJobNum};j++))
+        do
+            let "DetectedJobID = ${aFailedJobIDList[$j]}"
+            if [ "${SubmittedJobID}" = "${DetectedJobID}" ]
+            then
+                echo "${SubmittedJobID}  ${vSubCasesIndex}  ${vTestDir} ">>${FailedJobsInfo}
+                echo "            ----Test dir is: ${aFailedJobTestDirList}">>${FailedJobsInfo}
+
+            fi
+        done
+
+        ## for succed jobs' info
+        for ((j=0;j<${SuccedJobNum};j++))
+        do
+            let "DetectedJobID = ${aSuccedJobIDList[$j]}"
+            if [ "${SubmittedJobID}" = "${DetectedJobID}" ]
+            then
+                echo "${SubmittedJobID}  ${vSubCasesIndex}  ${vTestDir} ">>${SuccedJobsInfo}
+                echo "            ----Test dir is: ${aSuccedJobTestDirList}">>${SuccedJobsInfo}
+
+            fi
+        done
+
+        ## for un-run-cases jobs' info
+        for ((j=0;j<${UnRunCasesJobNum};j++))
+        do
+            let "DetectedJobID = ${aUnRunCaseJobIDList[$j]}"
+            if [ "${SubmittedJobID}" = "${DetectedJobID}" ]
+            then
+                echo "${SubmittedJobID}  ${vSubCasesIndex}  ${vTestDir} ">>${UnRunCasesJobsInfo}
+                echo "            ----Test dir is: ${aUnRunCaseJobTestDirList}">>${UnRunCasesJobsInfo}
+            fi
+        done
+
     done
 
 }
@@ -336,11 +444,13 @@ runMain()
     runInitial
 
     runParseJobsInfo
+    runParseJobsDetailInfo
 
     runOutputParseInfo
 
     runSGEJobStatusCheck
     runUpdateSGEJobPassedStatus
+    runOutputJobDetailInfoFile
     runOutputStatusSummary
     if [ $? -eq 0 ]
     then
