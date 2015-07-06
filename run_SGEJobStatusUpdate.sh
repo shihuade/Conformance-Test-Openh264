@@ -103,7 +103,7 @@ runParseJobsDetailInfo()
     for((i=0;i<${SubmittedJobNum};i++))
     do
         vTempJobName=${aSubmittedSGEJobNameList[$i]}
-        vTempYUVName=`echo ${vTempJobName} | awk 'BEGIN {FS="----"} {print $2}' `
+        vTempYUVName=`echo ${vTempJobName} | awk 'BEGIN {FS="----"} {print $1}' `
         vTempYUVName=`echo ${vTempYUVName} | awk 'BEGIN {FS=".yuv"} {print $1}' `
         vTempYUVName="${vTempYUVName}.yuv"
 
