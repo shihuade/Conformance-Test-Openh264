@@ -49,7 +49,7 @@ runEncoderCommandInital()
 					-sw -sh  "-dw 0"  "-dh 0" "-dw 1" "-dh 1" "-dw 2" "-dh 2" "-dw 3" "-dh 3" \
 					"-frout 0" "-frout 1" "-frout 2" "-frout 3" \
 					"-lqp 0" "-lqp 1" "-lqp 2" "-lqp 3" \
-					-rc -tarb "-ltarb 0" 	"-ltarb 1" "-ltarb 2" "-ltarb 3" \
+					-rc -fs -tarb "-ltarb 0" 	"-ltarb 1" "-ltarb 2" "-ltarb 3" \
 					"-slcmd 0" "-slcnum 0" "-slcmd 1" "-slcnum 1"\
 					"-slcmd 2" "-slcnum 2" "-slcmd 3" "-slcnum 3"\
 					-nalsize \
@@ -59,7 +59,7 @@ runEncoderCommandInital()
 					sw sh  dw0 dh0 dw1 dh1 dw2 dh2 dw3 dh3 \
 					frout0 frout1 frout2 frout3 \
 					lqp0 lqp1 lqp2 lqp3 \
-					rc tarb ltarb0 	ltarb1 ltarb2 ltarb3 \
+					rc FrSkip tarb ltarb0 	ltarb1 ltarb2 ltarb3 \
 					slcmd0 slcnum0 slcmd1 slcnum1 \
 					slcmd2 slcnum2 slcmd3 slcnum3 \
 					MaxNalSZ  \
@@ -85,7 +85,7 @@ runParseCaseInfo()
 	local TempData=""
 
 	local CaseData=$@
-	declare -a aTempParamIndex=( 6 7 8 9 10 11 12 13    15 16 17   19 20 21     24 25 26 27   30 31 32 33 34 35 )
+	declare -a aTempParamIndex=( 6 7 8 9 10 11 12 13    15 16 17   19 20 21     25 26 27 28   31 32 33 34 35 36 )
 	TempData=`echo $CaseData |awk 'BEGIN {FS="[,\r]"} {for(i=1;i<=NF;i++) printf(" %s",$i)} ' `
 	aEncoderCommandValue=(${TempData})
 	let "TempParamFlag=0"

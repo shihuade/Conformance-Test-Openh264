@@ -59,6 +59,7 @@ runGlobalVariableInital()
 	declare -a  aNumTempLayer
 	declare -a  aUsageType
 	declare -a  aRCMode
+    declare -a  aFrameSkip
 	declare -a  aIntraPeriod
 	declare -a  aTargetBitrateSet
 	declare -a  aInitialQP
@@ -247,6 +248,9 @@ runParseCaseConfigure()
 		elif [[ "$line" =~ ^RCMode ]]
 		then
 			aRCMode=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
+        elif [[ "$line" =~ ^EnableFrameSkip ]]
+        then
+            aFrameSkip=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^EnableLongTermReference ]]
 		then
 			aEnableLongTermReference=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
@@ -272,6 +276,7 @@ runParseCaseConfigure()
 		then
 			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		fi
+
 	done <$ConfigureFile
 }
 #usage: runGetSliceNum  $SliceMd
@@ -321,17 +326,22 @@ runFirstStageCase()
 					then
 						aQPforTest=${aInitialQP[@]}
 						aTargetBitrateSet=("256,256,256,256,")
+                        aFrameSkip=(0)
 					else
 						aQPforTest=(26)
 						runGenerateMultiLayerBRSet ${NumSpatialLayer}
 					fi
-					#......for loop.........................................#
-					for QPIndex in ${aQPforTest[@]}
-					do
-						for BitRateIndex in ${aTargetBitrateSet[@]}
-						do
-							runGenerateLayerResolution   ${NumSpatialLayer}
-							echo "$ScreenSignal, \
+
+                    for vFrameSkipFlag in ${aFrameSkip[@]}
+                    do
+
+                        #......for loop.........................................#
+                        for QPIndex in ${aQPforTest[@]}
+                        do
+                            for BitRateIndex in ${aTargetBitrateSet[@]}
+                            do
+                                runGenerateLayerResolution   ${NumSpatialLayer}
+                                echo "$ScreenSignal, \
 								$FramesToBeEncoded,\
 								${NumSpatialLayer},\
 								$NumTempLayer,\
@@ -341,8 +351,10 @@ runFirstStageCase()
 								${QPIndex}, ${QPIndex},\
 								${QPIndex}, ${QPIndex},\
 								${RCModeIndex},\
+                                ${vFrameSkipFlag},\
 								${BitRateIndex}">>$casefile_01
-						done
+                            done
+                        done
 					done
 				done
 			done
@@ -471,7 +483,8 @@ runOutputParseResult()
 	echo "aNumSpatialLayer=   ${aNumSpatialLayer[@]}"
 	echo "aNumTempLayer=      ${aNumTempLayer[@]}"
 	echo "MaxNalSize=         $MaxNalSize"
-	echo "aRCMode=            ${aRCMode[@]}"
+    echo "aRCMode=            ${aRCMode[@]}"
+    echo "aFrameSkip=         ${aFrameSkip[@]}"
 	echo "aInitialQP=         ${aInitialQP[@]}"
 	echo "aIntraPeriod=       ${aIntraPeriod}"
 	echo "aSliceMode=         ${aSliceMode[@]}"
@@ -525,6 +538,7 @@ runBeforeGenerate()
 		QPLayer2,\
 		QPLayer3,\
 		RCMode,\
+        FrameSkip,\
 		BROverAll,\
 		BRLayer0,\
 		BRLayer1,\
