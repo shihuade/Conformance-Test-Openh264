@@ -23,7 +23,8 @@ runPrepareSGEJobFile()
 
     let "SGEQueueIndex = SGEJobNum % 3"
 
-	SGEQueue="Openh264SGE_${SGEQueueIndex}"
+    #SGEQueue="Openh264SGE_${SGEQueueIndex}"
+    SGEQueue="Openh264SGE"
     #add ---- for post log parse
 	SGEJobName="----${TestYUVName}_SubCaseIndex_${SubCaseIndex}----"
 	SGEModelFile="${ScriptFolder}/SGEModel.sge"

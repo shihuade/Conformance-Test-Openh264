@@ -74,10 +74,12 @@ runInitial()
     UnRunCasesJobsInfo="${CurrentDir}/UnRunCasesJobsDetailInfo.txt"
     UnknownReasonJobsInfo="${CurrentDir}/UnknownReasonJobsDetailInfo.txt"
 
-    echo "">${SuccedJobsInfo}
-    echo "">${FailedJobsInfo}
-    echo "">${UnRunCasesJobsInfo}
-    echo "">${UnknownReasonJobsInfo}
+    date
+    DateInfo=`date`
+    echo "${DateInfo}">${SuccedJobsInfo}
+    echo "${DateInfo}">${FailedJobsInfo}
+    echo "${DateInfo}">${UnRunCasesJobsInfo}
+    echo "${DateInfo}">${UnknownReasonJobsInfo}
 
 
 }
