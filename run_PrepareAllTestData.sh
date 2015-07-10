@@ -119,7 +119,19 @@ runParseConfigureFile()
             TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
             TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
             let "SGEJobSubCasesNum= ${TempString}"
+        elif [[ "$line" =~ ^InputFormat  ]]
+        then
+            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
+            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
+            let "InputFileFormat= ${TempString}"
+
+        elif [[ "$line" =~ ^TestBitStreamDir  ]]
+        then
+            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
+            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
+            InputBitStreamDir= ${TempString}
         fi
+
 	done <${ConfigureFile}
 
     if [ ! -z ${OpenH264Repos} ]
@@ -223,6 +235,25 @@ runPrepareTestSpace()
 	
 	return 0
 }
+runGetInputTestSet()
+{
+    aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
+
+    if [ ${InputFileFormat} -eq 1 ]
+    then
+        if [ ! -d ${InputBitStreamDir} ]
+        then
+            echo -e "\033[31m Input bit stream dir does not exist,please double check! \033[0m"
+            exit 1
+        fi
+
+        cd ${InputBitStreamDir}
+        InputBitStreamDir=`pwd`
+        cd ${CurrentDir}
+    fi
+
+}
+
 runCheck()
 {
 	#check test type
@@ -284,7 +315,11 @@ runMain()
 	Branch=""
     CodecInfoLog="${CurrentDir}/CodecInfo.log"
 
+    #Input test set setting
 	declare -a aTestYUVList
+    InputFileFormat=""
+    InputBitStreamDir=""
+
 	#folder for eache test sequence
 	SubFolder=""
 	SGEJobFile=""
@@ -306,10 +341,8 @@ runMain()
 	#update codec
     runUpdateCodec
 
+    runGetInputTestSet
 	echo "Preparing test space for all test sequences!"
-
-    aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
-
 	runPrepareTestSpace
 }
 TestType=$1

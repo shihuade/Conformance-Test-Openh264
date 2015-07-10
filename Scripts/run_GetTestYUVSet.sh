@@ -1,27 +1,39 @@
 #!/bin/bash
 #***************************************************************************************
 # brief:
-#      --get test YUV set from case configure file
+#      --get test test YUV name list from case configure file
+#      --if input files are bit streams, transcode bit stream into YUV file
+#        under folder under ${WorkdingDir}/BitStreamToYUV
 # usage:
 #      ./run_GetTestYUVSet.sh  ${CaseConfigureFile}
 #
 #date:  04/26/2014 Created
 #***************************************************************************************
 
-
-runGetTestYUVList()
+runInitial()
 {
-	local TestSet0=""
-	local TestSet1=""
-	local TestSet2=""
-	local TestSet3=""
-	local TestSet4=""
-	local TestSet5=""
-	local TestSet6=""
-	local TestSet7=""
-	local TestSet8=""
-
+    declare -a aInputTestFileList
     declare -a aTestYUVList
+
+    TestSet0=""
+    TestSet1=""
+    TestSet2=""
+    TestSet3=""
+    TestSet4=""
+    TestSet5=""
+    TestSet6=""
+    TestSet7=""
+    TestSet8=""
+
+    CurrentDir=`pwd`
+    InputBitStreamDir=""
+    BitStreamToYUVFolder="BitStreamToYUV"
+    let "InputFileFormat = 0"
+
+}
+
+runParseInputSetting()
+{
 	while read line
 	do
 		if [[ "$line" =~ ^TestSet0  ]]
@@ -51,15 +63,57 @@ runGetTestYUVList()
 		elif  [[ "$line" =~ ^TestSet8  ]]
 		then
 			TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-		fi
-	done <${ConfigureFile}
-	
-	aTestYUVList=(${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8})
 
-    echo ${aTestYUVList[@]}
+        elif [[ "$line" =~ ^InputFormat  ]]
+        then
+            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
+            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
+            let "InputFileFormat= ${TempString}"
+
+        elif [[ "$line" =~ ^TestBitStreamDir  ]]
+        then
+            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
+            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
+            InputBitStreamDir= ${TempString}
+        fi
+
+    done <${ConfigureFile}
+
+	aInputTestFileList=(${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8})
+
+
  }
 
+runTranscodeBitStreamToYUV()
+{
 
+    if [ ! -d ${BitStreamToYUVFolder} ]
+    then
+        mkdir ${BitStreamToYUVFolder}
+    fi
+
+    
+
+}
+
+
+runCheck()
+{
+    if [ ${InputFileFormat} -eq 1 ]
+    then
+
+        if [ ! -d ${InputBitStreamDir} ]
+        then
+            echo -e "\033[31m Input bit stream dir does not exist,please double check! \033[0m"
+            exit 1
+        fi
+
+        cd ${InputBitStreamDir}
+        InputBitStreamDir=`pwd`
+        cd ${CurrentDir}
+    fi
+
+}
 
 runMain()
 {
@@ -79,6 +133,8 @@ runMain()
     fi
 
     runGetTestYUVList
+
+    echo ${aTestYUVList[@]}
 
     return 0
 
