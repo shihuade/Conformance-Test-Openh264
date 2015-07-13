@@ -129,7 +129,7 @@ runParseConfigureFile()
         then
             TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
             TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
-            InputBitStreamDir= ${TempString}
+            InputBitStreamDir=${TempString}
         fi
 
 	done <${ConfigureFile}
