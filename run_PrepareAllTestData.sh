@@ -222,6 +222,11 @@ runPrepareTestSpace()
 		cp  ${ScriptFolder}/*   ${SubFolder}
 		cp  ${ConfigureFile}    ${SubFolder}
 
+        if [ ${InputFileFormat} -eq 1 ]
+        then
+            cp ${BitStreamToYUVFolder}/${TestYUV}  ${SubFolder}
+        fi
+
         cd ${SubFolder}
         runGenerateCaseFiles ${TestYUV}
         cd ${CurrentDir}
@@ -237,8 +242,6 @@ runPrepareTestSpace()
 }
 runGetInputTestSet()
 {
-    aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
-
     if [ ${InputFileFormat} -eq 1 ]
     then
         if [ ! -d ${InputBitStreamDir} ]
@@ -250,6 +253,13 @@ runGetInputTestSet()
         cd ${InputBitStreamDir}
         InputBitStreamDir=`pwd`
         cd ${CurrentDir}
+    fi
+
+    aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
+
+    if [ ${InputFileFormat} -eq 1 ]
+    then
+        cat BitStreamToYUV.log
     fi
 
 }
@@ -305,8 +315,9 @@ runMain()
     OpenH264Repos=$8
 
 	CurrentDir=`pwd`
-	SHA1TableFolder="SHA1Table"
-	FinalResultDir="FinalResult"
+	SHA1TableFolder="${CurrentDir}/SHA1Table"
+	FinalResultDir="${CurrentDir}/FinalResult"
+    BitStreamToYUVFolder="${CurrentDir}/BitStreamToYUV"
     SummaryDir="FinalResult_Summary"
 	let "SGEJobNum =0 "
     let "SGEJobSubCasesNum=0"
@@ -331,11 +342,7 @@ runMain()
 	mkdir ${SHA1TableFolder}
 	mkdir ${FinalResultDir}
 	mkdir ${SourceFolder}
-	
-	cd ${FinalResultDir}
-	FinalResultDir=`pwd`
-	cd  ${CurrentDir}
-	
+
 	#parse git repository info 
 	runParseConfigureFile
 	#update codec

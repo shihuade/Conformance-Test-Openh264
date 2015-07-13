@@ -19,21 +19,33 @@ runGetYUVFullPath()
 	fi
 	local TestYUVName=$1
 	local ConfigureFile=$2
+
 	local YUVDir=""
+    let "InputFormat=0"
 	while read line
 	do
 		if [[  $line =~ ^TestYUVDir  ]]
 		then
 			 YUVDir=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-			 break
-		fi
+        elif [[  $line =~ ^InputFormat  ]]
+        then
+            vTemp=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
+            let "InputFormat=${vTemp}"
+        fi
 	done <${ConfigureFile}
-	if [  ! -d ${YUVDir} ]
-	then
-		echo "YUV directory setting is not correct,${YUVDir} does not exist! "
-		exit 1
-	fi
-	TestYUVFullPath=`./run_GetYUVPath.sh  ${TestYUVName}  ${YUVDir}`
+
+
+    if [ ! ${InputFormat} -eq 0 ]
+    then
+        TestYUVFullPath=`pwd`
+    else
+        if [  ! -d ${YUVDir} ]
+        then
+            echo "YUV directory setting is not correct,${YUVDir} does not exist! "
+            exit 1
+        fi
+        TestYUVFullPath=`./run_GetYUVPath.sh  ${TestYUVName}  ${YUVDir}`
+    fi
 	return $?
 }
 
