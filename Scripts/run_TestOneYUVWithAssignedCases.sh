@@ -38,6 +38,7 @@ runGetYUVFullPath()
     if [ ! ${InputFormat} -eq 0 ]
     then
         TestYUVFullPath=`pwd`
+        TestYUVFullPath=${TestYUVFullPath}/${TestYUVName}
     else
         if [  ! -d ${YUVDir} ]
         then

@@ -303,4 +303,13 @@ OriginYUV=$2
 NumberLayer=$3
 PrepareLog=$4
 Multiple16Flag=$5
+
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
 runMain   ${OutPutDir} ${OriginYUV}  ${NumberLayer} ${PrepareLog} ${Multiple16Flag}

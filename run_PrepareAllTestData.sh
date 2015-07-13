@@ -209,7 +209,6 @@ runPrepareTestSpace()
 
         echo -e "\033[32m ********************************************************************* \033[0m"
         echo -e "\033[32m    Test sequence name is ${TestYUV} \033[0m"
-        echo -e "\033[32m    Test sequence name is ${TestYUV} \033[0m"
         echo -e "\033[32m    Sub folder is  ${SubFolder}"
         echo -e "\033[32m ********************************************************************* \033[0m"
 
