@@ -7,6 +7,17 @@
 # usage:
 #      ./run_GetTestYUVSet.sh  ${CaseConfigureFile}
 #
+#      ----for case 0: input format is 0
+#          input files are YUV, output test YUV name list only
+#
+#      ----for case 0: input format is 1
+#           input files are bit stream,
+#          --i) check that wheather all test bit stream are exist under given input dir
+#          --ii)transcode bit stream into YUV, output YUV folder is
+#               ${CurrentDir}/BitStreamToYUV
+#          --iii) output transcode YUV name list
+#
+#
 #date:  04/26/2014 Created
 #***************************************************************************************
 
@@ -14,6 +25,8 @@ runInitial()
 {
     declare -a aInputTestFileList
     declare -a aTestYUVList
+    declare -a aBitStreamToYUVFlag
+    declare -a aFailedTranscodedList
 
     TestSet0=""
     TestSet1=""
@@ -26,9 +39,15 @@ runInitial()
     TestSet8=""
 
     CurrentDir=`pwd`
+    ScriptsDir="${CurrentDir}/Scripts"
+    CodecDir="${CurrentDir}/Codec/h264dec"
     InputBitStreamDir=""
-    BitStreamToYUVFolder="BitStreamToYUV"
+    BitStreamToYUVFolder="${CurrentDir}/BitStreamToYUV"
+    BitStreamToYUVLog="${CurrentDir}/BitStreamToYUV.log"
     let "InputFileFormat = 0"
+    let "FailedTranscodedNum=0"
+    let "ReturnFlag=0"
+    date >${BitStreamToYUVLog}
 
 }
 
@@ -74,7 +93,7 @@ runParseInputSetting()
         then
             TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
             TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
-            InputBitStreamDir= ${TempString}
+            InputBitStreamDir="${TempString}"
         fi
 
     done <${ConfigureFile}
@@ -92,12 +111,57 @@ runTranscodeBitStreamToYUV()
         mkdir ${BitStreamToYUVFolder}
     fi
 
-    
+    let "i=0"
 
-    
+    for vInputFileName in ${aInputTestFileList[@]}
+    do
 
+        InputBitStreamFile=${InputBitStreamDir}/${vInputFileName}
+
+        if [ ! -e ${InputBitStreamFile} ]
+        then
+            echo -e "\033[31m bit sream ${InputBitStreamFile}  does not exist,please double check! \033[0m"
+            aBitStreamToYUVFlag[$i]="Transcoded Failed!--File not exist"
+            aFailedTranscodedList[FailedTranscodedNum]=${InputBitStreamFile}
+            let "FailedTranscodedNum ++"
+            let "ReturnFlag=1"
+        else
+            ${ScriptsDir}/run_BitStreamToYUV.sh ${InputBitStreamFile} ${BitStreamToYUVFolder}  ${CodecDir}
+            aBitStreamToYUVFlag[$i]="Transcoded Succed!"
+        fi
+        let "i ++"
+    done
 }
 
+runOutputBitStreamTransCodeInfo()
+{
+
+    echo -e "\033[32m ********************************************************* \033[0m"
+    echo -e "\033[32m Bit stream transcode to YUV detaile info list as below:   \033[0m"
+    echo -e "\033[32m ********************************************************* \033[0m"
+    for ((i=0;i<${#aInputTestFileList[@]};i++))
+    do
+        echo "${aInputTestFileList[$i]} : ${aBitStreamToYUVFlag[$i]} "
+    done
+    echo ""
+    echo -e "\033[31m Total failed num         is:  ${FailedTranscodedNum}       \033[0m"
+    echo -e "\033[31m Failed bit stream files are:  ${aFailedTranscodedList[@]}  \033[0m"
+    echo ""
+    echo -e "\033[32m TranscodeYUV list are: ${aTestYUVList[@]}                  \033[0m"
+    echo -e "\033[32m ********************************************************* \033[0m"
+}
+runGetTranscodeYUVName()
+{
+
+    let " i=0"
+    for file in ${BitStreamToYUVFolder}/*.yuv
+    do
+
+        vTempName=`echo ${file} | awk 'BEGIN {FS="/"} {print $NF}'`
+        aTestYUVList[$i]=${vTempName}
+        let " i ++"
+   done
+}
 
 runCheck()
 {
@@ -113,6 +177,21 @@ runCheck()
         cd ${InputBitStreamDir}
         InputBitStreamDir=`pwd`
         cd ${CurrentDir}
+    fi
+
+}
+
+runGetTestYUVList()
+{
+
+    if [ ${InputFileFormat} -eq 1 ]
+    then
+        runTranscodeBitStreamToYUV      >>${BitStreamToYUVLog}
+        runGetTranscodeYUVName          >>${BitStreamToYUVLog}
+        runOutputBitStreamTransCodeInfo >>${BitStreamToYUVLog}
+
+    else
+        aTestYUVList=( ${aInputTestFileList[@]})
     fi
 
 }
@@ -134,11 +213,14 @@ runMain()
         exit 1
     fi
 
+    runInitial
+    runParseInputSetting
+
     runGetTestYUVList
 
     echo ${aTestYUVList[@]}
 
-    return 0
+    return ${ReturnFlag}
 
 }
 

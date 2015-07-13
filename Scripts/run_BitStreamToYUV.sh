@@ -1,8 +1,15 @@
 
 #!/bin/bash
-#usage:  run_ParseDecoderInfo   $Decoder_LogFile  
-#eg:     input:    run_ParseDecoderInfo   test.264.log
-#        output    1024  720  
+#*******************************************************************************************
+#
+#usage:  ./run_BitStream2YUV.sh  $BitstreamName $OutputYUVName $Decoder
+#
+#eg:     input:    run_BitStreamToYUV.sh   test.264  ./BitStreamToYUV ./Codec/h264dec
+#
+#        output    ./BitStreamToYUV/test.264_HXW_FrNum_XXX.yuv
+#
+#*******************************************************************************************
+
 run_ParseDecoderInfo()
 {
 	if [ ! $# -eq 1 ]
@@ -34,7 +41,7 @@ run_BitStream2YUV()
 {
  	if [ ! $# -eq 3 ]
 	then
-		echo "usage: run_BitStream2YUV  \$BitstreamName \$OutputYUVName \$LogFile   "
+		echo "usage: ./run_BitStreamToYUV.sh  \$BitstreamName \$OutputYUVName \$LogFile   "
 		return 1
 	fi
 	local BitStreamName=$1
@@ -47,6 +54,7 @@ run_BitStream2YUV()
 		echo "detected by run_BitStreamToYUV.sh"
 		return 1
 	fi
+
 	#decode bitstream
 	${Decoder}  ${BitStreamName}  ${OutputYUVNAMe} 2> ${LogFile}
 	
