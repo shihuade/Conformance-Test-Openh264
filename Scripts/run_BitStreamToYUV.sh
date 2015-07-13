@@ -13,18 +13,21 @@ run_ParseDecoderInfo()
 	local LogFile=$1
 	local Width=""
 	local Height=""
+    local FrameNum=""
 	while read line
 	do
 		if [[  $line =~  "iWidth"   ]]
 		then
 			Width=`echo $line | awk 'BEGIN  {FS="[:\n]"} {print $2}'`
-		fi
-		if [[  $line =~  "height"   ]]
+		elif [[  $line =~  "height"   ]]
 		then
 		   Height=`echo $line | awk 'BEGIN  {FS="[:\n]"} {print $2}'`
-		fi
+        elif [[  $line =~  "Frames"   ]]
+        then
+            FrameNum=`echo $line | awk 'BEGIN  {FS="[:\n]"} {print $2}'`
+        fi
 	done < ${LogFile}
-	echo "${Width}  ${Height}"
+	echo "${Width}  ${Height} ${FrameNum}"
 }
 #usage: run_BitStream2YUV  $BitstreamName  $OutputYUVName $LogFile 
 run_BitStream2YUV()
@@ -65,12 +68,16 @@ run_RegularizeYUVName()
 	declare -a aDecodedYUVInfo	
 	aDecodedYUVInfo=(`run_ParseDecoderInfo  ${LogFile}`)
 	
-	RegularizedYUVName="${BitStreamName}_${aDecodedYUVInfo[0]}x${aDecodedYUVInfo[1]}.yuv"
-    NewYUVName="${OutputDir}/${RegularizedYUVName}"
+	RegularizedYUVName="${BitStreamName}_${aDecodedYUVInfo[0]}x${aDecodedYUVInfo[1]}_FrNum_${aDecodedYUVInfo[1]}.yuv"
+    NewYUVFileName="${OutputDir}/${RegularizedYUVName}"
 	
-    mv -f 	${OrignName}   ${NewYUVName}
+    mv -f 	${OrignName}   ${NewYUVFileName}
+
+
 	echo ""
-	echo "file :  ${OrignName}   has been renamed as :${NewYUVName}"	
+	echo "file :  ${OrignName}   has been renamed as :${NewYUVFileName}"
+    echo "OutputYUVName is ${RegularizedYUVName}"
+    echo "OutputYUVDir is  ${NewYUVFileName}"
 	echo ""
 	
 	return 0
