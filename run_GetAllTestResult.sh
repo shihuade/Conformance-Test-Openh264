@@ -90,6 +90,50 @@ runOutputSummary()
 	echo ""
 }
 
+runRenameSHA1TableForTravis()
+{
+    echo ""
+    echo -e "\033[32m ********************************************************** \033[0m"
+    echo -e "\033[32m rename SHA1 table file for travis test \033[0m"
+    echo
+    for file in ${SHA1TableDir}/*.csv
+    do
+        vTempFileName=`echo $file | awk 'BEGIN {FS="/"} {print $NF}'`
+        vBitStreamName=`echo $vTempFileName | awk 'BEGIN {FS=".264"} {print $1 }'`
+        vBitStreamName="${vBitStreamName}.264"
+        vRename="${SHA1TableDir}/${vBitStreamName}_AllCases_SHA1_Table.csv"
+
+        mv ${file}  ${vRename}
+        echo -e "\033[32m vBitStreamName is ${vBitStreamName}                    \033[0m"
+        echo -e "\033[32m file ${file} has been renamed to ${vRename}            \033[0m"
+    done
+
+    echo ""
+    echo -e "\033[32m ********************************************************** \033[0m"
+    echo ""
+
+
+}
+
+runRenameSHA1TableFile()
+{
+    while read line
+    do
+        if [[ "$line" =~ ^InputFormat  ]]
+        then
+            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
+            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
+            let "InputFileFormat= ${TempString}"
+        fi
+
+    done <${ConfigureFile}
+
+    if [ ${InputFileFormat} -eq 1 ]
+    then
+        runRenameSHA1TableForTravis
+    fi
+}
+
 runCheck()
 {
     echo ""
@@ -140,6 +184,9 @@ runMain()
 
 	#get all test summary
 	runGetAllYUVTestResult
+
+    runRenameSHA1TableFile
+
     runOutputSummary
     runPromptInfo
 
