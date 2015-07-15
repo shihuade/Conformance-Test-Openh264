@@ -76,7 +76,7 @@ run_RegularizeYUVName()
 	declare -a aDecodedYUVInfo	
 	aDecodedYUVInfo=(`run_ParseDecoderInfo  ${LogFile}`)
 	
-	RegularizedYUVName="${BitStreamName}_${aDecodedYUVInfo[0]}x${aDecodedYUVInfo[1]}_FrNum_${aDecodedYUVInfo[1]}.yuv"
+	RegularizedYUVName="${BitStreamName}_${aDecodedYUVInfo[0]}x${aDecodedYUVInfo[1]}_FrNum_${aDecodedYUVInfo[2]}.yuv"
     NewYUVFileName="${OutputDir}/${RegularizedYUVName}"
 	
     mv -f 	${OrignName}   ${NewYUVFileName}
