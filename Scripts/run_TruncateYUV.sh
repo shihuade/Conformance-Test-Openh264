@@ -1,19 +1,24 @@
 #!/bin/bash
-
-
+#*******************************************************************************************************************
+# brief:  truncate yuv file with given output frame num
+#
+# Usage: ./run_TruncateYUV.sh  ${InputYUV}  ${OutputDir} ${OutputFrmNum} ${TruncateApp}
+#
+# e.g.:
+#        ./run_TruncateYUV.sh Test_1280X720.yuv  ./TruncateOutputDir 200 DownConvertStatic
+#
+# date: 2015/07/15  huashi@ciscocom
+#*******************************************************************************************************************
 
 runUsage()
 {
-
-echo  -e "\033[31m  case failed! \033[0m"
-echo  -e "\033[31m  case failed! \033[0m"
-echo  -e "\033[31m  case failed! \033[0m"
-echo  -e "\033[31m  case failed! \033[0m"
-
-
+    echo  -e "\n\n"
+    echo  -e "\033[31m Usage: ./run_TruncateYUV.sh \${InputYUV} \${OutputDir} \${OutputFrmNum} \${TruncateApp}  \033[0m"
+    echo  -e "\033[31m e.g.:                                                                                    \033[0m"
+    echo  -e "\033[31m  ./run_TruncateYUV.sh Test_1280X720.yuv  ./TruncateOutputDir 200 DownConvertStatic       \033[0m"
+    echo  -e "\n\n"
 
 }
-
 
 runInit()
 {
@@ -31,12 +36,6 @@ runInit()
 
 }
 
-runOutputTaskInfo()
-{
-
-
-
-}
 
 runParseYUVInfo()
 {
@@ -55,10 +54,21 @@ runTruncateYUV()
 
     if [ ! $? -eq 0 ]
     then
-        echo  -e "\033[31m  Trunscate fiel ${InputYUV} failed! \033[0m"
+        echo  -e "\033[31m  Trunscate file ${InputYUV} failed! \033[0m"
         exit 1
 
     fi
+}
+
+runOutputTaskInfo()
+{
+    echo  -e "\n\n"
+    echo  -e "\033[32m  ************************************************************ \033[0m"
+    echo  -e "\033[32m  ${InputYUV} has been trunscate ${OutputYUV}                  \033[0m"
+    echo  -e "\033[32m   Succeed!                                                     \033[0m"
+    echo  -e "\033[32m  ************************************************************ \033[0m"
+    echo  -e "\n\n"
+
 }
 
 runCheck()
@@ -102,7 +112,13 @@ runCheck()
 runMain()
 {
 
+    runInit
+    runCheck
 
+    runParseYUVInfo
+    runTruncateYUV
+
+    runOutputTaskInfo
 
 }
 
@@ -126,7 +142,4 @@ OutputFrmNum=$3
 TruncateApp=$4
 
 runMain
-
-
-
 
