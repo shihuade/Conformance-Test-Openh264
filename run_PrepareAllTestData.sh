@@ -35,6 +35,11 @@ runRemovedPreviousTestData()
 		./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
 	fi
 
+    if [ -d $BitStreamToYUVFolder ]
+    then
+        ./${ScriptFolder}/run_SafeDelete.sh  $BitStreamToYUVFolder
+    fi
+
     for file in ${CurrentDir}/*.log
     do
         ./${ScriptFolder}/run_SafeDelete.sh  ${file}
@@ -286,32 +291,24 @@ runCheck()
 	fi
 	return 0
 }
-#usage: runPrepareALlFolder   $TestType $AllTestDataFolder  $TestBitStreamFolder   $CodecFolder  $ScriptFolder  $ConfigureFile/$SH1TableFolder
+
+runUsage()
+{
+
+    echo ""
+    echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType   \$SourceFolder  \$AllTestDataFolder  \033[0m"
+    echo -e "\033[31m                                     \$CodecFolder \$ScriptFolder \$ConfigureFile      \033[0m"
+    echo ""
+    echo -e "\033[31m or:  \033[0m"
+    echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType   \$SourceFolder  \$AllTestDataFolder  \033[0m"
+    echo -e "\033[31m                                     \$CodecFolder \$ScriptFolder \$ConfigureFile      \033[0m"
+    echo -e "\033[31m                                     \$OpenH264Branch \$OpenH264Repos       \033[0m"
+    echo ""
+
+}
+
 runMain()
 {
-	#parameter check!
-	if [ ! $# -ge 6  ]
-	then
-		echo ""
-        echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType   \$SourceFolder  \$AllTestDataFolder  \033[0m"
-        echo -e "\033[31m                                     \$CodecFolder \$ScriptFolder \$ConfigureFile      \033[0m"
-        echo ""
-        echo -e "\033[31m or:  \033[0m"
-        echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType   \$SourceFolder  \$AllTestDataFolder  \033[0m"
-        echo -e "\033[31m                                     \$CodecFolder \$ScriptFolder \$ConfigureFile      \033[0m"
-        echo -e "\033[31m                                     \$OpenH264Branch \$OpenH264Repos       \033[0m"
-        echo ""
-		return 1
-	fi
-	
-	TestType=$1
-	SourceFolder=$2
-	AllTestDataFolder=$3
-	CodecFolder=$4
-	ScriptFolder=$5
-	ConfigureFile=$6
-    OpenH264Branch=$7
-    OpenH264Repos=$8
 
 	CurrentDir=`pwd`
 	SHA1TableFolder="${CurrentDir}/SHA1Table"
@@ -351,14 +348,6 @@ runMain()
 	echo "Preparing test space for all test sequences!"
 	runPrepareTestSpace
 }
-TestType=$1
-SourceFolder=$2
-AllTestDataFolder=$3
-CodecFolder=$4
-ScriptFolder=$5
-ConfigureFile=$6
-OpenH264Branch=$7
-OpenH264Repos=$8
 
 echo ""
 echo "*********************************************************"
@@ -368,5 +357,20 @@ echo "        $0 $@"
 echo "*********************************************************"
 echo ""
 
-runMain  $TestType  $SourceFolder $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile ${OpenH264Branch} "${OpenH264Repos}"
+#parameter check!
+if [ ! $# -ge 6  ]
+then
+    runUsage
+    return 1
+fi
 
+TestType=$1
+SourceFolder=$2
+AllTestDataFolder=$3
+CodecFolder=$4
+ScriptFolder=$5
+ConfigureFile=$6
+OpenH264Branch=$7
+OpenH264Repos=$8
+
+runMain
