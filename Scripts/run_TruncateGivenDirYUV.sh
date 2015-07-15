@@ -50,17 +50,18 @@ runGenerateAllFilesFullPath()
             echo file1 is ${file1}
             for file2 in ${SubFolder2}/*
             do
-                echo ----file2 is ${file2}
 				if [ -d ${file2} ]
                 then
+                    echo ----file2 is ${file2}
+
                     SubFolder3=${file2}
 
                     for file3 in ${SubFolder3}/*
                     do
-                        echo ${file1} >>${YUVFullPathLog}
+                        echo ${file3} >>${YUVFullPathLog}
                     done
                 else
-                    echo ${file1} >>${YUVFullPathLog}
+                    echo ${file2} >>${YUVFullPathLog}
                 fi
             done
         else
