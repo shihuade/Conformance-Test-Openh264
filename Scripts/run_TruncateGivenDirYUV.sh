@@ -47,10 +47,10 @@ runGenerateAllFilesFullPath()
         if [ -d ${file1} ]
         then
             SubFolder2=${file1}
-
+            echo file1 is ${file1}
             for file2 in ${SubFolder2}/*
             do
-                echo file2 is ${file2}
+                echo ----file2 is ${file2}
 				if [ -d ${file2} ]
                 then
                     SubFolder3=${file2}
