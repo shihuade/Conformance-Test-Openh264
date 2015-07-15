@@ -4,7 +4,7 @@
 #      --get YUV info via YUV's name
 #
 #
-#     usage runGetYUVInfo  $TestSequencName
+#     usage run_ParseYUVInfo.sh  $TestSequencName
 #     eg. input:  ABC_1920X1080_30fps_XXX.yuv  output: 1920 1080 30
 #     eg. input:  ABC_1920X1080_XXX.yuv        output: 1920 1080 0
 #     eg. input:  ABC_XXX.yuv                  output: 0    0    0
@@ -17,7 +17,7 @@ runGetYUVInfo()
 {
   if [ ! $# -eq 1  ]
   then
-    echo "runGetYUVInfo  \$TestSequencName"
+    echo "run_ParseYUVInfo.sh  \$TestSequencName"
     echo "detected by run_ParseYUVInfo.sh"
     return 1
   fi
