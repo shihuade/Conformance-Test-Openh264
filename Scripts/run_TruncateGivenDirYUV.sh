@@ -47,13 +47,10 @@ runGenerateAllFilesFullPath()
         if [ -d ${file1} ]
         then
             SubFolder2=${file1}
-            echo file1 is ${file1}
             for file2 in ${SubFolder2}/*
             do
 				if [ -d ${file2} ]
                 then
-                    echo ----file2 is ${file2}
-
                     SubFolder3=${file2}
 
                     for file3 in ${SubFolder3}/*
@@ -68,6 +65,25 @@ runGenerateAllFilesFullPath()
             echo ${file1} >>${YUVFullPathLog}
         fi
     done
+
+}
+
+runTruncateAllYUVs()
+{
+    while read line
+    do
+        if [[  "$line" ~= ".yuv" ]]
+        then
+            vInputYUV="$line"
+            vYUVName=`echo $line  | awk ' BEGIN {FS="/"} {print $NF}'`
+            vSubFoler=`echo $line | awk ' BEGIN {FS="${InputYUVDir}"} {print $2}'`
+            echo "vSubFoler is ${vSubFoler}"
+            vSubFoler=`echo $vSubFoler | awk ' BEGIN {FS="${vYUVName}"} {print $1}'`
+            echo "vSubFoler is ${vSubFoler}"
+        fi
+
+    done <${YUVFullPathLog}
+
 
 }
 
@@ -111,6 +127,10 @@ runCheck()
     then
         echo  -e "\033[31m  Input YUV file ${InputYUVDir} does not exist,please double check! \033[0m"
         exit 1
+    else
+        cd ${InputYUVDir}
+        InputYUVDir=`pwd`
+        cd ${CurrentDir}
     fi
 
 
@@ -118,6 +138,10 @@ runCheck()
     then
         echo  -e "\033[31m  Output dir ${OutputDir} does not exist,please double check! \033[0m"
         exit 1
+    else
+        cd ${OutputDir}
+        OutputDir=`pwd`
+        cd ${CurrentDir}
     fi
 
     if [  ${OutputFrmNum} -lt 1 ]
@@ -178,4 +202,5 @@ TruncateApp=$4
 #runMain
 runInit
 runGenerateAllFilesFullPath
+runTruncateAllYUVs
 

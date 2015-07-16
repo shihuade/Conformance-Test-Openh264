@@ -31,8 +31,9 @@ runInit()
     CurrentDir=`pwd`
     ScriptFileForYUVParser="run_ParseYUVInfo.sh"
 
-    TestYUVName=`echo $InputYUV | awk 'BEGIN {FS="/"} {print $NF}'`
-    OutputYUV="${OutputDir}/${TestYUVName}"
+    TestYUVName=`echo $InputYUV  | awk 'BEGIN {FS="/"} {print $NF}'`
+    vTempName=`echo $TestYUVName | awk 'BEGIN {FS=".yuv"} {print $1}'`
+    OutputYUV="${OutputDir}/${vTempName}_FrmNum_${OutputFrmNum}.yuv"
 
 }
 
@@ -84,6 +85,10 @@ runCheck()
     then
         echo  -e "\033[31m  Output dir ${OutputDir} does not exist,please double check! \033[0m"
         exit 1
+    else
+        cd ${OutputDir}
+        OutputDir=`pwd`
+        cd ${CurrentDir}
     fi
 
     if [  ${OutputFrmNum} -lt 1 ]
