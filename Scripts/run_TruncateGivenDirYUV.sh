@@ -67,12 +67,30 @@ runGenerateAllFilesFullPath()
     done
 
 }
+runGetSubFolder()
+{
+
+    local FullPath="/home/Video/YUV/YUVCollection/Desktop/Desktop03_SCC_2884x1802.yuv"
+    local InputYUVDir=/home/Video/YUV
+    FullDirDepth=`echo $FullPath      |awk 'BEGIN {FS="/"} {print NF}'`
+    ParentDirDepth=`echo $InputYUVDir |awk 'BEGIN {FS="/"} {print NF}'`
+    let "SubDirDepth=${FullDirDepth} -${ParentDirDepth}"
+
+    let "StartIndex=${ParentDirDepth} +1"
+    SubDir=`echo ${FullPath}   \
+            | awk -v Start=${StartIndex} -v End=${FullDirDepth} 'BEGIN {FS="/"} {for(i=Start; i< End;i++) printf("%s/",$i)}'`
+    echo "FullDirDepth   is ${FullDirDepth}"
+    echo "ParentDirDepth is ${ParentDirDepth}"
+    echo "SubDirDepth    is ${SubDirDepth}"
+
+    echo "SubDir is ${SubDir}"
+}
 
 runTruncateAllYUVs()
 {
     while read line
     do
-        if [[  "$line" ~= ".yuv" ]]
+        if [[  "$line" =~ ".yuv" ]]
         then
             vInputYUV="$line"
             vYUVName=`echo $line  | awk ' BEGIN {FS="/"} {print $NF}'`
@@ -200,7 +218,8 @@ OutputFrmNum=$3
 TruncateApp=$4
 
 #runMain
-runInit
-runGenerateAllFilesFullPath
-runTruncateAllYUVs
+#runInit
+#runGenerateAllFilesFullPath
+#runTruncateAllYUVs
+runGetSubFolder
 
