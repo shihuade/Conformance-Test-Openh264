@@ -177,7 +177,7 @@ runCancelAllRunningJobsAndSubmitNewJobs()
 
 runCheckAndSubmitJobs()
 {
-    if [ ! -e {SGEJobSubmittedLog} ]
+    if [ ! -e ${SGEJobSubmittedLog} ]
     then
         runCleanUpAllTestData
         runSubmitSGEJobs
