@@ -51,6 +51,13 @@ runInitial()
 
     SCCStatusLog="SCCSGEJobStatus.txt"
     SVCStatusLog="SVCSGEJobStatus.txt"
+    
+    SCCJobSubmittedDateLog="SCCJobSubmittedDate.txt"
+    SVCJobSubmittedDateLog="SVCJobSubmittedDate.txt"
+    JobSubmittedDateLog="JobSubmittedDate.txt""
+    
+    date
+    DateInfo=`date`
     SGEJobStatusLog=NULL
 }
 
@@ -156,7 +163,15 @@ runSubmitSGEJobs()
     ./run_Main.sh SGETest  ${ConfigureFile}  "${CodecBranch}"  "${ReposAddr}"
 
 }
-
+runGenerateDateInfo()
+{
+    echo "****************************************" >${JobSubmittedDateLog}
+    echo ""                                        >>${JobSubmittedDateLog}
+    echo "Submitted date is:"                      >>${JobSubmittedDateLog}
+    echo        ${DateInfo}                        >>${JobSubmittedDateLog}
+    echo ""                                        >>${JobSubmittedDateLog}
+    echo "****************************************">>${JobSubmittedDateLog}
+}
 
 runCancelAllRunningJobsAndSubmitNewJobs()
 {
@@ -170,6 +185,7 @@ runCancelAllRunningJobsAndSubmitNewJobs()
     runCleanUpAllTestData
 
     runSubmitSGEJobs
+    runGenerateDateInfo
 
     SummaryInfo="Stop all previous SGE jobs and submit new jobs based setting!"
 
@@ -236,6 +252,11 @@ runCopyFilesToAttachedDir()
         cp ${CodecInfoLog}    ${AttachmentsDir}/${TestProfile}_${CodecInfoLog}
     fi
 
+    if [ -e ${JobSubmittedDateLog} ]
+    then
+        cp ${JobSubmittedDateLog}    ${AttachmentsDir}/${JobSubmittedDateLog}
+    fi
+
     echo ""
     echo "*****************************************************************************"
 
@@ -271,10 +292,12 @@ runCheck()
     if [ "${TestProfile}" = "SCC"  ]
     then
         SGEJobStatusLog=${SCCStatusLog}
+        JobSubmittedDateLog=${SCCJobSubmittedDateLog}
         return 0
     elif [ "${TestProfile}" = "SVC"  ]
     then
         SGEJobStatusLog=${SVCStatusLog}
+        JobSubmittedDateLog=${SVCJobSubmittedDateLog}
         return 0
     else
         echo ""
