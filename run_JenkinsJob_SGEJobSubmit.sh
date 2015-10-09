@@ -54,7 +54,7 @@ runInitial()
     
     SCCJobSubmittedDateLog="SCCJobSubmittedDate.txt"
     SVCJobSubmittedDateLog="SVCJobSubmittedDate.txt"
-    JobSubmittedDateLog="JobSubmittedDate.txt""
+    JobSubmittedDateLog="JobSubmittedDate.txt"
     
     date
     DateInfo=`date`
