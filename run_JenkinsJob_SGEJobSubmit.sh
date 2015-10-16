@@ -204,6 +204,7 @@ runCheckAndSubmitJobs()
             runSGEJobPreviousTestBackup
             runCleanUpAllTestData
             runSubmitSGEJobs
+            runGenerateDateInfo
             SummaryInfo="Backup previous test data and submit new jobs based on setting"
         else
             echo "skip job submit as previous jobs have not been completed yet!"
