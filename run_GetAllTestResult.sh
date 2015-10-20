@@ -210,7 +210,7 @@ fi
 
 TestType=$1
 ConfigureFile=$2
-AllTestResultPassFlag=$3
+AllTestResultPassFlagFile=$3
 
 echo ""
 echo "*********************************************************"
