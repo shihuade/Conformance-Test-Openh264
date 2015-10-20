@@ -4,7 +4,7 @@
 #      --test all cases of all sequences 
 #      --usage:  run_GetAllTestResult.sh  ${TestType}       \
 #                                         ${ConfigureFile}  \
-#                                         ${AllTestResultPassFlag}
+#                                         ${AllTestResultPassFlagFile}
 #
 #
 #date: 04/28/2015 Created
@@ -12,10 +12,10 @@
  runUsage()
  {
 	echo ""
-    echo -e "\033[31m usage: ./run_GetAllTestResult.sh   \${TestType}               \033[0m"
-    echo -e "\033[31m                                    \${ConfigureFile}          \033[0m"
-    echo -e "\033[31m                                    \${AllTestResultPassFlag}  \033[0m"
-    echo -e "\033[31m \${AllTestResultPassFlag} will be generated if all test cases passed!   \033[0m"
+    echo -e "\033[31m usage: ./run_GetAllTestResult.sh   \${TestType}                   \033[0m"
+    echo -e "\033[31m                                    \${ConfigureFile}              \033[0m"
+    echo -e "\033[31m                                    \${AllTestResultPassFlagFile}  \033[0m"
+    echo -e "\033[31m \${AllTestResultPassFlagFile} will be generated if all test cases passed!   \033[0m"
     echo ""
  }
 
@@ -190,14 +190,14 @@ runMain()
     runOutputSummary
     runPromptInfo
 
-    if [ -e ${AllTestResultPassFlag} ]
+    if [ -e ${AllTestResultPassFlagFile} ]
     then
-        ./Scripts/run_SafeDelete.sh ${AllTestResultPassFlag}
+        ./Scripts/run_SafeDelete.sh ${AllTestResultPassFlagFile}
     fi
 
     if [ ${AllTestFlag} -eq 0  ]
     then
-        touch ${AllTestResultPassFlag}
+        touch ${AllTestResultPassFlagFile}
     fi
     return 0
 
