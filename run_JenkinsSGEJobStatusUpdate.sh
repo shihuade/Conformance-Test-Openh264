@@ -141,7 +141,7 @@ runGetSummary()
         echo " Final summary for all jobs ---- ${TestProfile}"
         echo "*****************************************************************************"
         echo ""
-        ./run_GetAllTestResult.sh SGETest {CaseConfigureFile} ${AllTestResultPassFlag}
+        ./run_GetAllTestResult.sh SGETest ${CaseConfigureFile} ${AllTestResultPassFlag}
         cat  ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}
         cp   ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
     fi
