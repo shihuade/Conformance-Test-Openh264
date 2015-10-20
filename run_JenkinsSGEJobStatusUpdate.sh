@@ -34,6 +34,7 @@ runInital()
     AttachmentsDir="${JenkinsHomeDir}/${AttachmentsFolder}"
 
     CaseConfigureFileDir="CaseConfigure"
+    CaseConfigureFile="${CaseConfigureFileDir}/case_${TestProfile}.cfg"
     FinalResultSummaryDir="FinalResult_Summary"
     FinalResultDir="FinalResult"
     SGEIPInfoFile="${CurrentDir}/Tools/SGE.cfg"
@@ -140,7 +141,7 @@ runGetSummary()
         echo " Final summary for all jobs ---- ${TestProfile}"
         echo "*****************************************************************************"
         echo ""
-        ./run_GetAllTestResult.sh SGETest ./CaseConfigure/case_SVC.cfg ${AllTestResultPassFlag}
+        ./run_GetAllTestResult.sh SGETest {CaseConfigureFile} ${AllTestResultPassFlag}
         cat  ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}
         cp   ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
     fi
@@ -167,14 +168,9 @@ runCopyFilesToAchiveDir()
         cp ${CodecInfoLog}  ${AttachmentsDir}/${TestProfile}_${CodecInfoLog}
     fi
 
-    if [ -e ${CaseConfigureFileDir}/case_SVC.cfg ]
+    if [ -e ${CaseConfigureFile} ]
     then
-        cp ${CaseConfigureFileDir}/case_SVC.cfg  ${AttachmentsDir}
-    fi
-
-    if [ -e ${CaseConfigureFileDir}/case_SCC.cfg ]
-    then
-        cp ${CaseConfigureFileDir}/case_SCC.cfg  ${AttachmentsDir}
+        cp ${CaseConfigureFile}  ${AttachmentsDir}
     fi
 
     if [ -e ${SGEIPInfoFile} ]
