@@ -257,6 +257,11 @@ runCopyFilesToAttachedDir()
     then
         cp ${JobSubmittedDateLog}    ${AttachmentsDir}/${JobSubmittedDateLog}
     fi
+ 
+    if [ -e ${SGEJobStatusLog} ]
+    then
+        cp ${SGEJobStatusLog}    ${AttachmentsDir}/${SGEJobStatusLog}
+    fi
 
     echo ""
     echo "*****************************************************************************"
