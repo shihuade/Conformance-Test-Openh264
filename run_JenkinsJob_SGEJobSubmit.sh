@@ -37,13 +37,22 @@ runInitial()
     JenkinsHomeDir="/Users/jenkins"
     AttachmentsFolder="Openh264-SGETest/Jenkins-Job-Submit-Log"
     AttachmentsDir="${JenkinsHomeDir}/${AttachmentsFolder}"
+    CurrentDir=`pwd`
+    SGEJobsTestSpace="${CurrentDir}"
+    
+    #for job status 
+    FinalResultSummaryDir="FinalResult_Summary"
+    AllTestSummary="AllTestYUVsSummary.txt"
+    SGEJobsAllTestSummary="${TestProfile}_AllTestYUVsSummary.txt"
+    AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
+    AllTestResultPassFlag="AllCasesPass.flag"
+    let " SubmitJobStatusFlag = 0"
 
     #log file for attachments
     #log file for attachments
     SGEJobSubmittedLog="SGEJobsSubmittedInfo.log"
     SGEJobCancelJobLog="SGEJobsCancelInfo.log"
     JobsStatusLog="SGEJobStatus.txt"
-    AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
 
     ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
     CodecInfoLog="CodecInfo.log"
@@ -131,6 +140,32 @@ runCleanUpAllTestData()
 
 
 }
+runGetPriviousTestSummary()
+{
+    #get summary
+    if [ -e ${AllJobsCompletedFlagFile} ]
+    then
+        echo ""
+        echo "*****************************************************************************"
+        echo " Final summary for all jobs ---- ${TestProfile}"
+        echo "*****************************************************************************"
+        echo ""
+        ./run_GetAllTestResult.sh SGETest ${ConfigureFile} ${AllTestResultPassFlag}
+        cat  ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}
+        cp   ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
+        
+        if [ ! -e ${AllTestResultPassFlag} ]
+        then
+             echo "*****************************************************************************"
+             echo " not all cases passed the test for previous submit!"
+             echo " test profile is ${TestProfile}  "
+             echo " please double check!"
+             echo "*****************************************************************************"
+             let " SubmitJobStatusFlag = 1"
+        fi
+    fi
+
+}
 
 runSGEJobPreviousTestBackup()
 {
@@ -180,6 +215,8 @@ runCancelAllRunningJobsAndSubmitNewJobs()
 {
 
     runSGEJobsUpdate
+    runGetPriviousTestSummary
+
     runSGEJobPreviousTestBackup >${PrieviousJobBackupLog}
     cat ${PrieviousJobBackupLog}
     
@@ -190,8 +227,6 @@ runCancelAllRunningJobsAndSubmitNewJobs()
 
     runSubmitSGEJobs
     runGenerateDateInfo
-
-    SummaryInfo="Stop all previous SGE jobs and submit new jobs based setting!"
 
 }
 
@@ -290,9 +325,20 @@ runOutputSUmmary()
     echo " Codec branch   is ${CodecBranch}"
     echo " ReposAddr      is ${ReposAddr}"
     echo ""
-    echo " SummaryInfo for this job is ${SummaryInfo}"
-    echo "*****************************************************************************"
-
+    echo " SummaryInfo for this job is:"
+    if [ ${SubmitJobStatusFlag} -eq 0 ]
+    then
+        echo " ${SummaryInfo}--all is well!"
+        echo "*****************************************************************************"
+        exit 0
+    else
+        echo " ${SummaryInfo}"
+        echo "    --previous submit jobs failed!"
+        echo "    --please double check "
+        echo "    --and refer detail from privous backup log file--${PrieviousJobBackupLog}"
+        echo "*****************************************************************************"
+        exit 1
+    fi
 }
 
 runCheck()
@@ -338,9 +384,6 @@ runMain()
 
     runCopyFilesToAttachedDir
     runOutputSUmmary
-
-    return 0
-
 }
 
 if [ ! $# -eq 4 ]
