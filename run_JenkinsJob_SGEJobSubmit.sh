@@ -147,7 +147,7 @@ runGetPriviousTestSummary()
     then
         echo ""
         echo "*****************************************************************************"
-        echo " Final summary for all jobs ---- ${TestProfile}"
+        echo " Final summary for all previous submitted jobs ---- ${TestProfile}"
         echo "*****************************************************************************"
         echo ""
         ./run_GetAllTestResult.sh SGETest ${ConfigureFile} ${AllTestResultPassFlag}
