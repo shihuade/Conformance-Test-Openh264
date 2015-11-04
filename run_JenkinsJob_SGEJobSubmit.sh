@@ -60,7 +60,7 @@ runInitial()
     
     date
     DateInfo=`date`
-    SGEJobStatusLog=NULL
+    SGEJobStatusLog="${TestProfile}_SGEJobStatus.txt"
 }
 
 
@@ -100,6 +100,7 @@ runSGEJobsUpdate()
     if [ -e ${SGEJobSubmittedLog} ]
     then
         ./run_SGEJobStatusUpdate.sh ${SGEJobSubmittedLog} ${AllJobsCompletedFlagFile}>${SGEJobStatusLog}
+        cat ${SGEJobStatusLog}
     else
         echo "there is no job been sbumitted yet!"
     fi
@@ -307,12 +308,10 @@ runCheck()
 
     if [ "${TestProfile}" = "SCC"  ]
     then
-        SGEJobStatusLog=${SCCStatusLog}
         JobSubmittedDateLog=${SCCJobSubmittedDateLog}
         return 0
     elif [ "${TestProfile}" = "SVC"  ]
     then
-        SGEJobStatusLog=${SVCStatusLog}
         JobSubmittedDateLog=${SVCJobSubmittedDateLog}
         return 0
     else
