@@ -56,6 +56,8 @@ runInitial()
     SVCJobSubmittedDateLog="SVCJobSubmittedDate.txt"
     JobSubmittedDateLog="JobSubmittedDate.txt"
     
+    PrieviousJobBackupLog="${TestProfile}_PreviousJobBackupInfo.txt"
+    
     date
     DateInfo=`date`
     SGEJobStatusLog=NULL
@@ -177,9 +179,10 @@ runCancelAllRunningJobsAndSubmitNewJobs()
 {
 
     runSGEJobsUpdate
-    runSGEJobPreviousTestBackup
+    runSGEJobPreviousTestBackup >${PrieviousJobBackupLog}
+    cat ${PrieviousJobBackupLog}
+    
     runKillJob
-
     cat ${SGEJobCancelJobLog}
 
     runCleanUpAllTestData
@@ -201,7 +204,9 @@ runCheckAndSubmitJobs()
         runSGEJobsUpdate
         if [ -e ${AllJobsCompletedFlagFile} ]
         then
-            runSGEJobPreviousTestBackup
+            runSGEJobPreviousTestBackup >${PrieviousJobBackupLog}
+            cat ${PrieviousJobBackupLog}
+            
             runCleanUpAllTestData
             runSubmitSGEJobs
             runGenerateDateInfo
@@ -261,6 +266,11 @@ runCopyFilesToAttachedDir()
     if [ -e ${SGEJobStatusLog} ]
     then
         cp ${SGEJobStatusLog}    ${AttachmentsDir}/${SGEJobStatusLog}
+    fi
+
+   if [ -e ${PrieviousJobBackupLog} ]
+    then
+        cp ${PrieviousJobBackupLog}    ${AttachmentsDir}/${PrieviousJobBackupLog}
     fi
 
     echo ""
