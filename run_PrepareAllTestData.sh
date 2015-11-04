@@ -70,10 +70,10 @@ runUpdateCodec()
 	fi
 	
 	cd ${SourceFolder}
-	git checkout ${Branch}
-    git branch >${CodecInfoLog}
-    git remote -v >>${CodecInfoLog}
-    git log -3 >>${CodecInfoLog}
+	git checkout -f  ${Branch}
+	git branch >${CodecInfoLog}
+	git remote -v >>${CodecInfoLog}
+	git log -3 >>${CodecInfoLog}
 
 	cd ${CurrentDir}
 	
@@ -313,10 +313,10 @@ runMain()
 	CurrentDir=`pwd`
 	SHA1TableFolder="${CurrentDir}/SHA1Table"
 	FinalResultDir="${CurrentDir}/FinalResult"
-    BitStreamToYUVFolder="${CurrentDir}/BitStreamToYUV"
-    SummaryDir="FinalResult_Summary"
+	BitStreamToYUVFolder="${CurrentDir}/BitStreamToYUV"
+	SummaryDir="FinalResult_Summary"
 	let "SGEJobNum =0 "
-    let "SGEJobSubCasesNum=0"
+	let "SGEJobSubCasesNum=0"
 
 	Openh264GitAddr=""
 	Branch=""
