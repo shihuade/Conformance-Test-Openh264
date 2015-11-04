@@ -89,9 +89,9 @@ runBackupTestData()
 	mkdir -p  ${BackupFolder}/${ConfigureFolder}
 	mkdir -p  ${BackupFolder}/${FinalResultFolder}
 
-    cp -f  ${TestSpaceDir}/*.log                    ${BackupFolder}
-    cp -f  ${TestSpaceDir}/*.txt                    ${BackupFolder}
-    cp -f  ${TestSpaceDir}/*.flag                   ${BackupFolder}
+        cp -f  ${TestSpaceDir}/*.log                    ${BackupFolder}
+        cp -f  ${TestSpaceDir}/*.txt                    ${BackupFolder}
+        cp -f  ${TestSpaceDir}/*.flag                   ${BackupFolder}
 	cp -f  ${TestSpaceDir}/${CodecFolder}/*         ${BackupFolder}/${CodecFolder}
  	cp -f  ${TestSpaceDir}/${ConfigureFolder}/*     ${BackupFolder}/${ConfigureFolder}
 	cp -f  ${TestSpaceDir}/${FinalResultFolder}/*   ${BackupFolder}/${FinalResultFolder}
@@ -100,16 +100,16 @@ runBackupTestData()
 
 runBackupInfo()
 {
-	echo -e "\033[32m **************--backup info--****************************\033[0m"
-	echo -e "\033[32m                                                          \033[0m"
-	echo -e "\033[32m  backup date:    ${DateInfo}                             \033[0m"
-	echo -e "\033[32m  backup folder:  ${BackupFolder}                         \033[0m"
-	echo -e "\033[32m                                                          \033[0m"
-	echo -e "\033[32m  backup data include:                                    \033[0m"
-	echo -e "\033[32m   --test codec in          ${TestSpaceDir}/Codec         \033[0m"
-	echo -e "\033[32m   --test configure file in ${TestSpaceDir}/CaseConfigure \033[0m"
-	echo -e "\033[32m   --test result in         ${TestSpaceDir}/FinalResult   \033[0m"
-	echo -e "\033[32m *********************************************************\033[0m"
+	echo -e "\033[32m **************--backup info--***********************************\033[0m"
+	echo -e "\033[32m                                                                 \033[0m"
+	echo -e "\033[32m  backup date:    ${DateInfo}                                    \033[0m"
+	echo -e "\033[32m  backup folder:  ${BackupFolder}                                \033[0m"
+	echo -e "\033[32m                                                                 \033[0m"
+	echo -e "\033[32m  backup data include:                                           \033[0m"
+	echo -e "\033[32m   --test codec in          ${TestSpaceDir}/Codec                \033[0m"
+	echo -e "\033[32m   --test configure file in ${TestSpaceDir}/CaseConfigure        \033[0m"
+	echo -e "\033[32m   --test result in         ${TestSpaceDir}/${FinalResultFolder} \033[0m"
+	echo -e "\033[32m ****************************************************************\033[0m"
 
 }
 
