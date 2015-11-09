@@ -384,7 +384,7 @@ runSecondStageCase()
 				else
 				  ThreadNumber=( ${aMultipleThreadIdc[@]} )
 				fi
-				if [  $SlcMode -eq 4  ]
+				if [  $SlcMode -eq 3  ]
 				then
 					let "TempNalSize=${MaxNalSize}"
 				else
@@ -406,9 +406,6 @@ runSecondStageCase()
 								${TempNalSize},\
 								$IntraPeriodIndex,\
 								$ThreadNum">>$casefile_02
-                            elif [ ${SlcMode} -eq 3 -a ${PicH} -ge ${SliceMode3MaxH} ]
-                            then
-                                continue
                             else
 								echo "$FirstStageCase\
 								${SlcMode}, ${SlcNum},\
