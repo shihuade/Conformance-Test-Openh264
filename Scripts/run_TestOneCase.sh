@@ -29,6 +29,7 @@ runGlobalVariableInitial()
 	let "EncoderNum=-1"
 	let "SpatailLayerNum=1"
 	let "RCMode=0"
+    let "MultiThreadFlag=0"
 
 	BitStreamSHA1String="NULL"
 	BitStreamMD5String="NULL"
@@ -48,7 +49,7 @@ runEncoderCommandInital()
 					-sw -sh  "-dw 0"  "-dh 0" "-dw 1" "-dh 1" "-dw 2" "-dh 2" "-dw 3" "-dh 3" \
 					"-frout 0" "-frout 1" "-frout 2" "-frout 3" \
 					"-lqp 0" "-lqp 1" "-lqp 2" "-lqp 3" \
-					-rc -tarb "-ltarb 0" 	"-ltarb 1" "-ltarb 2" "-ltarb 3" \
+					-rc -fs -tarb "-ltarb 0" 	"-ltarb 1" "-ltarb 2" "-ltarb 3" \
 					"-slcmd 0" "-slcnum 0" "-slcmd 1" "-slcnum 1"\
 					"-slcmd 2" "-slcnum 2" "-slcmd 3" "-slcnum 3"\
 					-nalsize \
@@ -58,7 +59,7 @@ runEncoderCommandInital()
 					sw sh  dw0 dh0 dw1 dh1 dw2 dh2 dw3 dh3 \
 					frout0 frout1 frout2 frout3 \
 					lqp0 lqp1 lqp2 lqp3 \
-					rc tarb ltarb0 	ltarb1 ltarb2 ltarb3 \
+					rc FrSkip tarb ltarb0 	ltarb1 ltarb2 ltarb3 \
 					slcmd0 slcnum0 slcmd1 slcnum1 \
 					slcmd2 slcnum2 slcmd3 slcnum3 \
 					MaxNalSZ  \
@@ -84,7 +85,7 @@ runParseCaseInfo()
 	local TempData=""
 
 	local CaseData=$@
-	declare -a aTempParamIndex=( 6 7 8 9 10 11 12 13    15 16 17   19 20 21     24 25 26 27   30 31 32 33 34 35 )
+	declare -a aTempParamIndex=( 6 7 8 9 10 11 12 13    15 16 17   19 20 21     25 26 27 28   31 32 33 34 35 36 )
 	TempData=`echo $CaseData |awk 'BEGIN {FS="[,\r]"} {for(i=1;i<=NF;i++) printf(" %s",$i)} ' `
 	aEncoderCommandValue=(${TempData})
 	let "TempParamFlag=0"
@@ -106,10 +107,11 @@ runParseCaseInfo()
 }
 runSetCaseGlobalParam()
 {
-	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_welsrubyenc.264
+	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_wels.264
 	let "EncoderNum      = ${aEncoderCommandValue[1]}"
 	let "SpatailLayerNum = ${aEncoderCommandValue[2]}"
 	let "RCMode          = ${aEncoderCommandValue[22]}"
+    let "MultiThreadFlag = ${aEncoderCommandValue[38]}"
 
 	for((i=0;i<4;i++))
 	do
@@ -269,9 +271,16 @@ runOutputCaseCheckStatus()
 	#date info
 	date
 	local TestTime=`date`
-	
-	 echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AllCasesSHATableFile}
-	 echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} ">>${AllCasesPassStatusFile}
+
+    echo "line writed to SHA1 talbe is:"
+    echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}"
+
+    echo "line writed to AllCases file is:"
+    echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} "
+
+
+    echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AssignedCasesSHATableFile}
+    echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} ">>${AssignedCasesPassStatusFile}
 
 	if [ ${BasicCheckFlag} -eq 1 -o  ${JSVMCheckFlag} -eq 1 ]
 	then
@@ -309,19 +318,25 @@ runBasicCheck()
 {
 	./run_CheckBasicCheck.sh  ${EncoderFlag}  ${EncoderLog} ${EncoderNum}  ${SpatailLayerNum} ${RCMode} ${CheckLogFile} \
 							${aInputYUVSizeLayer[@]} ${aRecYUVFileList[@]} ${aRecCropYUVFileList[@]}  ${aEncodedPicW[@]} ${aEncodedPicH[@]}
-	#copy bit stream file to ./issue folder
-	#do not copy those cases RecYUV not exist!
-	if [ ! $? -eq 0  -a  ! $? -eq 2  ]
-	then
+	#copy bit stream file to ./issue folder;do not copy those cases which RecYUV does not exist!
+    if [ $? -eq 0  ]
+    then
+        return 0
+    elif [ $? -eq 2  ]  #  $?==2: means rec yuv doest not exist
+    then
+        return 1
+    else
 		if [ -e ${BitStreamFile}  ]
 		then
-			#cp ${BitStreamFile}  ${IssueDataPath}
-			Action="you can open the annotation to save the issue bit stream"
-		fi
+            #currently, only copy when multi thread is enable
+            if [ ${MultiThreadFlag} -gt 1 ]
+            then
+                cp ${BitStreamFile}  ${IssueDataPath}
+            fi
+        fi
 		return 1
-	else
-		return 0
-	fi
+    fi
+
 
 }
 runJSVMCheck()
@@ -388,6 +403,13 @@ runMain()
 	return 0
 }
 CaseInfo=$@
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain  ${CaseInfo}
 
 

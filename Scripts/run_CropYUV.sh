@@ -142,6 +142,13 @@ InputYUV=$1
 OutputYUV=$2
 EncodedWidth=$3
 EncodedHeight=$4
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain  ${InputYUV} ${OutputYUV} ${EncodedWidth} ${EncodedHeight}
 
 

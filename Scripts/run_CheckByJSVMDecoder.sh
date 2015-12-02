@@ -351,7 +351,7 @@ runMain()
 	if [  ! $? -eq 0 ]
 	then
 		echo ""
-		echo -e "\033[31m run_JSVMCheck.sh parameters are not correct,please double check! \033[0m"
+		echo -e "\033[31m run_CheckByJSVMDecoder.sh parameters are not correct,please double check! \033[0m"
 		echo ""
 		EncoderCheckResult="1-Encoder failed!--Parameters for JSVM check are not correct!"
 		DecoderCheckResult="3-Decoder cannot be checked!"
@@ -361,6 +361,7 @@ runMain()
 
 	runSetGlobalParam
 	echo "-------------------1. JSVM Check--extract bit stream"
+    date
 	./run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
 	if [  ! $? -eq 0 ]
 	then
@@ -374,6 +375,7 @@ runMain()
 	fi
 
 	echo "-------------------2. JSVM Check--JSVM Decode Check"
+    date
 	runJSVMDecodedFailedCheck
 	if [  ! $? -eq 0 ]
 	then
@@ -388,10 +390,12 @@ runMain()
 
 	#check RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV
 	echo "-------------------3. JSVM Check--WelsDecoder Decode Check"
+    date
 	runWelsDecodedFailedCheck  >${TempDir}/WelsDecTemp.log
 
 	runGenerateSHA1String
 	echo "-------------------4. JSVM Check--RecYUV-JSVMDecYUV-WelsDecYUV Comparison"
+    date
 	runRecYUVJSVMDecYUCompare
 	if [ ${FinalCheckFlag} -eq 0 ]
 	then
@@ -411,6 +415,13 @@ runMain()
 	fi
 
 }
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain $@
 
 

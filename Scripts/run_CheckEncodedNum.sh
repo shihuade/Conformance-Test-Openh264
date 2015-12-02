@@ -167,6 +167,14 @@ runMain()
 	then
 		runCheckActualEncodedNum ${EncoderNum}
 		let "CheckFlag=$?"
+        # for case: 300frams YUV, test frame num set equal to 800
+        #the same logic with frame num is -1
+        if [ ! ${CheckFlag} -eq 0 ]
+        then
+            runCheckActulLayerSize ${SpatailLayerNum}
+            let "CheckFlag=$?"
+        fi
+
 	fi
 
 	if [  ${CheckFlag} -eq 0 ]
@@ -182,6 +190,13 @@ runMain()
 		return 1
 	fi
 }
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain $@
 
 

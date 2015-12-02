@@ -162,9 +162,11 @@ runMain()
 
 	EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
-
+    echo "CheckLog is ${CheckLog}"
+    echo ""
 	echo "---------------Basic Check--------------------------------------------"
 	echo "-------------------1. Basic Check--Encoded Failed Check"
+    date
 	runEncoderFailedCheck
 	if [ ! $? -eq 0 ]
 	then
@@ -172,6 +174,7 @@ runMain()
 		return 1
 	fi
 	echo "-------------------2. Basic Check--RecYUV Check"
+    date
 	runRecYUVCheck
 	if [ ! $? -eq 0 ]
 	then
@@ -180,6 +183,7 @@ runMain()
 	fi
 
 	echo "-------------------3. Basic Check--Crop RecYUV for JSVM comparison"
+    date
 	runCropRecYUV
 	if [ ! $? -eq 0 ]
 	then
@@ -188,6 +192,7 @@ runMain()
 	fi
 
 	echo "-------------------4. Basic Check--Encoded Number Check"
+    date
 	runEncodedNumCheck
 	if [ ! $? -eq 0 ]
 	then
@@ -203,6 +208,13 @@ runMain()
 	echo ""
 	return 0
 }
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain $@
 
 

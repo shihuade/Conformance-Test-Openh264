@@ -45,7 +45,7 @@ runBuildCodec()
 	fi
 	local OpenH264Dir=$1
 	local CurrentDir=`pwd`
-	local BuildLog="${CurrentDir}/build.log"
+	local BuildLog="${CurrentDir}/CodecBuildInfo.log"
 	if [  ! -d ${OpenH264Dir} ]
 	then
 		echo "openh264 dir is not right!"
@@ -142,6 +142,15 @@ runMain()
 	return 0
 }
 Openh264Dir=$1
+
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
 runMain ${Openh264Dir}
 
 

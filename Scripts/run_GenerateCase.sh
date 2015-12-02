@@ -1,22 +1,20 @@
 #!/bin/bash
 #***************************************************************************************
 # brief:
-#      --generate  case based on cade configure file
-#      usage: ./run_GenerateCase.sh  $Case.cfg   $TestSequence  $OutputCaseFile
-#      eg:      run_GenerateCase.sh  case.cfg  ABC_1920X1080.yuv  AllCase.csv
+#      generate  case based on case configure file and given test sequence
+#
+#      usage: ./run_GenerateCase.sh  $Case.cfg   $TestSequence      $OutputCaseFile
+#      e.g.:  ./run_GenerateCase.sh  case.cfg    ABC_1920X1080.yuv  AllCase.csv
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
+
 #usage:  runParseYUVInfo  ${YUVName}
 runParseYUVInfo()
 {
-	if [ ! $# -eq 1 ]
-	then
-		echo "usage:  runParseYUVInfo  \${YUVName}"
-		return 1
-	fi
-	declare -a aYUVInfo
-	aYUVInfo=(`./run_ParseYUVInfo.sh  ${TestSequence}`)
+    TestYUVName=${TestSequence}
+    declare -a aYUVInfo
+	aYUVInfo=(`./run_ParseYUVInfo.sh  ${TestYUVName}`)
 	PicW=${aYUVInfo[0]}
 	PicH=${aYUVInfo[1]}
 	FPS=${aYUVInfo[2]}
@@ -28,9 +26,9 @@ runParseYUVInfo()
 	if [  ${FPS} -eq 0  ]
 	then
 		let "FPS=10"
-	elif [  ${FPS} -gt 50  ]
+	elif [  ${FPS} -gt 60  ]
 		then
-		let "FPS=50"
+		let "FPS=60"
 	fi
 	return 0
 }
@@ -49,18 +47,19 @@ runGlobalVariableInital()
 {
 	if [ ! $# -eq 2 ]
 	then
-	echo "usage:   runGlobalVariableInital  \$TestSequence  \$OutputCaseFile "
-	return 1
+        echo "usage:   runGlobalVariableInital  \$TestSequence  \$OutputCaseFile "
+        return 1
 	fi
 	local  TestSequence=$1
 	local  OutputCaseFile=$2
 	let   " FramesToBeEncoded = 0"
 	let   " MaxNalSize = 0"
-	let   "Multiple16Flag=0"
+	let   " Multiple16Flag=0"
 	declare -a  aNumSpatialLayer
 	declare -a  aNumTempLayer
 	declare -a  aUsageType
 	declare -a  aRCMode
+    declare -a  aFrameSkip
 	declare -a  aIntraPeriod
 	declare -a  aTargetBitrateSet
 	declare -a  aInitialQP
@@ -127,6 +126,7 @@ runMultiLayerInitial()
 	aSpatialLayerBRSet3=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  3 $ConfigureFile ${Multiple16Flag}`)
 	aSpatialLayerBRSet4=(`./run_GetSpatialLayerBitRateSet.sh  $PicW  $PicH $FPS  4 $ConfigureFile ${Multiple16Flag}`)
 }
+
 #usage:  runGenerateMultiLayerBRSet ${SpatialNum}
 #e.g:    --input:  runGenerateMultiLayerBRSet 2
 #        --output: "1000,200,800,0, 0,"  "1500,500,1000,0,0"
@@ -248,6 +248,9 @@ runParseCaseConfigure()
 		elif [[ "$line" =~ ^RCMode ]]
 		then
 			aRCMode=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
+        elif [[ "$line" =~ ^EnableFrameSkip ]]
+        then
+            aFrameSkip=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^EnableLongTermReference ]]
 		then
 			aEnableLongTermReference=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
@@ -273,6 +276,7 @@ runParseCaseConfigure()
 		then
 			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		fi
+
 	done <$ConfigureFile
 }
 #usage: runGetSliceNum  $SliceMd
@@ -322,17 +326,22 @@ runFirstStageCase()
 					then
 						aQPforTest=${aInitialQP[@]}
 						aTargetBitrateSet=("256,256,256,256,")
+                        aFrameSkip=(0)
 					else
 						aQPforTest=(26)
 						runGenerateMultiLayerBRSet ${NumSpatialLayer}
 					fi
-					#......for loop.........................................#
-					for QPIndex in ${aQPforTest[@]}
-					do
-						for BitRateIndex in ${aTargetBitrateSet[@]}
-						do
-							runGenerateLayerResolution   ${NumSpatialLayer}
-							echo "$ScreenSignal, \
+
+                    for vFrameSkipFlag in ${aFrameSkip[@]}
+                    do
+
+                        #......for loop.........................................#
+                        for QPIndex in ${aQPforTest[@]}
+                        do
+                            for BitRateIndex in ${aTargetBitrateSet[@]}
+                            do
+                                runGenerateLayerResolution   ${NumSpatialLayer}
+                                echo "$ScreenSignal, \
 								$FramesToBeEncoded,\
 								${NumSpatialLayer},\
 								$NumTempLayer,\
@@ -342,8 +351,10 @@ runFirstStageCase()
 								${QPIndex}, ${QPIndex},\
 								${QPIndex}, ${QPIndex},\
 								${RCModeIndex},\
+                                ${vFrameSkipFlag},\
 								${BitRateIndex}">>$casefile_01
-						done
+                            done
+                        done
 					done
 				done
 			done
@@ -357,6 +368,8 @@ runSecondStageCase()
 	declare -a aSliceNumber
 	declare -a ThreadNumber
 	local TempNalSize=""
+    let  "SliceMode3MaxH = 35*16"
+
 	while read FirstStageCase
 	do
 		if  [[ $FirstStageCase =~ ^[-0-9]  ]]
@@ -371,7 +384,7 @@ runSecondStageCase()
 				else
 				  ThreadNumber=( ${aMultipleThreadIdc[@]} )
 				fi
-				if [  $SlcMode -eq 4  ]
+				if [  $SlcMode -eq 3  ]
 				then
 					let "TempNalSize=${MaxNalSize}"
 				else
@@ -393,7 +406,7 @@ runSecondStageCase()
 								${TempNalSize},\
 								$IntraPeriodIndex,\
 								$ThreadNum">>$casefile_02
-							else
+                            else
 								echo "$FirstStageCase\
 								${SlcMode}, ${SlcNum},\
 								${SlcMode}, ${SlcNum},\
@@ -442,6 +455,7 @@ runThirdStageCase()
 										${SceneChangeFlag},\
 										${BackgroundFlag},\
 										${AQFlag}">>$casefile
+                                        let "TotalCasesNum ++"
 								done
 							done
 						done
@@ -455,14 +469,19 @@ runThirdStageCase()
 runOutputParseResult()
 {
     echo ""
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m Test cases generation result for ${TestSequence} \033[0m"
+    echo -e "\033[32m TotalCasesNum is ${TotalCasesNum}"
+    echo -e "\033[32m ********************************************************************* \033[0m"
 	echo "PicWxPicH_FPS is ${PicW}x${PicH}_${FPS}"
-	echo "all case info has been  output to file $casefile "
+	echo "all cases info have been  output to file $casefile "
 	echo "aUsageType=         ${aUsageType[@]}"
 	echo "Frames=             $FramesToBeEncoded"
 	echo "aNumSpatialLayer=   ${aNumSpatialLayer[@]}"
 	echo "aNumTempLayer=      ${aNumTempLayer[@]}"
 	echo "MaxNalSize=         $MaxNalSize"
-	echo "aRCMode=            ${aRCMode[@]}"
+    echo "aRCMode=            ${aRCMode[@]}"
+    echo "aFrameSkip=         ${aFrameSkip[@]}"
 	echo "aInitialQP=         ${aInitialQP[@]}"
 	echo "aIntraPeriod=       ${aIntraPeriod}"
 	echo "aSliceMode=         ${aSliceMode[@]}"
@@ -488,6 +507,8 @@ runOutputParseResult()
 	echo "aSpatialLayerBRSet2 is ${aSpatialLayerBRSet2[@]}"
 	echo "aSpatialLayerBRSet3 is ${aSpatialLayerBRSet3[@]}"
 	echo "aSpatialLayerBRSet4 is ${aSpatialLayerBRSet4[@]}"
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo ""
 }
 runBeforeGenerate()
 {
@@ -514,6 +535,7 @@ runBeforeGenerate()
 		QPLayer2,\
 		QPLayer3,\
 		RCMode,\
+        FrameSkip,\
 		BROverAll,\
 		BRLayer0,\
 		BRLayer1,\
@@ -554,23 +576,39 @@ runMain()
     echo "usage:   runMain   \$Case.cfg   \$TestSequence  \$OutputCaseFile  "
     return 1
   fi
-  local ConfigureFile=$1
-  local TestSequence=$2
-  local OutputCaseFile=$3
+
+  ConfigureFile=$1
+  TestSequence=$2
+  OutputCaseFile=$3
+  let "TotalCasesNum=0"
+
+
+  ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
+  if [ ! -f ${ConfigureFile} ]
+  then
+    echo "configure file does not exist, please double check!"
+    echo "${ConfigureFile} for cases generation!"
+    exit 1
+  fi
+
   runGlobalVariableInital  $TestSequence  $OutputCaseFile
   runParseCaseConfigure  ${ConfigureFile}
   runMultiLayerInitial
   runBeforeGenerate
-  runOutputParseResult
   runFirstStageCase
   runSecondStageCase
   runThirdStageCase
   runAfterGenerate
+  runOutputParseResult
 }
 ConfigureFile=$1
 TestSequence=$2
 OutputCaseFile=$3
 echo ""
-echo "case generating ......"
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
 runMain  ${ConfigureFile}   ${TestSequence}   ${OutputCaseFile}
-

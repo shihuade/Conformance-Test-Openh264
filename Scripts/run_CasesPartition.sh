@@ -1,19 +1,26 @@
-#!/bin/sh
-
-#  Script.sh
-#  
+#!/bin/bash
+#********************************************************************************
+# Brief: split all cases set into small sets and generate sub-set cases files
 #
-#  Created by huashi on 12/10/14.
+# Usage: run_CasesPartition.sh  ${AllCasesFile} ${SubCasesNum}
+#                               ${TestYUVName}
+# e.g.:
+#       inputt: run_CasesPartition.sh  ABC.YUV_AllCases.csv  1000  ABC.YUV
+#       output: ABC.YUV_SubCases_0.csv   ABC.YUV_SubCases_1.csv
+#       output: ABC.YUV_SubCases_2.csv   ABC.YUV_SubCases_3.csv
+#       (suppose there are 3800 cases)
 #
-
-
+#
+#date:  12/10/2014 Created
+#*********************************************************************************
 
 
 runUsage()
 {
     echo ""
     echo -e "\033[31m Usage: \033[0m"
-    echo -e "\033[31m    --./run_CasesPartition.sh \${AllCasesFile} \${SubCasesNum} \${TestYUVName}\033[0m"
+    echo -e "\033[31m    --./run_CasesPartition.sh \${AllCasesFile} \${SubCasesNum}    \033[0m"
+    echo -e "\033[31m                              \${TestYUVName}  \${SubCaseInfoLog} \033[0m"
     echo ""
 }
 
@@ -26,9 +33,9 @@ runCheck()
         exit 1
     fi
 
-    if [ ${SubCasesNum} -le 10  ]
+    if [ ${SubCasesNum} -le 5  ]
     then
-        echo -e "\033[31m sub cases number should larger than 10!  \033[0m"
+        echo -e "\033[31m sub cases number should larger than 5!  \033[0m"
         exit 1
     fi
 
@@ -46,6 +53,10 @@ runPartitionAllCasesIntoSubCasesFile()
     let "LineIndex   = 0"
     let "NewFileFlag = 0"
 
+    echo ""
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m partition all cases into small cases set for ${TestYUVName} \033[0m"
+
     SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
     while read line
     do
@@ -57,16 +68,17 @@ runPartitionAllCasesIntoSubCasesFile()
         fi
 
         let "CaseIndex = LineIndex -1"
-        let "NewFileFlag = CaseIndex% ${SubCasesNum}"
+        let "NewFileFlag = CaseIndex % ${SubCasesNum}"
         if [ ${NewFileFlag} -eq 0 ]
         then
             SubCasesFileName="${TestYUVName}_SubCases_${SubCasesFileIndex}.csv"
             let "SubCasesFileIndex ++"
-            echo ${HeadLine}
-            echo ${LineIndex}
-            echo ${CaseIndex}
-            echo $line
+            #echo ${HeadLine}
+            #echo ${LineIndex}
+            #echo ${CaseIndex}
+            #echo $line
             echo ${HeadLine} >${SubCasesFileName}
+            echo ${SubCasesFileName}>>${SubCaseInfoLog}
         fi
         echo ${line} >>${SubCasesFileName}
 
@@ -74,11 +86,18 @@ runPartitionAllCasesIntoSubCasesFile()
 
     done < ${AllCasesFile}
 
+    let "CaseIndex ++"
+    echo -e "\033[32m Total cases num for partition is     ${CaseIndex} \033[0m"
+    echo -e "\033[32m SubCasesNum in one sub-cases set is  ${SubCasesNum} \033[0m"
+    echo -e "\033[32m Total sub cases file num is          ${SubCasesFileIndex} \033[0m"
+    echo -e "\033[32m ********************************************************************* \033[0m"
+
+
 }
 
-runMian()
+runMain()
 {
-    if [ ! $# -eq 3 ]
+    if [ ! $# -eq 4 ]
     then
         runUsage
         exit 1
@@ -87,10 +106,13 @@ runMian()
     AllCasesFile=$1
     SubCasesNum=$2
     TestYUVName=$3
+    SubCaseInfoLog=$4
+    let "SubCasesFileIndex = 0"
 
     runCheck
 
     runPartitionAllCasesIntoSubCasesFile
+    echo ${SubCasesFileIndex}>>${SubCaseInfoLog}
 
     return 0
 }
@@ -98,7 +120,15 @@ runMian()
 AllCasesFile=$1
 SubCasesNum=$2
 TestYUVName=$3
-runMian ${AllCasesFile} ${SubCasesNum}  ${TestYUVName}
+SubCaseInfoLog=$4
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+runMain ${AllCasesFile} ${SubCasesNum}  ${TestYUVName} ${SubCaseInfoLog}
 
 
 

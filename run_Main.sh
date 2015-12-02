@@ -17,19 +17,40 @@
  {
 	echo ""
 	echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \033[0m"
-	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest  ./CaseConfigure/case.cfg\033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest    ./CaseConfigure/case.cfg \s033[0m"
 	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ./CaseConfigure/case.cfg \033[0m"
+    echo ""
+    echo -e "\033[31m or  \033[0m"
+    echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \$Branch \$GitRepos \033[0m"
  	echo ""
  }
  
- runPromptInfo()
- {
-	echo ""
-	echo  -e "\033[32m Final result can be found in ./FinaleRestult \033[0m"
-	echo  -e "\033[32m SHA1 table can be found in ./SHA1Table \033[0m"
-	echo ""
- }
- 
+runGetFinalTestResult()
+{
+    #check test type
+    if [ ${TestType} = "SGETest" ]
+    then
+
+        echo ""
+        echo -e "\033[32m **************************************************************************************\033[0m"
+        echo ""
+        echo -e "\033[32m please run below command to check whether all SGE jobs have been completed!"
+        echo ""
+        echo -e "\033[32m     ./run_SGEJobStatusUpdate.sh  SGEJobsSubmittedInfo.log ${AllJobsCompletedFlagFile} "
+        echo ""
+        echo ""
+        echo -e "\033[32m please run below command to get final result when all SGE jobs have been completed!"
+        echo ""
+        echo -e "\033[32m     ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile} ${AllTestResultPassFlag}"
+        echo -e "\033[32m **************************************************************************************\033[0m"
+        echo ""
+        return 0
+    elif [ ${TestType} = "LocalTest" ]
+    then
+        ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile} ${AllTestResultPassFlag}
+        let "AllTestFlag =$?"
+    fi
+}
 runCheck()
 {
 	#check test type
@@ -55,14 +76,17 @@ runCheck()
 }
 runMain()
  {
-	if [ ! $# -eq 2 ]
+	if [ ! $# -ge 2 ]
 	then
 		runUsage
 		exit 1
 	fi
 	TestType=$1
 	ConfigureFile=$2
-	
+    OpenH264Branch=$3
+    OpenH264Repos=$4
+
+
 	runCheck
 	
 	#dir translation
@@ -73,13 +97,18 @@ runMain()
 	SHA1TableFolder="SHA1Table"
 	ConfigureFolder="CaseConfigure"
 	FinalResultDir="FinalResult"
-	
+    AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
+    AllTestResultPassFlag="AllCasesPass.flag"
+
+    let "AllTestFlag =0"
+
+
 	echo ""
 	echo ""
 	echo "prepare for all test data......."
 	echo ""
-	# prepare for all test data  //$TestType  $SourceFolder $AllTestDataFolder    $CodecFolder  $ScriptFolder  $ConfigureFile
-	./run_PrepareAllTestData.sh   ${TestType}  ${SourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile}
+	# prepare for all test data
+	./run_PrepareAllTestData.sh   ${TestType}  ${SourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile} ${OpenH264Branch} "${OpenH264Repos}"
 	if [ ! $? -eq 0 ]
 	then
 		echo "failed to prepared  test space for all test data!"
@@ -89,26 +118,26 @@ runMain()
 	echo ""
 	echo "running all test cases for all test sequences......"
 	echo ""
-	##                                     ${TestType}  ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
-	./run_AllTestSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
-	if [ ! $? -eq 0 ]
-	then
-		echo ""
-		echo -e "\033[31m failed: not all cases for all test sequences have been passed ! \033[0m"
-		echo ""
-		cp  ${FinalResultDir}/*SHA1_Table.csv  ./${SHA1TableFolder}
-		runPromptInfo
-		exit 1
-	else
-		echo ""
-		echo -e "\033[32m all cases of  all test sequences have been passed! \033[0m"
-		echo ""
-		cp  ${FinalResultDir}/*SHA1_Table.csv ./${SHA1TableFolder}
-		runPromptInfo
-		exit 0
-	fi
+	##
+    ./run_TestAllSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
+
+    runGetFinalTestResult
+
+    return ${AllTestFlag}
+
 }
 TestType=$1
 ConfigureFile=$2
-runMain  ${TestType} ${ConfigureFile}
+OpenH264Branch=$3
+OpenH264Repos=$4
+
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
+runMain  ${TestType} ${ConfigureFile} ${OpenH264Branch} "${OpenH264Repos}"
 

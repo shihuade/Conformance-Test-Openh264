@@ -75,6 +75,5 @@ runMain()
 
 
 FileList=$@
-
 runMain ${FileList}
 

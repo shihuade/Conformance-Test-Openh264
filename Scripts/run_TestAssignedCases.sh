@@ -6,10 +6,10 @@
 #                                     or for SGE test, in /opt/$hostName/SGEJObID
 #            pass case number, unpass case number total case number
 #            ${TestSetIndex}_${TestYUVName}_AllCaseOutput.csv
-#            ${AllCasesConsoleLogFile}
+#            ${AssignedCasesConsoleLogFile}
 #            ${CaseSummaryFile}
 #
-#usage:  ./run_TestAllCases.sh $TestYUV  $InputYUV $AllCaseFile
+#usage:  ./run_TestAssignedCases.sh $TestYUV  $InputYUV $GivenCaseFile
 #
 #
 #date:  5/08/2014 Created
@@ -36,17 +36,17 @@ runGlobalVariableInitial()
 	mkdir -p ${IssueDataPath}
 	mkdir -p ${TempDataPath}
 	#test cfg file and test info output file
-	AllCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput.csv"
-	UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput.csv"
-	AllCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table.csv"
-	AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_0.TestLog"
-	CaseSummaryFile="${ResultPath}/${TestYUVName}.Summary"
+	AssignedCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput_SubCasesIndex_${SubCaseIndex}.csv"
+	UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput_SubCasesIndex_${SubCaseIndex}.csv"
+	AssignedCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table_SubCasesIndex_${SubCaseIndex}.csv"
+	AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}__SubCasesIndex_${SubCaseIndex}.TestLog"
+	CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary"
 	HeadLine1="EncoderFlag, DecoderFlag, FPS, BitSreamSHA1, BitSreamMD5, InputYUVSHA1, InputYUVMD5,\
 			-utype,  -frms,  -numl,  -numtl, -sw, -sh,\
 			-dw 0, -dh 0, -dw 1, -dh 1, -dw 2, -dh 2, -dw 3, -dh 3,\
 			-frout 0,  -frout 1, -frout 2, -frout 3,\
 			-lqp 0, -lqp 1, -lqp 2, -lqp 3,\
-			-rc, -tarb, -ltarb 0, -ltarb 1, -ltarb 2, -ltarb 3,\
+			-rc,-fs, -tarb, -ltarb 0, -ltarb 1, -ltarb 2, -ltarb 3,\
 			-slcmd 0, -slcnum 0, -slcmd 1, -slcnum 1,\
 			-slcmd 2, -slcnum 2, -slcmd 3, -slcnum 3,\
 			-nalsize,\
@@ -58,17 +58,17 @@ runGlobalVariableInitial()
 			-dw 0, -dh 0, -dw 1, -dh 1,-dw 2, -dh 2, -dw 3, -dh 3,\
 			-frout 0,  -frout 1, -frout 2, -frout 3,\
 			-lqp 0, -lqp 1, -lqp 2, -lqp 3,\
-			-rc, -tarb, -ltarb 0, -ltarb 1, -ltarb 2, -ltarb 3,\
+			-rc, -fs, -tarb, -ltarb 0, -ltarb 1, -ltarb 2, -ltarb 3,\
 			-slcmd 0, -slcnum 0, -slcmd 1, -slcnum 1,\
 			-slcmd 2, -slcnum 2, -slcmd 3, -slcnum 3,\
 			-nalsize,\
 			-iper, -thread, -ltr, -db, -denois,\
 			-scene  , bgd  , -aq "
 
-	echo  ${HeadLine1}>${AllCasesPassStatusFile}
+	echo  ${HeadLine1}>${AssignedCasesPassStatusFile}
 	echo  ${HeadLine1}>${UnPassedCasesFile}
 
-	echo  ${HeadLine2}>${AllCasesSHATableFile}
+	echo  ${HeadLine2}>${AssignedCasesSHATableFile}
 	let "YUVSizeLayer0=0"
 	let "YUVSizeLayer1=0"
 	let "YUVSizeLayer2=0"
@@ -104,7 +104,7 @@ runParseConfigure()
 }
 runPrepareMultiLayerInputYUV()
 {
-	local PrepareLog="${LocalDataDir}/${TestYUVName}_MultiLayerInputYUVPrepare.log"
+	local PrepareLog="${LocalDataDir}/${TestYUVName}_MultiLayerInputYUVPrepare_SubCaseIndex_${SubCaseIndex}.log"
 	declare -a aYUVInfo
 
 	aYUVInfo=(`./run_ParseYUVInfo.sh  ${TestYUVName}`)
@@ -223,34 +223,35 @@ runParseCaseCheckLog()
 #usage  runAllCaseTest
 runAllCaseTest()
 {
-	local CheckLogFile="${TempDataPath}/CaseCheck.log"
-	let "TotalCaseNum=0"
+    local CheckLogFile="${TempDataPath}/CaseCheck.log"
+    let "TotalCaseNum=0"
 	let "LineIndex=0"
 	let "LogFileIndex=0"
 	while read CaseData
 	do
 		if [ ${LineIndex} -gt 0  ]
 		then
-			#to limit log file's size,each log file only records 1000 cases' log 
-			let "NewLogFileFlag = ${TotalCaseNum}%1000"
+			#to limit log file's size,each log file only records 200 cases' log
+			let "NewLogFileFlag = ${TotalCaseNum}%200"
 			if [ ${NewLogFileFlag} -eq 0 ]
 			then
-				AllCasesConsoleLogFile="${ResultPath}/${TestYUVName}_${LogFileIndex}.TestLog"
+				AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_${LogFileIndex}.TestLog"
 				let "LogFileIndex++"
-				echo "">${AllCasesConsoleLogFile}
+				echo "">${AssignedCasesConsoleLogFile}
 			fi
 			
-			echo "" >>${AllCasesConsoleLogFile}
-			echo "" >>${AllCasesConsoleLogFile}
-			echo "" >>${AllCasesConsoleLogFile}
-			echo "****************case index is ${TotalCaseNum}************">>${AllCasesConsoleLogFile}
+			echo "" >>${AssignedCasesConsoleLogFile}
+			echo "" >>${AssignedCasesConsoleLogFile}
+			echo "" >>${AssignedCasesConsoleLogFile}
+			echo "****************case index is ${TotalCaseNum}************">>${AssignedCasesConsoleLogFile}
+            echo "     LocalDataDir is: ${LocalDataDir}">>${AssignedCasesConsoleLogFile}
 			export IssueDataPath
 			export TempDataPath
 			export TestYUVName
 			export InputYUV
-			export AllCasesPassStatusFile
+			export AssignedCasesPassStatusFile
 			export UnPassedCasesFile
-			export AllCasesSHATableFile
+			export AssignedCasesSHATableFile
 			#export CheckLogFile
 			export YUVSizeLayer0
 			export YUVSizeLayer1
@@ -261,12 +262,18 @@ runAllCaseTest()
 			export YUVFileLayer2
 			export YUVFileLayer3
 
-			./run_TestOneCase.sh  ${CaseData}      >>${AllCasesConsoleLogFile}
+			./run_TestOneCase.sh  ${CaseData}      >>${AssignedCasesConsoleLogFile}
 
-			runParseCaseCheckLog  ${CheckLogFile}  >>${AllCasesConsoleLogFile}
-			echo "" >>${AllCasesConsoleLogFile}
-			echo "---------------Cat Check Log file------------------------">>${AllCasesConsoleLogFile}
-			cat ${CheckLogFile} >>${AllCasesConsoleLogFile}
+			runParseCaseCheckLog  ${CheckLogFile}  >>${AssignedCasesConsoleLogFile}
+			echo "" >>${AssignedCasesConsoleLogFile}
+			echo "---------------Cat Check Log file------------------------">>${AssignedCasesConsoleLogFile}
+            if [ -e ${CheckLogFile} ]
+            then
+                cat ${CheckLogFile} >>${AssignedCasesConsoleLogFile}
+            else
+                echo "CheckLogFile ${CheckLogFile} does not exist,please double check"
+            fi
+
 			for file in  ${TempDataPath}/*
 			do
 				./run_SafeDelete.sh  ${file}>>DeletedFile.list
@@ -277,7 +284,7 @@ runAllCaseTest()
 
 		let "LineIndex++"
 		
-	done <$AllCaseFile
+	done <$GivenCaseFile
 }
 #usage runOutputPassNum
 runOutputPassNum()
@@ -286,12 +293,12 @@ runOutputPassNum()
 	TestFolder=`echo $CurrentDir | awk 'BEGIN {FS="/"} { i=NF; print $i}'`
 	echo ""
 	echo  -e "\033[32m *********************************************************** \033[0m"
-	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}\033[0m"
-	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}\033[0m"
-	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}\033[0m"
-	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}\033[0m"
-	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum}\033[0m"
-	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}\033[0m"
+	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}       \033[0m"
+	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}   \033[0m"
+	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum} \033[0m"
+	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}   \033[0m"
+	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum} \033[0m"
+	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}  \033[0m"
 	echo "issue bitstream can be found in ./AllTestData/${TestFolder}/issue"
 	echo "detail result  can be found in  ./AllTestData/${TestFolder}/${ResultPath}"
 	echo  -e "\033[32m *********************************************************** \033[0m"
@@ -300,17 +307,18 @@ runOutputPassNum()
 	echo "  --detail result  can be found in   ${LocalDataDir}/${ResultPath}" 
 	echo  -e "\033[32m *********************************************************** \033[0m"
 	echo ""
-	echo "...............Test summary for ${TestYUVName}...........................">${CaseSummaryFile}
-	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum}\033[0m">>${CaseSummaryFile}
-	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}\033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m ..................Test summary for ${TestYUVName}....................\033[0m">${CaseSummaryFile}
+    echo  "     TestStartTime is ${StartTime}  ">>${CaseSummaryFile}
+    echo  "     TestEndTime   is ${EndTime}    ">>${CaseSummaryFile}
+	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}        \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}    \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum}  \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}    \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum}  \033[0m">>${CaseSummaryFile}
+	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}   \033[0m">>${CaseSummaryFile}
 	echo "" >>${CaseSummaryFile}
 	echo "  --issue bitstream can be found in  ${LocalDataDir}/issue" >>${CaseSummaryFile}
 	echo "  --detail result  can be found in   ${LocalDataDir}/${ResultPath}" >>${CaseSummaryFile}
-
 	echo  -e "\033[32m *********************************************************** \033[0m"
 
 	if [  ! ${EncoderUnPassedNum} -eq 0  ]
@@ -326,20 +334,25 @@ runOutputPassNum()
 	
 }
 #***********************************************************
-# usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $AllCaseFile
+# usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $GivenCaseFile
 runMain()
 {
-	if [ ! $# -eq 5  ]
+	if [ ! $# -eq 6  ]
 	then
-		echo "usage: run_TestAllCase.sh \${LocalDataDir}  \${ConfigureFile} \$TestYUVName \$InputYUV  \$AllCaseFile"
-	return 1
+		echo "usage: run_TestAssignedCases.sh \${LocalDataDir}  \${ConfigureFile}  \${TestYUVName}   "
+        echo "                                \${InputYUV}       \${SubCaseIndex}  \${GivenCaseFile} "
+        return 1
 	fi
 
 	LocalDataDir=$1
 	ConfigureFile=$2
 	TestYUVName=$3
 	InputYUV=$4
-	AllCaseFile=$5
+    SubCaseIndex=$5
+	GivenCaseFile=$6
+    StartTime=""
+    EndTime=""
+
 	runGlobalVariableInitial
 	runParseConfigure
 
@@ -347,7 +360,15 @@ runMain()
 
 	echo ""
 	echo  -e "\033[32m  testing all cases, please wait!...... \033[0m"
-	runAllCaseTest 
+    #get time info
+    date
+    StartTime=`date`
+
+	runAllCaseTest
+    #get time info
+    date
+    EndTime=`date`
+
 	runOutputPassNum
 	return $?
 }
@@ -355,7 +376,15 @@ LocalDataDir=$1
 ConfigureFile=$2
 TestYUVName=$3
 InputYUV=$4
-AllCaseFile=$5
-runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV}  ${AllCaseFile}
+SubCaseIndex=$5
+GivenCaseFile=$6
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV} ${SubCaseIndex} ${GivenCaseFile}
 
 
