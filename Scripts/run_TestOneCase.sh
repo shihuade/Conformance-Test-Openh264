@@ -52,7 +52,7 @@ runEncoderCommandInital()
 					"-slcmd 0" "-slcnum 0" "-slcmd 1" "-slcnum 1"\
 					"-slcmd 2" "-slcnum 2" "-slcmd 3" "-slcnum 3"\
 					-nalsize \
-					-iper   -thread    -ltr \
+					-iper   -thread  " -loadbalancing 0 "  -ltr \
 					-db  -denois    -scene    -bgd    -aq )
 	aEncoderCommandName=(usagetype  frms  numl   numtl \
 					sw sh  dw0 dh0 dw1 dh1 dw2 dh2 dw3 dh3 \
