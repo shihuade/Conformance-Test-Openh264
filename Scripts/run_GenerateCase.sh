@@ -70,6 +70,7 @@ runGlobalVariableInital()
 	declare -a  aSliceNum3
 	declare -a  aSliceNum4
 	declare -a  aMultipleThreadIdc
+	declare -a  aUseLoadBalancing
 	declare -a  aEnableLongTermReference
 	declare -a  aLoopFilterDisableIDC
 	declare -a  aEnableDenoise
@@ -135,9 +136,10 @@ runGenerateMultiLayerBRSet()
 {
 	if [ ! $# -eq 1 ]
 	then
-	echo "usage:  runGenerateMultiLayerBRSet \${SpatialNum}"
-	exit 1
+		echo "usage:  runGenerateMultiLayerBRSet \${SpatialNum}"
+		exit 1
 	fi
+
 	local SpatialNum=$1
 	local TempLayerBRInfo=""
 	local TempIndex=""
@@ -221,6 +223,9 @@ runParseCaseConfigure()
 		elif [[ "$line" =~ ^MultipleThreadIdc ]]
 		then
 			aMultipleThreadIdc=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
+		elif [[ "$line" =~ ^UseLoadBalancing ]]
+		then
+			aUseLoadBalancing=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
 		elif [[ "$line" =~ ^SliceMode ]]
 		then
 			aSliceMode=(`echo $line | awk 'BEGIN {FS="[#:\r]"} {print $2}' `)
@@ -396,26 +401,30 @@ runSecondStageCase()
 					do
 						for ThreadNum in ${ThreadNumber[@]}
 						do
-							if [ ${SlcMode} -eq 1 -a ${SlcNum} -eq 4   ]
-							then
-								echo "$FirstStageCase\
-								1,4,\
-								1,1,\
-								1,1,\
-								1,1,\
-								${TempNalSize},\
-								$IntraPeriodIndex,\
-								$ThreadNum">>$casefile_02
-                            else
-								echo "$FirstStageCase\
-								${SlcMode}, ${SlcNum},\
-								${SlcMode}, ${SlcNum},\
-								${SlcMode}, ${SlcNum},\
-								${SlcMode}, ${SlcNum},\
-								${TempNalSize},\
-								${IntraPeriodIndex},\
-								${ThreadNum}">>$casefile_02
-							fi
+							for LoadBalancing in ${aUseLoadBalancing[@]}
+							do
+								if [ ${SlcMode} -eq 1 -a ${SlcNum} -eq 4   ]
+								then
+									echo "$FirstStageCase\
+									1,4,\
+									1,1,\
+									1,1,\
+									1,1,\
+									${TempNalSize},\
+									$IntraPeriodIndex,\
+									$ThreadNum,\
+									$LoadBalancing">>$casefile_02
+                        					else
+									echo "$FirstStageCase\
+									${SlcMode}, ${SlcNum},\
+									${SlcMode}, ${SlcNum},\
+									${SlcMode}, ${SlcNum},\
+									${SlcMode}, ${SlcNum},\
+									${TempNalSize},\
+									${IntraPeriodIndex},\
+									${ThreadNum},\
+									$LoadBalancing">>$casefile_02
+								fi
 						done #threadNum loop
 					done #aSliceNum loop
 				done #Slice Mode loop
@@ -480,8 +489,8 @@ runOutputParseResult()
 	echo "aNumSpatialLayer=   ${aNumSpatialLayer[@]}"
 	echo "aNumTempLayer=      ${aNumTempLayer[@]}"
 	echo "MaxNalSize=         $MaxNalSize"
-    echo "aRCMode=            ${aRCMode[@]}"
-    echo "aFrameSkip=         ${aFrameSkip[@]}"
+	echo "aRCMode=            ${aRCMode[@]}"
+	echo "aFrameSkip=         ${aFrameSkip[@]}"
 	echo "aInitialQP=         ${aInitialQP[@]}"
 	echo "aIntraPeriod=       ${aIntraPeriod}"
 	echo "aSliceMode=         ${aSliceMode[@]}"
@@ -491,6 +500,7 @@ runOutputParseResult()
 	echo "aSliceNum3=         ${aSliceNum3[@]}"
 	echo "aSliceNum4=         ${aSliceNum4[@]}"
 	echo "aMultipleThreadIdc= ${aMultipleThreadIdc[@]}"
+	echo "aUseLoadBalancing=  ${aUseLoadBalancing[@]}"
 	echo "aEnableLongTermReference=      ${aEnableLongTermReference[@]}"
 	echo "aLoopFilterDisableIDC=         ${aLoopFilterDisableIDC[@]}"
 	echo "aEnableDenoise=                ${aEnableDenoise[@]}"
@@ -535,7 +545,7 @@ runBeforeGenerate()
 		QPLayer2,\
 		QPLayer3,\
 		RCMode,\
-        FrameSkip,\
+        	FrameSkip,\
 		BROverAll,\
 		BRLayer0,\
 		BRLayer1,\
@@ -552,6 +562,7 @@ runBeforeGenerate()
 		MaxNalSize,\
 		IntraPeriod,\
 		MultipleThreadIdc,\
+		LoadBalancing,\
 		EnableLongTermReference,\
 		LoopFilterDisableIDC,\
 		DenoiseFlag,\
