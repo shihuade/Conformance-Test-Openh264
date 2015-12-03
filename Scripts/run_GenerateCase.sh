@@ -425,6 +425,7 @@ runSecondStageCase()
 									${ThreadNum},\
 									$LoadBalancing">>$casefile_02
 								fi
+							done #loadbalancing loop
 						done #threadNum loop
 					done #aSliceNum loop
 				done #Slice Mode loop
