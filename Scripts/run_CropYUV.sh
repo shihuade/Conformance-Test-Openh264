@@ -4,7 +4,7 @@
 #*************************************************************************************************
 # brife:
 #    As openh264 encoder's reconstructed YUV file is multiple of 16 even though the
-#    input resolution is not multiple 0f 16. So, in order to make comparison between
+#    input resolution is not multiple of 16. So, in order to make comparison between
 #    JM decoded YUV and reconstructed YUV, we need to crop the reconstructed  YUV
 #    first.
 #

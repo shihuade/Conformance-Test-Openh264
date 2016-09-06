@@ -48,14 +48,19 @@ runMain()
 	aOutputBitStreamNameList=( ${OutputBitStreamNameL0} ${OutputBitStreamNameL1} ${OutputBitStreamNameL2} ${OutputBitStreamNameL3} )
 
 	let "ExtractFlag=0"
-	for((i=0;i<${SpatialLayerNUm}; i++))
-	do
-		./${Extractor}  ${InputBitSteam} ${aOutputBitStreamNameList[$i]}  -did $i 2>BitStreamExtract.log
-		if [ ! $? -eq 0  -o  ! -e  ${aOutputBitStreamNameList[$i]} -o ! -s  ${aOutputBitStreamNameList[$i]} ]
-		then
-			let "ExtractFlag=1"
-		fi
-	done
+    if [ ${SpatialLayerNUm} -eq 1 ]
+    then
+        mv ${InputBitSteam} ${aOutputBitStreamNameList[0]}
+    else
+        for((i=0;i<${SpatialLayerNUm}; i++))
+        do
+            ./${Extractor}  ${InputBitSteam} ${aOutputBitStreamNameList[$i]}  -did $i 2>BitStreamExtract.log
+            if [ ! $? -eq 0  -o  ! -e  ${aOutputBitStreamNameList[$i]} -o ! -s  ${aOutputBitStreamNameList[$i]} ]
+            then
+                let "ExtractFlag=1"
+            fi
+	    done
+    fi
 
 	if [ ${ExtractFlag} -eq 0 ]
 	then
