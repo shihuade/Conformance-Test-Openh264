@@ -58,7 +58,8 @@ runSetGlobalParam()
 	TempDir=`pwd`
 	cd ${CurrentDir}
 
-	JSVMDecoderLog="${TempDir}/JSVMDecoder.log"
+    #JSVMDecoderLog="${TempDir}/JMDecoder.log"
+    JMDecoderLog="${TempDir}/JSVMDecoder.log"
 	WelsDecoderLog="${TempDir}/WelsDecoder.log"
 
 	for((i=0;i<4;i++))
@@ -115,6 +116,29 @@ runJSVMDecodedFailedCheck()
 	cat ${JSVMDecoderLog}
 	return 0
 }
+
+runJMDecodedFailedCheck()
+{
+    echo "">${JMDecoderLog}
+    for((i=0; i<${SpatialLayerNum}; i++))
+    do
+        echo " JM decoding, layer $i.....................">>${JMDecoderLog}
+        ./${JMDecoder}  -p InputFile="${aLayerBitStream[$i]}" -p OutputFile="${aLayerJSVMYUV[$i]}" >>${JMDecoderLog}
+
+        if [ ! $? -eq 0  -o  ! -e ${aLayerJSVMYUV[$i]} ]
+        then
+            echo ""
+            echo -e "\033[31m JM decoded failed!  \033[0m"
+            echo ""
+            cat ${JMDecoderLog}
+            return 1
+        fi
+    done
+
+    cat ${JMDecoderLog}
+    return 0
+}
+
 runWelsDecodedFailedCheck()
 {
 	echo "">${WelsDecoderLog}
@@ -283,7 +307,8 @@ runCheckParameter()
 
 	done
 
-	if [  ! -e ${JSVMDecoder}  -o ! -e ${JMDecoder} -o ! -e ${WelsDecoder}   ]
+    #if [  ! -e ${JSVMDecoder}  -o ! -e ${JMDecoder} -o ! -e ${WelsDecoder}   ]
+    if [ ! -e ${JMDecoder} -o ! -e ${WelsDecoder}   ]
 	then
 		echo ""
 		echo -e "\033[31m  ${JSVMDecoder}  or ${JMDecoder} or  ${WelsDecoder} does not exist !\033[0m"
