@@ -85,7 +85,7 @@ runTruncateAllYUVs()
                 mkdir ${vOutputDir}
             fi
 
-            ./run_TruncateYUV.sh ${vInputYUV} ${vOutputDir} ${OutputFrmNum} ${TruncateApp}
+            #./run_TruncateYUV.sh ${vInputYUV} ${vOutputDir} ${OutputFrmNum} ${TruncateApp}
         fi
 
     done <${YUVFullPathLog}
@@ -123,11 +123,6 @@ runCheck()
         exit 1
     fi
 
-    if [  ! -e ${TruncateApp} ]
-    then
-        echo  -e "\033[31m  Truncate App ${TruncateApp} does not exist,please double check! \033[0m"
-        exit 1
-    fi
 
     for ScriptFile in ${aScriptFile[@]}
     do

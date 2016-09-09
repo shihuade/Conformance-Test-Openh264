@@ -111,8 +111,8 @@ runPrepareMultiLayerInputYUV()
 	PicW=${aYUVInfo[0]}
 	PicH=${aYUVInfo[1]}
 	#generate input YUV file for each layer
-	MaxSpatialLayerNum=`./run_GetSpatialLayerNum.sh ${PicW} ${PicH}`
-
+    #MaxSpatialLayerNum=`./run_GetSpatialLayerNum.sh ${PicW} ${PicH}`
+    let "MaxSpatialLayerNum=1"
 	./run_PrepareMultiLayerInputYUV.sh  ${LocalDataDir}  ${InputYUV} ${MaxSpatialLayerNum} ${PrepareLog} ${Multiple16Flag}
 
 	if [ ! $? -eq 0 ]

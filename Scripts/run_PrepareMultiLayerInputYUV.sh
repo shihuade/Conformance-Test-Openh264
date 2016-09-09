@@ -152,7 +152,7 @@ runSetLayerInfo()
 	aLayerHeight=( ${LayerHeight_3} ${LayerHeight_2} ${LayerHeight_1} ${LayerHeight_0} )
 	if [ ${Multiple16Flag} -eq 1  ]
 	then
-	for((i=0;i<4;i++))
+	    for((i=0;i<4;i++))
 		do
 			aLayerWidth[$i]=`runExtendMultiple16   ${aLayerWidth[$i]}`
 			aLayerHeight[$i]=`runExtendMultiple16  ${aLayerHeight[$i]}`
@@ -273,15 +273,20 @@ runMain()
 		fi
 	done
 
-	#down sample 
-	for ((i=0; i<${NumberLayer}; i++ ))
-	do
-		./${DownSampleExe}  ${OriginWidth} ${OriginHeight} ${OriginYUV}  ${aLayerWidth[$i]}  ${aLayerHeight[i]}  ${OutPutDir}/${aOutputLayerName[i]}
-		if [ ! $? -eq 0 ]
-		then
-			let "PrepareFlag=1"
-		fi
-	done
+	#down sample
+    if [ ${NumberLayer} -eq 1 ]
+    then
+       echo "no need to down sample"
+    else
+        for ((i=0; i<${NumberLayer}; i++ ))
+        do
+            #./${DownSampleExe}  ${OriginWidth} ${OriginHeight} ${OriginYUV}  ${aLayerWidth[$i]}  ${aLayerHeight[i]}  ${OutPutDir}/${aOutputLayerName[i]}
+            if [ ! $? -eq 0 ]
+            then
+                let "PrepareFlag=1"
+            fi
+        done
+    fi
 
 	if [ ! ${PrepareFlag} -eq 0 ]
 	then

@@ -401,7 +401,7 @@ runMain()
 
 	echo "-------------------2. JSVM Check--JSVM Decode Check"
     date
-	runJSVMDecodedFailedCheck
+	runJMDecodedFailedCheck
 	if [  ! $? -eq 0 ]
 	then
 		echo ""
@@ -448,5 +448,3 @@ echo "        $0 $@"
 echo "*********************************************************"
 echo ""
 runMain $@
-
-

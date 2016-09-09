@@ -300,7 +300,7 @@ runMain()
 	#check item exist or not or there is permission denied for current user
 	runDeleteItemCheck
 	#check that whether item is project file/folder or not 
-	runFolderLocationCheck
+    #runFolderLocationCheck
 	
 	
 	#delete item
