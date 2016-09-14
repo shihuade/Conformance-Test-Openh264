@@ -30,10 +30,10 @@ runRemovedPreviousTestData()
         ./${ScriptFolder}/run_SafeDelete.sh  $SummaryDir
     fi
 
-	if [ -d $SourceFolder ]
-	then
-		./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
-	fi
+    #if [ -d $SourceFolder ]
+    #then
+      #./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
+    #fi
 
     if [ -d $BitStreamToYUVFolder ]
     then
@@ -337,7 +337,7 @@ runMain()
 	
 	mkdir ${SHA1TableFolder}
 	mkdir ${FinalResultDir}
-	mkdir ${SourceFolder}
+    #mkdir ${SourceFolder}
 
 	#parse git repository info 
 	runParseConfigureFile
