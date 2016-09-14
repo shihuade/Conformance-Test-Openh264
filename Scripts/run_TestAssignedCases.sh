@@ -238,11 +238,11 @@ runAllCaseTest()
 				AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_${LogFileIndex}.TestLog"
 				let "LogFileIndex++"
 				echo "">${AssignedCasesConsoleLogFile}
+                ./run_SafeDelete.sh ${TempDataPath} >>DeletedFile.list
+                mkdir ${TempDataPath}
 			fi
 			
-			echo "" >>${AssignedCasesConsoleLogFile}
-			echo "" >>${AssignedCasesConsoleLogFile}
-			echo "" >>${AssignedCasesConsoleLogFile}
+			echo -e "\n\n \n" >>${AssignedCasesConsoleLogFile}
 			echo "****************case index is ${TotalCaseNum}************">>${AssignedCasesConsoleLogFile}
             echo "     LocalDataDir is: ${LocalDataDir}">>${AssignedCasesConsoleLogFile}
 			export IssueDataPath
@@ -274,17 +274,14 @@ runAllCaseTest()
                 echo "CheckLogFile ${CheckLogFile} does not exist,please double check"
             fi
 
-			for file in  ${TempDataPath}/*
-			do
-				./run_SafeDelete.sh  ${file}>>DeletedFile.list
-			done
-
 			let "TotalCaseNum++"
 		fi
 
 		let "LineIndex++"
 		
 	done <$GivenCaseFile
+
+    ./run_SafeDelete.sh ${TempDataPath} >>DeletedFile.list
 }
 #usage runOutputPassNum
 runOutputPassNum()
