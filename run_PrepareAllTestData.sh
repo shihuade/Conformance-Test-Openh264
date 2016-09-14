@@ -60,7 +60,7 @@ runUpdateCodec()
 {
 
 
-	./run_CheckoutCiscoOpenh264Codec.sh  ${Openh264GitAddr} ${SourceFolder}
+    #./run_CheckoutCiscoOpenh264Codec.sh  ${Openh264GitAddr} ${SourceFolder}
 	if [  ! $? -eq 0 ]
 	then	
 		echo ""
