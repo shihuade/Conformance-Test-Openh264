@@ -47,6 +47,40 @@
       location = "container:run_UpdateCodec.sh">
    </FileRef>
    <Group
+      location = "group:Tools"
+      name = "Tools">
+      <FileRef
+         location = "group:run_CopyFilesFromSGE.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetSpectialCasesLogFromLargeLogFile.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEHostsIP.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEHostsName.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEHostsTestDataDir.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SearchFileAndGetFullPath.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SGERestart_For_Host_side.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SGERestart_Master_side.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SSHServerHostAutoLogSetting.sh">
+      </FileRef>
+      <FileRef
+         location = "group:SGE.cfg">
+      </FileRef>
+   </Group>
+   <Group
       location = "group:../Scripts"
       name = "Scripts">
       <FileRef
@@ -153,40 +187,6 @@
       </FileRef>
       <FileRef
          location = "group:SGEModel.sge">
-      </FileRef>
-   </Group>
-   <Group
-      location = "group:Tools"
-      name = "Tools">
-      <FileRef
-         location = "group:run_CopyFilesFromSGE.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_GetSpectialCasesLogFromLargeLogFile.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_ParseSGEHostsIP.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_ParseSGEHostsName.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_ParseSGEHostsTestDataDir.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_SearchFileAndGetFullPath.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_SGERestart_For_Host_side.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_SGERestart_Master_side.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_SSHServerHostAutoLogSetting.sh">
-      </FileRef>
-      <FileRef
-         location = "group:SGE.cfg">
       </FileRef>
    </Group>
    <Group
