@@ -179,22 +179,10 @@ runPrepareMultiLayerInputYUV()
 #usae: runParseCaseCheckLog ${CheckLog}
 runParseCaseCheckLog()
 {
-	if [ ! $# -eq 1 ]
-	then
-		echo "usae: runParseCaseCheckLog ${CheckLog}"
-		return 1
-	fi
-
 	local CheckLog=$1
 	local Flag="0"
 
-	if [  ! -e ${CheckLog} ]
-	then
-		echo "check log file does not exist!"
-		return 1
-	fi
-
-	while read line
+    while read line
 	do
 		if [[  "$line" =~ ^EncoderPassedNum  ]]
 		then
@@ -264,14 +252,13 @@ runAllCaseTest()
 
 			./run_TestOneCase.sh  ${CaseData}      >>${AssignedCasesConsoleLogFile}
 
-			runParseCaseCheckLog  ${CheckLogFile}  >>${AssignedCasesConsoleLogFile}
-			echo "" >>${AssignedCasesConsoleLogFile}
-			echo "---------------Cat Check Log file------------------------">>${AssignedCasesConsoleLogFile}
+			echo -e "\n---------------parse and Cat Check Log file--------------------">>${AssignedCasesConsoleLogFile}
             if [ -e ${CheckLogFile} ]
             then
-                cat ${CheckLogFile} >>${AssignedCasesConsoleLogFile}
+                cat ${CheckLogFile}                    >>${AssignedCasesConsoleLogFile}
+                runParseCaseCheckLog  ${CheckLogFile}  >>${AssignedCasesConsoleLogFile}
             else
-                echo "CheckLogFile ${CheckLogFile} does not exist,please double check"
+                echo -e "\n CheckLogFile ${CheckLogFile} does not exist,please double check"
             fi
 
 			let "TotalCaseNum++"
