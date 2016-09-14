@@ -193,6 +193,9 @@
       location = "group:CaseConfigure"
       name = "CaseConfigure">
       <FileRef
+         location = "group:case_for_linux_fast_test.cfg">
+      </FileRef>
+      <FileRef
          location = "group:case_for_mac.cfg">
       </FileRef>
       <FileRef
