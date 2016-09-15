@@ -89,19 +89,13 @@ runGlobalVariableInitial()
 	let "DecoderUpPassedNum=0"
 	let "DecoderUnCheckNum=0"
 }
+
 runParseConfigure()
 {
-	while read line
-	do
-		if [[ "$line" =~ ^Multiple16Flag ]]
-		then
-			Multiple16Flag=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
-		elif [[ "$line" =~ ^MultiLayer ]]
-		then
-			MultiLayerFlag=(`echo $line | awk 'BEGIN {FS="[#:]"} {print $2}' `)
-		fi
-	done <${ConfigureFile}
+   Multiple16Flag=(`cat ${ConfigureFile} | grep "Multiple16Flag" | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+   MultiLayerFlag=(`cat ${ConfigureFile} | grep "MultiLayer"     | awk 'BEGIN {FS="[#:]"} {print $2}' `)
 }
+
 runPrepareMultiLayerInputYUV()
 {
 	local PrepareLog="${LocalDataDir}/${TestYUVName}_MultiLayerInputYUVPrepare_SubCaseIndex_${SubCaseIndex}.log"
@@ -356,6 +350,8 @@ runMain()
 	runOutputPassNum
 	return $?
 }
+
+Temp(){
 LocalDataDir=$1
 ConfigureFile=$2
 TestYUVName=$3
@@ -369,6 +365,14 @@ echo "     input parameters are:"
 echo "        $0 $@"
 echo "*********************************************************"
 echo ""
-runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV} ${SubCaseIndex} ${GivenCaseFile}
-
-
+#runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV} ${SubCaseIndex} ${GivenCaseFile}
+}
+ConfigureFile=$1
+date
+for((i=0;i<1000;i++))
+do
+   runParseConfigure
+done
+date
+echo "MultiLayerFlag is $MultiLayerFlag"
+echo "Multiple16Flag is $Multiple16Flag"
