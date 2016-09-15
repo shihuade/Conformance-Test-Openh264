@@ -9,6 +9,8 @@
 #     eg. input:  ABC_1920X1080_XXX.yuv        output: 1920 1080 0
 #     eg. input:  ABC_XXX.yuv                  output: 0    0    0
 #
+#     eg. input:  ABC_1080X720_30fps.yuv_DownSampleTo_540x360_25fps.yuv
+#                                              output: 540  360  25
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
@@ -42,12 +44,13 @@ runGetYUVInfo()
     then
       PicWidth=`echo $Iterm | awk 'BEGIN {FS="[xX]"} {print $1}'`
       PicHeight=`echo $Iterm | awk 'BEGIN {FS="[xX]"} {print $2}'`
-      break
+      let "MathIndex = Index"
     fi
     let "Index++"
   done
+
   #get fps info
-  let "Index++"
+  let "Index = MathIndex +1 "
   if [ $Index -le ${#aPicInfo[@]} ]
   then
     if [[ ${aPicInfo[$Index]} =~ ^[1-9]  ]] || [[ ${aPicInfo[$Index]} =~ $Pattern_04 ]]
