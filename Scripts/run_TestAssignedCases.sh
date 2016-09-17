@@ -109,13 +109,29 @@ runParseInputYUVPrepareLog()
 
 runParseCaseCheckLog()
 {
+    local CheckLog=$1
+    local Flag="0"
 
+    YUVSizeLayer0=(`cat ${CheckLog}    | grep "EncoderPassedNum"   | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    let "EncoderPassedNum +=${Flag}"
+
+    YUVSizeLayer1=(`cat ${CheckLog}    | grep "EncoderUnPassedNum" | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    let "EncoderUnPassedNum +=${Flag}"
+
+    YUVSizeLayer2=(`cat ${CheckLog}    | grep "DecoderPassedNum"   | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    let "DecoderPassedNum +=${Flag}"
+
+    YUVSizeLayer3=(`cat ${CheckLog}    | grep "DecoderUpPassedNum" | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    let "DecoderUpPassedNum +=${Flag}"
+
+    YUVSizeLayer3=(`cat ${CheckLog}    | grep "DecoderUnCheckNum"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    let "DecoderUnCheckNum +=${Flag}"
 
 }
 
 runPrepareInputYUV()
 {
-	local PrepareLog="${LocalDataDir}/${TestYUVName}_MultiLayerInputYUVPrepare_SubCaseIndex_${SubCaseIndex}.log"
+	local PrepareLog="${LocalDataDir}/${TestYUVName}_InputYUVPrepare_SubCaseIndex_${SubCaseIndex}.log"
 
     ./run_PrepareInputYUV.sh  ${LocalDataDir}  ${InputYUV}  ${PrepareLog} ${Multiple16Flag} ${EncodedFrmNum}
 	if [ ! $? -eq 0 ]
@@ -134,37 +150,7 @@ runPrepareInputYUV()
 	echo "YUVSizeLayer1:  ${YUVSizeLayer1}"
 	echo "YUVSizeLayer0:  ${YUVSizeLayer0}"
 }
-#usae: runParseCaseCheckLog ${CheckLog}
-runParseCaseCheckLog()
-{
-	local CheckLog=$1
-	local Flag="0"
 
-    while read line
-	do
-		if [[  "$line" =~ ^EncoderPassedNum  ]]
-		then
-			Flag=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-			let "EncoderPassedNum +=${Flag}"
-		elif [[ "$line" =~ ^EncoderUnPassedNum ]]
-		then
-			Flag=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-			let "EncoderUnPassedNum +=${Flag}"
-		elif [[ "$line" =~ ^DecoderPassedNum ]]
-		then
-			Flag=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-			let "DecoderPassedNum +=${Flag}"
-		elif [[ "$line" =~ ^DecoderUpPassedNum ]]
-		then
-			Flag=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-			let "DecoderUpPassedNum +=${Flag}"
-		elif [[ "$line" =~ ^DecoderUnCheckNum ]]
-		then
-			Flag=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-			let "DecoderUnCheckNum +=${Flag}"
-		fi
-	done <${CheckLog}
-}
 # run all test case based on XXXcase.csv file
 #usage  runAllCaseTest
 runAllCaseTest()
@@ -275,19 +261,6 @@ runOutputPassNum()
 # usage: runMain ${ConfigureFile}  $TestYUV  $InputYUV $GivenCaseFile
 runMain()
 {
-	if [ ! $# -eq 6  ]
-	then
-		echo "usage: run_TestAssignedCases.sh \${LocalDataDir}  \${ConfigureFile}  \${TestYUVName}   "
-        echo "                                \${InputYUV}       \${SubCaseIndex}  \${GivenCaseFile} "
-        return 1
-	fi
-
-	LocalDataDir=$1
-	ConfigureFile=$2
-	TestYUVName=$3
-	InputYUV=$4
-    SubCaseIndex=$5
-	GivenCaseFile=$6
     StartTime=""
     EndTime=""
 
@@ -312,27 +285,35 @@ runMain()
 }
 
 Temp(){
+
+#****************************************************************************************************************
+echo -e "\n*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo -e "*********************************************************\n"
+
+if [ ! $# -eq 6  ]
+then
+    echo "usage: run_TestAssignedCases.sh \${LocalDataDir}  \${ConfigureFile}  \${TestYUVName}   "
+    echo "                                \${InputYUV}       \${SubCaseIndex}  \${GivenCaseFile} "
+    return 1
+fi
+
 LocalDataDir=$1
 ConfigureFile=$2
 TestYUVName=$3
 InputYUV=$4
 SubCaseIndex=$5
 GivenCaseFile=$6
-echo ""
-echo "*********************************************************"
-echo "     call bash file is $0"
-echo "     input parameters are:"
-echo "        $0 $@"
-echo "*********************************************************"
-echo ""
-#runMain  ${LocalDataDir}  ${ConfigureFile} ${TestYUVName}  ${InputYUV} ${SubCaseIndex} ${GivenCaseFile}
+
+runMain
+#****************************************************************************************************************
+
 }
-ConfigureFile=$1
-date
-for((i=0;i<1000;i++))
-do
-   runParseConfigure
-done
-date
-echo "MultiLayerFlag is $MultiLayerFlag"
-echo "Multiple16Flag is $Multiple16Flag"
+LocalDataDir=$1
+ConfigureFile=$2
+TestYUVName=$3
+InputYUV=$4
+runParseConfigure
+runPrepareInputYUV
