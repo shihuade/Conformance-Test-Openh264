@@ -6,10 +6,10 @@
 #        1). calculate input layer size based on encoded frame num(size in byte);
 #        2). change YUV's resolution and crop it to be multiple of 16 if Multiple16Flag==1
 #
-#  usage: ./run_PrepareMultiLayerInputYUV.sh  ${OutputDir}      ${InputYUV}      ${LogFileName}
+#  usage: ./run_PrepareInputYUV.sh  ${OutputDir}      ${InputYUV}      ${LogFileName}
 #                                             ${Multiple16Flag} ${EncodedFrmNum}
 #  --eg:
-#    input:  run_PrepareMultiLayerInputYUV.sh  /opt/GuanYUn ../../ABC_1080X720_30fps.yuv  prepare.log
+#    input:  run_PrepareInputYUV.sh  /opt/GuanYUn ../../ABC_1080X720_30fps.yuv  prepare.log
 #                                              1  30
 #             Multiple16Flag=1; EncodedFrmNum=30
 #    output: there will be tow down sample YUV generated under /opt/GuanYu/
@@ -171,7 +171,7 @@ runCheckParm()
     fi
 
 }
-#usage: run_PrepareMultiLayerInputYUV.sh ${OriginYUV} ${PrepareLog} ${Multiple16Flag}
+#usage: run_PrepareInputYUV.sh ${OriginYUV} ${PrepareLog} ${Multiple16Flag}
 runMain()
 {
 	let "PrepareFlag=0"
@@ -205,7 +205,7 @@ echo ""
 
 if [ ! $# -eq 5 ]
 then
-    echo -e "\033[32m usage: run_PrepareMultiLayerInputYUV.sh \${OutPutDir} \${OriginYUV} \${PrepareLog} \${Multiple16Flag} \${EncodedFrmNum} \n\033[0m"
+    echo -e "\033[32m usage: run_PrepareInputYUV.sh \${OutPutDir} \${OriginYUV} \${PrepareLog} \${Multiple16Flag} \${EncodedFrmNum} \n\033[0m"
     exit 1
 fi
 
