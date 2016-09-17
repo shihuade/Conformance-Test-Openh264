@@ -133,22 +133,28 @@ runPrepareInputYUV()
 {
 	local PrepareLog="${LocalDataDir}/${TestYUVName}_InputYUVPrepare_SubCaseIndex_${SubCaseIndex}.log"
 
+    #prepare input YUV, change resolution to be multiple of 16 and rename file name if Multiple16Flag=1
+    #copy YUV file to LocalDataDir
     ./run_PrepareInputYUV.sh  ${LocalDataDir}  ${InputYUV}  ${PrepareLog} ${Multiple16Flag} ${EncodedFrmNum}
 	if [ ! $? -eq 0 ]
 	then
-		echo ""
-		echo -e "\033[31m multilayer input YUV preparation failed! \033[0m"
-		echo ""
+		echo -e "\033[31m \n multilayer input YUV preparation failed! \n\033[0m"
 		exit 1
 	fi
 
 	#parse multilayer YUV's name and size info
     runParseInputYUVPrepareLog ${PrepareLog}
-	
-	echo "YUVSizeLayer3:  ${YUVSizeLayer3}"
-	echo "YUVSizeLayer2:  ${YUVSizeLayer2}"
-	echo "YUVSizeLayer1:  ${YUVSizeLayer1}"
+    echo "rename YUV name due to Multiple16Flag=1, actual value is Multiple16Flag=${Multiple16Flag}"
+    echo "InputYUVName update: ${TestYUVName} to ${InputYUVName}"
+    echo "copy InputYUV to:    ${LocalDataDir}/${InputYUVName}"
 	echo "YUVSizeLayer0:  ${YUVSizeLayer0}"
+	echo "YUVSizeLayer1:  ${YUVSizeLayer1}"
+	echo "YUVSizeLayer2:  ${YUVSizeLayer2}"
+	echo "YUVSizeLayer3:  ${YUVSizeLayer3}"
+
+    #update YUV name and input YUV dir info
+    TestYUVName=${InputYUVName}
+    InputYUV=${LocalDataDir}/${InputYUVName}
 }
 
 # run all test case based on XXXcase.csv file
