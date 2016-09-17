@@ -377,6 +377,27 @@ runMain()
 	runOutputCaseCheckStatus
 	return 0
 }
+
+TestCaseExample()
+{
+IssueDataPath="issue"mlkl
+
+TempDataPath="TempData"
+TestYUVName="horse_riding_640x512_30.yuv"
+InputYUV="./horse_riding_640x512_30.yuv"
+AssignedCasesPassStatusFile="Example_TestOneCase_AssignedCasesPassStatusFile.csv"
+UnPassedCasesFile="Example_TestOneCase_UnPassedCasesFile.csv"
+AssignedCasesSHATableFile="Example_TestOneCase_AssignedCasesSHATableFile.csv"
+#CheckLogFile
+YUVSizeLayer0
+YUVSizeLayer1
+YUVSizeLayer2
+YUVSizeLayer3
+horse_riding_640x512_30.yuv
+CaseInfo="0, 65 , 1, 1, 640, 480, 640,480,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
+
+}
+
 CaseInfo=$@
 echo ""
 echo "*********************************************************"
