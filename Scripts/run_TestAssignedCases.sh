@@ -77,38 +77,47 @@ runGlobalVariableInitial()
 	let "Multiple16Flag=1"
 	let "MultiLayerFlag=0"
 
-	YUVFileLayer0=""
-	YUVFileLayer1=""
-	YUVFileLayer2=""
-	YUVFileLayer3=""
-
 	#encoder parameters  change based on the case info
 	let "EncoderPassedNum=0"
 	let "EncoderUnPassedNum=0"
 	let "DecoderPassedNum=0"
 	let "DecoderUpPassedNum=0"
 	let "DecoderUnCheckNum=0"
+    let "EncodedFrmNum = 0"
 }
 
 runParseConfigure()
 {
-   Multiple16Flag=(`cat ${ConfigureFile} | grep "Multiple16Flag" | awk 'BEGIN {FS="[#:]"} {print $2}' `)
-   MultiLayerFlag=(`cat ${ConfigureFile} | grep "MultiLayer"     | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+   Multiple16Flag=(`cat ${ConfigureFile} | grep "Multiple16Flag"    | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+   MultiLayerFlag=(`cat ${ConfigureFile} | grep "MultiLayer"        | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+   EncodedFrmNum=(`cat ${ConfigureFile}  | grep "FramesToBeEncoded" | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+
 }
 
-runPrepareMultiLayerInputYUV()
+runParseInputYUVPrepareLog()
+{
+    local PrepareLog=$1
+
+    YUVSizeLayer0=(`cat ${PrepareLog} | grep "LayerSize_0"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    YUVSizeLayer1=(`cat ${PrepareLog} | grep "LayerSize_1"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    YUVSizeLayer2=(`cat ${PrepareLog} | grep "LayerSize_2"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    YUVSizeLayer3=(`cat ${PrepareLog} | grep "LayerSize_3"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+
+    InputYUVName=(`cat ${PrepareLog}  | grep "InputYUV"     | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    NumberLayer=(`cat ${PrepareLog}   | grep "NumberLayer"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+}
+
+runParseCaseCheckLog()
+{
+
+
+}
+
+runPrepareInputYUV()
 {
 	local PrepareLog="${LocalDataDir}/${TestYUVName}_MultiLayerInputYUVPrepare_SubCaseIndex_${SubCaseIndex}.log"
-	declare -a aYUVInfo
 
-	aYUVInfo=(`./run_ParseYUVInfo.sh  ${TestYUVName}`)
-	PicW=${aYUVInfo[0]}
-	PicH=${aYUVInfo[1]}
-	#generate input YUV file for each layer
-	MaxSpatialLayerNum=`./run_GetSpatialLayerNum.sh ${PicW} ${PicH}`
-
-	./run_PrepareMultiLayerInputYUV.sh  ${LocalDataDir}  ${InputYUV} ${MaxSpatialLayerNum} ${PrepareLog} ${Multiple16Flag}
-
+    ./run_PrepareInputYUV.sh  ${LocalDataDir}  ${InputYUV}  ${PrepareLog} ${Multiple16Flag} ${EncodedFrmNum}
 	if [ ! $? -eq 0 ]
 	then
 		echo ""
@@ -118,56 +127,11 @@ runPrepareMultiLayerInputYUV()
 	fi
 
 	#parse multilayer YUV's name and size info
-	while read line
-	do
-		if [[  $line =~ ^LayerName_0  ]]
-		then
-			YUVFileLayer0=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ $line =~ ^LayerSize_0 ]]
-		then
-			YUVSizeLayer0=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif  [[  $line =~ ^LayerName_1  ]]
-		then
-			YUVFileLayer1=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ $line =~ ^LayerSize_1 ]]
-		then
-			YUVSizeLayer1=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif  [[  $line =~ ^LayerName_2  ]]
-		then
-			YUVFileLayer2=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ $line =~ ^LayerSize_2 ]]
-		then
-			YUVSizeLayer2=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif  [[  $line =~ ^LayerName_3  ]]
-		then
-			YUVFileLayer3=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ $line =~ ^LayerSize_3 ]]
-		then
-			YUVSizeLayer3=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		fi
-	done <${PrepareLog}
+    runParseInputYUVPrepareLog ${PrepareLog}
 	
-	
-	#for SGE Test, add LocalData directory 
-	if [ "${LocalDataDir}" != "${CurrentDir}" ]
-	then
-		echo "SGE Test,data dir is ${LocalDataDir}"
-		YUVFileLayer0="${LocalDataDir}/${YUVFileLayer0}"
-		YUVFileLayer1="${LocalDataDir}/${YUVFileLayer1}"
-		YUVFileLayer2="${LocalDataDir}/${YUVFileLayer2}"
-		YUVFileLayer3="${LocalDataDir}/${YUVFileLayer3}"
-	else
-		echo "local  Test,data dir is ${LocalDataDir}"
-	fi
-	
-	
-	echo "YUVFileLayer3:  ${YUVFileLayer3}"
 	echo "YUVSizeLayer3:  ${YUVSizeLayer3}"
-	echo "YUVFileLayer2:  ${YUVFileLayer2}"
 	echo "YUVSizeLayer2:  ${YUVSizeLayer2}"
-	echo "YUVFileLayer1:  ${YUVFileLayer1}"
 	echo "YUVSizeLayer1:  ${YUVSizeLayer1}"
-	echo "YUVFileLayer0:  ${YUVFileLayer0}"
 	echo "YUVSizeLayer0:  ${YUVSizeLayer0}"
 }
 #usae: runParseCaseCheckLog ${CheckLog}
@@ -239,10 +203,6 @@ runAllCaseTest()
 			export YUVSizeLayer1
 			export YUVSizeLayer2
 			export YUVSizeLayer3
-			export YUVFileLayer0
-			export YUVFileLayer1
-			export YUVFileLayer2
-			export YUVFileLayer3
 
 			./run_TestOneCase.sh  ${CaseData}      >>${AssignedCasesConsoleLogFile}
 
@@ -334,7 +294,7 @@ runMain()
 	runGlobalVariableInitial
 	runParseConfigure
 
-	runPrepareMultiLayerInputYUV
+	runPrepareInputYUV
 
 	echo ""
 	echo  -e "\033[32m  testing all cases, please wait!...... \033[0m"
