@@ -394,10 +394,25 @@ TestCaseExample()
     AssignedCasesSHATableFile="Example_TestOneCase_AssignedCasesSHATableFile.csv"
 
     EncodedFrmNum=65
+    NumberLayer=1
+
     YUVSizeLayer0=31948800
     YUVSizeLayer1=0
     YUVSizeLayer2=0
     YUVSizeLayer3=0
+
+    export TestPlatform
+    export JMDecoder
+    export JSVMDecoder
+    export WelsDecoder
+    export IssueDataPath
+    export TempDataPath
+
+    export NumberLayer
+    export YUVSizeLayer0
+    export YUVSizeLayer1
+    export YUVSizeLayer2
+    export YUVSizeLayer3
 
     CaseInfo="0, 65 , 1, 1, 640, 512, 640,512,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
 
