@@ -380,24 +380,29 @@ runMain()
 
 TestCaseExample()
 {
-IssueDataPath="issue"mlkl
+    IssueDataPath="issue"
+    TempDataPath="TempData"
 
-TempDataPath="TempData"
-TestYUVName="horse_riding_640x512_30.yuv"
-InputYUV="./horse_riding_640x512_30.yuv"
-AssignedCasesPassStatusFile="Example_TestOneCase_AssignedCasesPassStatusFile.csv"
-UnPassedCasesFile="Example_TestOneCase_UnPassedCasesFile.csv"
-AssignedCasesSHATableFile="Example_TestOneCase_AssignedCasesSHATableFile.csv"
-#CheckLogFile
-YUVSizeLayer0
-YUVSizeLayer1
-YUVSizeLayer2
-YUVSizeLayer3
-horse_riding_640x512_30.yuv
-CaseInfo="0, 65 , 1, 1, 640, 480, 640,480,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
+    mkdir -p ${IssueDataPath} ${TempDataPath}
+    TestYUVName="horse_riding_640x512_30.yuv"
+    InputYUV="./horse_riding_640x512_30.yuv"
+    AssignedCasesPassStatusFile="Example_TestOneCase_AssignedCasesPassStatusFile.csv"
+    UnPassedCasesFile="Example_TestOneCase_UnPassedCasesFile.csv"
+    AssignedCasesSHATableFile="Example_TestOneCase_AssignedCasesSHATableFile.csv"
+
+    EncodedFrmNum=65
+    YUVSizeLayer0=31948800
+    YUVSizeLayer1=0
+    YUVSizeLayer2=0
+    YUVSizeLayer3=0
+
+    CaseInfo="0, 65 , 1, 1, 640, 512, 640,512,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
+
+    runMain  ${CaseInfo}
 
 }
 
+Temp(){
 CaseInfo=$@
 echo ""
 echo "*********************************************************"
@@ -408,4 +413,6 @@ echo "*********************************************************"
 echo ""
 runMain  ${CaseInfo}
 
+}
 
+TestCaseExample
