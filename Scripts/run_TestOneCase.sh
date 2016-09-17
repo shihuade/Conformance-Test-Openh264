@@ -177,15 +177,18 @@ runEncodeOneCase()
 
 runParseEncoderLog()
 {
-	while read line
-	do
-		if [[ $line =~ ^FPS  ]]
-		then
-			FPS=`echo $line | awk '{print $2}'`
-			break
-		fi
-	done < ${EncoderLog}
+    #encoded log looks like:
+    #*********************************
+    #Width:		640
+    #Height:		480
+    #Frames:		445
+    #encode time:	2.440146 sec
+    #FPS:		182.366137 fps
+    #*********************************
+
+    FPS=(`cat ${EncoderLog} | grep "FPS" | awk '{print $2}' `)
 }
+
 #usage runParseCaseCheckLog  ${CheckLog}
 runParseCaseCheckLog()
 {
@@ -266,13 +269,9 @@ runOutputCaseCheckStatus()
 runOutputCaseInfo()
 {
 
-	echo "YUVFileLayer3:  ${YUVFileLayer3}"
 	echo "YUVSizeLayer3:  ${YUVSizeLayer3}"
-	echo "YUVFileLayer2:  ${YUVFileLayer2}"
 	echo "YUVSizeLayer2:  ${YUVSizeLayer2}"
-	echo "YUVFileLayer1:  ${YUVFileLayer1}"
 	echo "YUVSizeLayer1:  ${YUVSizeLayer1}"
-	echo "YUVFileLayer0:  ${YUVFileLayer0}"
 	echo "YUVSizeLayer0:  ${YUVSizeLayer0}"
 
 	echo ""
