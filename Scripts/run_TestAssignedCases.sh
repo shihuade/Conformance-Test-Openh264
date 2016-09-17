@@ -135,12 +135,15 @@ runToolCheck()
 {
     JMDecoder="JMDecoder"
     JSVMDecoder="H264AVCDecoderLibTestStatic"
+    WelsDecoder="h264dec"
     if [ "${TestPlatform}" = "Mac" ]
     then
         [ ! -e ${JMDecoder} ]   && echo "JMDecoder   ${JMDecoder} does not exist!"   && exit 1
     else
         [ ! -e ${JSVMDecoder} ] && echo "JSVMDecoder ${JSVMDecoder} does not exist!" && exit 1
     fi
+
+    [ ! -e ${WelsDecoder} ]   && echo "WelsDecoder   ${WelsDecoder} does not exist!"   && exit 1
 }
 
 runPrepareInputYUV()
@@ -173,20 +176,27 @@ runPrepareInputYUV()
 
 runExportVariable()
 {
+#to do: need to validate expart variables
     export TestPlatform
+
     export JMDecoder
     export JSVMDecoder
+    export WelsDecoder
+
     export IssueDataPath
     export TempDataPath
+
     export TestYUVName
     export InputYUV
-    export AssignedCasesPassStatusFile
-    export UnPassedCasesFile
-    export AssignedCasesSHATableFile
+    export NumberLayer
     export YUVSizeLayer0
     export YUVSizeLayer1
     export YUVSizeLayer2
     export YUVSizeLayer3
+
+    export AssignedCasesPassStatusFile
+    export UnPassedCasesFile
+    export AssignedCasesSHATableFile
 }
 
 # run all test case based on XXXcase.csv file

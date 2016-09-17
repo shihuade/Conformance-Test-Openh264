@@ -38,8 +38,6 @@ runIntialGlobalParam()
 	BitStream=""
 	TempDir=""
 	CheckLogFile=""
-	JSVMDecoder="H264AVCDecoderLibTestStatic"
-	JMDecoder="JMDecoder"
 	WelsDecoder="h264dec"
 
 	BitStreamSHA1String="NULL"
@@ -59,6 +57,7 @@ runSetGlobalParam()
 	cd ${CurrentDir}
 
 	JSVMDecoderLog="${TempDir}/JSVMDecoder.log"
+    JMDecoderLog="${TempDir}/JMDecoder.log"
 	WelsDecoderLog="${TempDir}/WelsDecoder.log"
 
 	for((i=0;i<4;i++))
@@ -115,6 +114,29 @@ runJSVMDecodedFailedCheck()
 	cat ${JSVMDecoderLog}
 	return 0
 }
+
+runJMDecodedFailedCheck()
+{
+    echo "">${JMDecoderLog}
+    for((i=0; i<${SpatialLayerNum}; i++))
+    do
+        echo " JM decoding, layer $i.....................">>${JMDecoderLog}
+        ./${JMDecoder}  -p InputFile="${aLayerBitStream[$i]}" -p OutputFile="${aLayerJSVMYUV[$i]}" >>${JMDecoderLog}
+
+        if [ ! $? -eq 0  -o  ! -e ${aLayerJSVMYUV[$i]} ]
+        then
+            echo ""
+            echo -e "\033[31m JM decoded failed!  \033[0m"
+            echo ""
+            cat ${JMDecoderLog}
+            return 1
+        fi
+    done
+
+    cat ${JMDecoderLog}
+    return 0
+}
+
 runWelsDecodedFailedCheck()
 {
 	echo "">${WelsDecoderLog}
@@ -283,13 +305,6 @@ runCheckParameter()
 
 	done
 
-	if [  ! -e ${JSVMDecoder}  -o ! -e ${JMDecoder} -o ! -e ${WelsDecoder}   ]
-	then
-		echo ""
-		echo -e "\033[31m  ${JSVMDecoder}  or ${JMDecoder} or  ${WelsDecoder} does not exist !\033[0m"
-		echo ""
-		return 1
-	fi
 
 	if [ ! -e ${OringInputYUV}  ]
 	then
@@ -362,21 +377,30 @@ runMain()
 	runSetGlobalParam
 	echo "-------------------1. JSVM Check--extract bit stream"
     date
-	./run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
-	if [  ! $? -eq 0 ]
-	then
-		echo ""
-		echo -e "\033[31m failed to extract  bit stream ! \033[0m"
-		echo ""
-		EncoderCheckResult="1-Encoder failed!--Failed to extracted bit stream!"
-		DecoderCheckResult="3-Decoder cannot be checked!"
-		runOutputCheckLog >${CheckLogFile}
-		exit 1
-	fi
+    if [ ${NumberLayer} -gt 1 ]
+    then
+        ./run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
+        if [  ! $? -eq 0 ]
+        then
+            echo ""
+            echo -e "\033[31m failed to extract  bit stream ! \033[0m"
+            echo ""
+            EncoderCheckResult="1-Encoder failed!--Failed to extracted bit stream!"
+            DecoderCheckResult="3-Decoder cannot be checked!"
+            runOutputCheckLog >${CheckLogFile}
+            exit 1
+        fi
+    fi
 
 	echo "-------------------2. JSVM Check--JSVM Decode Check"
     date
-	runJSVMDecodedFailedCheck
+    if [  "${TestPlatform}" = "Mac" ]
+    then
+        runJMDecodedFailedCheck
+    else
+	    runJSVMDecodedFailedCheck
+    fi
+
 	if [  ! $? -eq 0 ]
 	then
 		echo ""
