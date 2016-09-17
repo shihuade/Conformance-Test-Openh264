@@ -50,6 +50,9 @@
       location = "group:Tools"
       name = "Tools">
       <FileRef
+         location = "group:run_RenameYUVfileWithNewResolution.sh">
+      </FileRef>
+      <FileRef
          location = "group:run_CopyFilesFromSGE.sh">
       </FileRef>
       <FileRef
@@ -156,7 +159,7 @@
          location = "group:run_ParseYUVInfo.sh">
       </FileRef>
       <FileRef
-         location = "group:run_PrepareMultiLayerInputYUV.sh">
+         location = "group:/Users/huashi/project/Openh264/ConformanceTest/Scripts/run_PrepareInputYUV.sh">
       </FileRef>
       <FileRef
          location = "group:run_SafeDelete.sh">
