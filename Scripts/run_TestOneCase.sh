@@ -380,6 +380,9 @@ runMain()
 
 TestCaseExample()
 {
+    TestPlatform="Mac"
+    JMDecoder="JMDecoder"
+    JSVMDecoder="H264AVCDecoderLibTestStatic"
     IssueDataPath="issue"
     TempDataPath="TempData"
 

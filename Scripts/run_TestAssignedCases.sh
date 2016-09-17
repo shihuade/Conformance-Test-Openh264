@@ -84,6 +84,8 @@ runGlobalVariableInitial()
 	let "DecoderUpPassedNum=0"
 	let "DecoderUnCheckNum=0"
     let "EncodedFrmNum = 0"
+    TestPlatform=""
+
 }
 
 runParseConfigure()
@@ -91,7 +93,7 @@ runParseConfigure()
    Multiple16Flag=(`cat ${ConfigureFile} | grep "Multiple16Flag"    | awk 'BEGIN {FS="[#:]"} {print $2}' `)
    MultiLayerFlag=(`cat ${ConfigureFile} | grep "MultiLayer"        | awk 'BEGIN {FS="[#:]"} {print $2}' `)
    EncodedFrmNum=(`cat ${ConfigureFile}  | grep "FramesToBeEncoded" | awk 'BEGIN {FS="[#:]"} {print $2}' `)
-
+   TestPlatform=(`cat ${ConfigureFile}   | grep "TestPlatform"      | awk 'BEGIN {FS="[#:]"} {print $2}' `)
 }
 
 runParseInputYUVPrepareLog()
@@ -129,6 +131,18 @@ runParseCaseCheckLog()
 
 }
 
+runToolCheck()
+{
+    JMDecoder="JMDecoder"
+    JSVMDecoder="H264AVCDecoderLibTestStatic"
+    if [ "${TestPlatform}" = "Mac" ]
+    then
+        [ ! -e ${JMDecoder} ]   && echo "JMDecoder   ${JMDecoder} does not exist!"   && exit 1
+    else
+        [ ! -e ${JSVMDecoder} ] && echo "JSVMDecoder ${JSVMDecoder} does not exist!" && exit 1
+    fi
+}
+
 runPrepareInputYUV()
 {
 	local PrepareLog="${LocalDataDir}/${TestYUVName}_InputYUVPrepare_SubCaseIndex_${SubCaseIndex}.log"
@@ -157,6 +171,24 @@ runPrepareInputYUV()
     InputYUV=${LocalDataDir}/${InputYUVName}
 }
 
+runExportVariable()
+{
+    export TestPlatform
+    export JMDecoder
+    export JSVMDecoder
+    export IssueDataPath
+    export TempDataPath
+    export TestYUVName
+    export InputYUV
+    export AssignedCasesPassStatusFile
+    export UnPassedCasesFile
+    export AssignedCasesSHATableFile
+    export YUVSizeLayer0
+    export YUVSizeLayer1
+    export YUVSizeLayer2
+    export YUVSizeLayer3
+}
+
 # run all test case based on XXXcase.csv file
 #usage  runAllCaseTest
 runAllCaseTest()
@@ -183,18 +215,6 @@ runAllCaseTest()
 			echo -e "\n\n \n" >>${AssignedCasesConsoleLogFile}
 			echo "****************case index is ${TotalCaseNum}************">>${AssignedCasesConsoleLogFile}
             echo "     LocalDataDir is: ${LocalDataDir}">>${AssignedCasesConsoleLogFile}
-			export IssueDataPath
-			export TempDataPath
-			export TestYUVName
-			export InputYUV
-			export AssignedCasesPassStatusFile
-			export UnPassedCasesFile
-			export AssignedCasesSHATableFile
-			#export CheckLogFile
-			export YUVSizeLayer0
-			export YUVSizeLayer1
-			export YUVSizeLayer2
-			export YUVSizeLayer3
 
 			./run_TestOneCase.sh  ${CaseData}      >>${AssignedCasesConsoleLogFile}
 
@@ -272,6 +292,7 @@ runMain()
 
 	runGlobalVariableInitial
 	runParseConfigure
+    runToolCheck
 
 	runPrepareInputYUV
 
@@ -281,6 +302,7 @@ runMain()
     date
     StartTime=`date`
 
+    runExportVariable
 	runAllCaseTest
     #get time info
     date
