@@ -105,6 +105,7 @@ runParseCaseInfo()
 		let "TempParamFlag=0"
 	done
 }
+
 runSetCaseGlobalParam()
 {
 	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_wels.264
@@ -119,14 +120,7 @@ runSetCaseGlobalParam()
 		aRecCropYUVFileList[$i]="${TempDataPath}/${TestYUVName}_rec${i}_cropped.yuv"
 	done
 
-	declare -a aTempInputYUVSize
-	aTempInputYUVSize=( ${YUVSizeLayer0} ${YUVSizeLayer1} ${YUVSizeLayer2} ${YUVSizeLayer3} )
-	aInputYUVSizeLayer=( 0 0 0 0 )
-	for((i=0;i<${SpatailLayerNum};i++))
-	do
-		let "InputYUVSizeIndex=$i + 4 - ${SpatailLayerNum}"
-		aInputYUVSizeLayer[$i]=${aTempInputYUVSize[$InputYUVSizeIndex]}
-	done
+	aInputYUVSizeLayer=( ${YUVSizeLayer0} ${YUVSizeLayer1} ${YUVSizeLayer2} ${YUVSizeLayer3} )
 
 	aEncodedPicW=( ${aEncoderCommandValue[6]} ${aEncoderCommandValue[8]} ${aEncoderCommandValue[10]} ${aEncoderCommandValue[12]})
 	aEncodedPicH=( ${aEncoderCommandValue[7]} ${aEncoderCommandValue[9]} ${aEncoderCommandValue[11]} ${aEncoderCommandValue[13]})
@@ -180,25 +174,7 @@ runEncodeOneCase()
 	return 0
 
 }
-#usage: runGetFileSize  $FileName
-runGetFileSize()
-{
-	if [ ! -e $1   ]
-	then
-		echo ""
-		echo "file $1 does not exist!"
-		echo "usage: runGetFileSize  $FileName!"
-		echo ""
-		return 1
-	fi
-	local FileName=$1
-	local FileSize=""
-	local TempInfo=""
-	TempInfo=`ls -l $FileName`
-	FileSize=`echo $TempInfo | awk '{print $5}'`
-	echo $FileSize
 
-}
 runParseEncoderLog()
 {
 	while read line
