@@ -40,10 +40,8 @@ runIntialGlobalParam()
 
 	BitStreamSHA1String="NULL"
 	InputYUVSHA1String="NULL"
-	BitStreamMD5String="NULL"
-	InputYUVMD5String="NULL"
 
-	EncoderCheckResult="NULL"
+    EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
 
 }
@@ -81,9 +79,7 @@ runOutputCheckLog()
 	echo  "DecoderUnCheckNum:  ${DecoderUnCheckNum}"
 
 	echo "BitStreamSHA1String: ${BitStreamSHA1String}"
-	echo "BitStreamMD5String:  ${BitStreamMD5String}"
 	echo "InputYUVSHA1String:  ${InputYUVSHA1String}"
-	echo "InputYUVMD5String:   ${InputYUVMD5String}"
 	echo "EncoderCheckResult: ${EncoderCheckResult}"
 	echo "DecoderCheckResult: ${DecoderCheckResult}"
 }
@@ -126,7 +122,6 @@ runWelsDecodedFailedCheck()
 	do
 		echo " WelsDecoder decoding, layer $i..................... "
 		./${WelsDecoder}  ${aLayerBitStream[$i]}  ${aLayerWelsDecYUV[$i]}
-
 		if [ ! $? -eq 0  -o  ! -e ${aLayerWelsDecYUV[$i]} ]
 		then
 			echo -e "\033[31m \n WelsDecoder decoded failed! \n\033[0m"
@@ -140,41 +135,17 @@ runGenerateSHA1String()
 {
 	for((i=0; i<${SpatialLayerNum}; i++))
 	do
-		if [ -e  ${aLayerJSVMYUV[$i]}  ]
-		then
-			aJSVMYUVSHA1String[$i]=`openssl sha1  ${aLayerJSVMYUV[$i]}`
-			aJSVMYUVSHA1String[$i]=`echo ${aJSVMYUVSHA1String[$i]}  | awk '{print $2}' `
-		fi
+		[ -e ${aLayerJSVMYUV[$i]} ]    && aJSVMYUVSHA1String[$i]=`openssl sha1  ${aLayerJSVMYUV[$i]} | awk '{print $2}' `
 
-		if [ -e  ${aLayerWelsDecYUV[$i]}  ]
-		then
-			aWelsDecYUVSHA1String[$i]=`openssl sha1  ${aLayerWelsDecYUV[$i]}`
-			aWelsDecYUVSHA1String[$i]=`echo ${aWelsDecYUVSHA1String[$i]}  | awk '{print $2}' `
-		fi
+		[ -e ${aLayerWelsDecYUV[$i]} ] && aWelsDecYUVSHA1String[$i]=`openssl sha1  ${aLayerWelsDecYUV[$i]} | awk '{print $2}' `
 
-		if [ -e  ${aLayerRecYUV[$i]}  ]
-		then
-			aRecYUVSHA1String[$i]=`openssl sha1  ${aLayerRecYUV[$i]}`
-			aRecYUVSHA1String[$i]=`echo ${aRecYUVSHA1String[$i]}  | awk '{print $2}' `
-		fi
+        [ -e ${aLayerRecYUV[$i]} ]     && aRecYUVSHA1String[$i]=`openssl sha1  ${aLayerRecYUV[$i]} | awk '{print $2}' `
+
 	done
 
-	if [ -e ${BitStream} ]
-	then
-		BitStreamSHA1String=`openssl sha1  ${BitStream}`
-		BitStreamSHA1String=`echo ${BitStreamSHA1String}  | awk '{print $2}' `
+	[ -e ${BitStream} ] && BitStreamSHA1String=`openssl sha1  ${BitStream} | awk '{print $2}' `
 
-		BitStreamMD5String=`openssl md5   ${BitStream}`
-		BitStreamMD5String=`echo ${BitStreamMD5String}  | awk '{print $2}' `
-	fi
-	if [ -e ${OringInputYUV} ]
-	then
-		InputYUVSHA1String=`openssl sha1  ${OringInputYUV} `
-		InputYUVSHA1String=`echo ${InputYUVSHA1String}  | awk '{print $2}' `
-
-		InputYUVMD5String=`openssl md5  ${OringInputYUV}`
-		InputYUVMD5String=`echo ${InputYUVMD5String}  | awk '{print $2}' `
-	fi
+	[ -e ${OringInputYUV} ] && InputYUVSHA1String=`openssl sha1  ${OringInputYUV} | awk '{print $2}' `
 
 }
 runRecYUVJSVMDecYUCompare()
@@ -303,8 +274,6 @@ runOutputCheckInfo()
 	echo "aJSVMYUVSHA1String     ${aJSVMYUVSHA1String[@]}"
 	echo "BitStreamSHA1String    ${BitStreamSHA1String}"
 	echo "InputYUVSHA1String     ${InputYUVSHA1String}"
-	echo "BitStreamMD5String     ${BitStreamMD5String} "
-	echo "InputYUVMD5String      ${InputYUVMD5String}"
 
 	echo ""
 	echo "WelsDecodedFailedFlag  ${WelsDecodedFailedFlag}"
