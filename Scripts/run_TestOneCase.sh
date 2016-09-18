@@ -20,7 +20,6 @@ runGlobalVariableInitial()
 	declare -a aEncodedPicW
 	declare -a aEncodedPicH
 
-	BitstreamPrefix=""
 	BitStreamFile=""
 
 	EncoderLog="${TempDataPath}/encoder.log"
@@ -77,38 +76,13 @@ runEncoderCommandInital()
 #usage  runGetaEncoderCommandValue $CaseData
 runParseCaseInfo()
 {
-	if [ $#  -lt 1  ]
-	then
-		echo "no parameter!"
-		return 1
-	fi
-	local TempData=""
-
-	local CaseData=$@
-	declare -a aTempParamIndex=( 6 7 8 9 10 11 12 13    15 16 17   19 20 21     25 26 27 28   31 32 33 34 35 36 )
-	TempData=`echo $CaseData |awk 'BEGIN {FS="[,\r]"} {for(i=1;i<=NF;i++) printf(" %s",$i)} ' `
-	aEncoderCommandValue=(${TempData})
-	let "TempParamFlag=0"
-	for((i=0; i<$NumParameter; i++))
-	do
-		for ParnmIndex in ${aTempParamIndex[@]}
-		do
-		  if [  $i -eq ${ParnmIndex} ]
-		  then
-				let "TempParamFlag=1"
-		  fi
-		done
-		if [ ${TempParamFlag} -eq 0 ]
-		then
-			BitstreamPrefix=${BitstreamPrefix}_${aEncoderCommandName[$i]}_${aEncoderCommandValue[$i]}
-		fi
-		let "TempParamFlag=0"
-	done
+    local CaseData=$@
+	aEncoderCommandValue=(`echo $CaseData |awk 'BEGIN {FS="[,\r]"} {for(i=1;i<=NF;i++) printf(" %s",$i)} ' `)
 }
 
 runSetCaseGlobalParam()
 {
-	BitStreamFile=${TempDataPath}/${TestYUVName}_${BitstreamPrefix}_wels.264
+    BitStreamFile=${TempDataPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_CaseIndex_${CaseIndex}wels.264
 	let "EncoderNum      = ${aEncoderCommandValue[1]}"
 	let "SpatailLayerNum = ${aEncoderCommandValue[2]}"
 	let "RCMode          = ${aEncoderCommandValue[22]}"
@@ -147,12 +121,12 @@ runEncodeOneCase()
 	echo "---------------Encode One Case-------------------------------------------"
 	echo "case line is :"
 	EncoderCommand="./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} \
-				-drec 0 ${aRecYUVFileList[0]} -drec 1 ${aRecYUVFileList[1]} \
-				-drec 2 ${aRecYUVFileList[2]} -drec 3 ${aRecYUVFileList[3]}  -org ${InputYUV}"
+				-drec 0 ${RecYUVFile0} -drec 1 ${RecYUVFile1} \
+				-drec 2 ${RecYUVFile2} -drec 3 ${RecYUVFile3}  -org ${InputYUV}"
 	echo ${EncoderCommand}
 	./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} \
-				-drec 0 ${aRecYUVFileList[0]} -drec 1 ${aRecYUVFileList[1]} \
-				-drec 2 ${aRecYUVFileList[2]} -drec 3 ${aRecYUVFileList[3]}  -org ${InputYUV}>${EncoderLog}
+				-drec 0 ${RecYUVFile0} -drec 1 ${RecYUVFile1} \
+				-drec 2 ${RecYUVFile2} -drec 3 ${RecYUVFile3}  -org ${InputYUV}>${EncoderLog}
 
 	if [ $? -eq 0  ]
 	then
@@ -268,12 +242,6 @@ runOutputCaseCheckStatus()
 }
 runOutputCaseInfo()
 {
-
-	echo "YUVSizeLayer3:  ${YUVSizeLayer3}"
-	echo "YUVSizeLayer2:  ${YUVSizeLayer2}"
-	echo "YUVSizeLayer1:  ${YUVSizeLayer1}"
-	echo "YUVSizeLayer0:  ${YUVSizeLayer0}"
-
 	echo ""
 	echo "EncoderNum ${EncoderNum}"
 	echo "EncoderNum  ${EncoderNum}"
@@ -282,10 +250,8 @@ runOutputCaseInfo()
 
 	for((i=0;i<4;i++))
 	do
-		echo "aInputYUVSizeLayer  $i : ${aInputYUVSizeLayer[$i]}"
-		echo "aRecYUVFileList     $i : ${aRecYUVFileList[$i]}"
-		echo "aRecCropYUVFileList $i :${aRecCropYUVFileList[$i]}"
-		echo "PicWxPicH:  ${aEncodedPicW[$i]}x${aEncodedPicH[$i]}"
+		echo "aInputYUVSizeLayer $i : ${aInputYUVSizeLayer[$i]}"
+		echo "PicW x PicH           : ${aEncodedPicW[$i]}x${aEncodedPicH[$i]}"
 	done
 
 }
@@ -403,6 +369,22 @@ TestCaseExample()
     YUVSizeLayer2=0
     YUVSizeLayer3=0
 
+    RecYUVFile0="${TempDataPath}/${TestYUVName}_rec_0.yuv"
+    RecYUVFile1="${TempDataPath}/${TestYUVName}_rec_1.yuv"
+    RecYUVFile2="${TempDataPath}/${TestYUVName}_rec_2.yuv"
+    RecYUVFile3="${TempDataPath}/${TestYUVName}_rec_3.yuv"
+
+    RecCropYUV0="${TempDataPath}/${TestYUVName}_rec_0_cropped.yuv"
+    RecCropYUV1="${TempDataPath}/${TestYUVName}_rec_1_cropped.yuv"
+    RecCropYUV2="${TempDataPath}/${TestYUVName}_rec_2_cropped.yuv"
+    RecCropYUV3="${TempDataPath}/${TestYUVName}_rec_3_cropped.yuv"
+
+    SubCaseIndex=0
+    CaseIndex=12
+
+    #export variables have been export in run_TestAssignedCases.sh
+    export SubCaseIndex
+    export CaseIndex
     export TestPlatform
     export JMDecoder
     export JSVMDecoder
@@ -416,10 +398,22 @@ TestCaseExample()
     export YUVSizeLayer2
     export YUVSizeLayer3
 
+    export RecYUVFile0
+    export RecYUVFile1
+    export RecYUVFile2
+    export RecYUVFile3
+
+    export RecCropYUV0
+    export RecCropYUV1
+    export RecCropYUV2
+    export RecCropYUV3
+
+
+
     CaseInfo="0, 65 , 1, 1, 640, 512, 640,512,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
     date >Example_Test.log
     StartTime=`date`
-    for((k=0; k<10; k++))
+    for((k=0; k<2; k++))
     do
        echo -e "\n example index is $k \n"
        runMain  ${CaseInfo}
