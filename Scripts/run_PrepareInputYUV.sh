@@ -42,6 +42,21 @@ runGlobalVariableInitial()
     aLayerHeight=(0 0 0 0)
     aYUVSize=(0 0 0 0)
 }
+runCheckEncodedFrameNum()
+{
+
+    OriginYUVSize=`ls -l ${OriginYUV} | awk '{print $5}'`
+    #size in bytes
+    let "FrameSize = $OriginWidth * ${OriginHeight} * 12 / 8"
+    let "MaxFrameNum=${OriginYUVSize}/ $FrameSize"
+
+    if [ ${EncodedFrmNum} -gt ${MaxFrameNum} ]
+    then
+        echo "EncodedFrmNum(${EncodedFrmNum}) in test is larger than MaxFrameNum(${MaxFrameNum})"
+        echo "now change actual encoded frame num to MaxFrameNum(${MaxFrameNum})"
+        let "EncodedFrmNum = ${MaxFrameNum}"
+    fi
+}
 
 #usage: runSetLayerInfo
 runSetLayerInfo()
@@ -177,6 +192,8 @@ runMain()
 	let "PrepareFlag=0"
 	runGlobalVariableInitial
     runCheckParm
+
+    runCheckEncodedFrameNum
 	runSetLayerInfo
     runPrepareInputYUV
 	if [ ! ${PrepareFlag} -eq 0 ]
