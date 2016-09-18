@@ -32,8 +32,6 @@ runIntialGlobalParam()
 	let "WelsDecJSVMFlag=0"
 	let "SpatialLayerNum=0"
 
-	JSVMDecoderLog=""
-	WelsDecoderLog=""
 	OringInputYUV=""
 	BitStream=""
 	TempDir=""
@@ -55,10 +53,6 @@ runSetGlobalParam()
 	cd ${TempDir}
 	TempDir=`pwd`
 	cd ${CurrentDir}
-
-	JSVMDecoderLog="${TempDir}/JSVMDecoder.log"
-    JMDecoderLog="${TempDir}/JMDecoder.log"
-	WelsDecoderLog="${TempDir}/WelsDecoder.log"
 
 	for((i=0;i<4;i++))
 	do
@@ -95,67 +89,51 @@ runOutputCheckLog()
 }
 runJSVMDecodedFailedCheck()
 {
-	echo "">${JSVMDecoderLog}
 	for((i=0; i<${SpatialLayerNum}; i++))
 	do
-		echo " JSVM decoding, layer $i.....................">>${JSVMDecoderLog}
-		./${JSVMDecoder}   ${aLayerBitStream[$i]}  ${aLayerJSVMYUV[$i]} >>${JSVMDecoderLog}
+		echo " JSVM decoding, layer $i....................."
+		./${JSVMDecoder}   ${aLayerBitStream[$i]}  ${aLayerJSVMYUV[$i]}
 
 		if [ ! $? -eq 0  -o  ! -e ${aLayerJSVMYUV[$i]} ]
 		then
-			echo ""
-			echo -e "\033[31m JSVM decoded failed!  \033[0m"
-			echo ""
-			cat ${JSVMDecoderLog}
+			echo -e "\033[31m \n JSVM decoded failed!  \n\033[0m"
 			return 1
 		fi
 	done
 
-	cat ${JSVMDecoderLog}
 	return 0
 }
 
 runJMDecodedFailedCheck()
 {
-    echo "">${JMDecoderLog}
     for((i=0; i<${SpatialLayerNum}; i++))
     do
-        echo " JM decoding, layer $i.....................">>${JMDecoderLog}
-        ./${JMDecoder}  -p InputFile="${aLayerBitStream[$i]}" -p OutputFile="${aLayerJSVMYUV[$i]}" >>${JMDecoderLog}
+        echo " JM decoding, layer $i....................."
+        ./${JMDecoder}  -p InputFile="${aLayerBitStream[$i]}" -p OutputFile="${aLayerJSVMYUV[$i]}"
 
         if [ ! $? -eq 0  -o  ! -e ${aLayerJSVMYUV[$i]} ]
         then
-            echo ""
-            echo -e "\033[31m JM decoded failed!  \033[0m"
-            echo ""
-            cat ${JMDecoderLog}
+            echo -e "\033[31m \n JM decoded failed!  \n\033[0m"
             return 1
         fi
     done
-
-    cat ${JMDecoderLog}
     return 0
 }
 
 runWelsDecodedFailedCheck()
 {
-	echo "">${WelsDecoderLog}
 	for((i=0; i<${SpatialLayerNum}; i++))
 	do
-		echo " WelsDecoder decoding, layer $i..................... ">>${WelsDecoderLog}
-		./${WelsDecoder}  ${aLayerBitStream[$i]}  ${aLayerWelsDecYUV[$i]}  2>>${WelsDecoderLog}
+		echo " WelsDecoder decoding, layer $i..................... "
+		./${WelsDecoder}  ${aLayerBitStream[$i]}  ${aLayerWelsDecYUV[$i]}
 
 		if [ ! $? -eq 0  -o  ! -e ${aLayerWelsDecYUV[$i]} ]
 		then
-			echo ""
-			echo -e "\033[31m WelsDecoder decoded failed! \033[0m"
-			echo ""
+			echo -e "\033[31m \n WelsDecoder decoded failed! \n\033[0m"
 			let "WelsDecodedFailedFlag=1"
-			cat ${WelsDecoderLog}
 			return 1
 		fi
 	done
-	cat ${WelsDecoderLog}
 	return 0
 }
 runGenerateSHA1String()
