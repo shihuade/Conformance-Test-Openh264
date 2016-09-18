@@ -373,9 +373,11 @@ runMain()
 
 	#get FPS info from encoder log
 	runParseEncoderLog
+    echo "FPS is $FPS"
 	runParseCaseCheckLog ${CheckLogFile}
 	runOutputCaseCheckStatus
-	return 0
+    echo "main end"
+#return 0
 }
 
 TestCaseExample()
@@ -415,9 +417,16 @@ TestCaseExample()
     export YUVSizeLayer3
 
     CaseInfo="0, 65 , 1, 1, 640, 512, 640,512,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
-
-    runMain  ${CaseInfo}
-
+    date >Example_Test.log
+    StartTime=`date`
+    for((k=0; k<10; k++))
+    do
+       echo -e "\n example index is $k \n"
+       runMain  ${CaseInfo}
+    done
+    EndTime=`date`
+    echo "StartTime: ${StartTime}"
+    echo "EndTime  : ${EndTime}"
 }
 
 Temp(){
