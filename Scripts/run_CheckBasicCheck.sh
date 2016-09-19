@@ -58,22 +58,27 @@ runRecYUVCheck()
 }
 runEncodedNumCheck()
 {
-	if [ ${RCMode} -eq -1 ]
-	then
-		./run_CheckEncodedNum.sh  ${EncodedNum} ${SpatailLayerNum} ${EncoderLog} ${aInputYUVSizeLayer[@]} ${aRecCropYUVFileList[@]}
+    aRecYUVLayerSize=(0 0 0 0)
+    aRecYUVFile=($RecYUVFile0  $RecYUVFile1  $RecYUVFile2  $RecYUVFile3)
+    aInputLayerYUVSize=($YUVSizeLayer0  $YUVSizeLayer1  $YUVSizeLayer2  $YUVSizeLayer3)
 
-		if [ ! $? -eq 0 ]
-		then
-			EncoderCheckResult="1-Encoder failed!Encoded number does not match with setting"
-			DecoderCheckResult="3-Decoder cannot be checked!"
-			runOutputFailedCheckLog >${CheckLog}
-			return 1
-		fi
-	else
-		echo -e "\033[32m no need to check encoded number when rc is on!  \033[0m"
-		return 0
-	fi
+    if [ ${RCMode} -eq -1 ]
+    then
+        let "SizeMatchFlag=0"
+        for((i=0;i<${SpatailLayerNum};i++))
+        do
+            [ -e ${aRecYUVFile[$i]} ] && aRecYUVLayerSize[$i]=`ls -l ${aRecYUVFile[$i]} | awk '{print $5}'`
+
+            echo "RecYUV   size: ${aRecYUVLayerSize[$i]}"
+            echo "InputYUV size: ${aInputLayerYUVSize[$i]}"
+
+            [ ! ${aRecYUVLayerSize[$i]} -eq ${aInputLayerYUVSize[$i]} ] && return 1
+        done
+    fi
+
+    return 0
 }
+
 runCropRecYUV()
 {
 	let "CropFlag=0"
@@ -208,6 +213,49 @@ runMain()
 	echo ""
 	return 0
 }
+
+runTestExample()
+{
+    #input variables which have been export by run_TestOneCase.sh
+    declare -a aParameterSet
+    declare -a aInputYUVSizeLayer
+    declare -a aRecYUVFileList
+    declare -a aRecCropYUVFileList
+    declare -a aEncodedPicW
+    declare -a aEncodedPicH
+
+    aParameterSet="1 TempData/encoder.log 65 1 -1 TempData/CaseCheck.log 31948800 0 0 0 TempData/horse_riding_640x512_30.yuv_rec0.yuv TempData/horse_riding_640x512_30.yuv_rec1.yuv TempData/horse_riding_640x512_30.yuv_rec2.yuv TempData/horse_riding_640x512_30.yuv_rec3.yuv TempData/horse_riding_640x512_30.yuv_rec0_cropped.yuv TempData/horse_riding_640x512_30.yuv_rec1_cropped.yuv TempData/horse_riding_640x512_30.yuv_rec2_cropped.yuv TempData/horse_riding_640x512_30.yuv_rec3_cropped.yuv 640 0 0 0 512 0 0 0"
+
+    aParameterSet=(${aParameterSet})
+
+    EncoderFlag=${aParameterSet[0]}
+    EncoderLog=${aParameterSet[1]}
+    EncodedNum=${aParameterSet[2]}
+    SpatailLayerNum=${aParameterSet[3]}
+    RCMode=${aParameterSet[4]}
+    CheckLog=${aParameterSet[5]}
+
+    for((i=0;i<4;i++))
+    do
+        let "YUVSizeIndex=    $i + 6 "
+        let "RecYUVFileIndex= $i + 10"
+        let "CropYUVIndex=    $i + 14"
+        let "EncPicWIndex=    $i + 18"
+        let "EncPicHIndex=    $i + 22"
+
+        aInputYUVSizeLayer[$i]=${aParameterSet[${YUVSizeIndex}]}
+        aRecYUVFileList[$i]=${aParameterSet[${RecYUVFileIndex}]}
+        aRecCropYUVFileList[$i]=${aParameterSet[${CropYUVIndex}]}
+        aEncodedPicW[$i]=${aParameterSet[${EncPicWIndex}]}
+        aEncodedPicH[$i]=${aParameterSet[${EncPicHIndex}]}
+    done
+
+    runMain
+
+}
+
+
+
 echo ""
 echo "*********************************************************"
 echo "     call bash file is $0"
