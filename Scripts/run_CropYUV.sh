@@ -9,7 +9,7 @@
 #    first.
 #
 #  usage:
-#         ----./run_CropYUV.sh  ${InputYUV} ${OutputYUV} ${EncodedWidth} ${EncodedHeight}
+#         ----./run_CropYUV.sh  ${RecYUV} ${OutputYUV} ${EncodedWidth} ${EncodedHeight}
 #  return value:
 #          0-->cropped succeed   1-->no need to crop, multiple of 16
 #          2-->cropped failed
@@ -33,12 +33,12 @@ runSetCropResolution()
 
 	if [ ! ${PicWRemainder} -eq 0   ]
 	then
-		let "OriginWidth=${EncodedWidth}   + 16 - ${PicWRemainder}"
+		let "RecYUVWidth=${EncodedWidth}   + 16 - ${PicWRemainder}"
 	fi
 	
 	if [ ! ${PicHRemainder} -eq 0  ]
 	then
-		let "OriginHeight=${EncodedHeight} + 16 - ${PicHRemainder} "
+		let "RecYUVHeight=${EncodedHeight} + 16 - ${PicHRemainder} "
 	fi
 	
 	return 0
@@ -47,13 +47,13 @@ runSetCropResolution()
 runCropYUV()
 {
 
-	local Command="./${Cropper} ${OriginWidth}  ${OriginHeight}  ${InputYUV}  \
+	local Command="./${Cropper} ${RecYUVWidth}  ${RecYUVHeight}  ${RecYUV}  \
 					${EncodedWidth} ${EncodedHeight} ${OutputYUV} \
 					-crop 0 0 0 ${EncodedWidth} ${EncodedHeight}" 
 	
 	echo ""
-	echo "OriginWidth   is ${OriginWidth}"
-	echo "OriginHeight  is ${OriginHeight}"
+	echo "RecYUVWidth   is ${RecYUVWidth}"
+	echo "RecYUVHeight  is ${RecYUVHeight}"
 	echo "EncodedWidth  is ${EncodedWidth}"
 	echo "EncodedHeight is ${EncodedHeight}"
 	echo ""
@@ -61,7 +61,7 @@ runCropYUV()
 	echo ${Command}
 	echo ""
 	
-	./${Cropper} ${OriginWidth}  ${OriginHeight}  ${InputYUV}  \
+	./${Cropper} ${RecYUVWidth}  ${RecYUVHeight}  ${RecYUV}  \
 	             ${EncodedWidth} ${EncodedHeight} ${OutputYUV} \
 				 -crop 0 0 0 ${EncodedWidth} ${EncodedHeight}
 
@@ -73,72 +73,40 @@ runCropYUV()
 	fi
 }
 
-#usage:run_CropYUV.sh  ${InputYUV} ${OutputYUV} ${EncodedWidth} ${EncodedHeight}
+#usage:run_CropYUV.sh  ${RecYUV} ${OutputYUV} ${EncodedWidth} ${EncodedHeight}
 runMain()
 {
 
 	if [ ! $# -eq 4 ]
 	then
 		echo ""
-		echo "usage:run_CropYUV.sh  \${InputYUV} \${OutputYUV} \${EncodedWidth} \${EncodedHeight}"
+		echo "usage:run_CropYUV.sh  \${RecYUV} \${OutputYUV} \${EncodedWidth} \${EncodedHeight}"
 		echo ""
 		exit 2
 	fi
 
-	InputYUV=$1
+	RecYUV=$1
 	OutputYUV=$2
 	EncodedWidth=$3
 	EncodedHeight=$4
 	Cropper="DownConvertStatic"
 	
-	let "OriginWidth=${EncodedWidth}"
-	let "OriginHeight=${EncodedHeight}"
+	let "RecYUVWidth=${EncodedWidth}"
+	let "RecYUVHeight=${EncodedHeight}"
 	
 	let "CropFlag=1"
 	
-	if [ ! -e ${InputYUV}  -o ! -s ${InputYUV} ]
-	then
-		echo ""	
-		echo -e "\033[31m   input yuv file ${InputYUV} does not exist or the size is 0 bit! \033[0m"
-		echo ""
-		exit 2
-	fi
-	
-	if [ ${EncodedWidth} -lt 4  -o  ${EncodedHeight} -lt 4  ]
-	then
-		echo ""
-		echo -e "\033[31m   encoded width or encoded height is not correct, the value should be PicWXPicH>=4X4 \033[0m"
-		echo ""
-		exit 2
-	fi
-	
 	runSetCropResolution
-	if [  ${CropFlag} -eq 0 ]
-	then
-		echo ""
-		echo -e "\033[32m   YUV resolution is multiple of 16 \033[0m"
-		echo -e "\033[32m   no need to crop \033[0m"
-		echo ""
-		exit 1	
-	fi
-	
-	runCropYUV
-	if [  ${CropFlag} -eq 0 ]
-	then
-		echo ""
-		echo -e "\033[32m   crop succeed \033[0m"
-		echo ""
-		exit 0	
-	else
-		echo ""
-		echo -e "\033[31m   crop failed \033[0m"
-		echo ""
-		exit 2		
-	fi
+	[  ${CropFlag} -eq 0 ] && echo -e "\033[32m\n  YUV resolution is multiple of 16, no need to crop \n\033[0m" && return 1
 
+	runCropYUV
+	[  ! ${CropFlag} -eq 0 ] && echo -e "\033[32m\n   crop failed \n\033[0m" &&  return 2
+
+    echo -e "\033[32m\n  crop succeed \n\033[0m"
+    return 0
 }
 
-InputYUV=$1
+RecYUV=$1
 OutputYUV=$2
 EncodedWidth=$3
 EncodedHeight=$4
@@ -149,6 +117,6 @@ echo "     input parameters are:"
 echo "        $0 $@"
 echo "*********************************************************"
 echo ""
-runMain  ${InputYUV} ${OutputYUV} ${EncodedWidth} ${EncodedHeight}
+runMain  ${RecYUV} ${OutputYUV} ${EncodedWidth} ${EncodedHeight}
 
 
