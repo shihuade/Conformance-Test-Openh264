@@ -59,20 +59,17 @@ runRecYUVCheck()
 runEncodedNumCheck()
 {
     aRecYUVLayerSize=(0 0 0 0)
-    aRecYUVFile=($RecYUVFile0  $RecYUVFile1  $RecYUVFile2  $RecYUVFile3)
-    aInputLayerYUVSize=($YUVSizeLayer0  $YUVSizeLayer1  $YUVSizeLayer2  $YUVSizeLayer3)
-
     if [ ${RCMode} -eq -1 ]
     then
         let "SizeMatchFlag=0"
         for((i=0;i<${SpatailLayerNum};i++))
         do
-            [ -e ${aRecYUVFile[$i]} ] && aRecYUVLayerSize[$i]=`ls -l ${aRecYUVFile[$i]} | awk '{print $5}'`
+            [ -e ${aRecYUVFileList[$i]} ] && aRecYUVLayerSize[$i]=`ls -l ${aRecYUVFileList[$i]} | awk '{print $5}'`
 
             echo "RecYUV   size: ${aRecYUVLayerSize[$i]}"
-            echo "InputYUV size: ${aInputLayerYUVSize[$i]}"
+            echo "InputYUV size: ${aInputYUVSizeLayer[$i]}"
 
-            [ ! ${aRecYUVLayerSize[$i]} -eq ${aInputLayerYUVSize[$i]} ] && return 1
+            [ ! ${aRecYUVLayerSize[$i]} -eq ${aInputYUVSizeLayer[$i]} ] && return 1
         done
     fi
 
@@ -121,49 +118,14 @@ runOutputParameter()
 	echo ""
 
 }
-#Usage: run_CheckBasicCheck.sh  $EncoderFlag  $EncoderLog $EncodedNum  $SpatailLayerNum $RCMode CheckLog
-#		                        $aInputYUVSizeLayer  $aRecYUVFileList  $aRecCropYUVFileList  $aEncodedPicW aEncodedPicH
+#Usage: run_CheckBasicCheck.sh  $EncoderFlag   $SpatailLayerNum $RCMode
 runMain()
 {
-	if [ ! $# -eq 26 ]
-	then
-		echo ""
-		echo  -e "\033[31m Usage: run_CheckBasicCheck.sh  \$EncoderFlag  \$EncoderLog \$EncodedNum  \$SpatailLayerNum \$RCMode \$CheckLog \033[0m"
-		echo  -e "\033[31m                   \$aInputYUVSizeLayer  \$aRecYUVFileList \$aRecCropYUVFileList  \$aEncodedPicW \$aEncodedPicH \033[0m"
-		echo ""
-		exit 1
-	fi
-
-	declare -a aParameterSet
-	declare -a aInputYUVSizeLayer
-	declare -a aRecYUVFileList
-	declare -a aRecCropYUVFileList
-	declare -a aEncodedPicW
-	declare -a aEncodedPicH
-
-	aParameterSet=($@)
-
-	EncoderFlag=${aParameterSet[0]}
-	EncoderLog=${aParameterSet[1]}
-	EncodedNum=${aParameterSet[2]}
-	SpatailLayerNum=${aParameterSet[3]}
-	RCMode=${aParameterSet[4]}
-	CheckLog=${aParameterSet[5]}
-
-	for((i=0;i<4;i++))
-	do
-		let "YUVSizeIndex=    $i + 6 "
-		let "RecYUVFileIndex= $i + 10"
-		let "CropYUVIndex=    $i + 14"
-		let "EncPicWIndex=    $i + 18"
-		let "EncPicHIndex=    $i + 22"
-
-		aInputYUVSizeLayer[$i]=${aParameterSet[${YUVSizeIndex}]}
-		aRecYUVFileList[$i]=${aParameterSet[${RecYUVFileIndex}]}
-		aRecCropYUVFileList[$i]=${aParameterSet[${CropYUVIndex}]}
-		aEncodedPicW[$i]=${aParameterSet[${EncPicWIndex}]}
-		aEncodedPicH[$i]=${aParameterSet[${EncPicHIndex}]}
-	done
+    aInputYUVSizeLayer=($YUVSizeLayer0 $YUVSizeLayer1 $YUVSizeLayer2 $YUVSizeLayer3)
+    aRecYUVFileList=($RecYUVFile0 $RecYUVFile1 $RecYUVFile2 $RecYUVFile3)
+    aRecCropYUVFileList=($RecCropYUV0 $RecCropYUV1 $RecCropYUV2 $RecCropYUV3)
+    aEncodedPicW=($PicW0 $PicW1 $PicW2 $PicW3)
+    aEncodedPicH=($PicH0 $PicH1 $PicH2 $PicH3)
 
 	EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
@@ -214,48 +176,7 @@ runMain()
 	return 0
 }
 
-runTestExample()
-{
-    #input variables which have been export by run_TestOneCase.sh
-    declare -a aParameterSet
-    declare -a aInputYUVSizeLayer
-    declare -a aRecYUVFileList
-    declare -a aRecCropYUVFileList
-    declare -a aEncodedPicW
-    declare -a aEncodedPicH
-
-    aParameterSet="1 TempData/encoder.log 65 1 -1 TempData/CaseCheck.log 31948800 0 0 0 TempData/horse_riding_640x512_30.yuv_rec0.yuv TempData/horse_riding_640x512_30.yuv_rec1.yuv TempData/horse_riding_640x512_30.yuv_rec2.yuv TempData/horse_riding_640x512_30.yuv_rec3.yuv TempData/horse_riding_640x512_30.yuv_rec0_cropped.yuv TempData/horse_riding_640x512_30.yuv_rec1_cropped.yuv TempData/horse_riding_640x512_30.yuv_rec2_cropped.yuv TempData/horse_riding_640x512_30.yuv_rec3_cropped.yuv 640 0 0 0 512 0 0 0"
-
-    aParameterSet=(${aParameterSet})
-
-    EncoderFlag=${aParameterSet[0]}
-    EncoderLog=${aParameterSet[1]}
-    EncodedNum=${aParameterSet[2]}
-    SpatailLayerNum=${aParameterSet[3]}
-    RCMode=${aParameterSet[4]}
-    CheckLog=${aParameterSet[5]}
-
-    for((i=0;i<4;i++))
-    do
-        let "YUVSizeIndex=    $i + 6 "
-        let "RecYUVFileIndex= $i + 10"
-        let "CropYUVIndex=    $i + 14"
-        let "EncPicWIndex=    $i + 18"
-        let "EncPicHIndex=    $i + 22"
-
-        aInputYUVSizeLayer[$i]=${aParameterSet[${YUVSizeIndex}]}
-        aRecYUVFileList[$i]=${aParameterSet[${RecYUVFileIndex}]}
-        aRecCropYUVFileList[$i]=${aParameterSet[${CropYUVIndex}]}
-        aEncodedPicW[$i]=${aParameterSet[${EncPicWIndex}]}
-        aEncodedPicH[$i]=${aParameterSet[${EncPicHIndex}]}
-    done
-
-    runMain
-
-}
-
-
-
+#*****************************************************************************************************************************
 echo ""
 echo "*********************************************************"
 echo "     call bash file is $0"
@@ -263,6 +184,18 @@ echo "     input parameters are:"
 echo "        $0 $@"
 echo "*********************************************************"
 echo ""
-runMain $@
+
+if [ ! $# -eq 3 ]
+then
+    echo  -e "\033[31m \n Usage: run_CheckBasicCheck.sh  \$EncoderFlag \$SpatailLayerNum \$RCMode \n\033[0m"
+    exit 1
+fi
+#*****************************************************************************************************************************
+
+EncoderFlag=$1
+SpatailLayerNum=$2
+RCMode=$3
+
+runMain
 
 
