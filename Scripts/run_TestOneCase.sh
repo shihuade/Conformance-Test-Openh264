@@ -22,7 +22,7 @@ runGlobalVariableInitial()
 
 	BitStreamFile=""
 
-	EncoderLog="${TempDataPath}/encoder.log"
+
 	FPS="NULL"
 
 	let "EncoderNum=-1"
@@ -257,29 +257,19 @@ runOutputCaseInfo()
 }
 runBasicCheck()
 {
-	./run_CheckBasicCheck.sh  ${EncoderFlag}  ${EncoderLog} ${EncoderNum}  ${SpatailLayerNum} ${RCMode} ${CheckLogFile} \
-							${aInputYUVSizeLayer[@]} ${aRecYUVFileList[@]} ${aRecCropYUVFileList[@]}  ${aEncodedPicW[@]} ${aEncodedPicH[@]}
-	#copy bit stream file to ./issue folder;do not copy those cases which RecYUV does not exist!
+	./run_CheckBasicCheck.sh  ${EncoderFlag}  ${SpatailLayerNum} ${RCMode}
+	#copy bit stream file to ./issue folder;
     if [ $? -eq 0  ]
     then
         return 0
-    elif [ $? -eq 2  ]  #  $?==2: means rec yuv doest not exist
-    then
-        return 1
     else
-		if [ -e ${BitStreamFile}  ]
-		then
-            #currently, only copy when multi thread is enable
-            if [ ${MultiThreadFlag} -gt 1 ]
-            then
-                cp ${BitStreamFile}  ${IssueDataPath}
-            fi
-        fi
+        #currently, only copy when multi thread is enable
+        [ -e ${BitStreamFile}  ] && [ ${MultiThreadFlag} -gt 1 ] && cp ${BitStreamFile}  ${IssueDataPath}
+
 		return 1
     fi
-
-
 }
+
 runJSVMCheck()
 {
 	./run_CheckByJSVMDecoder.sh ${CheckLogFile} ${TempDataPath}  ${InputYUV} ${BitStreamFile}  ${SpatailLayerNum}  ${aRecYUVFileList[@]}
@@ -357,12 +347,23 @@ TestCaseExample()
     mkdir -p ${IssueDataPath} ${TempDataPath}
     TestYUVName="horse_riding_640x512_30.yuv"
     InputYUV="./horse_riding_640x512_30.yuv"
+    EncoderLog="${TempDataPath}/encoder.log"
     AssignedCasesPassStatusFile="Example_TestOneCase_AssignedCasesPassStatusFile.csv"
     UnPassedCasesFile="Example_TestOneCase_UnPassedCasesFile.csv"
     AssignedCasesSHATableFile="Example_TestOneCase_AssignedCasesSHATableFile.csv"
 
     EncodedFrmNum=65
     NumberLayer=1
+
+    PicW0=640
+    PicW1=0
+    PicW2=0
+    PicW3=0
+
+    PicH0=512
+    PicH1=0
+    PicH2=0
+    PicH3=0
 
     YUVSizeLayer0=31948800
     YUVSizeLayer1=0
@@ -391,8 +392,21 @@ TestCaseExample()
     export WelsDecoder
     export IssueDataPath
     export TempDataPath
+    export EncoderLog
+    export CheckLogFile
 
     export NumberLayer
+    export EncodedFrmNum
+    export PicW0
+    export PicW1
+    export PicW2
+    export PicW3
+
+    export PicH0
+    export PicH1
+    export PicH2
+    export PicH3
+
     export YUVSizeLayer0
     export YUVSizeLayer1
     export YUVSizeLayer2
