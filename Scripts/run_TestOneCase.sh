@@ -272,7 +272,7 @@ runBasicCheck()
 
 runJSVMCheck()
 {
-	./run_CheckByJSVMDecoder.sh ${CheckLogFile} ${TempDataPath}  ${InputYUV} ${BitStreamFile}  ${SpatailLayerNum}  ${aRecYUVFileList[@]}
+	./run_CheckByJSVMDecoder.sh ${BitStreamFile}  ${SpatailLayerNum}
 
 	#copy bit stream file to ./issue folder
 	if [ ! $? -eq 0 ]
@@ -341,6 +341,7 @@ TestCaseExample()
     TestPlatform="Mac"
     JMDecoder="JMDecoder"
     JSVMDecoder="H264AVCDecoderLibTestStatic"
+    WelsDecoder="h264dec"
     IssueDataPath="issue"
     TempDataPath="TempData"
 
@@ -395,6 +396,8 @@ TestCaseExample()
     export EncoderLog
     export CheckLogFile
 
+    export InputYUV
+    export TestYUVName
     export NumberLayer
     export EncodedFrmNum
     export PicW0
