@@ -3,7 +3,7 @@
 #Brief: to check whether the encoded number is the same with given setting
 #
 # Usage: run_CheckBasicCheck.sh  $EncoderFlag  $EncoderLog $EncodedNum \
-#                                $SpatailLayerNum $RCMode $CheckLog    \
+#                                $SpatailLayerNum $RCMode $CheckLogFile    \
 #		                 $aInputYUVSizeLayer  $aRecYUVFileList \
 #                                $aRecCropYUVFileList $aEncodedPicW    \
 #                                $aEncodedPicH
@@ -31,7 +31,7 @@ runEncoderFailedCheck()
 	then
 		EncoderCheckResult="1-Encoder failed!"
 		DecoderCheckResult="3-Decoder cannot be checked!"
-		runOutputFailedCheckLog>${CheckLog}
+		runOutputFailedCheckLog>${CheckLogFile}
 		return 1
 	fi
 	return 0
@@ -51,7 +51,7 @@ runRecYUVCheck()
 	then
 		EncoderCheckResult="1-Encoder failed!--RecYUV does not exist"
 		DecoderCheckResult="3-Decoder cannot be checked!"
-		runOutputFailedCheckLog>${CheckLog}
+		runOutputFailedCheckLog>${CheckLogFile}
 		return 1
 	fi
 	return 0
@@ -100,7 +100,7 @@ runCropRecYUV()
 	then
 		EncoderCheckResult="1-Encoder RecYUV file cropped failed!"
 		DecoderCheckResult="3-Decoder cannot be checked!"
-		runOutputFailedCheckLog >${CheckLog}
+		runOutputFailedCheckLog >${CheckLogFile}
 		return 1
 	fi
 
@@ -118,18 +118,25 @@ runOutputParameter()
 	echo ""
 
 }
-#Usage: run_CheckBasicCheck.sh  $EncoderFlag   $SpatailLayerNum $RCMode
-runMain()
+
+runInitBasedExported()
 {
     aInputYUVSizeLayer=($YUVSizeLayer0 $YUVSizeLayer1 $YUVSizeLayer2 $YUVSizeLayer3)
     aRecYUVFileList=($RecYUVFile0 $RecYUVFile1 $RecYUVFile2 $RecYUVFile3)
     aRecCropYUVFileList=($RecCropYUV0 $RecCropYUV1 $RecCropYUV2 $RecCropYUV3)
     aEncodedPicW=($PicW0 $PicW1 $PicW2 $PicW3)
     aEncodedPicH=($PicH0 $PicH1 $PicH2 $PicH3)
+}
+
+#Usage: run_CheckBasicCheck.sh  $EncoderFlag   $SpatailLayerNum $RCMode
+runMain()
+{
+
+    runInitBasedExported
 
 	EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
-    echo "CheckLog is ${CheckLog}"
+    echo "CheckLogFile is ${CheckLogFile}"
     echo ""
 	echo "---------------Basic Check--------------------------------------------"
 	echo "-------------------1. Basic Check--Encoded Failed Check"
