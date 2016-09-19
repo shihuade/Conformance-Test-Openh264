@@ -83,31 +83,24 @@ runEncodedNumCheck()
 #so need to croped Rec YUV's resolution the same with input resolution
 runCropRecYUV()
 {
-	let "CropFlag=0"
 	let "CropRetFlag=0"
 	for((i=0;i<${SpatailLayerNum};i++))
 	do
-		echo "${aRecYUVFileList[$i]}  ${aRecCropYUVFileList[$i]}  ${aEncodedPicW[$i]}  ${aEncodedPicH[$i]}"
 		./run_CropYUV.sh  ${aRecYUVFileList[$i]}  ${aRecCropYUVFileList[$i]}  ${aEncodedPicW[$i]}  ${aEncodedPicH[$i]}
 		let "CropRetFlag=$?"
 		if [ $CropRetFlag -eq 2 ]
 		then
-			let "CropFlag=1"
-		fi
+            EncoderCheckResult="1-Encoder RecYUV file cropped failed!"
+            DecoderCheckResult="3-Decoder cannot be checked!"
+            runOutputFailedCheckLog >${CheckLogFile}
+            return 1
+        fi
 
 		if [ $CropRetFlag  -eq 1 ]
 		then
 			cp -f ${aRecYUVFileList[$i]}  ${aRecCropYUVFileList[$i]}
 		fi
 	done
-
-	if [ !  ${CropFlag} -eq 0 ]
-	then
-		EncoderCheckResult="1-Encoder RecYUV file cropped failed!"
-		DecoderCheckResult="3-Decoder cannot be checked!"
-		runOutputFailedCheckLog >${CheckLogFile}
-		return 1
-	fi
 
 	return 0
 }
