@@ -15,18 +15,16 @@ runGlobalVariableInitial()
 	declare -a aEncoderCommandName
 	declare -a aEncoderCommandValue
 
-	BitStreamFile=""
-	FPS="NULL"
-
 	let "SpatailLayerNum=1"
 	let "RCMode=0"
     let "MultiThreadFlag=0"
+    let "EncoderFlag=0"
+    let "FPS=30"
 
+    BitStreamFile=""
 	BitStreamSHA1String="NULL"
 	EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
-
-	let "EncoderFlag=0"
 }
 #called by runGlobalVariableInitial
 #usage runEncoderCommandInital
@@ -237,8 +235,7 @@ runMain()
 
 	#get FPS info from encoder log
 	runParseEncoderLog
-    echo "FPS is $FPS"
-	runParseCaseCheckLog ${CheckLogFile}
+	runParseCaseCheckLog
 	runOutputCaseCheckStatus
     return 0
 }
