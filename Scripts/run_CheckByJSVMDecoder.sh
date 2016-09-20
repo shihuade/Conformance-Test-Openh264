@@ -46,6 +46,8 @@ runSetGlobalParam()
 		aLayerWelsDecYUV[$i]="${TempDataPath}/Dec_WelsDec_${i}.yuv"
 	done
 
+   [ ${SpatialLayerNum} -eq 1 ] && aLayerBitStream[0]=${BitStream}
+
     aRecCropYUVFileList=($RecCropYUV0 $RecCropYUV1 $RecCropYUV2 $RecCropYUV3)
 
 	let "EncoderPassedNum   = 0"

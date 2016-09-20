@@ -27,10 +27,8 @@ runMain()
 
 
 	let "ExtractFlag=0"
-    if [ ${SpatialLayerNum} -eq 1 ]
+    if [ ${SpatialLayerNum} -gt 1 ]
     then
-        cp ${InputBitSteam} ${aOutputBitStreamNameList[0]}
-    else
         for((i=0;i<${SpatialLayerNum}; i++))
         do
             ./${Extractor}  ${InputBitSteam} ${aOutputBitStreamNameList[$i]}  -did $i 2>BitStreamExtract.log

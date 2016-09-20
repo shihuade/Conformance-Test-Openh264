@@ -31,9 +31,6 @@ runGlobalVariableInitial()
     let "MultiThreadFlag=0"
 
 	BitStreamSHA1String="NULL"
-	BitStreamMD5String="NULL"
-	InputYUVSHA1String="NULL"
-	InputYUVMD5String="NULL"
 	EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
 	EncoderCommand="NULL"
@@ -82,7 +79,7 @@ runParseCaseInfo()
 
 runSetCaseGlobalParam()
 {
-    BitStreamFile=${TempDataPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_CaseIndex_${CaseIndex}wels.264
+    BitStreamFile=${TempDataPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_CaseIndex_${CaseIndex}_openh264.264
 	let "EncoderNum      = ${aEncoderCommandValue[1]}"
 	let "SpatailLayerNum = ${aEncoderCommandValue[2]}"
 	let "RCMode          = ${aEncoderCommandValue[22]}"
@@ -163,20 +160,15 @@ runParseEncoderLog()
     FPS=(`cat ${EncoderLog} | grep "FPS" | awk '{print $2}' `)
 }
 
-#usage runParseCaseCheckLog  ${CheckLog}
+#usage runParseCaseCheckLog  ${CheckLogFile}
 runParseCaseCheckLog()
 {
-	if [  ! $# -eq 1  ]
-	then
-		echo "usage: runParseCaseCheckLog  \${CheckLog}"
-		return 1
-	fi
-	local CheckLog=$1
-	if [ ! -e ${CheckLog}  ]
+	if [ ! -e ${CheckLogFile}  ]
 	then
 		echo "check log does not exist!"
 		return 1
 	fi
+
 	while read line
 	do
 		if [[  "$line" =~ ^EncoderCheckResult  ]]
@@ -185,23 +177,12 @@ runParseCaseCheckLog()
 		elif [[ "$line" =~ ^DecoderCheckResult ]]
 		then
 			DecoderCheckResult=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ "$line" =~ ^BitStreamSHA1String ]]
-		then
-			BitStreamSHA1String=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ "$line" =~ ^BitStreamMD5String ]]
-		then
-			BitStreamMD5String=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ "$line" =~ ^InputYUVSHA1String ]]
-		then
-			InputYUVSHA1String=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ "$line" =~ ^InputYUVMD5String ]]
-		then
-			InputYUVMD5String=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
 		fi
-	done <${CheckLog}
+	done <${CheckLogFile}
 	
-	#generate SHA1 string for bit stream and input YUV no matter failed or not
-    [ -e ${BitStreamFile} ] && BitStreamSHA1String=`openssl sha1  ${BitStreamFile} | awk '{print $2}' `
+	#generate SHA1 string for bit stream
+    echo "BitStreamFile is $BitStreamFile"
+   [ -e ${BitStreamFile} ] && BitStreamSHA1String=`openssl sha1  ${BitStreamFile} | awk '{print $2}' `
 
 }
 runOutputCaseCheckStatus()
@@ -209,20 +190,20 @@ runOutputCaseCheckStatus()
 	#date info
 	date
 	local TestTime=`date`
-
+    SHA1TableData="${BitStreamSHA1String}, ${InputYUVSHA1String}, ${TestCaseInfo}"
+    TestCaseStatusInfo="${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${SHA1TableData}, ${TestTime},${EncoderCommand}"
     echo "line writed to SHA1 talbe is:"
-    echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}"
+    echo "${SHA1TableData}"
 
     echo "line writed to AllCases file is:"
-    echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} "
+    echo " ${TestCaseStatusInfo} "
 
-
-    echo " ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${CaseInfo}">>${AssignedCasesSHATableFile}
-    echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${TestTime},${EncoderCommand} ">>${AssignedCasesPassStatusFile}
+    echo " ${SHA1TableData}">>${AssignedCasesSHATableFile}
+    echo " ${TestCaseStatusInfo}">>${AssignedCasesPassStatusFile}
 
 	if [ ${BasicCheckFlag} -eq 1 -o  ${JSVMCheckFlag} -eq 1 ]
 	then
-		echo " ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${BitStreamSHA1String}, ${BitStreamMD5String}, ${InputYUVSHA1String},${InputYUVMD5String}, ${TestCaseInfo}, ${EncoderCommand}">>${UnPassedCasesFile}
+		echo "${TestCaseStatusInfo}">>${UnPassedCasesFile}
 	fi
 }
 runOutputCaseInfo()
@@ -244,33 +225,28 @@ runBasicCheck()
 {
 	./run_CheckBasicCheck.sh  ${EncoderFlag}  ${SpatailLayerNum} ${RCMode}
 	#copy bit stream file to ./issue folder;
-    if [ $? -eq 0  ]
+    if [ ! $? -eq 0  ]
     then
-        return 0
-    else
         #currently, only copy when multi thread is enable
         [ -e ${BitStreamFile}  ] && [ ${MultiThreadFlag} -gt 1 ] && cp ${BitStreamFile}  ${IssueDataPath}
 
 		return 1
     fi
+    return 0
 }
 
 runJSVMCheck()
 {
 	./run_CheckByJSVMDecoder.sh ${BitStreamFile}  ${SpatailLayerNum}
-
 	#copy bit stream file to ./issue folder
 	if [ ! $? -eq 0 ]
 	then
-		if [ -e ${BitStreamFile}  ]
-		then
-			#cp ${BitStreamFile}  ${IssueDataPath}
-			Action="you can open the annotation to save the issue bit stream"
-		fi
-		return 1
-	else
-		return 0
+        #[ -e ${BitStreamFile}  ] && cp ${BitStreamFile}  ${IssueDataPath}
+        Action="you can open the annotation to save the issue bit stream"
+        return 1
 	fi
+
+    return 0
 }
 # usage: runMain $TestYUV  $InputYUV $AllCaseFile
 runMain()
@@ -296,7 +272,7 @@ runMain()
 	then
 		echo  -e "\033[31m  case failed! \033[0m"
 		let "BasicCheckFlag=1"
-		runParseCaseCheckLog ${CheckLogFile}
+		runParseCaseCheckLog
 		runOutputCaseCheckStatus
 		exit 1
 	fi

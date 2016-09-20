@@ -41,7 +41,7 @@ runGlobalVariableInitial()
 	AssignedCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table_SubCasesIndex_${SubCaseIndex}.csv"
 	AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}__SubCasesIndex_${SubCaseIndex}.TestLog"
 	CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary"
-	HeadLine1="EncoderFlag, DecoderFlag, FPS, BitSreamSHA1, BitSreamMD5, InputYUVSHA1, InputYUVMD5,\
+	HeadLine1="EncoderFlag, DecoderFlag, FPS, BitSreamSHA1, InputYUVSHA1,\
 			-utype,  -frms,  -numl,  -numtl, -sw, -sh,\
 			-dw 0, -dh 0, -dw 1, -dh 1, -dw 2, -dh 2, -dw 3, -dh 3,\
 			-frout 0,  -frout 1, -frout 2, -frout 3,\
@@ -53,7 +53,7 @@ runGlobalVariableInitial()
 			-iper, -thread, -ltr, -db, -denois,\
 			-scene,  -bgd ,  -aq, "
 
-	HeadLine2="BitSreamSHA1, BitSreamMD5, InputYUVSHA1, InputYUVMD5,\
+	HeadLine2="BitSreamSHA1, InputYUVSHA1,\
 			-utype,  -frms,  -numl,  -numtl, -sw, -sh,\
 			-dw 0, -dh 0, -dw 1, -dh 1,-dw 2, -dh 2, -dw 3, -dh 3,\
 			-frout 0,  -frout 1, -frout 2, -frout 3,\
