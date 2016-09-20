@@ -49,9 +49,6 @@ runSetGlobalParam()
 	done
 
     aRecCropYUVFileList=($RecCropYUV0 $RecCropYUV1 $RecCropYUV2 $RecCropYUV3)
-	aRecYUVSHA1String=( NULL NULL NULL NULL )
-	aWelsDecYUVSHA1String=( NULL NULL NULL NULL )
-	aJSVMYUVSHA1String=( NULL NULL NULL NULL )
 
 	let "EncoderPassedNum   = 0"
 	let "EncoderUnPassedNum = 1"
@@ -208,9 +205,9 @@ runRecYUVJSVMDecYUCompare()
 	fi
 	return 0
 }
+
 runCheckParameter()
 {
-
 	if [ ! -e ${BitStream}  ]
 	then
         echo -e "\033[31m\n bit stream  ${BitStream} does not exist! \n\033[0m"
@@ -226,9 +223,6 @@ runOutputCheckInfo()
 {
 	echo "-------------------6. JSVM Check--Check Result"
 	echo ""
-	echo "aRecYUVSHA1String      ${aRecYUVSHA1String[@]}"
-	echo "aWelsDecYUVSHA1String  ${aWelsDecYUVSHA1String[@]}"
-	echo "aJSVMYUVSHA1String     ${aJSVMYUVSHA1String[@]}"
 	echo "BitStreamSHA1String    ${BitStreamSHA1String}"
 	echo "InputYUVSHA1String     ${InputYUVSHA1String}"
 
