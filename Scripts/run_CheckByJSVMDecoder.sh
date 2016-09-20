@@ -27,9 +27,10 @@ runIntialGlobalParam()
 
 	let "WelsDecodedFailedFlag=0"
 	let "FinalCheckFlag=0"
-	let "RecJSVMFlag=0"
-	let "WelsDecJSVMFlag=0"
+	let "RecJSVMFlag=1"
+	let "WelsDecJSVMFlag=1"
 
+    DiffInfo="diff.log"
 	BitStreamSHA1String="NULL"
 	InputYUVSHA1String="NULL"
 
@@ -98,11 +99,30 @@ runJMDecodedFailedCheck()
         ./${JMDecoder}  -p InputFile="${aLayerBitStream[$i]}" -p OutputFile="${aLayerJSVMYUV[$i]}"
         if [ ! $? -eq 0  -o  ! -e ${aLayerJSVMYUV[$i]} ]
         then
-            echo -e "\033[31m \n JM decoded failed!  \n\033[0m"
+            echo -e "\033[31m\n JM decoded failed!  \n\033[0m"
             return 1
         fi
     done
     return 0
+}
+
+runJMJSVMDecodedCheck()
+{
+    if [  "${TestPlatform}" = "Mac" ]
+    then
+        runJMDecodedFailedCheck   >${TempDataPath}/JM_Decode_Temp.log
+    else
+        runJSVMDecodedFailedCheck >${TempDataPath}/JSVM_Decode_Temp.log
+    fi
+
+    if [  ! $? -eq 0 ]
+    then
+        echo -e "\033[31m\n JSVM decoded failed ! \n\033[0m"
+        EncoderCheckResult="1-Encoder failed!-JSVM decode failed!"
+        DecoderCheckResult="3-Decoder cannot be checked!"
+        runOutputCheckLog >${CheckLogFile}
+        exit 1
+    fi
 }
 
 runWelsDecodedFailedCheck()
@@ -114,7 +134,7 @@ runWelsDecodedFailedCheck()
 
 		if [ ! $? -eq 0  -o  ! -e ${aLayerWelsDecYUV[$i]} ]
 		then
-			echo -e "\033[31m \n WelsDecoder decoded failed! \n\033[0m"
+			echo -e "\033[31m\n WelsDecoder decoded failed! \n\033[0m"
 			let "WelsDecodedFailedFlag=1"
 			return 1
 		fi
@@ -124,38 +144,21 @@ runWelsDecodedFailedCheck()
 
 runGenerateSHA1String()
 {
+
 	for((i=0; i<${SpatialLayerNum}; i++))
 	do
-		[ -e ${aLayerJSVMYUV[$i]} ]    && aJSVMYUVSHA1String[$i]=`openssl sha1  ${aLayerJSVMYUV[$i]} | awk '{print $2}' `
-
-		[ -e ${aLayerWelsDecYUV[$i]} ] && aWelsDecYUVSHA1String[$i]=`openssl sha1  ${aLayerWelsDecYUV[$i]} | awk '{print $2}' `
-
-        [ -e ${aRecCropYUVFileList[$i]} ]  && aRecYUVSHA1String[$i]=`openssl sha1  ${aRecCropYUVFileList[$i]} | awk '{print $2}' `
-	done
+        diff ${aLayerJSVMYUV[$i]} ${aLayerWelsDecYUV[$i]}    >${DiffInfo} && [ ! -s ${DiffInfo} ] && let "RecJSVMFlag=0"
+        diff ${aLayerJSVMYUV[$i]} ${aRecCropYUVFileList[$i]} >${DiffInfo} && [ ! -s ${DiffInfo} ] && let "WelsDecJSVMFlag=0"
+    done
 
 	[ -e ${BitStream} ] && BitStreamSHA1String=`openssl sha1  ${BitStream} | awk '{print $2}' `
 
 	[ -e ${InputYUV} ] && InputYUVSHA1String=`openssl sha1  ${InputYUV} | awk '{print $2}' `
 
 }
+
 runRecYUVJSVMDecYUCompare()
 {
-
-	let "RecJSVMFlag=0"
-	let "WelsDecJSVMFlag=0"
-	for((i=0; i<${SpatialLayerNum}; i++))
-	do
-		if [  ! "${aRecYUVSHA1String[$i]}" = "${aJSVMYUVSHA1String[$i]}"  ]
-		then
-			let "RecJSVMFlag=1"
-		fi
-
-		if [  ! "${aWelsDecYUVSHA1String[$i]}" = "${aJSVMYUVSHA1String[$i]}"  ]
-		then
-			let "WelsDecJSVMFlag=1"
-		fi
-	done
-
 	#for encoder check result
 	if [ ${RecJSVMFlag} -eq 0  ]
 	then
@@ -249,9 +252,7 @@ runMain()
         ./run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
         if [  ! $? -eq 0 ]
         then
-            echo ""
-            echo -e "\033[31m failed to extract  bit stream ! \033[0m"
-            echo ""
+            echo -e "\033[31m\n failed to extract  bit stream ! \n\033[0m"
             EncoderCheckResult="1-Encoder failed!--Failed to extracted bit stream!"
             DecoderCheckResult="3-Decoder cannot be checked!"
             runOutputCheckLog >${CheckLogFile}
@@ -260,37 +261,18 @@ runMain()
     fi
 
 	echo "-------------------2. JSVM Check--JSVM Decode Check"
-    if [  "${TestPlatform}" = "Mac" ]
-    then
-        runJMDecodedFailedCheck   >${TempDataPath}/JM_Decode_Temp.log
-    else
-	    runJSVMDecodedFailedCheck >${TempDataPath}/JSVM_Decode_Temp.log
-    fi
+    runJMJSVMDecodedCheck
 
-	if [  ! $? -eq 0 ]
-	then
-		echo ""
-		echo -e "\033[31m JSVM decoded failed ! \033[0m"
-		echo ""
-		EncoderCheckResult="1-Encoder failed!-JSVM decode failed!"
-		DecoderCheckResult="3-Decoder cannot be checked!"
-		runOutputCheckLog >${CheckLogFile}
-		exit 1
-	fi
-
-	#check RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV
 	echo "-------------------3. JSVM Check--WelsDecoder Decode Check"
     runWelsDecodedFailedCheck  >${TempDataPath}/WelsDecTemp.log
 
     echo "-------------------4. Generate SHA1"
-	runGenerateSHA1String
+    runGenerateSHA1String
 
 	echo "-------------------5. JSVM Check--RecYUV-JSVMDecYUV-WelsDecYUV Comparison"
 	runRecYUVJSVMDecYUCompare
-
     runOutputCheckLog >${CheckLogFile}
     runOutputCheckInfo
-
 
     if [ ${FinalCheckFlag} -eq 0 ]
 	then
@@ -323,6 +305,15 @@ fi
 BitStream=$1
 let "SpatialLayerNum=$2"
 
-runMain
+StartTime1=`date`
+for((n=0;n<1;n++))
+do
 
+runMain
+done
+
+EndTime1=`date`
+echo "StartTime1: $StartTime1"
+echo "EndTime1:   $EndTime1"
+echo "******JSVM end"
 
