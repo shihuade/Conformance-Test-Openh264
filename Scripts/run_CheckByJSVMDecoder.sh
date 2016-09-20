@@ -139,7 +139,7 @@ runWelsDecodedFailedCheck()
 	return 0
 }
 
-runGenerateSHA1String()
+runGenerateSHA1StringAndCheckDiff()
 {
 
 	for((i=0; i<${SpatialLayerNum}; i++))
@@ -156,32 +156,21 @@ runGenerateSHA1String()
 
 runRecYUVJSVMDecYUCompare()
 {
+    #before this check,has passed JM/JSVM decoded test
 	#for encoder check result
 	if [ ${RecJSVMFlag} -eq 0  ]
 	then
-		EncoderCheckResult="0-Encoder passed!"
 		let "EncoderPassedNum   = 1"
 		let "EncoderUnPassedNum = 0"
+        EncoderCheckResult="0-Encoder passed!"
 	else
-		EncoderCheckResult="1-Encoder failed!--RecYUV--JSVMDecYUV does not match!"
 		let "EncoderPassedNum   = 0"
 		let "EncoderUnPassedNum = 1"
+        EncoderCheckResult="1-Encoder failed!--RecYUV--JSVMDecYUV does not match!"
 	fi
 
 	#for decoder check result
-	if [ ${WelsDecodedFailedFlag} -eq 1 -a  ${RecJSVMFlag} -eq 1  ]
-	then
-		let "DecoderPassedNum   = 0"
-		let "DecoderUpPassedNum = 0"
-		let "DecoderUnCheckNum  = 1"
-		DecoderCheckResult="3-Decoder failed due to error bit stream,cannot be checked!"
-	elif [  ${WelsDecodedFailedFlag} -eq 1 -a  ${RecJSVMFlag} -eq 0 ]
-	then
-		let "DecoderPassedNum   = 0"
-		let "DecoderUpPassedNum = 1"
-		let "DecoderUnCheckNum  = 0"
-		DecoderCheckResult="2-Decoder failed!"
-	elif [  ${WelsDecodedFailedFlag} -eq 0  ]
+	if [  ${WelsDecodedFailedFlag} -eq 0  ]
 	then
 		if [ ${WelsDecJSVMFlag}  -eq 0 ]
 		then
@@ -193,9 +182,21 @@ runRecYUVJSVMDecYUCompare()
 			let "DecoderPassedNum   = 0"
 			let "DecoderUpPassedNum = 1"
 			let "DecoderUnCheckNum  = 0"
-			DecoderCheckResult="2-Decoder failed!"
+			DecoderCheckResult="2-Decoder failed! DecYUV--JSVMDecYUV does not match"
 		fi
-	fi
+    elif [ ${WelsDecodedFailedFlag} -eq 1 -a  ${RecJSVMFlag} -eq 1  ]
+    then
+        let "DecoderPassedNum   = 0"
+        let "DecoderUpPassedNum = 0"
+        let "DecoderUnCheckNum  = 1"
+        DecoderCheckResult="3-Decoder failed due to error bit stream,cannot be checked!"
+    elif [  ${WelsDecodedFailedFlag} -eq 1 -a  ${RecJSVMFlag} -eq 0 ]
+    then
+        let "DecoderPassedNum   = 0"
+        let "DecoderUpPassedNum = 1"
+        let "DecoderUnCheckNum  = 0"
+        DecoderCheckResult="2-Decoder failed!"
+    fi
 
 	if [ ${RecJSVMFlag} -eq 0  -a   ${WelsDecodedFailedFlag} -eq 0  -a ${WelsDecJSVMFlag}  -eq 0 ]
 	then
@@ -225,7 +226,6 @@ runOutputCheckInfo()
 	echo ""
 	echo "BitStreamSHA1String    ${BitStreamSHA1String}"
 	echo "InputYUVSHA1String     ${InputYUVSHA1String}"
-
 	echo ""
 	echo "WelsDecodedFailedFlag  ${WelsDecodedFailedFlag}"
 	echo "FinalCheckFlag         ${FinalCheckFlag}"
@@ -241,8 +241,6 @@ runMain()
 
     echo "---------------JSVM Check--------------------------------------------"
 	echo "-------------------1. JSVM Check--extract bit stream"
-#if [ ${NumberLayer} -gt 1 ]
-# then
     ./run_ExtractLayerBitStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
     if [  ! $? -eq 0 ]
     then
@@ -252,7 +250,6 @@ runMain()
         runOutputCheckLog >${CheckLogFile}
         exit 1
     fi
-# fi
 
 	echo "-------------------2. JSVM Check--JSVM Decode Check"
     runJMJSVMDecodedCheck
@@ -261,7 +258,7 @@ runMain()
     runWelsDecodedFailedCheck  >${TempDataPath}/WelsDecTemp.log
 
     echo "-------------------4. Generate SHA1"
-    runGenerateSHA1String
+    runGenerateSHA1StringAndCheckDiff
 
 	echo "-------------------5. JSVM Check--RecYUV-JSVMDecYUV-WelsDecYUV Comparison"
 	runRecYUVJSVMDecYUCompare
@@ -280,14 +277,12 @@ runMain()
 }
 
 #*****************************************************************
-echo ""
-echo "*********************************************************"
+echo -e "\n*********************************************************"
 echo "     call bash file is $0"
 echo "     input parameters are:"
 echo "        $0 $@"
 date
-echo "*********************************************************"
-echo ""
+echo -e "\n*********************************************************\n"
 if [  ! $# -eq 2  ]
 then
     echo ""
@@ -299,15 +294,5 @@ fi
 BitStream=$1
 let "SpatialLayerNum=$2"
 
-StartTime1=`date`
-for((n=0;n<1;n++))
-do
-
 runMain
-done
-
-EndTime1=`date`
-echo "StartTime1: $StartTime1"
-echo "EndTime1:   $EndTime1"
-echo "******JSVM end"
 
