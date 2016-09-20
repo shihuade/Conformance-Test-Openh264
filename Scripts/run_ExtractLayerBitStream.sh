@@ -29,7 +29,7 @@ runMain()
 	let "ExtractFlag=0"
     if [ ${SpatialLayerNum} -eq 1 ]
     then
-        mv ${InputBitSteam} ${aOutputBitStreamNameList[0]}
+        cp ${InputBitSteam} ${aOutputBitStreamNameList[0]}
     else
         for((i=0;i<${SpatialLayerNum}; i++))
         do
