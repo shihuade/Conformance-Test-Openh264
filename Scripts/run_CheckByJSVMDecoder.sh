@@ -31,8 +31,6 @@ runIntialGlobalParam()
 	let "WelsDecJSVMFlag=1"
 
     DiffInfo="diff.log"
-	BitStreamSHA1String="NULL"
-	InputYUVSHA1String="NULL"
 
     EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
@@ -65,8 +63,6 @@ runOutputCheckLog()
 	echo  "DecoderUpPassedNum: ${DecoderUpPassedNum}"
 	echo  "DecoderUnCheckNum:  ${DecoderUnCheckNum}"
 
-	echo "BitStreamSHA1String: ${BitStreamSHA1String}"
-	echo "InputYUVSHA1String:  ${InputYUVSHA1String}"
 	echo "EncoderCheckResult: ${EncoderCheckResult}"
 	echo "DecoderCheckResult: ${DecoderCheckResult}"
 }
@@ -147,11 +143,6 @@ runGenerateSHA1StringAndCheckDiff()
         diff ${aLayerJSVMYUV[$i]} ${aLayerWelsDecYUV[$i]}    >${DiffInfo} && [ ! -s ${DiffInfo} ] && let "RecJSVMFlag=0"
         diff ${aLayerJSVMYUV[$i]} ${aRecCropYUVFileList[$i]} >${DiffInfo} && [ ! -s ${DiffInfo} ] && let "WelsDecJSVMFlag=0"
     done
-
-	[ -e ${BitStream} ] && BitStreamSHA1String=`openssl sha1  ${BitStream} | awk '{print $2}' `
-
-	[ -e ${InputYUV} ] && InputYUVSHA1String=`openssl sha1  ${InputYUV} | awk '{print $2}' `
-
 }
 
 runRecYUVJSVMDecYUCompare()
@@ -223,9 +214,6 @@ runCheckParameter()
 runOutputCheckInfo()
 {
 	echo "-------------------6. JSVM Check--Check Result"
-	echo ""
-	echo "BitStreamSHA1String    ${BitStreamSHA1String}"
-	echo "InputYUVSHA1String     ${InputYUVSHA1String}"
 	echo ""
 	echo "WelsDecodedFailedFlag  ${WelsDecodedFailedFlag}"
 	echo "FinalCheckFlag         ${FinalCheckFlag}"
