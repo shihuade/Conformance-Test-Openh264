@@ -3,56 +3,35 @@
 #brief:  used bit stream extractor from train's project.
 #        and extract single layer spatial layer's bit stream 
 #
-#usage: run_ExtractMultiLayerBItStream.sh  ${InputBitSteam}  \
-#                         ${SpatialLayerNUm} ${OutputBitStreamName[@]}
+#usage: run_ExtractLayerBitStream.sh  ${InputBitSteam}  \
+#                         ${SpatialLayerNum} ${OutputBitStreamName[@]}
 #
 #
 #date:  5/08/2014 Created
 #*************************************************************************
-#usage: run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNUm} ${InputBitSteam}  ${OutputBitStreamName[@]}
+#usage: run_ExtractLayerBitStream.sh  ${SpatialLayerNum} ${InputBitSteam}  ${OutputBitStreamName[@]}
 runMain()
 {
 	if [  ! $# -eq 6  ]
 	then
 		echo ""
-		echo "usage: run_ExtractMultiLayerBItStream.sh   \${SpatialLayerNUm} \${InputBitSteam} \${OutputBitStreamName[@]} "
-		echo ""
-		exit 1
-	fi
-	local SpatialLayerNUm=$1
-	local InputBitSteam=$2
-	local OutputBitStreamNameL0=$3
-	local OutputBitStreamNameL1=$4
-	local OutputBitStreamNameL2=$5
-	local OutputBitStreamNameL3=$6
-	local Extractor="extractor.app"
-	if [ ! -e ${InputBitSteam}    ]
-	then
-		echo ""
-		echo "input bit stream does not exist!"
-		echo ${Usage}
+		echo "usage: run_ExtractLayerBitStream.sh   \${SpatialLayerNum} \${InputBitSteam} \${OutputBitStreamName[@]} "
 		echo ""
 		exit 1
 	fi
 
-	if [ ${SpatialLayerNUm} -lt 1   -o ${SpatialLayerNUm} -gt 4  ]
-	then
-		echo ""
-		echo "input spatial number is not correct, 1<=SpattialNum<=4"
-		echo ${Usage}
-		echo ""
-		exit 1
-	fi
+	SpatialLayerNum=$1
+	InputBitSteam=$2
+    aOutputBitStreamNameList=( $3 $4 $5 $6)
+	Extractor="extractor.app"
 
-	declare -a aOutputBitStreamNameList
-	aOutputBitStreamNameList=( ${OutputBitStreamNameL0} ${OutputBitStreamNameL1} ${OutputBitStreamNameL2} ${OutputBitStreamNameL3} )
 
 	let "ExtractFlag=0"
-    if [ ${SpatialLayerNUm} -eq 1 ]
+    if [ ${SpatialLayerNum} -eq 1 ]
     then
         mv ${InputBitSteam} ${aOutputBitStreamNameList[0]}
     else
-        for((i=0;i<${SpatialLayerNUm}; i++))
+        for((i=0;i<${SpatialLayerNum}; i++))
         do
             ./${Extractor}  ${InputBitSteam} ${aOutputBitStreamNameList[$i]}  -did $i 2>BitStreamExtract.log
             if [ ! $? -eq 0  -o  ! -e  ${aOutputBitStreamNameList[$i]} -o ! -s  ${aOutputBitStreamNameList[$i]} ]

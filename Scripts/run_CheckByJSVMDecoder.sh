@@ -241,18 +241,18 @@ runMain()
 
     echo "---------------JSVM Check--------------------------------------------"
 	echo "-------------------1. JSVM Check--extract bit stream"
-    if [ ${NumberLayer} -gt 1 ]
+#if [ ${NumberLayer} -gt 1 ]
+# then
+    ./run_ExtractLayerBitStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
+    if [  ! $? -eq 0 ]
     then
-        ./run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
-        if [  ! $? -eq 0 ]
-        then
-            echo -e "\033[31m\n failed to extract  bit stream ! \n\033[0m"
-            EncoderCheckResult="1-Encoder failed!--Failed to extracted bit stream!"
-            DecoderCheckResult="3-Decoder cannot be checked!"
-            runOutputCheckLog >${CheckLogFile}
-            exit 1
-        fi
+        echo -e "\033[31m\n failed to extract  bit stream ! \n\033[0m"
+        EncoderCheckResult="1-Encoder failed!--Failed to extracted bit stream!"
+        DecoderCheckResult="3-Decoder cannot be checked!"
+        runOutputCheckLog >${CheckLogFile}
+        exit 1
     fi
+# fi
 
 	echo "-------------------2. JSVM Check--JSVM Decode Check"
     runJMJSVMDecodedCheck
