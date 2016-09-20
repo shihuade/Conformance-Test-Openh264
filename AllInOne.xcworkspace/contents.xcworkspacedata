@@ -99,13 +99,10 @@
          location = "group:../ConformanceTest/Scripts/run_CheckByJSVMDecoder.sh">
       </FileRef>
       <FileRef
-         location = "group:../ConformanceTest/Scripts/run_CheckEncodedNum.sh">
-      </FileRef>
-      <FileRef
          location = "group:../ConformanceTest/Scripts/run_CropYUV.sh">
       </FileRef>
       <FileRef
-         location = "group:../ConformanceTest/Scripts/run_ExtractMultiLayerBItStream.sh">
+         location = "group:/Users/huashi/project/Openh264/ConformanceTest/Scripts/run_ExtractLayerBitStream.sh">
       </FileRef>
       <FileRef
          location = "group:../ConformanceTest/Scripts/run_GenerateCase.sh">
