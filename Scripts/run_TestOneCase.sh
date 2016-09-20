@@ -201,23 +201,8 @@ runParseCaseCheckLog()
 	done <${CheckLog}
 	
 	#generate SHA1 string for bit stream and input YUV no matter failed or not
-	if [ -e ${BitStreamFile} ]
-	then
-		BitStreamSHA1String=`openssl sha1  ${BitStreamFile}`
-		BitStreamSHA1String=`echo ${BitStreamSHA1String}  | awk '{print $2}' `
+    [ -e ${BitStreamFile} ] && BitStreamSHA1String=`openssl sha1  ${BitStreamFile} | awk '{print $2}' `
 
-		BitStreamMD5String=`openssl md5   ${BitStreamFile}`
-		BitStreamMD5String=`echo ${BitStreamMD5String}  | awk '{print $2}' `
-	fi
-	if [ -e  ${InputYUV} ]
-	then
-		InputYUVSHA1String=`openssl sha1  ${InputYUV} `
-		InputYUVSHA1String=`echo ${InputYUVSHA1String}  | awk '{print $2}' `
-
-		InputYUVMD5String=`openssl md5  ${InputYUV}`
-		InputYUVMD5String=`echo ${InputYUVMD5String}  | awk '{print $2}' `
-	fi
-	
 }
 runOutputCaseCheckStatus()
 {
@@ -297,7 +282,6 @@ runMain()
 	fi
 	#for test sequence info
 	TestCaseInfo=$@
-	CheckLogFile="${TempDataPath}/CaseCheck.log"
 	runGlobalVariableInitial
 	runEncoderCommandInital
 	runParseCaseInfo ${TestCaseInfo}
@@ -329,11 +313,9 @@ runMain()
 
 	#get FPS info from encoder log
 	runParseEncoderLog
-    echo "FPS is $FPS"
 	runParseCaseCheckLog ${CheckLogFile}
 	runOutputCaseCheckStatus
-    echo "main end"
-#return 0
+    return 0
 }
 
 TestCaseExample()
@@ -348,6 +330,7 @@ TestCaseExample()
     mkdir -p ${IssueDataPath} ${TempDataPath}
     TestYUVName="horse_riding_640x512_30.yuv"
     InputYUV="./horse_riding_640x512_30.yuv"
+    CheckLogFile="${TempDataPath}/CaseCheck.log"
     EncoderLog="${TempDataPath}/encoder.log"
     AssignedCasesPassStatusFile="Example_TestOneCase_AssignedCasesPassStatusFile.csv"
     UnPassedCasesFile="Example_TestOneCase_UnPassedCasesFile.csv"
@@ -381,6 +364,8 @@ TestCaseExample()
     RecCropYUV2="${TempDataPath}/${TestYUVName}_rec_2_cropped.yuv"
     RecCropYUV3="${TempDataPath}/${TestYUVName}_rec_3_cropped.yuv"
 
+   [ -e ${InputYUV} ] && InputYUVSHA1String=`openssl sha1  ${InputYUV} | awk '{print $2}' `
+
     SubCaseIndex=0
     CaseIndex=12
 
@@ -397,6 +382,7 @@ TestCaseExample()
     export CheckLogFile
 
     export InputYUV
+    export InputYUVSHA1String
     export TestYUVName
     export NumberLayer
     export EncodedFrmNum
@@ -430,7 +416,7 @@ TestCaseExample()
     CaseInfo="0, 65 , 1, 1, 640, 512, 640,512,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
     date >Example_Test.log
     StartTime=`date`
-    for((k=0; k<2; k++))
+    for((k=0; k<1; k++))
     do
        echo -e "\n example index is $k \n"
        runMain  ${CaseInfo}
