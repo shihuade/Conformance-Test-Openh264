@@ -14,18 +14,10 @@ runGlobalVariableInitial()
 	declare -a aEncoderCommandSet
 	declare -a aEncoderCommandName
 	declare -a aEncoderCommandValue
-	declare -a aInputYUVSizeLayer
-	declare -a aRecYUVFileList
-	declare -a aRecCropYUVFileList
-	declare -a aEncodedPicW
-	declare -a aEncodedPicH
 
 	BitStreamFile=""
-
-
 	FPS="NULL"
 
-	let "EncoderNum=-1"
 	let "SpatailLayerNum=1"
 	let "RCMode=0"
     let "MultiThreadFlag=0"
@@ -66,42 +58,24 @@ runEncoderCommandInital()
 	do
 		aEncoderCommandValue[$i]=0
 	done
+
+    BitStreamFile=${TempDataPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_CaseIndex_${CaseIndex}_openh264.264
 }
-#***********************************************************
-#call by  runAllCaseTest
-# parse case info --encoder preprocess
+
 #usage  runGetaEncoderCommandValue $CaseData
 runParseCaseInfo()
 {
     local CaseData=$@
 	aEncoderCommandValue=(`echo $CaseData |awk 'BEGIN {FS="[,\r]"} {for(i=1;i<=NF;i++) printf(" %s",$i)} ' `)
-}
 
-runSetCaseGlobalParam()
-{
-    BitStreamFile=${TempDataPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_CaseIndex_${CaseIndex}_openh264.264
-	let "EncoderNum      = ${aEncoderCommandValue[1]}"
-	let "SpatailLayerNum = ${aEncoderCommandValue[2]}"
-	let "RCMode          = ${aEncoderCommandValue[22]}"
+    let "SpatailLayerNum = ${aEncoderCommandValue[2]}"
+    let "RCMode          = ${aEncoderCommandValue[22]}"
     let "MultiThreadFlag = ${aEncoderCommandValue[38]}"
-
-	for((i=0;i<4;i++))
-	do
-		aRecYUVFileList[$i]="${TempDataPath}/${TestYUVName}_rec${i}.yuv"
-		aRecCropYUVFileList[$i]="${TempDataPath}/${TestYUVName}_rec${i}_cropped.yuv"
-	done
-
-	aInputYUVSizeLayer=( ${YUVSizeLayer0} ${YUVSizeLayer1} ${YUVSizeLayer2} ${YUVSizeLayer3} )
-
-	aEncodedPicW=( ${aEncoderCommandValue[6]} ${aEncoderCommandValue[8]} ${aEncoderCommandValue[10]} ${aEncoderCommandValue[12]})
-	aEncodedPicH=( ${aEncoderCommandValue[7]} ${aEncoderCommandValue[9]} ${aEncoderCommandValue[11]} ${aEncoderCommandValue[13]})
-
 }
-#call by  runAllCaseTest
+
 #usage  runEncodeOneCase
 runEncodeOneCase()
 {
-
 	local ParamCommand=""
 	for ((i=4; i<${NumParameter}; i++))
 	do
@@ -125,25 +99,16 @@ runEncodeOneCase()
 				-drec 0 ${RecYUVFile0} -drec 1 ${RecYUVFile1} \
 				-drec 2 ${RecYUVFile2} -drec 3 ${RecYUVFile3}  -org ${InputYUV}>${EncoderLog}
 
-	if [ $? -eq 0  ]
-	then
-		let "EncoderFlag=0"
-	else
-		let "EncoderFlag=1"
-	fi
-	
+    [ ! $? -eq 0  ] && let "EncoderFlag=1"
+
 	#delete the core down file as core down files for disk space limitation
 	for file in  ./core*
 	do
-		if [ -e ${file} ]
-		then
-			./run_SafeDelete.sh  ${file}
-		fi
+		[ -e ${file} ] && ./run_SafeDelete.sh  ${file}
 	done
 	
 	cat  ${EncoderLog}
 	return 0
-
 }
 
 runParseEncoderLog()
@@ -169,34 +134,31 @@ runParseCaseCheckLog()
 		return 1
 	fi
 
-	while read line
-	do
-		if [[  "$line" =~ ^EncoderCheckResult  ]]
-		then
-			EncoderCheckResult=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		elif [[ "$line" =~ ^DecoderCheckResult ]]
-		then
-			DecoderCheckResult=`echo $line | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-		fi
-	done <${CheckLogFile}
+    #case check log looks like:
+    #*********************************
+    #EncoderPassedNum:   1
+    #EncoderUnPassedNum: 0
+    #DecoderPassedNum:   1
+    #DecoderUpPassedNum: 0
+    #DecoderUnCheckNum:  0
+    #EncoderCheckResult: 0-Encoder passed!
+    #DecoderCheckResult: 0-Decoder passed!
+    #*********************************
+    EncoderCheckResult=`cat ${EncoderLog} | grep "EncoderCheckResult" | awk 'BEGIN {FS="[:\r]"} {print $2}'`
+    DecoderCheckResult=`cat ${EncoderLog} | grep "DecoderCheckResult" | awk 'BEGIN {FS="[:\r]"} {print $2}'`
 	
 	#generate SHA1 string for bit stream
-    echo "BitStreamFile is $BitStreamFile"
    [ -e ${BitStreamFile} ] && BitStreamSHA1String=`openssl sha1  ${BitStreamFile} | awk '{print $2}' `
 
 }
+
 runOutputCaseCheckStatus()
 {
 	#date info
 	date
 	local TestTime=`date`
     SHA1TableData="${BitStreamSHA1String}, ${InputYUVSHA1String}, ${TestCaseInfo}"
-    TestCaseStatusInfo="${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${SHA1TableData}, ${TestTime},${EncoderCommand}"
-    echo "line writed to SHA1 talbe is:"
-    echo "${SHA1TableData}"
-
-    echo "line writed to AllCases file is:"
-    echo " ${TestCaseStatusInfo} "
+    TestCaseStatusInfo="${TestTime}, ${EncoderCheckResult},${DecoderCheckResult}, ${FPS}, ${SHA1TableData},${EncoderCommand}"
 
     echo " ${SHA1TableData}">>${AssignedCasesSHATableFile}
     echo " ${TestCaseStatusInfo}">>${AssignedCasesPassStatusFile}
@@ -206,30 +168,14 @@ runOutputCaseCheckStatus()
 		echo "${TestCaseStatusInfo}">>${UnPassedCasesFile}
 	fi
 }
-runOutputCaseInfo()
-{
-	echo ""
-	echo "EncoderNum ${EncoderNum}"
-	echo "EncoderNum  ${EncoderNum}"
-	echo "SpatailLayerNum:  ${SpatailLayerNum}"
-	echo "RCMode   ${RCMode}"
 
-	for((i=0;i<4;i++))
-	do
-		echo "aInputYUVSizeLayer $i : ${aInputYUVSizeLayer[$i]}"
-		echo "PicW x PicH           : ${aEncodedPicW[$i]}x${aEncodedPicH[$i]}"
-	done
-
-}
 runBasicCheck()
 {
 	./run_CheckBasicCheck.sh  ${EncoderFlag}  ${SpatailLayerNum} ${RCMode}
-	#copy bit stream file to ./issue folder;
     if [ ! $? -eq 0  ]
     then
-        #currently, only copy when multi thread is enable
+        #currently, only copy multi thread faled cases' bit stream
         [ -e ${BitStreamFile}  ] && [ ${MultiThreadFlag} -gt 1 ] && cp ${BitStreamFile}  ${IssueDataPath}
-
 		return 1
     fi
     return 0
@@ -238,7 +184,6 @@ runBasicCheck()
 runJSVMCheck()
 {
 	./run_CheckByJSVMDecoder.sh ${BitStreamFile}  ${SpatailLayerNum}
-	#copy bit stream file to ./issue folder
 	if [ ! $? -eq 0 ]
 	then
         #[ -e ${BitStreamFile}  ] && cp ${BitStreamFile}  ${IssueDataPath}
@@ -261,8 +206,8 @@ runMain()
 	runGlobalVariableInitial
 	runEncoderCommandInital
 	runParseCaseInfo ${TestCaseInfo}
-	runSetCaseGlobalParam
-	runEncodeOneCase
+
+    runEncodeOneCase
 
 	echo ""
 	let "BasicCheckFlag=0"
@@ -289,6 +234,7 @@ runMain()
 
 	#get FPS info from encoder log
 	runParseEncoderLog
+    echo "FPS is $FPS"
 	runParseCaseCheckLog ${CheckLogFile}
 	runOutputCaseCheckStatus
     return 0
