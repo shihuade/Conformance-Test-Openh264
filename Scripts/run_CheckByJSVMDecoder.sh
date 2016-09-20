@@ -29,9 +29,6 @@ runIntialGlobalParam()
 	let "FinalCheckFlag=0"
 	let "RecJSVMFlag=0"
 	let "WelsDecJSVMFlag=0"
-	let "SpatialLayerNum=0"
-
-	BitStream=""
 
 	BitStreamSHA1String="NULL"
 	InputYUVSHA1String="NULL"
@@ -50,6 +47,7 @@ runSetGlobalParam()
 		aLayerWelsDecYUV[$i]="${TempDataPath}/Dec_WelsDec_${i}.yuv"
 	done
 
+    aRecCropYUVFileList=($RecCropYUV0 $RecCropYUV1 $RecCropYUV2 $RecCropYUV3)
 	aRecYUVSHA1String=( NULL NULL NULL NULL )
 	aWelsDecYUVSHA1String=( NULL NULL NULL NULL )
 	aJSVMYUVSHA1String=( NULL NULL NULL NULL )
@@ -74,6 +72,7 @@ runOutputCheckLog()
 	echo "EncoderCheckResult: ${EncoderCheckResult}"
 	echo "DecoderCheckResult: ${DecoderCheckResult}"
 }
+
 runJSVMDecodedFailedCheck()
 {
 	for((i=0; i<${SpatialLayerNum}; i++))
@@ -97,7 +96,6 @@ runJMDecodedFailedCheck()
     do
         echo " JM decoding, layer $i....................."
         ./${JMDecoder}  -p InputFile="${aLayerBitStream[$i]}" -p OutputFile="${aLayerJSVMYUV[$i]}"
-
         if [ ! $? -eq 0  -o  ! -e ${aLayerJSVMYUV[$i]} ]
         then
             echo -e "\033[31m \n JM decoded failed!  \n\033[0m"
@@ -113,6 +111,7 @@ runWelsDecodedFailedCheck()
 	do
 		echo " WelsDecoder decoding, layer $i..................... "
 		./${WelsDecoder}  ${aLayerBitStream[$i]}  ${aLayerWelsDecYUV[$i]}
+
 		if [ ! $? -eq 0  -o  ! -e ${aLayerWelsDecYUV[$i]} ]
 		then
 			echo -e "\033[31m \n WelsDecoder decoded failed! \n\033[0m"
@@ -131,7 +130,6 @@ runGenerateSHA1String()
 		[ -e ${aLayerWelsDecYUV[$i]} ] && aWelsDecYUVSHA1String[$i]=`openssl sha1  ${aLayerWelsDecYUV[$i]} | awk '{print $2}' `
 
         [ -e ${aRecCropYUVFileList[$i]} ]     && aRecYUVSHA1String[$i]=`openssl sha1  ${aRecCropYUVFileList[$i]} | awk '{print $2}' `
-
 	done
 
 	[ -e ${BitStream} ] && BitStreamSHA1String=`openssl sha1  ${BitStream} | awk '{print $2}' `
@@ -211,47 +209,11 @@ runCheckParameter()
 
 	if [ ! -e ${BitStream}  ]
 	then
-		echo ""
-		echo -e "\033[31m bit stream  ${BitStream} does not exist! \033[0m"
-		echo ""
-		return 1
-	fi
-
-	if [ ${SpatialLayerNum} -lt 1 -o  ${SpatialLayerNum} -gt 4 ]
-	then
-		echo ""
-		echo -e "\033[31m  SpatialNum is not correct, should be 1<=SpatialNum<=4 \033[0m"
-		echo ""
-		return 1
-	fi
-
-	if [ ! -d ${TempDataPath}  ]
-	then
-		echo ""
-		echo -e "\033[31m TempDataPath  ${TempDataPath} does not exist !\033[0m"
-		echo ""
-		return 1
-	fi
-
-	for((i=0; i<${SpatialLayerNum}; i++))
-	do
-		if [ ! -e ${aRecCropYUVFileList[$i]}  ]
-		then
-			echo ""
-			echo -e "\033[31m RecYUV ${aRecCropYUVFileList[$i]}  does not exist! \033[0m"
-			echo ""
-			return 1
-		fi
-
-	done
-
-
-	if [ ! -e ${InputYUV}  ]
-	then
-		echo ""
-		echo -e "\033[31m  InputYUV ${InputYUV} does not exist!\033[0m"
-		echo ""
-		return 1
+        echo -e "\033[31m\n bit stream  ${BitStream} does not exist! \n\033[0m"
+        EncoderCheckResult="1-Encoder failed!--bit stream  ${BitStream} does not exist!!"
+        DecoderCheckResult="3-Decoder cannot be checked!"
+        runOutputCheckLog >${CheckLogFile}
+        exit 1
 	fi
 
 	return 0
@@ -276,34 +238,10 @@ runOutputCheckInfo()
 
 runMain()
 {
-	if [  ! $# -eq 2  ]
-	then
-		echo ""
-		echo -e "\033[31m Usage: run_CheckByJSVMDecoder.sh   \${BitStream}  \${SpatialNum}  \033[0m"
-		echo ""
-		exit 1
-	fi
-
-	runIntialGlobalParam
-
-	BitStream=$1
-	let "SpatialLayerNum=$2"
-    aRecCropYUVFileList=($RecCropYUV0 $RecCropYUV1 $RecCropYUV2 $RecCropYUV3)
+    runIntialGlobalParam
+    runSetGlobalParam
 
     echo "---------------JSVM Check--------------------------------------------"
-	runCheckParameter
-	if [  ! $? -eq 0 ]
-	then
-		echo ""
-		echo -e "\033[31m run_CheckByJSVMDecoder.sh parameters are not correct,please double check! \033[0m"
-		echo ""
-		EncoderCheckResult="1-Encoder failed!--Parameters for JSVM check are not correct!"
-		DecoderCheckResult="3-Decoder cannot be checked!"
-		runOutputCheckLog >${CheckLogFile}
-		exit 1
-	fi
-
-	runSetGlobalParam
 	echo "-------------------1. JSVM Check--extract bit stream"
     date
     if [ ${NumberLayer} -gt 1 ]
@@ -344,7 +282,7 @@ runMain()
 	#check RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV
 	echo "-------------------3. JSVM Check--WelsDecoder Decode Check"
     date
-	runWelsDecodedFailedCheck  >${TempDataPath}/WelsDecTemp.log
+    runWelsDecodedFailedCheck  >${TempDataPath}/WelsDecTemp.log
 
 	runGenerateSHA1String
 	echo "-------------------4. JSVM Check--RecYUV-JSVMDecYUV-WelsDecYUV Comparison"
@@ -368,20 +306,6 @@ runMain()
 	fi
 
 }
-runTestExample()
-{
-    #test input paramter, and part of these params have been expored in run_TestOneCase.sh
-    CheckLogFile="TempData/CaseCheck.log"
-    TempDataPath="TempData"
-    InputYUV="./horse_riding_640x512_30.yuv"
-    BitStream="TempData/horse_riding_640x512_30.yuv_SubCaseIndex_0_CaseIndex_12wels.264"
-    let "SpatialLayerNum=1"
-
-    aRecCropYUVFileList[0]="TempData/horse_riding_640x512_30.yuv_rec0.yuv"
-    aRecCropYUVFileList[1]="TempData/horse_riding_640x512_30.yuv_rec1.yuv"
-    aRecCropYUVFileList[2]="TempData/horse_riding_640x512_30.yuv_rec2.yuv"
-    aRecCropYUVFileList[3]="TempData/horse_riding_640x512_30.yuv_rec3.yuv"
-}
 
 #*****************************************************************
 echo ""
@@ -391,6 +315,17 @@ echo "     input parameters are:"
 echo "        $0 $@"
 echo "*********************************************************"
 echo ""
-runMain $@
+if [  ! $# -eq 2  ]
+then
+    echo ""
+    echo -e "\033[31m Usage: run_CheckByJSVMDecoder.sh   \${BitStream}  \${SpatialNum}  \033[0m"
+    echo ""
+    exit 1
+fi
+
+BitStream=$1
+let "SpatialLayerNum=$2"
+
+runMain
 
 
