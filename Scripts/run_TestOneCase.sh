@@ -25,7 +25,6 @@ runGlobalVariableInitial()
 	BitStreamSHA1String="NULL"
 	EncoderCheckResult="NULL"
 	DecoderCheckResult="NULL"
-	EncoderCommand="NULL"
 
 	let "EncoderFlag=0"
 }
@@ -77,28 +76,18 @@ runParseCaseInfo()
 runEncodeOneCase()
 {
 	local ParamCommand=""
-	for ((i=4; i<${NumParameter}; i++))
+	for ((i=0; i<${NumParameter}; i++))
 	do
-		ParamCommand="${ParamCommand} ${aEncoderCommandSet[$i]}  ${aEncoderCommandValue[$i]} "
+		EncoderCommand="${EncoderCommand} ${aEncoderCommandSet[$i]}  ${aEncoderCommandValue[$i]} "
 	done
 
-
-	ParamCommand="${aEncoderCommandSet[0]} ${aEncoderCommandValue[0]} ${aEncoderCommandSet[1]}  ${aEncoderCommandValue[1]} \
-				 ${aEncoderCommandSet[2]}  ${aEncoderCommandValue[2]} \
-				-lconfig 0 layer0.cfg -lconfig 1 layer1.cfg -lconfig 2 layer2.cfg  -lconfig 3 layer3.cfg  \
-				${aEncoderCommandSet[3]}  ${aEncoderCommandValue[3]}  \
-				${ParamCommand}"
-	echo ""
-	echo "---------------Encode One Case-------------------------------------------"
-	echo "case line is :"
-	EncoderCommand="./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} \
-				-drec 0 ${RecYUVFile0} -drec 1 ${RecYUVFile1} \
-				-drec 2 ${RecYUVFile2} -drec 3 ${RecYUVFile3}  -org ${InputYUV}"
-	echo ${EncoderCommand}
-	./h264enc  welsenc.cfg    ${ParamCommand} -bf   ${BitStreamFile} \
-				-drec 0 ${RecYUVFile0} -drec 1 ${RecYUVFile1} \
-				-drec 2 ${RecYUVFile2} -drec 3 ${RecYUVFile3}  -org ${InputYUV}>${EncoderLog}
-
+	EncoderCommand="./h264enc  welsenc.cfg  -lconfig 0 layer0.cfg -lconfig 1 layer1.cfg -lconfig 2 layer2.cfg  -lconfig 3 layer3.cfg \
+                    ${EncoderCommand} -bf ${BitStreamFile}  -org ${InputYUV} \
+                    -drec 0 ${RecYUVFile0} -drec 1 ${RecYUVFile1} -drec 2 ${RecYUVFile2} -drec 3 ${RecYUVFile3}"
+    echo -e "\n---------------Encode One Case-------------------------------------------\n"
+    echo "Encoded command line is:"
+    echo ${EncoderCommand}
+    ${EncoderCommand} >${EncoderLog}
     [ ! $? -eq 0  ] && let "EncoderFlag=1"
 
 	#delete the core down file as core down files for disk space limitation
