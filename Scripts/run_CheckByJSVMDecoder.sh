@@ -121,6 +121,7 @@ runWelsDecodedFailedCheck()
 	done
 	return 0
 }
+
 runGenerateSHA1String()
 {
 	for((i=0; i<${SpatialLayerNum}; i++))
@@ -129,7 +130,7 @@ runGenerateSHA1String()
 
 		[ -e ${aLayerWelsDecYUV[$i]} ] && aWelsDecYUVSHA1String[$i]=`openssl sha1  ${aLayerWelsDecYUV[$i]} | awk '{print $2}' `
 
-        [ -e ${aRecCropYUVFileList[$i]} ]     && aRecYUVSHA1String[$i]=`openssl sha1  ${aRecCropYUVFileList[$i]} | awk '{print $2}' `
+        [ -e ${aRecCropYUVFileList[$i]} ]  && aRecYUVSHA1String[$i]=`openssl sha1  ${aRecCropYUVFileList[$i]} | awk '{print $2}' `
 	done
 
 	[ -e ${BitStream} ] && BitStreamSHA1String=`openssl sha1  ${BitStream} | awk '{print $2}' `
@@ -220,7 +221,7 @@ runCheckParameter()
 }
 runOutputCheckInfo()
 {
-	echo "-------------------5. JSVM Check--Check Result"
+	echo "-------------------6. JSVM Check--Check Result"
 	echo ""
 	echo "aRecYUVSHA1String      ${aRecYUVSHA1String[@]}"
 	echo "aWelsDecYUVSHA1String  ${aWelsDecYUVSHA1String[@]}"
@@ -243,7 +244,6 @@ runMain()
 
     echo "---------------JSVM Check--------------------------------------------"
 	echo "-------------------1. JSVM Check--extract bit stream"
-    date
     if [ ${NumberLayer} -gt 1 ]
     then
         ./run_ExtractMultiLayerBItStream.sh  ${SpatialLayerNum} ${BitStream}  ${aLayerBitStream[@]}
@@ -260,12 +260,11 @@ runMain()
     fi
 
 	echo "-------------------2. JSVM Check--JSVM Decode Check"
-    date
     if [  "${TestPlatform}" = "Mac" ]
     then
-        runJMDecodedFailedCheck
+        runJMDecodedFailedCheck   >${TempDataPath}/JM_Decode_Temp.log
     else
-	    runJSVMDecodedFailedCheck
+	    runJSVMDecodedFailedCheck >${TempDataPath}/JSVM_Decode_Temp.log
     fi
 
 	if [  ! $? -eq 0 ]
@@ -281,27 +280,24 @@ runMain()
 
 	#check RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV
 	echo "-------------------3. JSVM Check--WelsDecoder Decode Check"
-    date
     runWelsDecodedFailedCheck  >${TempDataPath}/WelsDecTemp.log
 
+    echo "-------------------4. Generate SHA1"
 	runGenerateSHA1String
-	echo "-------------------4. JSVM Check--RecYUV-JSVMDecYUV-WelsDecYUV Comparison"
-    date
+
+	echo "-------------------5. JSVM Check--RecYUV-JSVMDecYUV-WelsDecYUV Comparison"
 	runRecYUVJSVMDecYUCompare
-	if [ ${FinalCheckFlag} -eq 0 ]
+
+    runOutputCheckLog >${CheckLogFile}
+    runOutputCheckInfo
+
+
+    if [ ${FinalCheckFlag} -eq 0 ]
 	then
-		echo ""
-		echo -e "\033[32m  Passed!:RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV \033[0m"
-		echo ""
-		runOutputCheckLog >${CheckLogFile}
-		runOutputCheckInfo
+		echo -e "\033[32m\n  Passed!:RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV \n\033[0m"
 		return 0
 	else
-		echo ""
-		echo -e "\033[31m Failed!:RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV \033[0m"
-		echo ""
-		runOutputCheckLog >${CheckLogFile}
-		runOutputCheckInfo
+		echo -e "\033[31m\n Failed!:RecYUV--JSVMDecYUV WelsDecYUV--JSVMDecYUV \n\033[0m"
 		return 1
 	fi
 
@@ -313,6 +309,7 @@ echo "*********************************************************"
 echo "     call bash file is $0"
 echo "     input parameters are:"
 echo "        $0 $@"
+date
 echo "*********************************************************"
 echo ""
 if [  ! $# -eq 2  ]
