@@ -75,7 +75,7 @@ runParseCaseInfo()
 #usage  runEncodeOneCase
 runEncodeOneCase()
 {
-	local ParamCommand=""
+	EncoderCommand=""
 	for ((i=0; i<${NumParameter}; i++))
 	do
 		EncoderCommand="${EncoderCommand} ${aEncoderCommandSet[$i]}  ${aEncoderCommandValue[$i]} "
@@ -114,7 +114,6 @@ runParseEncoderLog()
     FPS=(`cat ${EncoderLog} | grep "FPS" | awk '{print $2}' `)
 }
 
-#usage runParseCaseCheckLog  ${CheckLogFile}
 runParseCaseCheckLog()
 {
 	if [ ! -e ${CheckLogFile}  ]
@@ -216,7 +215,7 @@ runMain()
 	then
 		echo  -e "\033[31m  case failed! \033[0m"
 		let "JSVMCheckFlag=1"
-		runParseCaseCheckLog ${CheckLogFile}
+		runParseCaseCheckLog
 		runOutputCaseCheckStatus
 		exit 1
 	fi
@@ -247,23 +246,10 @@ TestCaseExample()
     UnPassedCasesFile="Example_TestOneCase_UnPassedCasesFile.csv"
     AssignedCasesSHATableFile="Example_TestOneCase_AssignedCasesSHATableFile.csv"
 
-    EncodedFrmNum=65
-    NumberLayer=1
-
-    PicW0=640
-    PicW1=0
-    PicW2=0
-    PicW3=0
-
-    PicH0=512
-    PicH1=0
-    PicH2=0
-    PicH3=0
-
-    YUVSizeLayer0=31948800
-    YUVSizeLayer1=0
-    YUVSizeLayer2=0
-    YUVSizeLayer3=0
+    EncodedFrmNum=65;NumberLayer=1
+    PicW0=640;PicW1=0;PicW2=0;PicW3=0
+    PicH0=512;PicH1=0;PicH2=0;PicH3=0
+    YUVSizeLayer0=31948800;YUVSizeLayer1=0;YUVSizeLayer2=0;YUVSizeLayer3=0
 
     RecYUVFile0="${TempDataPath}/${TestYUVName}_rec_0.yuv"
     RecYUVFile1="${TempDataPath}/${TestYUVName}_rec_1.yuv"
@@ -281,53 +267,22 @@ TestCaseExample()
     CaseIndex=12
 
     #export variables have been export in run_TestAssignedCases.sh
-    export SubCaseIndex
-    export CaseIndex
+    export SubCaseIndex; export CaseIndex
     export TestPlatform
-    export JMDecoder
-    export JSVMDecoder
-    export WelsDecoder
-    export IssueDataPath
-    export TempDataPath
-    export EncoderLog
-    export CheckLogFile
-
-    export InputYUV
-    export InputYUVSHA1String
-    export TestYUVName
-    export NumberLayer
-    export EncodedFrmNum
-    export PicW0
-    export PicW1
-    export PicW2
-    export PicW3
-
-    export PicH0
-    export PicH1
-    export PicH2
-    export PicH3
-
-    export YUVSizeLayer0
-    export YUVSizeLayer1
-    export YUVSizeLayer2
-    export YUVSizeLayer3
-
-    export RecYUVFile0
-    export RecYUVFile1
-    export RecYUVFile2
-    export RecYUVFile3
-
-    export RecCropYUV0
-    export RecCropYUV1
-    export RecCropYUV2
-    export RecCropYUV3
-
-
+    export JMDecoder;    export JSVMDecoder;export WelsDecoder
+    export IssueDataPath;export TempDataPath
+    export EncoderLog;   export CheckLogFile
+    export InputYUV;     export InputYUVSHA1String;export TestYUVName
+    export NumberLayer;  export EncodedFrmNum
+    export PicW0;export PicW1;export PicW2;export PicW3
+    export PicH0;export PicH1;export PicH2;export PicH3
+    export YUVSizeLayer0;export YUVSizeLayer1;export YUVSizeLayer2;export YUVSizeLayer3
+    export RecYUVFile0;  export RecYUVFile1;  export RecYUVFile2;  export RecYUVFile3
+    export RecCropYUV0;  export RecCropYUV1;  export RecCropYUV2;  export RecCropYUV3
 
     CaseInfo="0, 65 , 1, 1, 640, 512, 640,512,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
-    date >Example_Test.log
     StartTime=`date`
-    for((k=0; k<1; k++))
+    for((k=0; k<10; k++))
     do
        echo -e "\n example index is $k \n"
        runMain  ${CaseInfo}
