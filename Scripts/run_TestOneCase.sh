@@ -240,6 +240,20 @@ runMain()
     return 0
 }
 
+runExampleExport()
+{
+    #export variables have been export in run_TestAssignedCases.sh
+    export SubCaseIndex; export CaseIndex;export EncodedFrmNum
+    export TestPlatform
+    export JMDecoder;    export JSVMDecoder;export WelsDecoder
+    export IssueDataPath;export TempDataPath
+    export EncoderLog;   export CheckLogFile
+    export InputYUV;     export InputYUVSHA1String;export TestYUVName
+    export YUVSizeLayer0;export YUVSizeLayer1;export YUVSizeLayer2;export YUVSizeLayer3
+    export RecYUVFile0;  export RecYUVFile1;  export RecYUVFile2;  export RecYUVFile3
+    export RecCropYUV0;  export RecCropYUV1;  export RecCropYUV2;  export RecCropYUV3
+}
+
 TestCaseExample()
 {
     TestPlatform="Mac"
@@ -278,17 +292,7 @@ TestCaseExample()
     SubCaseIndex=0
     CaseIndex=12
 
-    #export variables have been export in run_TestAssignedCases.sh
-    export SubCaseIndex; export CaseIndex;export EncodedFrmNum
-    export TestPlatform
-    export JMDecoder;    export JSVMDecoder;export WelsDecoder
-    export IssueDataPath;export TempDataPath
-    export EncoderLog;   export CheckLogFile
-    export InputYUV;     export InputYUVSHA1String;export TestYUVName
-    export YUVSizeLayer0;export YUVSizeLayer1;export YUVSizeLayer2;export YUVSizeLayer3
-    export RecYUVFile0;  export RecYUVFile1;  export RecYUVFile2;  export RecYUVFile3
-    export RecCropYUV0;  export RecCropYUV1;  export RecCropYUV2;  export RecCropYUV3
-
+    runExampleExport
     CaseInfo="0, 65 , 1, 1, 640, 512, 640,512,0,0,0,0,0,0, 10, 10,10,10, 26, 26, 26, 26, -1, 0, 400.00,400.00,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0"
     StartTime=`date`
     for((k=0; k<10; k++))
@@ -301,7 +305,12 @@ TestCaseExample()
     echo "EndTime  : ${EndTime}"
 }
 
-Temp(){
+#************************************************************************************************************************
+#  enable TestCaseExample for one case test
+#TestCaseExample
+#************************************************************************************************************************
+#main entry for the call from run_TestAssignedCases.sh
+
 CaseInfo=$@
 echo ""
 echo "*********************************************************"
@@ -310,8 +319,7 @@ echo "     input parameters are:"
 echo "        $0 $@"
 echo "*********************************************************"
 echo ""
+
 runMain  ${CaseInfo}
+#************************************************************************************************************************
 
-}
-
-TestCaseExample
