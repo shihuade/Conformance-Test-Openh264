@@ -42,14 +42,28 @@ runGlobalVariableInitial()
     aLayerHeight=(0 0 0 0)
     aYUVSize=(0 0 0 0)
 }
-runCheckEncodedFrameNum()
+
+runGetOriginYUVInfo()
 {
+    OriginYUVName=`echo ${OriginYUV} | awk 'BEGIN  {FS="/"} {print $NF}'`
+    aYUVInfo=(`./run_ParseYUVInfo.sh  ${OriginYUVName}`)
+
+    OriginWidth=${aYUVInfo[0]}
+    OriginHeight=${aYUVInfo[1]}
+    if [  ${OriginWidth} -eq 0  -o ${OriginHeight} -eq 0 ]
+    then
+        echo "origin YUV info is not right, PicW or PicH equal to 0 "
+        exit 1
+    fi
 
     OriginYUVSize=`ls -l ${OriginYUV} | awk '{print $5}'`
     #size in bytes
     let "FrameSize = $OriginWidth * ${OriginHeight} * 12 / 8"
     let "MaxFrameNum=${OriginYUVSize}/ $FrameSize"
+}
 
+runCheckEncodedFrameNum()
+{
     if [ ${EncodedFrmNum} -gt ${MaxFrameNum} ]
     then
         echo "EncodedFrmNum(${EncodedFrmNum}) in test is larger than MaxFrameNum(${MaxFrameNum})"
@@ -58,25 +72,15 @@ runCheckEncodedFrameNum()
     fi
 }
 
-#usage: runSetLayerInfo
 runSetLayerInfo()
 {
-	OriginYUVName=`echo ${OriginYUV} | awk 'BEGIN  {FS="/"} {print $NF}'`
-	aYUVInfo=(`./run_ParseYUVInfo.sh  ${OriginYUVName}`)
-
-    OriginWidth=${aYUVInfo[0]}
-	OriginHeight=${aYUVInfo[1]}
-	if [  ${OriginWidth} -eq 0  -o ${OriginHeight} -eq 0 ]
-	then
-		echo "origin YUV info is not right, PicW or PicH equal to 0 "
-		exit 1
-	fi
-
     NumberLayer=`./run_GetSpatialLayerNum.sh ${OriginWidth} ${OriginHeight}`
 
     #layer resolution for laye0,layer1,layer2,layer3 is the same with case setting,
     #please refer to run_GenerateCase.sh
-    #eg. OriginWidth=1280  then aLayerWidth=(1280 640 320 160)
+    #eg. Multiple16Flag=0; OriginHeight=720  then aLayerHeight=(720  360 180 90)
+    #    Multiple16Flag=1; OriginHeight=720  then aLayerHeight=(720 352 176 80)
+
     let "factor = 1"
     for((i=0;i<${NumberLayer};i++))
     do
@@ -106,12 +110,6 @@ runSetLayerInfo()
         # eg. resolution=1080*720,encoded_frm_num=30
         # then, encoded_layer_size=1080*720*12bit/piexl*30Frms / 8 (Bytes)
         let "aYUVSize[i] = ${aLayerWidth[$i]} * ${aLayerHeight[$i]} * ${EncodedFrmNum} * 12 / 8"
-        #echo "i=$i: aLayerWidth    ${aLayerWidth[$i]}"
-        #echo "i=$i: aLayerHeight   ${aLayerHeight[$i]}"
-        #echo "i=$i: aYUVSize       ${aYUVSize[$i]}"
-        #echo "i=$i: EncodedFrmNum  ${EncodedFrmNum}"
-
-
 	done
 }
 
@@ -121,17 +119,10 @@ runPrepareInputYUV()
     [ ! ${OriginWidth}  -eq ${aLayerWidth[0]}  ] &&  let "CropYUVFlag = 1"
     [ ! ${OriginHeight} -eq ${aLayerHeight[0]} ] &&  let "CropYUVFlag = 1"
 
-    #echo " OriginHeight ${OriginWidth} aLayerWidth ${aLayerWidth[0]} "
-    #echo " OriginHeight ${OriginHeight} aLayerHeight ${aLayerHeight[0]} "
-    #echo " CropYUVFlag is $CropYUVFlag"
-    #echo " NumberLayer is ${NumberLayer}"
     if [ ${CropYUVFlag} -eq 1 ]
     then
         #rename new input yuv file due to resolution change
         NewInputYUVName=`../Tools/run_RenameYUVfileWithNewResolution.sh ${OriginYUVName} ${aLayerWidth[0]} ${aLayerHeight[0]}`
-        #echo "NewInputYUVName is ${NewInputYUVName}"
-        #echo "OriginYUVName   is ${OriginYUVName}"
-        #echo "OutPutDir       is ${OutPutDir}"
         if [ -e ${OutPutDir}/${NewInputYUVName} ]
         then
             ./run_SafeDelete.sh  ${OutPutDir}/${NewInputYUVName}
@@ -159,15 +150,36 @@ runPrepareInputYUV()
 #usage:runOutputPrepareLog
 runOutputPrepareLog()
 {
-	echo "">${PrepareLog}
-    echo "InputYUV:      ${NewInputYUVName}">>${PrepareLog}
-    echo "NumberLayer:   ${NumberLayer}">>${PrepareLog}
-    echo "EncodedFrmNum: ${EncodedFrmNum}">>${PrepareLog}
+    #log looks like:
+    #*****************************************************
+    #InputYUV:      horse_riding_640x512_30.yuv
+    #OriginYUVSize: 314572800
+    #MaxFrameNum  : 640
+    #NumberLayer:   3
+    #EncodedFrmNum: 640
+    #LayerPicW_0:   640
+    #LayerPicH_H_0: 512
+    #LayerSize_0:   314572800
+    #LayerPicW_1:   320
+    #LayerPicH_H_1: 256
+    #LayerSize_1:   78643200
+    #LayerPicW_2:   160
+    #LayerPicH_H_2: 128
+    #LayerSize_2:   19660800
+    #*****************************************************
+
+    echo ""
+    echo "InputYUV:      ${NewInputYUVName}"
+    echo "OriginYUVSize: $OriginYUVSize"
+    echo "MaxFrameNum  : $MaxFrameNum"
+    echo "NumberLayer:   ${NumberLayer}"
+    echo "EncodedFrmNum: ${EncodedFrmNum}"
+
     for ((i=0; i<${NumberLayer}; i++ ))
 	do
-        echo "LayerPicW_${i}:   ${aLayerWidth[$i]}">>${PrepareLog}
-        echo "LayerPicH_H_${i}: ${aLayerHeight[$i]}">>${PrepareLog}
-        echo "LayerSize_${i}:   ${aYUVSize[$i]}">>${PrepareLog}
+        echo "LayerPicW_${i}:   ${aLayerWidth[$i]}"
+        echo "LayerPicH_H_${i}: ${aLayerHeight[$i]}"
+        echo "LayerSize_${i}:   ${aYUVSize[$i]}"
 	done
 }
 
@@ -193,7 +205,9 @@ runMain()
 	runGlobalVariableInitial
     runCheckParm
 
+    runGetOriginYUVInfo
     runCheckEncodedFrameNum
+
 	runSetLayerInfo
     runPrepareInputYUV
 	if [ ! ${PrepareFlag} -eq 0 ]
@@ -204,7 +218,7 @@ runMain()
 		exit 1
 	fi
 
-	runOutputPrepareLog
+	runOutputPrepareLog >${PrepareLog}
 	echo ""
 	echo -e "\033[32m  input YUV preparation succeed! \033[0m"
 	echo ""
