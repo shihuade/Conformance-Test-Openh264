@@ -105,18 +105,6 @@ runCropRecYUV()
 	return 0
 }
 
-runOutputParameter()
-{
-	echo ""
-	echo "aInputYUVSizeLayer  ${aInputYUVSizeLayer[@]}"
-	echo "aRecYUVFileList     ${aRecYUVFileList[@]}"
-	echo "aRecCropYUVFileList ${aRecCropYUVFileList[@]}"
-	echo "aEncodedPicW        ${aEncodedPicW[@]}"
-	echo "aEncodedPicH        ${aEncodedPicH[@]}"
-	echo ""
-
-}
-
 runInitBasedExported()
 {
     aInputYUVSizeLayer=($YUVSizeLayer0 $YUVSizeLayer1 $YUVSizeLayer2 $YUVSizeLayer3)

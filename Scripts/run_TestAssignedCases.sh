@@ -188,10 +188,7 @@ runExportVariable()
 runTestAndCheckOneCase()
 {
     echo -e "\n\n\n****************case index is ${TotalCaseNum}************"
-    echo -e "      LocalDataDir is: ${LocalDataDir}"
-
     ./run_TestOneCase.sh  ${CaseData}
-
     echo -e "\n---------------parse and Cat Check Log file--------------------"
     [ -e ${CheckLogFile} ] && cat ${CheckLogFile} && runParseCaseCheckLog
 }

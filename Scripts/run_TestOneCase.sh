@@ -96,8 +96,7 @@ runEncodeOneCase()
 	EncoderCommand="./h264enc  welsenc.cfg  -lconfig 0 layer0.cfg -lconfig 1 layer1.cfg -lconfig 2 layer2.cfg  -lconfig 3 layer3.cfg \
                     ${EncoderCommand} -bf ${BitStreamFile}  -org ${InputYUV} \
                     -drec 0 ${RecYUVFile0} -drec 1 ${RecYUVFile1} -drec 2 ${RecYUVFile2} -drec 3 ${RecYUVFile3}"
-    echo -e "\n---------------Encode One Case-------------------------------------------\n"
-    echo "Encoded command line is:"
+    echo -e "\n Encoded command line is:"
     echo ${EncoderCommand}
     ${EncoderCommand} >${EncoderLog}
     [ ! $? -eq 0  ] && let "EncoderFlag=1"
