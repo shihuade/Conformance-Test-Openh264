@@ -12,11 +12,10 @@
 runGlobalVariableInitial()
 {
     HostName=`hostname`
-    AssingedCasedConsoleOutput="${FinalResultDir}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}_console_output.log"
     TestReport="${FinalResultDir}/TestReport_${TestYUVName}_SubCasesIndex_${SubCaseIndex}.report"
     TestSummaryFileName="${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary"
     InputYUVCheck="InputYUVCheck.log"
-    YUVDeleteLog="DeletedYUVList.log 2"
+    YUVDeleteLog="DeletedYUVList.log"
     ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
     LocalWorkingDir=""
     TestYUVFullPath=""
@@ -47,23 +46,6 @@ runDeleteYUV()
 	done
 }
 
-runOutputTestInfo()
-{
-    echo -e "\033[32m ************************************************* \033[0m"
-    echo -e "\033[32m  Test report for YUV ${TestYUVName}               \033[0m"
-    echo -e "\033[32m ************************************************* \033[0m"
-    echo -e "\033[32m   test ${TestYUVName}  under ${HostName}          \033[0m"
-    echo -e "\033[32m   test type is ${TestType}                        \033[0m"
-    echo -e "\033[32m   local host test directory is ${LocalWorkingDir} \033[0m"
-    echo -e "\033[32m   AssignedCasesFile is  ${AssignedCasesFile}      \033[0m"
-    echo -e "\033[32m ************************************************* \033[0m"
-    echo -e "\033[32m   Sub-Case Index is: ${SubCaseIndex}              \033[0m"
-    echo -e "\033[32m   Host name      is: ${HostName}                  \033[0m"
-    echo -e "\033[32m   SGE job ID     is: ${SGEJobID}                  \033[0m"
-    echo -e "\033[32m   SGE job name   is: ${JOB_NAME}                  \033[0m"
-    echo -e "\033[32m ************************************************* \033[0m"
-}
-
 runCheckInputYUV()
 {
     runGetYUVFullPath  ${TestYUVName}  ${ConfigureFile}
@@ -73,7 +55,6 @@ runCheckInputYUV()
         echo -e "\033[31m     Failed!                                                         \033[0m"
         return 1
     fi
-    echo  -e "\033[32m\n  TestYUVFullPath is ${TestYUVFullPath}                             \n\033[0m"
 
     if [ ! -s  ${TestYUVFullPath} ]
     then
@@ -91,26 +72,14 @@ runTestOneYUV()
     cat ${InputYUVCheck}
     [ ! ${ReturnValue} -eq 0 ] && return 1
 
-
     #test assigned cases
     ./run_TestAssignedCases.sh  ${LocalWorkingDir}  ${ConfigureFile}    \
                                 ${TestYUVName}      ${TestYUVFullPath}  \
-                                ${SubCaseIndex}     ${AssignedCasesFile}  >${AssingedCasedConsoleOutput}  2>&1
+                                ${SubCaseIndex}     ${AssignedCasesFile}
     let "ReturnValue=$?"
 
-    #output test summary
-    cat  ${LocalWorkingDir}/result/${TestSummaryFileName}
-    if [  ! ${ReturnValue} -eq 0 ]
-	then
-		echo -e "\033[31m Failed!                        \033[0m"
-		echo -e "\033[31m Not all Cases passed the test! \033[0m"
-	else
-		echo -e "\033[32m Succeed!                       \033[0m"
-		echo -e "\033[32m All Cases passed the test!     \033[0m"
-	fi
-
     #copy test result files to final dir
-    cp  -f ${LocalWorkingDir}/result/*.csv    ${FinalResultDir}
+    cp  -f ${LocalWorkingDir}/result/*.csv  ${FinalResultDir}
 
     return ${ReturnValue}
 }
@@ -134,22 +103,56 @@ runSetLocalWorkingDir()
     fi
 }
 
+runOutoutTestReport()
+{
+    SummaryFile="${LocalWorkingDir}/result/${TestSummaryFileName}"
+
+    #basic info for this test
+    echo -e "\033[34m ***************************************************************************************************** \033[0m"
+    echo -e "\033[34m  Test report for YUV ${TestYUVName}              \033[0m"
+    echo -e "\033[34m ***************************************************************************************************** \033[0m"
+    echo -e "\033[35m   test host          is: ${HostName}             \033[0m"
+    echo -e "\033[35m   test type          is: ${TestType}             \033[0m"
+    echo -e "\033[35m   test directory     is: ${LocalWorkingDir}      \033[0m"
+    echo -e "\033[35m   AssignedCasesFile  is: ${AssignedCasesFile}    \033[0m"
+    echo -e "\033[32m   test YUV full path is: ${TestYUVFullPath}      \033[0m"
+    echo -e "\033[34m ***************************************************************************************************** \033[0m"
+    echo -e "\033[36m   Sub-Case Index is: ${SubCaseIndex}             \033[0m"
+    echo -e "\033[36m   Host name      is: ${HostName}                 \033[0m"
+    echo -e "\033[36m   SGE job ID     is: ${SGEJobID}                 \033[0m"
+    echo -e "\033[36m   SGE job name   is: ${JOB_NAME}                 \033[0m"
+    echo -e "\033[34m ***************************************************************************************************** \033[0m"
+
+    #input YUV check
+    [ -e ${InputYUVCheck} ] && cat ${InputYUVCheck}
+
+    #test summary
+    [ -e ${SummaryFile} ]   && cat ${SummaryFile}
+
+    #output final result
+    if [  ! ${PassedFlag} -eq 0 ]
+    then
+        echo -e "\033[31m Failed!                            \033[0m"
+        echo -e "\033[31m Not all Cases passed the test! \n\n\033[0m"
+    else
+        echo -e "\033[32m Succeed!                           \033[0m"
+        echo -e "\033[32m All Cases passed the test!     \n\n\033[0m"
+    fi
+}
+
 runMain()
 {
     runGlobalVariableInitial
 	runSetLocalWorkingDir
 
-    runOutputTestInfo >${TestReport}
-
-    cd ${LocalWorkingDir}
     #test assigned cases for one YUV
-    runTestOneYUV        >>${TestReport}
+    cd ${LocalWorkingDir}
+    runTestOneYUV
     PassedFlag=$?
     cd ${CurrentDir}
 
-    #output test console and test summary
-    cat ${InputYUVCheck}
-    cat ${AssingedCasedConsoleOutput}
+    #output to test report
+    runOutoutTestReport >${TestReport}
     cat ${TestReport}
 
     #deleted test YUV

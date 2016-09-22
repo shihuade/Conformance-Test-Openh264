@@ -198,7 +198,9 @@ runAllCaseTest()
 {
     let "TotalCaseNum=0";let "LineIndex=0";let "LogFileIndex=0"
 
-    echo  -e "\033[32m\n\n  testing all cases, please wait!...... \033[0m"
+    echo  -e "\033[32m *****************************************************************************************************  \033[0m"
+    echo  -e "\033[32m        testing all cases, please wait!......    \033[0m"
+    echo  -e "\033[32m *****************************************************************************************************\n\033[0m"
 	while read CaseData
 	do
 		if [ ${LineIndex} -gt 0  ]
@@ -226,6 +228,10 @@ runAllCaseTest()
 		
 	done <$GivenCaseFile
 
+    echo  -e "\033[32m *****************************************************************************************************   \033[0m"
+    echo  -e "\033[32m        All assigned cases have been checked, will generate test report/summary soon!    \033[0m"
+    echo  -e "\033[32m ***************************************************************************************************** \n\033[0m"
+
     ./run_SafeDelete.sh ${TempDataPath} >>DeletedFile.list
 }
 
@@ -233,45 +239,43 @@ runOutputPassNum()
 {
 	# output file locate in ../result
 	TestFolder=`echo $CurrentDir | awk 'BEGIN {FS="/"} { i=NF; print $i}'`
-	echo ""
-    echo  -e "\033[32m ...........Test summary for ${TestYUVName}..................\033[0m"
-	echo  -e "\033[32m *********************************************************** \033[0m"
-    echo  -e "\033[32m    TestStartTime is ${StartTime}               \033[0m"
-    echo  -e "\033[32m    TestEndTime   is ${EndTime}                 \033[0m"
-	echo  -e "\033[32m total case  Num     is : ${TotalCaseNum}       \033[0m"
-	echo  -e "\033[32m EncoderPassedNum    is : ${EncoderPassedNum}   \033[0m"
-	echo  -e "\033[31m EncoderUnPassedNum  is : ${EncoderUnPassedNum} \033[0m"
-	echo  -e "\033[32m DecoderPassedNum    is : ${DecoderPassedNum}   \033[0m"
-	echo  -e "\033[31m DecoderUpPassedNum  is : ${DecoderUpPassedNum} \033[0m"
-	echo  -e "\033[31m DecoderUnCheckNum   is : ${DecoderUnCheckNum}  \033[0m"
-	echo  -e "\033[32m ***********************************************************  \n\033[0m"
-	echo  -e "\033[32m --issue bitstream can be found in  ${LocalDataDir}/issue       \033[0m"
-	echo  -e "\033[32m --detail result  can be found in ${LocalDataDir}/${ResultPath} \033[0m"
-	echo  -e "\033[32m ***********************************************************    \033[0m"
+    echo  -e "\033[34m ***************************************************************************************************** \033[0m"
+    echo  -e "\033[34m               Test summary for ${TestYUVName}      \033[0m"
+	echo  -e "\033[34m ***************************************************************************************************** \033[0m"
+    echo  -e "\033[33m    TestStartTime    is: ${StartTime}               \033[0m"
+    echo  -e "\033[33m    TestEndTime      is: ${EndTime}                 \033[0m"
+    echo  -e "\033[34m ***************************************************************************************************** \033[0m"
+	echo  -e "\033[32m    total case  Num     is : ${TotalCaseNum}        \033[0m"
+	echo  -e "\033[32m    EncoderPassedNum    is : ${EncoderPassedNum}    \033[0m"
+	echo  -e "\033[31m    EncoderUnPassedNum  is : ${EncoderUnPassedNum}  \033[0m"
+	echo  -e "\033[32m    DecoderPassedNum    is : ${DecoderPassedNum}    \033[0m"
+	echo  -e "\033[31m    DecoderUpPassedNum  is : ${DecoderUpPassedNum}  \033[0m"
+	echo  -e "\033[31m    DecoderUnCheckNum   is : ${DecoderUnCheckNum}   \033[0m"
+	echo  -e "\033[34m ***************************************************************************************************** \033[0m"
+	echo  -e "\033[32m     --issue bitstream can be found in ${LocalDataDir}/issue         \033[0m"
+	echo  -e "\033[32m     --detail result can be found in   ${LocalDataDir}/${ResultPath} \033[0m"
+	echo  -e "\033[34m ***************************************************************************************************** \033[0m"
 	echo ""
 }
 
 #***********************************************************
 runMain()
 {
-    StartTime=""
-    EndTime=""
-
-	runGlobalVariableInitial
-	runParseConfigure
+    runGlobalVariableInitial
+    runParseConfigure
     runToolCheck
 
-	runPrepareInputYUV
+    runPrepareInputYUV
     runExportVariable
 
     StartTime=`date`
-	runAllCaseTest
+    runAllCaseTest
     EndTime=`date`
 
-	runOutputPassNum >${CaseSummaryFile}
+    runOutputPassNum >${CaseSummaryFile}
     #cat ${CaseSummaryFile}
-    echo "StartTime is $StartTime"
-    echo "EndTime   is $EndTime"
+    #echo "StartTime is $StartTime"
+    #echo "EndTime   is $EndTime"
 
     if [  ! ${EncoderUnPassedNum} -eq 0  ]
     then
