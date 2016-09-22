@@ -14,13 +14,6 @@
 #usage: runGetYUVPath  ${YUVName}  ${FindScope}
 runGetYUVPath()
 {
-	if [ ! $# -eq 2 ]
-	then
-		echo "runGetYUVPath  \${YUVName}  \${FindScope} "
-		return 1
-	fi
-	local YUVName=$1
-	local FindScope=$2
 	local YUVFullPath="NULL"
 	local Log="find.result"
 	local CurrentDir=`pwd`
@@ -33,6 +26,7 @@ runGetYUVPath()
 		FindScope=`pwd`
 		cd ${CurrentDir}
 	fi
+
 	find   ${FindScope}  -name  ${YUVName}>${Log}
 	while read line
 	do
@@ -54,8 +48,16 @@ runGetYUVPath()
 		return 0
 	fi
 }
+#********************************************************************************************************
+if [ ! $# -eq 2 ]
+then
+    echo "runGetYUVPath  \${YUVName}  \${FindScope} "
+    return 1
+fi
+
 YUVName=$1
 FindScope=$2
-runGetYUVPath  ${YUVName}  ${FindScope}
 
+runGetYUVPath
+#********************************************************************************************************
 
