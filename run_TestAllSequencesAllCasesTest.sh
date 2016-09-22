@@ -34,16 +34,12 @@ runGlobalInit()
     cd ${FinalResultDir}
     FinalResultDir=`pwd`
     cd  ${CurrentDir}
-
 }
 
 
 runSGETest()
 {
-	local SGEQueneName="Openh264SGE"	
-	
     ./run_SGEJobSubmit.sh  ${AllTestDataDir} ${ConfigureFile} ${SGEJobListFile}
-
     if [ ! $? -eq 0 ]
     then
         echo -e "\033[31m usage: failed to summit SGE jobs \033[0m"
@@ -52,10 +48,9 @@ runSGETest()
     fi
 
     #./run_SGEJobStatusUpdate.sh  ${SGEJobListFile}
-	
 	return $?
-	
 }
+
 runLocalTest()
 {
 	let "Flag=0"
@@ -67,6 +62,7 @@ runLocalTest()
 		then
 			continue
 		fi
+
 		cd  ${SubFolder}
         CasesFile=${TestYUV}_AllCase.csv
 		echo ""
@@ -74,11 +70,9 @@ runLocalTest()
 		echo ""
 		./run_TestOneYUVWithAssignedCases.sh  ${TestType}      ${TestYUV}  ${FinalResultDir} \
                                               ${ConfigureFile}  AllCases   ${CasesFile}
-		if [  ! $? -eq 0 ]
-		then
-			echo -e "\033[31m not all test cases have been passed! \033[0m"
-			let "Flag=1"
-		fi
+
+        let "Flag = $?"
+
 		#when test completed, generate flag file to avoid repeating test
 		touch ${TestFlagFile}
 		cd  ${CurrentDir}
@@ -90,41 +84,18 @@ runLocalTest()
  
 runCheck()
 {
-
     #check configure file
-    if [  ! -f ${ConfigureFile} ]
-    then
-        echo -e "\033[31m usage: ConfigureFile ${ConfigureFile} doest not exist,please double check \033[0m"
-        exit 1
-    fi
+    [  ! -f ${ConfigureFile} ] && echo -e "\033[31m usage: ConfigureFile ${ConfigureFile} doest not exist,please double check \033[0m" && exit 1
 
 	#check test type
-	if [ ${TestType} = "SGETest" ]
-	then
-		return 0
-	elif [ ${TestType} = "LocalTest" ]
-	then
-		return 0
-	else
-		 runUsage
-		 exit 1
-	fi
+    [ ! ${TestType} = "SGETest" ] && [ ! ${TestType} = "LocalTest" ] && runUsage && exit 1
 
 	return 0
 }
+
 #usage: runMain  ${BitstreamDir} ${AllTestDataDir}  ${FinalResultDir}
 runMain()
 {
-	if [ ! $# -eq 4  ]
-	then
-		runUsage
-		exit 1
-	fi
-	
-	TestType=$1
-	AllTestDataDir=$2
-	FinalResultDir=$3
-	ConfigureFile=$4
     declare -a aTestYUVList
 	#check input parameters
 	runCheck
@@ -143,13 +114,9 @@ runMain()
 	fi
 	
 	return $?
-	
 }
-TestType=$1
-AllTestDataDir=$2
-FinalResultDir=$3
-ConfigureFile=$4
 
+#************************************************************************************************************
 echo ""
 echo "*********************************************************"
 echo "     call bash file is $0"
@@ -157,6 +124,17 @@ echo "     input parameters is:"
 echo "        $0 $@"
 echo "*********************************************************"
 echo ""
+if [ ! $# -eq 4  ]
+then
+    runUsage
+    exit 1
+fi
 
-runMain  ${TestType}  ${AllTestDataDir}  ${FinalResultDir} ${ConfigureFile}
+TestType=$1
+AllTestDataDir=$2
+FinalResultDir=$3
+ConfigureFile=$4
+
+runMain
+#************************************************************************************************************
 
