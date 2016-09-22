@@ -33,9 +33,8 @@ runGlobalVariableInitial()
     AssignedCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput_SubCasesIndex_${SubCaseIndex}.csv"
 	UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput_SubCasesIndex_${SubCaseIndex}.csv"
 	AssignedCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table_SubCasesIndex_${SubCaseIndex}.csv"
-	AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}__SubCasesIndex_${SubCaseIndex}.TestLog"
 	CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary"
-    AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_0.TestLog"
+    AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}_AssignedCases_SubCaseIndex_${SubCaseIndex}_0.TestLog"
 
 	HeadLine1="TestTime, EncoderFlag, DecoderFlag, FPS, BitSreamSHA1, InputYUVSHA1,\
 			-utype,  -frms,  -numl,  -numtl, -sw, -sh,\
@@ -208,7 +207,7 @@ runAllCaseTest()
 			let "NewLogFileFlag = ${TotalCaseNum}%200"
 			if [ ${NewLogFileFlag} -eq 0 ]
 			then
-				AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}_SubCaseIndex_${SubCaseIndex}_${LogFileIndex}.TestLog"
+				AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}_AssignedCases_SubCaseIndex_${SubCaseIndex}_${LogFileIndex}.TestLog"
 				let "LogFileIndex++"
                 echo " LocalDataDir is: ${LocalDataDir}" >${AssignedCasesConsoleLogFile}
 
@@ -270,7 +269,7 @@ runMain()
     EndTime=`date`
 
 	runOutputPassNum >${CaseSummaryFile}
-    cat ${CaseSummaryFile}
+    #cat ${CaseSummaryFile}
     echo "StartTime is $StartTime"
     echo "EndTime   is $EndTime"
 
@@ -300,10 +299,11 @@ runExampleTest()
     runExampleInput
     runMain
 }
-
-Temp()
-{
 #****************************************************************************************************************
+# example test
+#runExampleTest
+#****************************************************************************************************************
+#main entry
 echo -e "\n*********************************************************"
 echo "     call bash file is $0"
 echo "     input parameters are:"
@@ -326,7 +326,6 @@ GivenCaseFile=$6
 
 runMain
 #****************************************************************************************************************
-}
 
-runExampleTest
+
 #****************************************************************************************************************
