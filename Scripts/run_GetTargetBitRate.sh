@@ -138,10 +138,7 @@ runMain()
   ConfigureFile=$4
   if [ ${PicW} -le 0 -o ${PicH} -le 0 -o ${FPS} -le 0 ]
   then
-	echo ""
-    echo "Picture info is not correct! please double check!"
-	echo "usage: run_GetTargetBitRate.sh  \${PicW} \${PicH} \${FPS} \${ConfigureFile} "
-	echo ""
+	echo "0 0"
 	exit 1
   fi
 
