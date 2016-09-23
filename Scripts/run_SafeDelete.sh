@@ -158,7 +158,7 @@ runDeleteItem()
 		runGetFileName
 		DeleteItem="${FullPath}/${FileName}"
 		echo "deleted file is :  $DeleteItem"
-		rm  -f ${DeleteItem}
+        rm  -f ${DeleteItem}
 		let "DeleteFlag=$?"
 	fi
 
@@ -192,7 +192,7 @@ runMain()
 	runDirLocationCheck
 
 	#delete item
-#runDeleteItem
+    runDeleteItem
 
 	#output parse info
 	runOutputParseInfo
