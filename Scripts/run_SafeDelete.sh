@@ -195,14 +195,14 @@ runMain()
     runDeleteItem
 
 	#output parse info
-	runOutputParseInfo
+    #runOutputParseInfo
 }
 #***************************************************************************************
-echo "*********************************************************"
-echo "     call bash file is $0"
-echo "     input parameters are:"
-echo "        $0 $@"
-echo "*********************************************************"
+#echo "*********************************************************"
+#echo "     call bash file is $0"
+#echo "     input parameters are:"
+#echo "        $0 $@"
+#echo "*********************************************************"
 if [ ! $# -eq 1  ]
 then
     echo "usage runMain \$DeleteItem"
