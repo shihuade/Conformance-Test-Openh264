@@ -1,10 +1,10 @@
 
 #!/bin/bash
 
-#*******************************************************************************
+#*****************************************************************************************************
 # brief:  get actual spatial layer resolution based on actual spatial number
 #
-# usage:  input:   run_GetSpatialLayerResolutionInfo.sh $PicW $PicH  $SpatialNum
+# usage:  input:   run_GetSpatialLayerResolutionInfo.sh $PicW $PicH  $SpatialNum $Multiple16Flag
 #
 #         output:   LayerWidth_0  LayerHeight_0  \
 #                   LayerWidth_1  LayerHeight_1  \
@@ -28,30 +28,16 @@
 #           output: 1280  720 0 0  0 0 0 0
 #
 #date:  5/08/2014 Created
-#*******************************************************************************
-#usage: runExtendMultiple16 ${PicW} or ${PicH}
+#*****************************************************************************************************
+
 runExtendMultiple16()
 {
-	if [ $1 -lt 4 ]
-	then
-		echo "usage: runExtendMultiple16 \${PicW} or \${PicH}"
-		exit 1
-	fi
-
 	local Num=$1
-	let  "TempNum=0"
-	let "Remainder=${Num}%16"
-
-	if [ ${Remainder} -eq 0  ]
-	then
-		let  "TempNum=${Num}"
-	else
-		let  "TempNum=${Num} - ${Remainder}"
-	fi
+    let  "TempNum = ${Num} - ${Num}%16"
 
 	echo "${TempNum}"
-	return 0
 }
+
 runMain()
 {
 	if [ $#  -lt 4  ]
@@ -68,8 +54,10 @@ runMain()
 	local PicH=$2
 	local SpatialNum=$3
 	local Multiple16Flag=$4
+
 	declare -a aLayerWidth
 	declare -a aLayerHeight
+
 	let "LayerWidth_0 = ${PicW}/8"
 	let "LayerWidth_1 = ${PicW}/4"
 	let "LayerWidth_2 = ${PicW}/2"
@@ -78,7 +66,8 @@ runMain()
 	let "LayerHeight_1 = ${PicH}/4"
 	let "LayerHeight_2 = ${PicH}/2"
 	let "LayerHeight_3 = ${PicH}"
-	aLayerWidth=( ${LayerWidth_0}  ${LayerWidth_1}  ${LayerWidth_2}  ${LayerWidth_3}  )
+
+	aLayerWidth=(  ${LayerWidth_0}  ${LayerWidth_1}  ${LayerWidth_2}  ${LayerWidth_3}  )
 	aLayerHeight=( ${LayerHeight_0} ${LayerHeight_1} ${LayerHeight_2} ${LayerHeight_3} )
 
 	if [ ${Multiple16Flag} -eq 1 ]
@@ -106,10 +95,13 @@ runMain()
 	fi
 	return 0
 }
+#****************************************************************************************************
 PicW=$1
 PicH=$2
 SpatialNum=$3
 Multiple16Flag=$4
+
 runMain  ${PicW} ${PicH}  ${SpatialNum}  ${Multiple16Flag}
+#****************************************************************************************************
 
 

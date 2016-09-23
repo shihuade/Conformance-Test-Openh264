@@ -18,8 +18,8 @@
 runUsage()
 {
     echo ""
-    echo -e "\033[31m Usage: \033[0m"
-    echo -e "\033[31m    --./run_CasesPartition.sh \${AllCasesFile} \${SubCasesNum}    \033[0m"
+    echo -e "\033[31m Usage:                                                           \033[0m"
+    echo -e "\033[31m      ./run_CasesPartition.sh \${AllCasesFile} \${SubCasesNum}    \033[0m"
     echo -e "\033[31m                              \${TestYUVName}  \${SubCaseInfoLog} \033[0m"
     echo ""
 }
@@ -97,18 +97,7 @@ runPartitionAllCasesIntoSubCasesFile()
 
 runMain()
 {
-    if [ ! $# -eq 4 ]
-    then
-        runUsage
-        exit 1
-    fi
-
-    AllCasesFile=$1
-    SubCasesNum=$2
-    TestYUVName=$3
-    SubCaseInfoLog=$4
     let "SubCasesFileIndex = 0"
-
     runCheck
 
     runPartitionAllCasesIntoSubCasesFile
@@ -128,6 +117,11 @@ echo "     input parameters are:"
 echo "        $0 $@"
 echo "*********************************************************"
 echo ""
+if [ ! $# -eq 4 ]
+then
+    runUsage
+    exit 1
+fi
 runMain ${AllCasesFile} ${SubCasesNum}  ${TestYUVName} ${SubCaseInfoLog}
 
 

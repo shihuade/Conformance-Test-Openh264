@@ -1,11 +1,14 @@
 #!/bin/bash
 #***************************************************************************************
 # brief:
-#      --delete previous test data, and prepare test space for all test sequences in AllTestData/XXX.yuv
+#      --delete previous test data,
+#      --prepare test space for all test sequences in AllTestData/XXX.yuv
+#
 #      --usage: refer to function runUsage()
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
+
 runUsage()
 {
     echo -e "\033[32m ************************************************************************** \033[0m"
@@ -58,17 +61,17 @@ runRemovedPreviousTestData()
 
     for file in ${CurrentDir}/*.log
     do
-        ./${ScriptFolder}/run_SafeDelete.sh  ${file}
+        [ -e ${file} ] && ./${ScriptFolder}/run_SafeDelete.sh  ${file}
     done
 
     for file in ${CurrentDir}/*.txt
     do
-        ./${ScriptFolder}/run_SafeDelete.sh  ${file}
+        [ -e ${file} ] && ./${ScriptFolder}/run_SafeDelete.sh  ${file}
     done
 
     for file in ${CurrentDir}/*.flag
     do
-        ./${ScriptFolder}/run_SafeDelete.sh  ${file}
+        [ -e ${file} ] && ./${ScriptFolder}/run_SafeDelete.sh  ${file}
     done
 
     mkdir -p ${AllTestDataFolder} ${SHA1TableFolder} ${FinalResultDir} ${SummaryDir} ${BitStreamToYUVFolder} ${CodecFolder}
@@ -99,7 +102,7 @@ runUpdateCodec()
     ./run_CheckoutRepos.sh  ${Openh264GitAddr} ${Branch} ${SourceFolder} ${ReposUpdateOption}
 	[  ! $? -eq 0 ] && echo -e "\033[31m\n Failed to checkout openh264 repository! \n\033[0m" && exit 1
 
-    #build codec with enable YUV dump
+    #build codec with enable YUV dump macro
 	./run_UpdateCodec.sh  ${SourceFolder}
 	[ ! $? -eq 0 ] && echo -e "\033[31m\n Failed build and update codec! \n\033[0m" && exit 1
 
@@ -242,10 +245,10 @@ runExampleTest()
 }
 #************************************************************************************************************
 # example test
-runExampleTest
+#runExampleTest
 
-EnableExampleTest()
-{
+#EnableExampleTest()
+#{
 #************************************************************************************************************
 echo ""
 echo "*********************************************************"
@@ -271,4 +274,4 @@ ReposUpdateOption=$6
 
 runMain
 #************************************************************************************************************
-}
+#}
