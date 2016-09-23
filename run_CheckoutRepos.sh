@@ -27,8 +27,6 @@ runUsage()
 
 runCheckParameter()
 {
-    #ReposUpdateOption: fast,  will only update via git pull command based on current repos,no need to clone a new one
-    #                   clone, will delete entire repos, and clone a new one
     [ -z ${ReposUpdateOption} ] && ReposUpdateOption="fast"
     if [ "${ReposUpdateOption}" = "fast" ]
     then
@@ -54,9 +52,6 @@ runCheckParameter()
         fi
 
         #check if the current repos git address is the same with input
-        #git remote output may looks like
-        #origin	https://github.com/cisco/openh264 (fetch)
-        #origin	https://github.com/cisco/openh264 (push)
         CurrentReposAddr=` git remote -v | grep origin | head -1 | awk '{print $2}'`
         if [ ! "${CurrentReposAddr}" = "${GitRepositoryAddr}" ]
         then
@@ -178,7 +173,7 @@ runExampleTest()
 #******************************************************************************************************************
 #example:
 #runExampleTest
-#Temp()
+#EnableWhenUsingExampleFunction()
 #{
 #******************************************************************************************************************
 echo ""
@@ -189,7 +184,6 @@ echo "        $0 $@"
 echo "*********************************************************"
 echo ""
 #******************************************************************************************************************
-
 if [  $# -lt 2 ]
 then
     runUsage
