@@ -40,7 +40,7 @@ runInitial()
 
     CurrentDir=`pwd`
     ScriptsDir="${CurrentDir}/Scripts"
-    CodecDir="${CurrentDir}/Codec/h264dec"
+    Decoder="${CurrentDir}/Codec/h264dec"
     InputBitStreamDir=""
     BitStreamToYUVFolder="${CurrentDir}/BitStreamToYUV"
     BitStreamToYUVLog="${CurrentDir}/BitStreamToYUV.log"
@@ -108,11 +108,10 @@ runTranscodeBitStreamToYUV()
 
     if [ ! -d ${BitStreamToYUVFolder} ]
     then
-        mkdir ${BitStreamToYUVFolder}
+        mkdir -p ${BitStreamToYUVFolder}
     fi
 
     let "i=0"
-
     for vInputFileName in ${aInputTestFileList[@]}
     do
 
@@ -126,7 +125,7 @@ runTranscodeBitStreamToYUV()
             let "FailedTranscodedNum ++"
             let "ReturnFlag=1"
         else
-            ${ScriptsDir}/run_BitStreamToYUV.sh ${InputBitStreamFile} ${BitStreamToYUVFolder}  ${CodecDir}
+            ${ScriptsDir}/run_BitStreamToYUV.sh ${InputBitStreamFile} ${BitStreamToYUVFolder}  ${Decoder}
             aBitStreamToYUVFlag[$i]="Transcoded Succed!"
         fi
         let "i ++"
@@ -150,6 +149,7 @@ runOutputBitStreamTransCodeInfo()
     echo -e "\033[32m TranscodeYUV list are: ${aTestYUVList[@]}                  \033[0m"
     echo -e "\033[32m ********************************************************* \033[0m"
 }
+
 runGetTranscodeYUVName()
 {
 

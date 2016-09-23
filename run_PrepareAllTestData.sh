@@ -2,43 +2,60 @@
 #***************************************************************************************
 # brief:
 #      --delete previous test data, and prepare test space for all test sequences in AllTestData/XXX.yuv
-#      --usage: run_PrepareAllTestData.sh  $AllTestDataFolder  \
-#                                          $CodecFolder  $ScriptFolder \
-#                                          $ConfigureFile
-#
+#      --usage: refer to function runUsage()
 #
 #date:  5/08/2014 Created
 #***************************************************************************************
+runUsage()
+{
+    echo -e "\033[32m ************************************************************************** \033[0m"
+    echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType       \$ConfigureFile       \033[0m"
+    echo -e "\033[31m                                     \$OpenH264Branch \$OpenH264Repos       \033[0m"
+    echo -e "\033[31m                                     \$SourceFolder   \$ReposUpdateOption   \033[0m"
+    echo -e "\033[31m       --last four parameters are optional                                  \033[0m"
+    echo -e "\033[31m         which used to overwrite value in configure file                    \033[0m"
+    echo -e "\033[31m       --ReposUpdateOption: fast or colone                                  \033[0m"
+    echo -e "\033[31m         ----fast:  update repos via git pull only                          \033[0m"
+    echo -e "\033[31m         ----clone: clone a new repos                                       \033[0m"
+    echo -e "\033[31m                                                                            \033[0m"
+    echo -e "\033[31m example:                                                                   \033[0m"
+    echo -e "\033[31m   ./run_PrepareAllTestFolder.sh LocalTest case_SVC.cfg                     \033[0m"
+    echo -e "\033[31m                                                                            \033[0m"
+    echo -e "\033[32m ************************************************************************** \033[0m"
+}
+
+runGlobalVariableInitial()
+{
+    CurrentDir=`pwd`
+    #the same with run_main.sh
+    AllTestDataFolder="AllTestData";SHA1TableFolder="SHA1Table";FinalResultDir="FinalResult"
+    CodecFolder="Codec";Codec_Linux="Codec_Linux";Codec_Mac="Codec_Mac"
+    ScriptFolder="Scripts"
+    BitStreamToYUVFolder="BitStreamToYUV"
+    SummaryDir="FinalResult_Summary"
+
+    let "SGEJobNum =0 ";let "SGEJobSubCasesNum=0"
+
+    Openh264GitAddr="";Branch=""
+
+    #Input test set setting
+    declare -a aTestYUVList
+    InputFileFormat=""
+
+    #folder for eache test sequence
+    SubFolder=""
+    SGEJobFile=""
+}
+
 runRemovedPreviousTestData()
 {
-	
-	if [ -d $AllTestDataFolder ]
-	then
-		./${ScriptFolder}/run_SafeDelete.sh  $AllTestDataFolder
-	fi
-	if [ -d $SHA1TableFolder ]
-	then
-		./${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
-	fi
-	if [ -d $FinalResultDir ]
-	then
-		./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
-	fi
-
-    if [ -d $SummaryDir ]
-    then
-        ./${ScriptFolder}/run_SafeDelete.sh  $SummaryDir
-    fi
-
-    #if [ -d $SourceFolder ]
-    #then
-      #./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
-    #fi
-
-    if [ -d $BitStreamToYUVFolder ]
-    then
-        ./${ScriptFolder}/run_SafeDelete.sh  $BitStreamToYUVFolder
-    fi
+	[ -d $AllTestDataFolder ]    && ./${ScriptFolder}/run_SafeDelete.sh  $AllTestDataFolder
+	[ -d $SHA1TableFolder ]      && ./${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
+	[ -d $FinalResultDir ]       && ./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
+	[ -d $SummaryDir ]           && ./${ScriptFolder}/run_SafeDelete.sh  $SummaryDir
+    [ -d $SourceFolder ]         && ./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
+    [ -d $BitStreamToYUVFolder ] && ./${ScriptFolder}/run_SafeDelete.sh  $BitStreamToYUVFolder
+    [ -d $CodecFolder ]          && ./${ScriptFolder}/run_SafeDelete.sh  $CodecFolder
 
     for file in ${CurrentDir}/*.log
     do
@@ -55,144 +72,60 @@ runRemovedPreviousTestData()
         ./${ScriptFolder}/run_SafeDelete.sh  ${file}
     done
 
-}
-runUpdateCodec()
-{
-
-
-    #./run_CheckoutCiscoOpenh264Codec.sh  ${Openh264GitAddr} ${SourceFolder}
-	if [  ! $? -eq 0 ]
-	then	
-		echo ""
-		echo -e "\033[31m Failed to clone latest openh264 repository! Please double check! \033[0m"
-		echo ""
-		exit 1
-	fi
-	
-	cd ${SourceFolder}
-	git checkout -f  ${Branch}
-	git branch >${CodecInfoLog}
-	git remote -v >>${CodecInfoLog}
-	git log -3 >>${CodecInfoLog}
-
-	cd ${CurrentDir}
-	
-	echo ""
-	echo -e "\033[32m openh264 codec building... \033[0m"
-	echo ""
-	./run_UpdateCodec.sh  ${SourceFolder}
-	if [ ! $? -eq 0 ]
-	then	
-		echo ""
-		echo -e "\033[31m Failed to update codec to latest version! Please double check! \033[0m"
-		echo ""
-		exit 1
-	fi
-	
-	return 0
-}
-
-runGenerateSGEJobFileForOneYUV()
-{
-    if [ ! $# -eq 3 ]
-    then
-        echo "usage: runGenerateSGEJobFileForOneYUV  \$TestSequenceDir  \$TestYUVName \$ConfigureFile "
-        return 1
-    fi
-
-    TestSequenceDir=$1
-    TestYUVName=$2
-    ConfigureFile=$3
-
-    ./Scripts/run_GenerateSGEJobFile.sh  ${TestSequenceDir} ${TestYUVName} ${ConfigureFile}
-
-    return 0
+    mkdir -p ${AllTestDataFolder} ${SHA1TableFolder} ${FinalResultDir} ${SummaryDir} ${BitStreamToYUVFolder} ${CodecFolder}
 }
 
 runParseConfigureFile()
 {
-	while read line
-	do
-		if [[ "$line" =~ ^GitAddress  ]]
-		then
-			Openh264GitAddr=`echo $line | awk '{print $2}' `
-		elif  [[ "$line" =~ ^GitBranch  ]]
-		then
-			Branch=`echo $line | awk '{print $2}' `
-        elif [[ "$line" =~ ^SubCasesNum  ]]
-        then
-            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
-            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
-            let "SGEJobSubCasesNum= ${TempString}"
-        elif [[ "$line" =~ ^InputFormat  ]]
-        then
-            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
-            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
-            let "InputFileFormat= ${TempString}"
+    Openh264GitAddr=(`cat ${ConfigureFile} | grep "^GitAddress"   | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+    Branch=(`cat ${ConfigureFile}          | grep "^GitBranch"    | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+    TempString=(`cat ${ConfigureFile}      | grep "^SubCasesNum"  | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+    let "SGEJobSubCasesNum= ${TempString}"
+    TempString=(`cat ${ConfigureFile}      | grep "^InputFormat"  | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+    let "InputFileFormat= ${TempString}"
+    Platform=(`cat ${ConfigureFile}        | grep "TestPlatform"  | awk 'BEGIN {FS="[#:]"} {print $2}' `)
 
-        elif [[ "$line" =~ ^TestBitStreamDir  ]]
-        then
-            TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
-            TempString=`echo $TempString | awk 'BEGIN {FS="#"} {print $1}' `
-            InputBitStreamDir=${TempString}
-        fi
+    #if value in configure files will be overwrite by input value
+    [ ! -z ${OpenH264Repos} ]    && Openh264GitAddr="${OpenH264Repos}"
+    [ ! -z ${OpenH264Branch} ]   && Branch="${OpenH264Branch}"
 
-	done <${ConfigureFile}
+    #using default value
+    [ -z ${SourceFolder} ]       && SourceFolder="Source"
+    [ -z ${ReposUpdateOption} ]  && ReposUpdateOption="fast"
+}
 
-    if [ ! -z ${OpenH264Repos} ]
-    then
-        Openh264GitAddr="${OpenH264Repos}"
-    fi
+runUpdateCodec()
+{
+    #checkout openh264 repos and switch to test branch
+    ./run_CheckoutRepos.sh  ${Openh264GitAddr} ${Branch} ${SourceFolder} ${ReposUpdateOption}
+	[  ! $? -eq 0 ] && echo -e "\033[31m\n Failed to checkout openh264 repository! \n\033[0m" && exit 1
 
-    if [ ! -z ${OpenH264Branch} ]
-    then
-        Branch="${OpenH264Branch}"
-    fi
+    #build codec with enable YUV dump
+	./run_UpdateCodec.sh  ${SourceFolder}
+	[ ! $? -eq 0 ] && echo -e "\033[31m\n Failed build and update codec! \n\033[0m" && exit 1
 
+    #copy JM/JSVM/DowsampleApp etc. tools to codec folder
+    [ "${Platform}" = "linux" ] && cp -f  ${Codec_Linux}/*  ${CodecFolder}
+    [ "${Platform}" = "mac" ]   && cp -f  ${Codec_Mac}/*    ${CodecFolder}
 
-    echo ""
-    echo -e "\033[32m openh264 repository cloning...             \033[0m"
-    echo -e "\033[32m     ----repository is ${Openh264GitAddr}   \033[0m"
-    echo -e "\033[32m     ----branch     is ${Branch}            \033[0m"
-    echo -e "\033[32m SGEJobSubCasesNum  is ${SGEJobSubCasesNum} \033[0m"
-    echo ""
-
-
+	return 0
 }
 
 runGenerateCaseFiles()
 {
-    if [ ! $# -eq 1 ]
-    then
-        echo -e "\033[31m usage: runGenerateCaseFiles \${TestYUVName}\033[0m"
-        return 1
-    fi
-
     TestYUVName=$1
+
     AllCasesFile=${TestYUVName}_AllCase.csv
     SubCaseInfoLog=${TestYUVName}_SubCasesInfo.log
 
     ./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName} ${AllCasesFile}
-    if [ ! $? -eq 0  ]
-    then
-        echo ""
-        echo  -e "\033[31m  failed to generate cases ! \033[0m"
-        echo ""
-        return 1
-    fi
+    [ ! $? -eq 0  ] && echo  -e "\033[31m\n  failed to generate cases ! \n\033[0m" && return 1
 
     if [ ${TestType} == "SGETest"  ]
     then
-        ./run_CasesPartition.sh ${AllCasesFile}  ${SGEJobSubCasesNum}    \
+        ./run_CasesPartition.sh ${AllCasesFile}  ${SGEJobSubCasesNum}\
                                 ${TestYUVName}   ${SubCaseInfoLog}
-
-        if [ ! $? -eq 0  ]
-        then
-            echo ""
-            echo  -e "\033[31m  failed to split all cases set into sub-set cases ! \033[0m"
-            echo ""
-            return 1
-        fi
+        [ ! $? -eq 0  ] && echo  -e "\033[31m  failed to split all cases set into sub-set! \n\033[0m" && return 1
     fi
 
     return 0
@@ -200,155 +133,114 @@ runGenerateCaseFiles()
 
 runPrepareTestSpace()
 {
-
-	#now prepare for test space for all test sequences
-	#for SGE test, use 3 test queues so that can support more parallel jobs
-    echo -e "\033[32m ********************************************************************* \033[0m"
-    echo -e "\033[32m    Preparing all test spaces for eache test sequence \033[0m"
-    echo -e "\033[32m ********************************************************************* \033[0m"
-
     let "YUVIndex=0"
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataFolder}/${TestYUV}"
+        [ -d  ${SubFolder} ] && continue #for those repeat YUV name in TestYUVList
 
         echo -e "\033[32m ********************************************************************* \033[0m"
-        echo -e "\033[32m    Test sequence name is ${TestYUV} \033[0m"
-        echo -e "\033[32m    Sub folder is  ${SubFolder}"
+        echo -e "\033[32m    Test sequence name is: ${TestYUV}                                  \033[0m"
+        echo -e "\033[32m    Test space         is: ${SubFolder}                                \033[0m"
         echo -e "\033[32m ********************************************************************* \033[0m"
 
-        if [  -d  ${SubFolder}  ]
-		then
-			continue
-		fi
+        #copy codec app, script files, cfg files to test space for one YUV
 		mkdir -p ${SubFolder}
-		cp  ${CodecFolder}/*    ${SubFolder}
-		cp  ${ScriptFolder}/*   ${SubFolder}
-		cp  ${ConfigureFile}    ${SubFolder}
+        cp ${CodecFolder}/*  ${SubFolder};  cp ${ScriptFolder}/*  ${SubFolder};  cp ${ConfigureFile} ${SubFolder}
 
-        if [ ${InputFileFormat} -eq 1 ]
-        then
-            cp ${BitStreamToYUVFolder}/${TestYUV}  ${SubFolder}
-        fi
+        #if input format is bit stream, will decode to YUV, and sub-folder as input YUV dir
+        [ ${InputFileFormat} -eq 1 ] && cp ${BitStreamToYUVFolder}/${TestYUV}  ${SubFolder}
 
-        cd ${SubFolder}
-        runGenerateCaseFiles ${TestYUV}
-        cd ${CurrentDir}
+        #generate test cases
+        cd ${SubFolder};runGenerateCaseFiles ${TestYUV};cd ${CurrentDir}
 
 		let "YUVIndex++"
 		if [ ${TestType} = "SGETest"  ]
 		then
-			runGenerateSGEJobFileForOneYUV  ${SubFolder}  ${TestYUV}  ${ConfigureFile}
+			./Scripts/run_GenerateSGEJobFile.sh  ${SubFolder}  ${TestYUV}  ${ConfigureFile}
 		fi 		
 	done
 	
 	return 0
 }
-runGetInputTestSet()
+
+runGetInputYUVTestSet()
 {
-    if [ ${InputFileFormat} -eq 1 ]
-    then
-        if [ ! -d ${InputBitStreamDir} ]
-        then
-            echo -e "\033[31m Input bit stream dir does not exist,please double check! \033[0m"
-            exit 1
-        fi
-
-        cd ${InputBitStreamDir}
-        InputBitStreamDir=`pwd`
-        cd ${CurrentDir}
-    fi
-
+    #if InputFileFormat=1, which means bit stream as input,
+    #   --1, will decode to YUV, rename YUV with actual resolution
+    #   --2, will copy decoded YUV files to BitStreamToYUV
+    #   --3, BitStreamToYUV will be set as input YUVs' dir
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
 
-    if [ ${InputFileFormat} -eq 1 ]
-    then
-        cat BitStreamToYUV.log
-    fi
+    [ ${InputFileFormat} -eq 1 ] && cat BitStreamToYUV.log
+}
 
+runOutput()
+{
+    echo -e "\033[32m ********************************************************* \033[0m"
+    echo -e "\033[32m Repository         is ${Openh264GitAddr}   \033[0m"
+    echo -e "\033[32m Branch             is ${Branch}            \033[0m"
+    echo -e "\033[32m SGEJobSubCasesNum  is ${SGEJobSubCasesNum} \033[0m"
+    echo -e "\033[32m SGEJobSubCasesNum  is ${SGEJobSubCasesNum} \033[0m"
+    echo -e "\033[32m ********************************************************* \033[0m"
 }
 
 runCheck()
 {
 	#check test type
-	if [ ${TestType} = "SGETest" ]
-	then
-		return 0
-	elif [ ${TestType} = "LocalTest" ]
-	then
-		return 0
-	else
-		 echo -e "\033[31musage: TestTest should be SGETest or LocalTest, please choose one! \033[0m"
-		 exit 1
-	fi
-	
+	[ ! "${TestType}" = "SGETest" ] && [ ! "${TestType}" = "LocalTest" ] &&  && exit 1
+
 	#check configure file
-	if [  ! -f ${ConfigureFile} ]
-	then
-		echo "Configure file not exist!, please double check in "
-		echo " usage may looks like:   ./run_Main.sh  ../CaseConfigure/case.cfg "
-		exit 1
-	fi
-	return 0
-}
+	[  ! -f ${ConfigureFile} ] && echo "Configure file not exist!, please double check in " && exit 1
 
-runUsage()
-{
-
-    echo ""
-    echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType   \$SourceFolder  \$AllTestDataFolder  \033[0m"
-    echo -e "\033[31m                                     \$CodecFolder \$ScriptFolder \$ConfigureFile      \033[0m"
-    echo ""
-    echo -e "\033[31m or:  \033[0m"
-    echo -e "\033[31m usage: run_PrepareAllTestFolder.sh  \$TestType   \$SourceFolder  \$AllTestDataFolder  \033[0m"
-    echo -e "\033[31m                                     \$CodecFolder \$ScriptFolder \$ConfigureFile      \033[0m"
-    echo -e "\033[31m                                     \$OpenH264Branch \$OpenH264Repos       \033[0m"
-    echo ""
-
+    return 0
 }
 
 runMain()
 {
-
-	CurrentDir=`pwd`
-	SHA1TableFolder="${CurrentDir}/SHA1Table"
-	FinalResultDir="${CurrentDir}/FinalResult"
-	BitStreamToYUVFolder="${CurrentDir}/BitStreamToYUV"
-	SummaryDir="FinalResult_Summary"
-	let "SGEJobNum =0 "
-	let "SGEJobSubCasesNum=0"
-
-	Openh264GitAddr=""
-	Branch=""
-    CodecInfoLog="${CurrentDir}/CodecInfo.log"
-
-    #Input test set setting
-	declare -a aTestYUVList
-    InputFileFormat=""
-    InputBitStreamDir=""
-
-	#folder for eache test sequence
-	SubFolder=""
-	SGEJobFile=""
-	
-	#check input parameters
+    #check input parameters
 	runCheck
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m    Removing previous test data \033[0m"
+    echo -e "\033[32m ********************************************************************* \033[0m"
 	runRemovedPreviousTestData
-	
-	mkdir ${SHA1TableFolder}
-	mkdir ${FinalResultDir}
-    #mkdir ${SourceFolder}
 
-	#parse git repository info 
+	#parse git repository info
 	runParseConfigureFile
+    runOutput
+
 	#update codec
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m    updating test codec  \033[0m"
+    echo -e "\033[32m ********************************************************************* \033[0m"
     runUpdateCodec
 
-    runGetInputTestSet
-	echo "Preparing test space for all test sequences!"
+    runGetInputYUVTestSet
+
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m    Preparing all test spaces for eache test sequence \033[0m"
+    echo -e "\033[32m ********************************************************************* \033[0m"
 	runPrepareTestSpace
 }
 
+runExampleTest()
+{
+    TestType="LocalTest"
+    ConfigureFile="./CaseConfigure/case_for_Mac_fast_test.cfg"
+    GitRepositoryAddr="https://github.com/cisco/openh264"
+    Branch="master"
+    CheckoutDir="Source"
+    ReposUpdateOption="fast"
+
+    runMain
+}
+#************************************************************************************************************
+# example test
+runExampleTest
+
+EnableExampleTest()
+{
+#************************************************************************************************************
 echo ""
 echo "*********************************************************"
 echo "     call bash file is $0"
@@ -358,19 +250,19 @@ echo "*********************************************************"
 echo ""
 
 #parameter check!
-if [ ! $# -ge 6  ]
+if [ ! $# -ge 2 ]
 then
     runUsage
     return 1
 fi
 
 TestType=$1
-SourceFolder=$2
-AllTestDataFolder=$3
-CodecFolder=$4
-ScriptFolder=$5
-ConfigureFile=$6
-OpenH264Branch=$7
-OpenH264Repos=$8
+ConfigureFile=$2
+OpenH264Branch=$3
+OpenH264Repos=$4
+SourceFolder=$5
+ReposUpdateOption=$6
 
 runMain
+#************************************************************************************************************
+}

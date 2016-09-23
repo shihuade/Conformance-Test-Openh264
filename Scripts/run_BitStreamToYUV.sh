@@ -36,6 +36,7 @@ run_ParseDecoderInfo()
 	done < ${LogFile}
 	echo "${Width}  ${Height} ${FrameNum}"
 }
+
 #usage: run_BitStream2YUV  $BitstreamName  $OutputYUVName $LogFile 
 run_BitStream2YUV()
 {
@@ -98,8 +99,7 @@ runMain()
 		echo "usage: runMain  \${BitStreamFile}  \${OutputDir} \${Decoder} "
 		return 1
 	fi
-	
-	
+
 	BitStreameFile=$1
 	OutputDir=$2
 	Decoder=$3
