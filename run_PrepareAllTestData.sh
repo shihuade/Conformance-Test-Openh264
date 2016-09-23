@@ -43,8 +43,7 @@ runGlobalVariableInitial()
     InputFileFormat=""
 
     #folder for eache test sequence
-    SubFolder=""
-    SGEJobFile=""
+    SubFolder="";SGEJobFile=""
 }
 
 runRemovedPreviousTestData()
@@ -77,8 +76,8 @@ runRemovedPreviousTestData()
 
 runParseConfigureFile()
 {
-    Openh264GitAddr=(`cat ${ConfigureFile} | grep "^GitAddress"   | awk 'BEGIN {FS="[#:]"} {print $2}' `)
-    Branch=(`cat ${ConfigureFile}          | grep "^GitBranch"    | awk 'BEGIN {FS="[#:]"} {print $2}' `)
+    Openh264GitAddr=(`cat ${ConfigureFile} | grep "^GitAddress"   | awk '{print $2}' `)
+    Branch=(`cat ${ConfigureFile}          | grep "^GitBranch"    | awk '{print $2}' `)
     TempString=(`cat ${ConfigureFile}      | grep "^SubCasesNum"  | awk 'BEGIN {FS="[#:]"} {print $2}' `)
     let "SGEJobSubCasesNum= ${TempString}"
     TempString=(`cat ${ConfigureFile}      | grep "^InputFormat"  | awk 'BEGIN {FS="[#:]"} {print $2}' `)
@@ -119,13 +118,13 @@ runGenerateCaseFiles()
     SubCaseInfoLog=${TestYUVName}_SubCasesInfo.log
 
     ./run_GenerateCase.sh  ${ConfigureFile}   ${TestYUVName} ${AllCasesFile}
-    [ ! $? -eq 0  ] && echo  -e "\033[31m\n  failed to generate cases ! \n\033[0m" && return 1
+    [ ! $? -eq 0  ] && echo  -e "\033[31m\n  failed to generate cases ! \n\033[0m" && exit 1
 
     if [ ${TestType} == "SGETest"  ]
     then
         ./run_CasesPartition.sh ${AllCasesFile}  ${SGEJobSubCasesNum}\
                                 ${TestYUVName}   ${SubCaseInfoLog}
-        [ ! $? -eq 0  ] && echo  -e "\033[31m  failed to split all cases set into sub-set! \n\033[0m" && return 1
+        [ ! $? -eq 0  ] && echo  -e "\033[31m  failed to split all cases set into sub-set! \n\033[0m" && exit 1
     fi
 
     return 0
@@ -188,7 +187,7 @@ runOutput()
 runCheck()
 {
 	#check test type
-	[ ! "${TestType}" = "SGETest" ] && [ ! "${TestType}" = "LocalTest" ] &&  && exit 1
+	[ ! "${TestType}" = "SGETest" ] && [ ! "${TestType}" = "LocalTest" ] && exit 1
 
 	#check configure file
 	[  ! -f ${ConfigureFile} ] && echo "Configure file not exist!, please double check in " && exit 1
@@ -200,6 +199,8 @@ runMain()
 {
     #check input parameters
 	runCheck
+    runGlobalVariableInitial
+
     echo -e "\033[32m ********************************************************************* \033[0m"
     echo -e "\033[32m    Removing previous test data \033[0m"
     echo -e "\033[32m ********************************************************************* \033[0m"
@@ -221,13 +222,18 @@ runMain()
     echo -e "\033[32m    Preparing all test spaces for eache test sequence \033[0m"
     echo -e "\033[32m ********************************************************************* \033[0m"
 	runPrepareTestSpace
+
+    echo -e "\033[32m ********************************************************************* \033[0m"
+    echo -e "\033[32m   Test space preparation succeed                               \033[0m"
+    echo -e "\033[32m   All test data, please refer to: ${AllTestDataFolder}         \033[0m"
+    echo -e "\033[32m ********************************************************************* \033[0m"
 }
 
 runExampleTest()
 {
     TestType="LocalTest"
     ConfigureFile="./CaseConfigure/case_for_Mac_fast_test.cfg"
-    GitRepositoryAddr="https://github.com/cisco/openh264"
+    OpenH264Repos="https://github.com/cisco/openh264"
     Branch="master"
     CheckoutDir="Source"
     ReposUpdateOption="fast"
