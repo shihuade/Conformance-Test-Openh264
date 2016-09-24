@@ -325,7 +325,7 @@ runOutputParseResult()
     echo -e "\033[32m ********************************************************************* \033[0m"
     echo -e "\033[32m Test cases generation result for ${TestSequence} \033[0m"
     echo -e "\033[32m TotalCasesNum is: ${TotalCasesNum}               \033[0m"
-    echo -e "\033[32m   time  is: ${StartTime}                         \033[0m"
+    echo -e "\033[32m   Start time  is: ${StartTime}                   \033[0m"
     echo -e "\033[32m   End time    is: ${EndTime}                     \033[0m"
     echo -e "\033[32m ********************************************************************* \033[0m"
 	echo "PicWxPicH_FPS is ${PicW}x${PicH}_${FPS}"
@@ -470,13 +470,5 @@ ConfigureFile=$1
 TestSequence=$2
 OutputCaseFile=$3
 
-#runMain
-date
-for((i=0;i<23000;i++))
-do
-   echo "123">>test.csv
-done
-date
+runMain
 #******************************************************************************************************************
-
-

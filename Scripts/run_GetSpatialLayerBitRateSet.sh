@@ -122,7 +122,7 @@ runInitAndInputCheck()
 runMain()
 {
 
-runInitAndInputCheck
+    runInitAndInputCheck
     runGetActualLayerResolution
     runGetLayrBRPoint
 
