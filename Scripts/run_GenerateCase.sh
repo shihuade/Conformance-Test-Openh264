@@ -93,13 +93,19 @@ runGenerateMultiLayerBRSet()
     #example:   TempLayerBRInfo="200 400 800 0 , 50 300 600 0 ,"
     #        -->aTempLayerBRInfo=(200 400 800 0   50 300 600 0)
     aTempLayerBRInfo=(`echo ${TempLayerBRInfo}  | awk ' BEGIN  {FS=","}  {for(i=1;i<=NF;i++) printf(" %s",$i) }'`)
-
-	let "TempTotalNum = ${#aSpatialLayerBRSet1[@]}"
-	for ((i=0;i<${TempTotalNum}; i+=4))
+	TempTotalNum=`echo ${TempLayerBRInfo}  | awk ' BEGIN  {FS=","}  {printf NF-1 }'`
+	for ((i=0;i<${TempTotalNum}; i++))
 	do
+        let "j = i*4"
 	    #bc tool to calculate overall target bit rate
 		OverallBR=`echo "scale=2;           ${aTempLayerBRInfo[$i+0]}+${aTempLayerBRInfo[$i+1]}+${aTempLayerBRInfo[$i+2]}+${aTempLayerBRInfo[$i+3]}" | bc`
-		aTargetBitrateSet[$i]="${OverallBR},${aTempLayerBRInfo[$i+0]},${aTempLayerBRInfo[$i+1]},${aTempLayerBRInfo[$i+2]},${aTempLayerBRInfo[$i+3]},"
+        LayerBR="${aTempLayerBRInfo[$j+0]},${aTempLayerBRInfo[$j+1]},${aTempLayerBRInfo[$j+2]},${aTempLayerBRInfo[$j+3]}"
+        MaxLayerBR=${LayerBR}
+
+        #OveralBR, LayerBR_0, LayerBR_1, LayerBR_2, LayerBR_3, MaxLayerBR_0, MaxLayerBR_1, MaxLayerBR_2, MaxLayerBR_3,
+		aTargetBitrateSet[$i]="${OverallBR},${LayerBR},${MaxLayerBR},"
+        echo "inside setting"
+        echo "aTargetBitrateSet[$i] is ${aTargetBitrateSet[$i]}"
 	done
 }
 #usage: runGenerateLayerResolution ${SpatialNum}
@@ -172,6 +178,8 @@ runFirstStageCase()
 		
 		for NumSpatialLayer in ${aNumSpatialLayer[@]}
 		do
+            runGenerateLayerResolution   ${NumSpatialLayer}
+
 			for NumTempLayer in ${aNumTempLayer[@]}
 			do
 				for RCModeIndex in ${aRCMode[@]}
@@ -194,7 +202,6 @@ runFirstStageCase()
                         do
                             for BitRateIndex in ${aTargetBitrateSet[@]}
                             do
-                                runGenerateLayerResolution   ${NumSpatialLayer}
                                 echo "$ScreenSignal, \
 								$FramesToBeEncoded,\
 								${NumSpatialLayer},\
@@ -362,7 +369,8 @@ runOutputParseResult()
 	echo "aSpatialLayerBRSet1 is ${aSpatialLayerBRSet1[@]}"
 	echo "aSpatialLayerBRSet2 is ${aSpatialLayerBRSet2[@]}"
 	echo "aSpatialLayerBRSet3 is ${aSpatialLayerBRSet3[@]}"
-	echo "aSpatialLayerBRSet4 is ${aSpatialLayerBRSet4[@]}"
+    echo "aSpatialLayerBRSet4 is ${aSpatialLayerBRSet4[@]}"
+    echo "aTargetBitrateSet is ${aTargetBitrateSet[@]}"
     echo -e "\033[32m ********************************************************************* \033[0m"
     echo ""
 }
@@ -397,6 +405,10 @@ runBeforeGenerate()
 		BRLayer1,\
 		BRLayer2,\
 		BRLayer3,\
+        MaxBRLayer0,\
+        MaxBRLayer1,\
+        MaxBRLayer2,\
+        MaxBRLayer3,\
 		SliceMdLayer0, \
 		SliceNmuLayer0,\
 		SliceMdLayer1, \
