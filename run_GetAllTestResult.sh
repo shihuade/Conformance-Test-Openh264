@@ -35,7 +35,6 @@ runGetAllYUVTestResult()
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 0
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 1
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
-
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 3
         ./Scripts/run_SubCasesToAllCasesSummary.sh ${TestYUV} ${DetailSummaryFile} ${SummaryFile}
 
@@ -55,24 +54,25 @@ runGetAllYUVTestResult()
 
 runPromptInfo()
 {
-    echo ""
-    echo  -e "\033[32m Final result can be found in ./FinaleRestult \033[0m"
-    echo  -e "\033[32m SHA1  table  can be found in ./SHA1Table \033[0m"
-    echo ""
     if [ ${AllTestFlag} -eq 0  ]
     then
         echo ""
-        echo -e "\033[32m ************************************************************************** \033[0m"
-        echo -e "\033[32m    All test succed!    \033[0m"
-        echo -e "\033[32m **************************************************************************** \033[0m"
+        echo -e "\033[34m ************************************************************************** \033[0m"
+        echo -e "\033[34m      Finale test result:  All test succed!       \033[0m"
+        echo -e "\033[34m **************************************************************************** \033[0m"
         echo ""
     else
         echo ""
         echo -e "\033[31m ************************************************************************** \033[0m"
-        echo -e "\033[31m  Not all cases passed!  \033[0m"
+        echo -e "\033[31m      Finale test result:  Not all cases passed!  \033[0m"
         echo -e "\033[31m **************************************************************************** \033[0m"
         echo ""
     fi
+    echo -e "\033[34m **************************************************************************** \033[0m"
+    echo  -e "\033[32m        Summary result can be found in ./FinalResult_Summary                 \033[0m"
+    echo  -e "\033[32m        All result can be found     in ./FinaleRestult                       \033[0m"
+    echo  -e "\033[32m        SHA1  table  can be found   in ./SHA1Table                           \033[0m"
+    echo -e "\033[34m **************************************************************************** \033[0m"
 
 }
 
@@ -139,7 +139,7 @@ runCheck()
     echo ""
     echo -e "\033[32m ********************************************************** \033[0m"
     echo -e "\033[32m     getting final test result... \033[0m"
-    echo -e "\033[32m     CurrentDir is :${CurrentDir}\033[0m"
+    echo -e "\033[32m     CurrentDir is :${CurrentDir} \033[0m"
     echo -e "\033[32m ********************************************************** \033[0m"
     echo ""
     if [ ! -d ${FinalResultDir} ]
@@ -178,7 +178,6 @@ runMain()
     let "AllTestFlag=0"
 	declare -a aTestYUVList
 
-
     #get YUV list
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
 
@@ -199,7 +198,8 @@ runMain()
     then
         touch ${AllTestResultPassFlagFile}
     fi
-    return 0
+
+    return ${AllTestFlag}
 
 }
 if [ ! $# -eq 3  ]
