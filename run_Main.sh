@@ -6,7 +6,7 @@
 #      --before run this script,
 #          i) you need to update you codec  in folder ./Codec
 #          ii) change you configure file if you do not use the default test case
-#      --usage: run_Main.sh $ConfigureFile
+#      --usage: refer to function runUsage()
 # 
 #      --for more detail,please refer to README.md
 #
@@ -15,14 +15,13 @@
 #***************************************************************************************
  runUsage()
  {
-	echo ""
-	echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \033[0m"
-	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest    ./CaseConfigure/case.cfg \s033[0m"
-	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ./CaseConfigure/case.cfg \033[0m"
-    echo ""
-    echo -e "\033[31m or  \033[0m"
-    echo -e "\033[31m usage: ./run_Main.sh  \$TestType \$ConfigureFile \$Branch \$GitRepos \033[0m"
- 	echo ""
+    echo -e "\033[32m **************************************************************************\033[0m"
+	echo -e "\033[31m   usage: ./run_Main.sh    \$TestType  \$ConfigureFile                     \033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest    ./CaseConfigure/case.cfg        \n\033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ./CaseConfigure/case.cfg        \n\033[0m"
+    echo -e "\033[31m or                                                                        \033[0m"
+    echo -e "\033[31m   usage: ./run_Main.sh  \$TestType \$ConfigureFile \$Branch \$GitRepos  \n\033[0m"
+    echo -e "\033[32m **************************************************************************\033[0m"
  }
  
 runGetFinalTestResult()
@@ -30,20 +29,12 @@ runGetFinalTestResult()
     #check test type
     if [ ${TestType} = "SGETest" ]
     then
-
-        echo ""
-        echo -e "\033[32m **************************************************************************************\033[0m"
-        echo ""
-        echo -e "\033[32m please run below command to check whether all SGE jobs have been completed!"
-        echo ""
-        echo -e "\033[32m     ./run_SGEJobStatusUpdate.sh  SGEJobsSubmittedInfo.log ${AllJobsCompletedFlagFile} "
-        echo ""
-        echo ""
-        echo -e "\033[32m please run below command to get final result when all SGE jobs have been completed!"
-        echo ""
-        echo -e "\033[32m     ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile} ${AllTestResultPassFlag}"
-        echo -e "\033[32m **************************************************************************************\033[0m"
-        echo ""
+        echo -e "\033[32m ********************************************************************************************\033[0m"
+        echo -e "\033[32m     please run below command to check whether all SGE jobs have been completed!             \033[0m"
+        echo -e "\033[32m       ./run_SGEJobStatusUpdate.sh  SGEJobsSubmittedInfo.log ${AllJobsCompletedFlagFile} \n\n\033[0m"
+        echo -e "\033[32m     please run below command to get final result when all SGE jobs have been completed!     \033[0m"
+        echo -e "\033[32m       ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile} ${AllTestResultPassFlag} \n\n\033[0m"
+        echo -e "\033[32m ********************************************************************************************\033[0m"
         return 0
     elif [ ${TestType} = "LocalTest" ]
     then
@@ -51,47 +42,24 @@ runGetFinalTestResult()
         let "AllTestFlag =$?"
     fi
 }
+
 runCheck()
 {
 	#check test type
-	if [ ${TestType} = "SGETest" ]
-	then
-		return 0
-	elif [ ${TestType} = "LocalTest" ]
-	then
-		return 0
-	else
-		 runUsage
-		 exit 1
-	fi
+	[ ! ${TestType} = "SGETest" ] && [ ! ${TestType} = "LocalTest" ] && runUsage && exit 1
 	
 	#check configure file
-	if [  ! -f ${ConfigureFile} ]
-	then
-		echo "Configure file not exist!, please double check in "
-		echo " usage may looks like:   ./run_Main.sh  ../CaseConfigure/case.cfg "
-		exit 1
-	fi
-	return 0
+	[  ! -f ${ConfigureFile} ] && echo "Configure file ${ConfigureFile} does not exist!, please double check" && runUsage && exit 1
+
+    return 0
 }
+
 runMain()
  {
-	if [ ! $# -ge 2 ]
-	then
-		runUsage
-		exit 1
-	fi
-	TestType=$1
-	ConfigureFile=$2
-    OpenH264Branch=$3
-    OpenH264Repos=$4
-
-
 	runCheck
 	
 	#dir translation
 	AllTestDataFolder="AllTestData"
-	SourceFolder="Source"
 	CodecFolder="Codec"
 	ScriptFolder="Scripts"
 	SHA1TableFolder="SHA1Table"
@@ -100,37 +68,52 @@ runMain()
     AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
     AllTestResultPassFlag="AllCasesPass.flag"
 
+    #default is Source, will be overwrite by input value
+    #SourceFolder="Source"
+
     let "AllTestFlag =0"
-
-
-	echo ""
-	echo ""
-	echo "prepare for all test data......."
-	echo ""
-	# prepare for all test data
-	./run_PrepareAllTestData.sh   ${TestType}  ${SourceFolder}  ${AllTestDataFolder}  ${CodecFolder}  ${ScriptFolder}  ${ConfigureFile} ${OpenH264Branch} "${OpenH264Repos}"
+    echo -e "\033[32m **************************************************************************\033[0m"
+    echo -e "\033[32m   prepare for all test data.......                                        \033[0m"
+    echo -e "\033[32m **************************************************************************\033[0m"
+   ./run_PrepareAllTestData.sh   ${TestType} ${ConfigureFile} ${OpenH264Branch} "${OpenH264Repos}" ${SourceFolder} ${CodecUpdateOption}
 	if [ ! $? -eq 0 ]
 	then
 		echo "failed to prepared  test space for all test data!"
 		exit 1
 	fi
-	echo ""
-	echo ""
-	echo "running all test cases for all test sequences......"
-	echo ""
-	##
+
+    echo -e "\033[32m **************************************************************************\033[0m"
+    echo -e "\033[32m   testing all cases for all test sequences......                          \033[0m"
+    echo -e "\033[32m **************************************************************************\033[0m"
     ./run_TestAllSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
 
+    echo -e "\033[32m **************************************************************************\033[0m"
+    echo -e "\033[32m   get final test result......                                             \033[0m"
+    echo -e "\033[32m **************************************************************************\033[0m"
     runGetFinalTestResult
 
     return ${AllTestFlag}
-
 }
-TestType=$1
-ConfigureFile=$2
-OpenH264Branch=$3
-OpenH264Repos=$4
 
+runExampleTest()
+{
+    TestType=LocalTest
+    ConfigureFile="../CaseConfigure/case_for_Mac_fast_test.cfg"
+    OpenH264Branch="Master"
+    OpenH264Repos="https://github.com/cisco/openh264"
+
+    runMain
+}
+
+#*****************************************************************************************
+#exampe test
+#*****************************************************************************************
+#runExampleTest
+#Temp()
+#{
+#*****************************************************************************************
+# main enctry:
+#*****************************************************************************************
 echo ""
 echo "*********************************************************"
 echo "     call bash file is $0"
@@ -139,5 +122,20 @@ echo "        $0 $@"
 echo "*********************************************************"
 echo ""
 
-runMain  ${TestType} ${ConfigureFile} ${OpenH264Branch} "${OpenH264Repos}"
+if [ ! $# -ge 2 ]
+then
+    runUsage
+    exit 1
+fi
 
+TestType=$1
+ConfigureFile=$2
+OpenH264Branch=$3
+OpenH264Repos=$4
+SourceFolder=$5
+CodecUpdateOption=$6
+
+
+runMain
+#*****************************************************************************************
+#}
