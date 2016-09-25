@@ -47,7 +47,17 @@ runCheckParameter()
             echo "git remote -v error, seems there is no repos"
             echo "now change ReposUpdateOption to clone, which will clone a new repos to ${CheckoutDir} "
             ReposUpdateOption="clone"
-            cd -p ${CurrentDir}
+            cd ${CurrentDir}
+            return 0
+        fi
+
+        git checkout ${Branch}
+        if [ ! $? -eq 0 ]
+        then
+            echo "git checkout ${Branch} error, seems there is no repos"
+            echo "now change ReposUpdateOption to clone, which will clone a new repos to ${CheckoutDir} "
+            ReposUpdateOption="clone"
+            cd ${CurrentDir}
             return 0
         fi
 
