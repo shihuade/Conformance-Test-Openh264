@@ -91,9 +91,11 @@ runParseConfigureFile()
     [ ! -z ${OpenH264Repos} ]    && Openh264GitAddr="${OpenH264Repos}"
     [ ! -z ${OpenH264Branch} ]   && Branch="${OpenH264Branch}"
 
+    DefaultSourceFolder="Source";
+    DefaultReposUpdateOption="fast"
     #using default value
-    [ -z ${SourceFolder} ]       && SourceFolder="Source"
-    [ -z ${ReposUpdateOption} ]  && ReposUpdateOption="fast"
+    [ -z ${SourceFolder} ]       && SourceFolder="${DefaultSourceFolder}"
+    [ -z ${ReposUpdateOption} ]  && ReposUpdateOption="${DefaultReposUpdateOption}"
 }
 
 runUpdateCodec()
@@ -107,8 +109,10 @@ runUpdateCodec()
 	[ ! $? -eq 0 ] && echo -e "\033[31m\n Failed build and update codec! \n\033[0m" && exit 1
 
     #copy JM/JSVM/DowsampleApp etc. tools to codec folder
-    [ "${Platform}" = "linux" ] && cp -f  ${Codec_Linux}/*  ${CodecFolder}
-    [ "${Platform}" = "mac" ]   && cp -f  ${Codec_Mac}/*    ${CodecFolder}
+    echo "Test platform is ${Platform}; copy JM/JSVM etc. tools to codec"
+    [ "${Platform}" = "Linux" ] && cp -f  ${Codec_Linux}/*  ${CodecFolder}
+    [ "${Platform}" = "Mac" ]   && cp -f  ${Codec_Mac}/*    ${CodecFolder}
+    ls -l ${CodecFolder}
 
 	return 0
 }
@@ -193,7 +197,7 @@ runCheck()
 	[ ! "${TestType}" = "SGETest" ] && [ ! "${TestType}" = "LocalTest" ] && exit 1
 
 	#check configure file
-	[  ! -f ${ConfigureFile} ] && echo "Configure file not exist!, please double check in " && exit 1
+	[  ! -f ${ConfigureFile} ] && echo "Configure file ${ConfigureFile} does not exist!please double check in " && exit 1
 
     return 0
 }
