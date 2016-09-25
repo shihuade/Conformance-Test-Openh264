@@ -8,7 +8,7 @@
       location = "container:run_BackupTestData.sh">
    </FileRef>
    <FileRef
-      location = "container:run_CheckoutCiscoOpenh264Codec.sh">
+      location = "container:/Users/huashi/project/Openh264/ConformanceTest/run_CheckoutRepos.sh">
    </FileRef>
    <FileRef
       location = "container:run_CleanUpTestSpace.sh">
@@ -192,6 +192,9 @@
    <Group
       location = "group:CaseConfigure"
       name = "CaseConfigure">
+      <FileRef
+         location = "group:case_for_Mac_SVC.cfg">
+      </FileRef>
       <FileRef
          location = "group:case_for_Mac_fast_test.cfg">
       </FileRef>
