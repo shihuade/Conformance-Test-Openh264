@@ -96,7 +96,7 @@ runUpdateRepos()
 runCloneRepos()
 {
     #remove and clone a new repos to CheckoutDir
-   [ -d ${CheckoutDir} ] && ./Scripts/run_SafeDelete.sh ${CheckoutDir}
+   [ -d ${CheckoutDir} ] && echo "remove CheckoutDir ${CheckoutDir}" && ./Scripts/run_SafeDelete.sh ${CheckoutDir}
    mkdir -p ${CheckoutDir}
 
    git clone ${GitRepositoryAddr}  ${CheckoutDir}
@@ -147,7 +147,7 @@ runMain()
         echo -e "\033[33m*********************************************** \033[0m"
         echo -e "\033[33m  update repos only                             \033[0m"
         echo -e "\033[33m*********************************************** \033[0m"
-        runUpdateRepos >ReposCheckout.log #2>&1
+        runUpdateRepos #>ReposCheckout.log 2>&1
         [ ! $? -eq 0 ] && echo -e "\033[31m\n update repos failed!\n\033[0m" && exit 1
 
     elif [ "${ReposUpdateOption}" = "clone" ]
@@ -155,7 +155,7 @@ runMain()
         echo -e "\033[33m*********************************************** \033[0m"
         echo -e "\033[33m  clone a new repos                             \033[0m"
         echo -e "\033[33m*********************************************** \033[0m"
-        runCloneRepos >ReposCheckout.log #2>&1
+        runCloneRepos #>ReposCheckout.log 2>&1
         [ ! $? -eq 0 ] && echo -e "\033[31m\n update repos failed!\n\033[0m" && exit 1
     else
         echo -e "\033[31m\n ReposUpdateOption should be fast or clone \n\033[0m"
