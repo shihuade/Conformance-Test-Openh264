@@ -59,7 +59,7 @@ runGlobalVariableInitial()
 			-slcmd 0, -slcnum 0, -slcmd 1, -slcnum 1,\
 			-slcmd 2, -slcnum 2, -slcmd 3, -slcnum 3,\
 			-nalsize,\
-			-iper, -thread, -ltr, -db, -denois,\
+			-iper, -thread, -loadbalancing, -ltr, -db, -denois,\
 			-scene  , bgd  , -aq "
 
 	echo  ${HeadLine1}>${AssignedCasesPassStatusFile}
