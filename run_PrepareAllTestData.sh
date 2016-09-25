@@ -55,9 +55,9 @@ runRemovedPreviousTestData()
 	[ -d $SHA1TableFolder ]      && ./${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
 	[ -d $FinalResultDir ]       && ./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
 	[ -d $SummaryDir ]           && ./${ScriptFolder}/run_SafeDelete.sh  $SummaryDir
-    [ -d $SourceFolder ]         && ./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
     [ -d $BitStreamToYUVFolder ] && ./${ScriptFolder}/run_SafeDelete.sh  $BitStreamToYUVFolder
     [ -d $CodecFolder ]          && ./${ScriptFolder}/run_SafeDelete.sh  $CodecFolder
+    #[ -d $SourceFolder ]        && ./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
 
     for file in ${CurrentDir}/*.log
     do

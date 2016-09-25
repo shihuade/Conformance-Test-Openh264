@@ -48,16 +48,16 @@ runSGETest()
     fi
 
     #./run_SGEJobStatusUpdate.sh  ${SGEJobListFile}
-	return $?
+	exit 0
 }
 
 runLocalTest()
 {
-	let "Flag=0"
+	let "AllSequencesAllCassesPassedFlag=0"
 	for TestYUV in ${aTestYUVList[@]}
 	do
 		SubFolder="${AllTestDataDir}/${TestYUV}"
-		TestFlagFile="${TestYUV}_Tested.flag"
+		TestFlagFile="${TestYUV}_Tested.AllSequencesAllCassesPassedFlag"
 		if [ -e   ${SubFolder}/${TestFlagFile} ]
 		then
 			continue
@@ -71,14 +71,20 @@ runLocalTest()
 		./run_TestOneYUVWithAssignedCases.sh  ${TestType}      ${TestYUV}  ${FinalResultDir} \
                                               ${ConfigureFile}  AllCases   ${CasesFile}
 
-        let "Flag = $?"
+        let "AllSequencesAllCassesPassedFlag = $?"
 
-		#when test completed, generate flag file to avoid repeating test
+		#when test completed, generate AllSequencesAllCassesPassedFlag file to avoid repeating test
 		touch ${TestFlagFile}
 		cd  ${CurrentDir}
 	done
-	
-	return ${Flag}
+
+    echo -e "\033[32m\n\n **************************************************************************\033[0m"
+    echo -e "\033[32m   all cases for all test sequences completed                                  \033[0m"
+    echo -e "\033[32m   cases passed status is(0:passed;1:failed): $AllSequencesAllCassesPassedFlag \033[0m"
+    echo -e "\033[32m   testing all cases for all test sequences......                              \033[0m"
+    echo -e "\033[32m **************************************************************************\n\n\033[0m"
+
+	exit ${AllSequencesAllCassesPassedFlag}
 	
 }
  
@@ -112,8 +118,7 @@ runMain()
 	then
 		runLocalTest
 	fi
-	
-	return $?
+
 }
 
 #************************************************************************************************************

@@ -15,13 +15,22 @@
 #***************************************************************************************
  runUsage()
  {
-    echo -e "\033[32m **************************************************************************\033[0m"
-	echo -e "\033[31m   usage: ./run_Main.sh    \$TestType  \$ConfigureFile                     \033[0m"
-	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest    ./CaseConfigure/case.cfg        \n\033[0m"
-	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ./CaseConfigure/case.cfg        \n\033[0m"
-    echo -e "\033[31m or                                                                        \033[0m"
-    echo -e "\033[31m   usage: ./run_Main.sh  \$TestType \$ConfigureFile \$Branch \$GitRepos  \n\033[0m"
-    echo -e "\033[32m **************************************************************************\033[0m"
+    echo -e "\033[32m ************************************************************************** \033[0m"
+	echo -e "\033[31m   usage: ./run_Main.sh    \$TestType  \$ConfigureFile                      \033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  SGETest    ./CaseConfigure/case.cfg           \033[0m"
+	echo -e "\033[31m       --eg:   ./run_Main.sh  LocalTest  ./CaseConfigure/case.cfg           \033[0m"
+    echo -e "\033[32m or                                                                         \033[0m"
+    echo -e "\033[32m ************************************************************************** \033[0m"
+    echo -e "\033[31m   usage: ./run_Main.sh  \$TestType       \$ConfigureFile                   \033[0m"
+    echo -e "\033[31m                         \$OpenH264Branch \$OpenH264Repos                   \033[0m"
+    echo -e "\033[31m                         \$SourceFolder   \$ReposUpdateOption               \033[0m"
+    echo -e "\033[32m ************************************************************************** \033[0m"
+    echo -e "\033[31m       --last four parameters are optional                                  \033[0m"
+    echo -e "\033[31m         which used to overwrite value in configure file                    \033[0m"
+    echo -e "\033[31m       --ReposUpdateOption: fast or colone                                  \033[0m"
+    echo -e "\033[31m         ----fast:  update repos via git pull only                          \033[0m"
+    echo -e "\033[31m         ----clone: clone a new repos                                       \033[0m"
+    echo -e "\033[32m ************************************************************************** \033[0m"
  }
  
 runGetFinalTestResult()
