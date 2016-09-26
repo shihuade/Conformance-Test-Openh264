@@ -80,7 +80,7 @@ runMain()
 	CurrentDir=`pwd`
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
-    SummaryDir="FinalResult_Summary"
+    SummaryDir="FinalTestReport"
 
 	runRemovedPreviousTestData
 	

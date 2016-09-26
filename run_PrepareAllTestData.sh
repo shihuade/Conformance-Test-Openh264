@@ -35,7 +35,7 @@ runGlobalVariableInitial()
     CodecFolder="Codec";Codec_Linux="Codec_Linux";Codec_Mac="Codec_Mac"
     ScriptFolder="Scripts"
     BitStreamToYUVFolder="BitStreamToYUV"
-    SummaryDir="FinalResult_Summary"
+    SummaryDir="FinalTestReport"
 
     let "SGEJobNum =0 ";let "SGEJobSubCasesNum=0"
 

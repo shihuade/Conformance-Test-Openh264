@@ -17,7 +17,7 @@
 	echo -e "\033[31m   FileIndex: 0--AssignedCasesPassStatusFile    \033[0m"
     echo -e "\033[31m   FileIndex: 1--UnPassedCasesFile              \033[0m"
     echo -e "\033[31m   FileIndex: 2--AssignedCasesSHATableFile      \033[0m"
-    echo -e "\033[31m   FileIndex: 3--CaseSummaryFile                \033[0m"
+    echo -e "\033[31m   FileIndex: 3--AllCaseAllSlavesTestReportFile                \033[0m"
  }
 
 runCopySubCaseFileToAllCasesFile()
@@ -60,7 +60,7 @@ runGenerateFilePreFixBasedIndex()
     AssignedCasesPassStatusFile="${TestYUVName}_AllCasesOutput"
     UnPassedCasesFile="${TestYUVName}_UnpassedCasesOutput"
     AssignedCasesSHATableFile="${TestYUVName}_AllCases_SHA1_Table"
-    CaseSummaryFile="${TestYUVName}"
+    AllCaseAllSlavesTestReportFile="${TestYUVName}"
 
     if [ ${FileIndex}  -eq 0 ]
     then
@@ -76,8 +76,8 @@ runGenerateFilePreFixBasedIndex()
         OutputFileName=${AssignedCasesSHATableFile}.csv
     elif [ ${FileIndex}  -eq 3 ]
     then
-        FileNamePrefix="TestReport_${CaseSummaryFile}_SubCasesIndex_"
-        OutputFileName=${CaseSummaryFile}_AllCasesAllSlaves.Summary.log
+        FileNamePrefix="TestReport_${AllCaseAllSlavesTestReportFile}_SubCasesIndex_"
+        OutputFileName=${AllCaseAllSlavesTestReportFile}_AllCasesAllSlaves.Summary.log
     fi
 
     OutputFile=${SummaryDir}/${OutputFileName}
@@ -126,7 +126,7 @@ runMain()
     OutputFileName=""
     OutputFile=""
     CurrentDir=`pwd`
-    SummaryDir=${CurrentDir}/FinalResult_Summary
+    SummaryDir=${CurrentDir}/FinalTestReport
 
     let "SubFileIndex = 0"
     let "NewFileFlag  = 0"

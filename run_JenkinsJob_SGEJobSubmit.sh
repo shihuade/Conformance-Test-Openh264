@@ -41,7 +41,7 @@ runInitial()
     SGEJobsTestSpace="${CurrentDir}"
     
     #for job status 
-    FinalResultSummaryDir="FinalResult_Summary"
+    FinalResultSummaryDir="FinalTestReport"
     AllTestSummary="AllTestYUVsSummary.txt"
     SGEJobsAllTestSummary="${TestProfile}_AllTestYUVsSummary.txt"
     AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"

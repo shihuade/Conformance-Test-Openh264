@@ -71,7 +71,7 @@ runPromptInfo()
         echo ""
     fi
     echo -e "\033[34m **************************************************************************** \033[0m"
-    echo  -e "\033[32m        Summary result can be found in ./FinalResult_Summary                 \033[0m"
+    echo  -e "\033[32m        Summary result can be found in ./FinalTestReport                     \033[0m"
     echo  -e "\033[32m        All result can be found     in ./FinaleRestult                       \033[0m"
     echo  -e "\033[32m        SHA1  table  can be found   in ./SHA1Table                           \033[0m"
     echo -e "\033[34m **************************************************************************** \033[0m"
@@ -173,7 +173,7 @@ runMain()
     #get full path info
     FinalResultDir=${CurrentDir}/FinalResult
     SHA1TableDir=${CurrentDir}/SHA1Table
-    FinalSummaryDir=${CurrentDir}/FinalResult_Summary
+    FinalSummaryDir=${CurrentDir}/FinalTestReport
     #check input parameters
 	runCheck
 

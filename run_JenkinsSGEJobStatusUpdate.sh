@@ -35,7 +35,7 @@ runInital()
 
     CaseConfigureFileDir="CaseConfigure"
     CaseConfigureFile="${CaseConfigureFileDir}/case_${TestProfile}.cfg"
-    FinalResultSummaryDir="FinalResult_Summary"
+    FinalResultSummaryDir="FinalTestReport"
     FinalResultDir="FinalResult"
     SGEIPInfoFile="${CurrentDir}/Tools/SGE.cfg"
 
