@@ -22,7 +22,8 @@
 
 runGetAllYUVTestResult()
 {
-    echo "">${AllTestSummary}
+echo "">${AllTestSummary}
+echo "">${AllYUVAllSlavesTestReort}
     for TestYUV in ${aTestYUVList[@]}
     do
         # combine sub-cases files into single all cases file
@@ -48,9 +49,9 @@ runGetAllYUVTestResult()
         cp -f ${SHA1TableFile} ${SHA1TableDir}
 
         #print test sequence's test summary
-        cat ${SummaryFile} >>${AllTestSummary}
-
-      done
+        cat ${SummaryFile}       >>${AllTestSummary}
+        cat ${DetailSummaryFile} >>${AllYUVAllSlavesTestReort}
+    done
 
 }
 
@@ -83,9 +84,14 @@ runOutputSummary()
 
 	echo ""
 	echo -e "\033[32m ********************************************************** \033[0m"
-	echo -e "\033[32m all test summary listed as below: \033[0m"
+	echo -e "\033[32m All test sequences under all test slaves test report:      \033[0m"
 	echo -e "\033[32m ********************************************************** \033[0m"
 	echo ""
+    cat ${AllYUVAllSlavesTestReort}
+    echo ""
+    echo -e "\033[32m ********************************************************** \033[0m"
+    echo -e "\033[32m All test sequences' summary listed as below:               \033[0m"
+    echo -e "\033[32m ********************************************************** \033[0m"
 	cat ${AllTestSummary}
 	echo ""
 	echo -e "\033[32m ********************************************************** \033[0m"
@@ -177,7 +183,10 @@ runMain()
     #check input parameters
 	runCheck
 
+    #Summary report for all test sequences
     AllTestSummary="${FinalSummaryDir}/AllTestYUVsSummary.txt"
+    #Detail report file for all test sequences under all slaves test report
+    AllYUVAllSlavesTestReort="${FinalSummaryDir}/AllTestYUVsAllSlavesDetailTestReport.txt"
     let "AllTestFlag=0"
 	declare -a aTestYUVList
 

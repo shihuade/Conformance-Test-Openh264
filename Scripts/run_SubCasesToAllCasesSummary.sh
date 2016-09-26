@@ -122,18 +122,18 @@ runMain()
     TempFile=${SummaryFile}_OverallSummary.log
 
     echo  -e "\033[34m ********************************************************** \033[0m"
-    echo  -e "\033[34m        Test summary for all sub-cases of ${TestYUVName}    \033[0m"
+    echo  -e "\033[34m        Test summary for all sub-cases of ${YUVName}        \033[0m"
     echo  -e "\033[34m ********************************************************** \033[0m"
 
     runCheck
 
     runSummarizeAllTestResult
-    runOutputTestSummary   #>${TempFile}
-    runOutputDetailResult  #>>${TempFile}
+    runOutputTestSummary   >${TempFile}
+    runOutputDetailResult  >>${TempFile}
     runOutputTestSummary   >${OutputFile}
 
     echo  -e "\033[34m ********************************************************** \033[0m"
-    echo  -e "\033[34m        Completed test summary for ${TestYUVName}           \033[0m"
+    echo  -e "\033[34m        Completed test summary for ${YUVName}               \033[0m"
     echo  -e "\033[34m        summary is ${OutputFile}                            \033[0m"
     echo  -e "\033[34m ********************************************************** \033[0m"
 
