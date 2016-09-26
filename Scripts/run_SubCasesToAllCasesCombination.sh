@@ -82,6 +82,7 @@ runGenerateFilePreFixBasedIndex()
     AssignedCasesSHATableFile="${TestYUVName}_AllCases_SHA1_Table"
     CaseSummaryFile="${TestYUVName}"
 
+    #CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary.log"
     if [ ${FileIndex}  -eq 0 ]
     then
         FileNamePrefix="${AssignedCasesPassStatusFile}_SubCasesIndex_"
@@ -97,7 +98,7 @@ runGenerateFilePreFixBasedIndex()
     elif [ ${FileIndex}  -eq 3 ]
     then
         FileNamePrefix="TestReport_${CaseSummaryFile}_SubCasesIndex_"
-        OutputFileName=${CaseSummaryFile}_AllCasesAllSlaves.Summary
+        OutputFileName=${CaseSummaryFile}_AllCasesAllSlaves.Summary.log
     fi
 
     OutputFile=${SummaryDir}/${OutputFileName}

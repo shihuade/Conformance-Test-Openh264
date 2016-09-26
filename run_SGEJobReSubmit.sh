@@ -272,7 +272,7 @@ runGetReSubmittedSGEJobFile()
 # CREW_352x288_30.yuv_AllCasesOutput_SubCasesIndex_0.csv
 # CREW_352x288_30.yuv_AllCases_SHA1_Table_SubCasesIndex_0.csv
 # CREW_352x288_30.yuv_UnpassedCasesOutput_SubCasesIndex_0.csv
-# TestReport_CREW_352x288_30.yuv_SubCasesIndex_0.report
+# TestReport_CREW_352x288_30.yuv_SubCasesIndex_0.report.log
 runGetReSubmittedSGEJobTestRestultFile()
 {
 
@@ -298,12 +298,12 @@ runGetReSubmittedSGEJobTestRestultFile()
             TempYUVName=`echo $TempFileName          | awk 'BEGIN {FS=".yuv"} {print $1}'`
             TempSubCaseIndex=`echo $TempFileName     | awk 'BEGIN {FS="SubCasesIndex_"} {print $2}'`
             TempSubCaseIndex=`echo $TempSubCaseIndex | awk 'BEGIN {FS=".csv"} {print $1}'`
-        elif [[ "$file" =~ .report$ ]]
+        elif [[ "$file" =~ .report.log$ ]]
         then
             TempYUVName=`echo $TempFileName          | awk 'BEGIN {FS=".yuv"} {print $1}'`
             TempYUVName=`echo $TempYUVName           | awk 'BEGIN {FS="TestReport_"} {print $2}'`
             TempSubCaseIndex=`echo $TempFileName     | awk 'BEGIN {FS="SubCasesIndex_"} {print $2}'`
-            TempSubCaseIndex=`echo $TempSubCaseIndex | awk 'BEGIN {FS=".report"} {print $1}'`
+            TempSubCaseIndex=`echo $TempSubCaseIndex | awk 'BEGIN {FS=".report.log"} {print $1}'`
         fi
 
         vMatchedPattern="${TempYUVName}.yuv_SubCaseIndex_${TempSubCaseIndex}"
@@ -327,7 +327,7 @@ runGetReSubmittedSGEJobTestRestultFile()
                     aReSubmittedSGEJobErrorCasesFileList[$i]=${file}
                 fi
 
-                if [[ "${TempFileName}" =~ .report$ ]]
+                if [[ "${TempFileName}" =~ .report.log$ ]]
                 then
                     aReSubmittedSGEJobTestReportFileList[$i]=${file}
                 fi

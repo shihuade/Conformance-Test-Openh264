@@ -9,7 +9,7 @@ about
 	will be marked as passed and SHA1 string will be generated, otherwise, marked as unpassed 
 	and no SHA1 string for this test case in SHA1 table file(XXX.yuv_AllCases_SHA1_Table.csv)
 
--   The output of the test are those files in ./FinalResult, espectially the summary files named as XXX.Summary.
+-   The output of the test are those files in ./FinalResult, espectially the summary files named as XXX.Summary.log.
 	and cases passed status in files named as XXX_AllCasesOutput.csv.And SHA1 table files can be found in 
         folder  ./SHA1Table.
 	For those temp data generated during test, can be found ./AllTestData/xxx.yuv/
@@ -104,8 +104,8 @@ structure
         All test sequences' test result will be copied to folder ./FinalResult.
         XXX_AllCasesOutput.csv       contain the passe status of all cases(passed or unpassed etc.)
         XXX_AllCases_SHA1_Table.csv  contain the SHA1 string of those  passed cases
-        XXX_.TestLog    test log of each test bit stream
-        XXX_.Summary    test summary of each test bit stream
+        XXX_.TestLog                 test log of each test bit stream
+        XXX_.Summary.log             test summary of each test bit stream
 
 -   Scripts
    

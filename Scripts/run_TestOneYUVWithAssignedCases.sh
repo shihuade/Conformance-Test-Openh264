@@ -12,8 +12,8 @@
 runGlobalVariableInitial()
 {
     HostName=`hostname`
-    TestReport="${FinalResultDir}/TestReport_${TestYUVName}_SubCasesIndex_${SubCaseIndex}.report"
-    TestSummaryFileName="${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary"
+    TestReport="${FinalResultDir}/TestReport_${TestYUVName}_SubCasesIndex_${SubCaseIndex}.report.log"
+    TestSummaryFileName="${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary.log"
     InputYUVCheck="InputYUVCheck.log"
     YUVDeleteLog="DeletedYUVList.log"
     ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`

@@ -31,7 +31,7 @@ runParseSubCaseFile()
     FileIndex=$2
 
     aSubCaseIndexList[${FileIndex}]=`echo ${SubFile} | awk 'BEGINE {FS="_SubCasesIndex_"} {print $2}'`
-    aSubCaseIndexList[${FileIndex}]=`echo ${SubFile} | awk 'BEGINE {FS=".Summary"} {print $1}'`
+    aSubCaseIndexList[${FileIndex}]=`echo ${SubFile} | awk 'BEGINE {FS=".Summary.log"} {print $1}'`
 
     while read line
     do

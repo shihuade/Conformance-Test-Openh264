@@ -33,7 +33,7 @@ runGlobalVariableInitial()
     AssignedCasesPassStatusFile="${ResultPath}/${TestYUVName}_AllCasesOutput_SubCasesIndex_${SubCaseIndex}.csv"
 	UnPassedCasesFile="${ResultPath}/${TestYUVName}_UnpassedCasesOutput_SubCasesIndex_${SubCaseIndex}.csv"
 	AssignedCasesSHATableFile="${ResultPath}/${TestYUVName}_AllCases_SHA1_Table_SubCasesIndex_${SubCaseIndex}.csv"
-	CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary"
+	CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary.log"
     AssignedCasesConsoleLogFile="${ResultPath}/${TestYUVName}_AssignedCases_SubCaseIndex_${SubCaseIndex}_0.TestLog"
 
 	HeadLine1="TestTime, EncoderFlag, DecoderFlag, FPS, BitSreamSHA1, InputYUVSHA1,\
