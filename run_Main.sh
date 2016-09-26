@@ -97,9 +97,14 @@ runMain()
     ./run_TestAllSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
 
     echo -e "\033[32m **************************************************************************\033[0m"
-    echo -e "\033[32m   get final test result......                                             \033[0m"
     echo -e "\033[32m **************************************************************************\033[0m"
-    runGetFinalTestResult
+    echo -e "\033[32m **************************************************************************\033[0m"
+    echo -e "\033[32m  Combining all sub-cases report/.csv files and double check final result  \033[0m"
+    echo -e "\033[32m **************************************************************************\033[0m"
+    echo -e "\033[32m **************************************************************************\033[0m"
+    echo -e "\033[32m **************************************************************************\033[0m"
+
+runGetFinalTestResult
 
     return ${AllTestFlag}
 }

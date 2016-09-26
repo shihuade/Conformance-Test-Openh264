@@ -78,11 +78,15 @@ runLocalTest()
 		cd  ${CurrentDir}
 	done
 
-    echo -e "\033[32m\n\n **************************************************************************\033[0m"
-    echo -e "\033[32m   all cases for all test sequences completed                                  \033[0m"
-    echo -e "\033[32m   cases passed status is(0:passed;1:failed): $AllSequencesAllCassesPassedFlag \033[0m"
-    echo -e "\033[32m   testing all cases for all test sequences......                              \033[0m"
-    echo -e "\033[32m **************************************************************************\n\n\033[0m"
+    echo -e "\033[35m\n\n ******************************************************************************  \033[0m"
+    echo -e "\033[35m     **************************************************************************  \033[0m"
+    echo -e "\033[35m     **************************************************************************  \033[0m"
+    echo -e "\033[35m     all cases for all test sequences completed                                  \033[0m"
+    echo -e "\033[35m     cases passed status is(0:passed;1:failed): $AllSequencesAllCassesPassedFlag \033[0m"
+    echo -e "\033[35m     testing all cases for all test sequences......                              \033[0m"
+    echo -e "\033[35m     **************************************************************************  \033[0m"
+    echo -e "\033[35m     **************************************************************************  \033[0m"
+    echo -e "\033[35m ******************************************************************************  \n\n\033[0m"
 
 	exit ${AllSequencesAllCassesPassedFlag}
 	
