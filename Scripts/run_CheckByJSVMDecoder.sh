@@ -126,7 +126,6 @@ runWelsDecodedFailedCheck()
 	do
 		echo " WelsDecoder decoding, layer $i..................... "
 		./${WelsDecoder}  ${aLayerBitStream[$i]}  ${aLayerWelsDecYUV[$i]}
-
 		if [ ! $? -eq 0  -o  ! -e ${aLayerWelsDecYUV[$i]} ]
 		then
 			echo -e "\033[31m\n WelsDecoder decoded failed! \n\033[0m"
@@ -142,8 +141,8 @@ runGenerateSHA1StringAndCheckDiff()
 
 	for((i=0; i<${SpatialLayerNum}; i++))
 	do
-        diff ${aLayerJSVMYUV[$i]} ${aLayerWelsDecYUV[$i]}    >${DiffInfo} && [ ! -s ${DiffInfo} ] && let "RecJSVMFlag=0"
-        diff ${aLayerJSVMYUV[$i]} ${aRecCropYUVFileList[$i]} >${DiffInfo} && [ ! -s ${DiffInfo} ] && let "WelsDecJSVMFlag=0"
+        diff ${aLayerJSVMYUV[$i]} ${aLayerWelsDecYUV[$i]}    >${DiffInfo} && [ ! -s ${DiffInfo} ] && let "WelsDecJSVMFlag=0"
+        diff ${aLayerJSVMYUV[$i]} ${aRecCropYUVFileList[$i]} >${DiffInfo} && [ ! -s ${DiffInfo} ] && let "RecJSVMFlag=0"
     done
 }
 
