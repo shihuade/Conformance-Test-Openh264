@@ -41,7 +41,7 @@ runInitial()
     SGEJobsTestSpace="${CurrentDir}"
     
     #for job status 
-    FinalResultSummaryDir="FinalTestReport"
+    FinalTestReportDir="FinalTestReport"
     AllTestSummary="AllTestYUVsSummary.txt"
     SGEJobsAllTestSummary="${TestProfile}_AllTestYUVsSummary.txt"
     AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
@@ -151,8 +151,8 @@ runGetPriviousTestSummary()
         echo "*****************************************************************************"
         echo ""
         ./run_GetAllTestResult.sh SGETest ${ConfigureFile} ${AllTestResultPassFlag}
-        cat  ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}
-        cp   ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
+        cat  ${SGEJobsTestSpace}/${FinalTestReportDir}/${AllTestSummary}
+        cp   ${SGEJobsTestSpace}/${FinalTestReportDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
         
         if [ ! -e ${AllTestResultPassFlag} ]
         then

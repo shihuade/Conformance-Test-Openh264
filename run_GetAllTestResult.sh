@@ -22,8 +22,8 @@
 
 runGetAllYUVTestResult()
 {
-echo "">${AllTestSummary}
-echo "">${AllYUVAllSlavesTestReort}
+    echo "">${AllTestSummary}
+    echo "">${AllYUVAllSlavesTestReort}
     for TestYUV in ${aTestYUVList[@]}
     do
         # combine sub-cases files into single all cases file
@@ -32,9 +32,9 @@ echo "">${AllYUVAllSlavesTestReort}
         echo ""
 #CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary.log"
 
-        DetailSummaryFile="${FinalSummaryDir}/${TestYUV}_AllCasesAllSlaves.Summary.log"
-        SummaryFile="${FinalSummaryDir}/TestReport_${TestYUV}.log"
-        SHA1TableFile="${FinalSummaryDir}/${TestYUV}_AllCases_SHA1_Table.csv"
+        DetailSummaryFile="${FinalTestReportDir}/${TestYUV}_AllCasesAllSlaves.Summary.log"
+        SummaryFile="${FinalTestReportDir}/TestReport_${TestYUV}.log"
+        SHA1TableFile="${FinalTestReportDir}/${TestYUV}_AllCases_SHA1_Table.csv"
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 0
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 1
         ./Scripts/run_SubCasesToAllCasesCombination.sh  ${FinalResultDir} ${TestYUV} 2
@@ -166,9 +166,9 @@ runCheck()
         exit 1
     fi
 
-    if [ ! -d ${FinalSummaryDir} ]
+    if [ ! -d ${FinalTestReportDir} ]
     then
-        mkdir ${FinalSummaryDir}
+        mkdir ${FinalTestReportDir}
     fi
 
 }
@@ -179,14 +179,14 @@ runMain()
     #get full path info
     FinalResultDir=${CurrentDir}/FinalResult
     SHA1TableDir=${CurrentDir}/SHA1Table
-    FinalSummaryDir=${CurrentDir}/FinalTestReport
+    FinalTestReportDir=${CurrentDir}/FinalTestReport
     #check input parameters
 	runCheck
 
     #Summary report for all test sequences
-    AllTestSummary="${FinalSummaryDir}/AllTestYUVsSummary.txt"
+    AllTestSummary="${FinalTestReportDir}/AllTestYUVsSummary.txt"
     #Detail report file for all test sequences under all slaves test report
-    AllYUVAllSlavesTestReort="${FinalSummaryDir}/AllTestYUVsAllSlavesDetailTestReport.txt"
+    AllYUVAllSlavesTestReort="${FinalTestReportDir}/AllTestYUVsAllSlavesDetailTestReport.txt"
     let "AllTestFlag=0"
 	declare -a aTestYUVList
 

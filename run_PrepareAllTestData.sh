@@ -35,7 +35,7 @@ runGlobalVariableInitial()
     CodecFolder="Codec";Codec_Linux="Codec_Linux";Codec_Mac="Codec_Mac"
     ScriptFolder="Scripts"
     BitStreamToYUVFolder="BitStreamToYUV"
-    SummaryDir="FinalTestReport"
+    FinalTestReportDir="FinalTestReport"
 
     let "SGEJobNum =0 ";let "SGEJobSubCasesNum=0"
 
@@ -54,7 +54,7 @@ runRemovedPreviousTestData()
 	[ -d $AllTestDataFolder ]    && ./${ScriptFolder}/run_SafeDelete.sh  $AllTestDataFolder
 	[ -d $SHA1TableFolder ]      && ./${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
 	[ -d $FinalResultDir ]       && ./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
-	[ -d $SummaryDir ]           && ./${ScriptFolder}/run_SafeDelete.sh  $SummaryDir
+	[ -d $FinalTestReportDir ]           && ./${ScriptFolder}/run_SafeDelete.sh  $FinalTestReportDir
     [ -d $BitStreamToYUVFolder ] && ./${ScriptFolder}/run_SafeDelete.sh  $BitStreamToYUVFolder
     [ -d $CodecFolder ]          && ./${ScriptFolder}/run_SafeDelete.sh  $CodecFolder
     #[ -d $SourceFolder ]        && ./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
@@ -74,7 +74,7 @@ runRemovedPreviousTestData()
         [ -e ${file} ] && ./${ScriptFolder}/run_SafeDelete.sh  ${file}
     done
 
-    mkdir -p ${AllTestDataFolder} ${SHA1TableFolder} ${FinalResultDir} ${SummaryDir} ${BitStreamToYUVFolder} ${CodecFolder}
+    mkdir -p ${AllTestDataFolder} ${SHA1TableFolder} ${FinalResultDir} ${FinalTestReportDir} ${BitStreamToYUVFolder} ${CodecFolder}
 }
 
 runParseConfigureFile()

@@ -35,7 +35,7 @@ runInital()
 
     CaseConfigureFileDir="CaseConfigure"
     CaseConfigureFile="${CaseConfigureFileDir}/case_${TestProfile}.cfg"
-    FinalResultSummaryDir="FinalTestReport"
+    FinalTestReportDir="FinalTestReport"
     FinalResultDir="FinalResult"
     SGEIPInfoFile="${CurrentDir}/Tools/SGE.cfg"
 
@@ -142,8 +142,8 @@ runGetSummary()
         echo "*****************************************************************************"
         echo ""
         ./run_GetAllTestResult.sh SGETest ${CaseConfigureFile} ${AllTestResultPassFlag}
-        cat  ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}
-        cp   ${SGEJobsTestSpace}/${FinalResultSummaryDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
+        cat  ${SGEJobsTestSpace}/${FinalTestReportDir}/${AllTestSummary}
+        cp   ${SGEJobsTestSpace}/${FinalTestReportDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
     fi
 
 }

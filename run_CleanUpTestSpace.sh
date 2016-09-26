@@ -36,9 +36,9 @@ runRemovedPreviousTestData()
 		./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
 	fi
 
-    if [ -d $SummaryDir ]
+    if [ -d $ReportDir ]
     then
-        ./${ScriptFolder}/run_SafeDelete.sh  $SummaryDir
+        ./${ScriptFolder}/run_SafeDelete.sh  $ReportDir
     fi
 
 	if [ -d $SourceFolder ]
@@ -80,7 +80,7 @@ runMain()
 	CurrentDir=`pwd`
 	SHA1TableFolder="SHA1Table"
 	FinalResultDir="FinalResult"
-    SummaryDir="FinalTestReport"
+    ReportDir="FinalTestReport"
 
 	runRemovedPreviousTestData
 	

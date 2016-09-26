@@ -80,7 +80,7 @@ runGenerateFilePreFixBasedIndex()
         OutputFileName=${AllCaseAllSlavesTestReportFile}_AllCasesAllSlaves.Summary.log
     fi
 
-    OutputFile=${SummaryDir}/${OutputFileName}
+    OutputFile=${FinalTestReportDir}/${OutputFileName}
 }
 
 runCheck()
@@ -102,9 +102,9 @@ runCheck()
     SubCasesFileDir=`pwd`
     cd ${CurrentDir}
 
-    if [ ! -d ${SummaryDir} ]
+    if [ ! -d ${FinalTestReportDir} ]
     then
-        mkdir ${SummaryDir}
+        mkdir ${FinalTestReportDir}
     fi
 
 }
@@ -126,7 +126,7 @@ runMain()
     OutputFileName=""
     OutputFile=""
     CurrentDir=`pwd`
-    SummaryDir=${CurrentDir}/FinalTestReport
+    FinalTestReportDir=${CurrentDir}/FinalTestReport
 
     let "SubFileIndex = 0"
     let "NewFileFlag  = 0"
