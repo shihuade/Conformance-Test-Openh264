@@ -145,8 +145,8 @@ runParseCaseCheckLog()
     #EncoderCheckResult: 0-Encoder passed!
     #DecoderCheckResult: 0-Decoder passed!
     #*********************************
-    EncoderCheckResult=`cat ${EncoderLog} | grep "EncoderCheckResult" | awk 'BEGIN {FS="[:\r]"} {print $2}'`
-    DecoderCheckResult=`cat ${EncoderLog} | grep "DecoderCheckResult" | awk 'BEGIN {FS="[:\r]"} {print $2}'`
+    EncoderCheckResult=`cat ${CheckLogFile} | grep "EncoderCheckResult" | awk 'BEGIN {FS="[:\r]"} {print $2}'`
+    DecoderCheckResult=`cat ${CheckLogFile} | grep "DecoderCheckResult" | awk 'BEGIN {FS="[:\r]"} {print $2}'`
 	
 	#generate SHA1 string for bit stream
    [ -e ${BitStreamFile} ] && BitStreamSHA1String=`openssl sha1  ${BitStreamFile} | awk '{print $2}' `
