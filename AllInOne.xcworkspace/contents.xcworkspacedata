@@ -1,234 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
-   <FileRef
-      location = "container:README.md">
-   </FileRef>
-   <FileRef
-      location = "container:run_BackupTestData.sh">
-   </FileRef>
-   <FileRef
-      location = "container:/Users/huashi/project/Openh264/ConformanceTest/run_CheckoutRepos.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_CleanUpTestSpace.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_GetAllTestResult.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_JenkinsJob_SGEJobSubmit.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_JenkinsSGEJobStatusUpdate.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_Main.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_PrepareAllTestData.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_SGEJobCancel.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_SGEJobReSubmit.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_SGEJobStatusUpdate.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_SGEJobSubmit.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_TestAllSequencesAllCasesTest.sh">
-   </FileRef>
-   <FileRef
-      location = "container:run_UpdateCodec.sh">
-   </FileRef>
-   <Group
-      location = "group:Tools"
-      name = "Tools">
-      <FileRef
-         location = "group:run_RenameYUVfileWithNewResolution.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_CopyFilesFromSGE.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_GetSpectialCasesLogFromLargeLogFile.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_ParseSGEHostsIP.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_ParseSGEHostsName.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_ParseSGEHostsTestDataDir.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_SearchFileAndGetFullPath.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_SGERestart_For_Host_side.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_SGERestart_Master_side.sh">
-      </FileRef>
-      <FileRef
-         location = "group:run_SSHServerHostAutoLogSetting.sh">
-      </FileRef>
-      <FileRef
-         location = "group:SGE.cfg">
-      </FileRef>
-   </Group>
-   <Group
-      location = "group:../Scripts"
-      name = "Scripts">
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_BitStreamToYUV.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_CasesPartition.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_CheckBasicCheck.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_CheckByJSVMDecoder.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_CropYUV.sh">
-      </FileRef>
-      <FileRef
-         location = "group:/Users/huashi/project/Openh264/ConformanceTest/Scripts/run_ExtractLayerBitStream.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GenerateCase.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GenerateSGEJobFile.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetListOfFilesSize.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetSGEFileFullPathByJobID.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetSpatialLayerBitRateSet.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetSpatialLayerNum.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetSpatialLayerResolutionInfo.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetTargetBitRate.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetTestYUVSet.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetYUVList.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_GetYUVPath.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_ParseRunningSGEJobIDsAndStatus.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_ParseSGEJobIDs.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_ParseSGEJobNames.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_ParseSGEJobPassStatus.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_ParseSGESlaveInfoForOneYUV.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_ParseYUVInfo.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_PrepareInputYUV.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_SafeDelete.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_SubCasesToAllCasesCombination.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_SubCasesToAllCasesSummary.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_TestAssignedCases.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_TestOneCase.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_TestOneYUVWithAssignedCases.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_TruncateAndGetSubDir.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_TruncateGivenDirYUV.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/run_TruncateYUV.sh">
-      </FileRef>
-      <FileRef
-         location = "group:../ConformanceTest/Scripts/SGEModel.sge">
-      </FileRef>
-   </Group>
-   <Group
-      location = "group:CaseConfigure"
-      name = "CaseConfigure">
-      <FileRef
-         location = "group:case_for_Mac_SVC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_for_Mac_fast_test.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_for_linux_fast_test.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SCC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SCC_base.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SHA1Table.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SHA1Table_new.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SVC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SVC_base.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:layer2.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:welsenc.cfg">
-      </FileRef>
-   </Group>
    <Group
       location = "group:Codec"
       name = "Codec">
@@ -267,6 +39,234 @@
       </FileRef>
       <FileRef
          location = "group:layer3.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:welsenc.cfg">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:run_BackupTestData.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_CheckoutRepos.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_CleanUpTestSpace.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_GetAllTestResult.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_JenkinsJob_SGEJobSubmit.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_JenkinsSGEJobStatusUpdate.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_Main.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_PrepareAllTestData.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_SGEJobCancel.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_SGEJobReSubmit.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_SGEJobStatusUpdate.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_SGEJobSubmit.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_TestAllSequencesAllCasesTest.sh">
+   </FileRef>
+   <FileRef
+      location = "group:run_UpdateCodec.sh">
+   </FileRef>
+   <Group
+      location = "group:Scripts"
+      name = "Scripts">
+      <FileRef
+         location = "group:run_BitStreamToYUV.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_CasesPartition.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_CheckBasicCheck.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_CheckByJSVMDecoder.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_CropYUV.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ExtractLayerBitStream.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GenerateCase.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GenerateSGEJobFile.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetListOfFilesSize.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetSGEFileFullPathByJobID.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetSpatialLayerBitRateSet.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetSpatialLayerNum.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetSpatialLayerResolutionInfo.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetTargetBitRate.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetTestYUVSet.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetYUVList.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetYUVPath.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseRunningSGEJobIDsAndStatus.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEJobIDs.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEJobNames.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEJobPassStatus.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGESlaveInfoForOneYUV.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseYUVInfo.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_PrepareInputYUV.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SafeDelete.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SubCasesToAllCasesCombination.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SubCasesToAllCasesSummary.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_TestAssignedCases.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_TestOneCase.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_TestOneYUVWithAssignedCases.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_TruncateAndGetSubDir.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_TruncateGivenDirYUV.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_TruncateYUV.sh">
+      </FileRef>
+      <FileRef
+         location = "group:SGEModel.sge">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:Tools"
+      name = "Tools">
+      <FileRef
+         location = "group:run_CopyFilesFromSGE.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_GetSpectialCasesLogFromLargeLogFile.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEHostsIP.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEHostsName.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_ParseSGEHostsTestDataDir.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_RenameYUVfileWithNewResolution.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SearchFileAndGetFullPath.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SGERestart_For_Host_side.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SGERestart_Master_side.sh">
+      </FileRef>
+      <FileRef
+         location = "group:run_SSHServerHostAutoLogSetting.sh">
+      </FileRef>
+      <FileRef
+         location = "group:SGE.cfg">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:CaseConfigure"
+      name = "CaseConfigure">
+      <FileRef
+         location = "group:case.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_for_linux_fast_test.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_for_Mac_fast_test.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_for_Mac_SVC.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SCC.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SCC_base.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_for_mac.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_new.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SVC.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SVC_base.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:layer2.cfg">
       </FileRef>
       <FileRef
          location = "group:welsenc.cfg">
