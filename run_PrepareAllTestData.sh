@@ -100,6 +100,11 @@ runParseConfigureFile()
 
 runUpdateCodec()
 {
+    #copy JM/JSVM/DowsampleApp etc. tools to codec folder
+    echo "Test platform is ${Platform}; copy JM/JSVM etc. tools to codec"
+    [ "${Platform}" = "Linux" ] && cp -f  ${Codec_Linux}/*  ${CodecFolder}
+    [ "${Platform}" = "Mac" ]   && cp -f  ${Codec_Mac}/*    ${CodecFolder}
+
     #checkout openh264 repos and switch to test branch
     ./run_CheckoutRepos.sh  ${Openh264GitAddr} ${Branch} ${SourceFolder} ${ReposUpdateOption}
 	[  ! $? -eq 0 ] && echo -e "\033[31m\n Failed to checkout openh264 repository! \n\033[0m" && exit 1
@@ -108,10 +113,6 @@ runUpdateCodec()
 	./run_UpdateCodec.sh  ${SourceFolder}
 	[ ! $? -eq 0 ] && echo -e "\033[31m\n Failed build and update codec! \n\033[0m" && exit 1
 
-    #copy JM/JSVM/DowsampleApp etc. tools to codec folder
-    echo "Test platform is ${Platform}; copy JM/JSVM etc. tools to codec"
-    [ "${Platform}" = "Linux" ] && cp -f  ${Codec_Linux}/*  ${CodecFolder}
-    [ "${Platform}" = "Mac" ]   && cp -f  ${Codec_Mac}/*    ${CodecFolder}
     ls -l ${CodecFolder}
 
 	return 0
