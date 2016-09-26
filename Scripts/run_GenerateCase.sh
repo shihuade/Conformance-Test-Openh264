@@ -104,9 +104,7 @@ runGenerateMultiLayerBRSet()
 
         #OveralBR, LayerBR_0, LayerBR_1, LayerBR_2, LayerBR_3, MaxLayerBR_0, MaxLayerBR_1, MaxLayerBR_2, MaxLayerBR_3,
 		aTargetBitrateSet[$i]="${OverallBR},${LayerBR},${MaxLayerBR},"
-        echo "inside setting"
-        echo "aTargetBitrateSet[$i] is ${aTargetBitrateSet[$i]}"
-	done
+    done
 }
 #usage: runGenerateLayerResolution ${SpatialNum}
 runGenerateLayerResolution()
