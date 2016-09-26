@@ -55,7 +55,7 @@ runOutputTestSummary()
     echo -e "\033[34m **********************************************************************   \033[0m"
     echo -e "\033[32m *        Test report of all cases for YUV ${YUVName}    \033[0m"
     echo -e "\033[34m **********************************************************************   \033[0m"
-    if [ ! ${EncoderUnPassedNum} -eq 0 ]
+    if [ ! ${EncoderUnPassedNum} -eq 0 -o ${TotalNum} -eq 0 ]
     then
         echo -e "\033[31m   Not all Cases passed the test!   \033[0m"
         echo -e "\033[31m     Failed!   \033[0m"
@@ -119,7 +119,7 @@ runMain()
     let "DecoderPassedNum =0"
     let "DecoderUpPassedNum = 0"
     let "DecoderUnCheckNum =0"
-    TempFile=${SummaryFile}_OverallSummary.log
+    TempFile=${YUVName}_OverallSummary.log
 
     echo  -e "\033[34m ********************************************************** \033[0m"
     echo  -e "\033[34m        Test summary for all sub-cases of ${YUVName}        \033[0m"
@@ -144,8 +144,6 @@ runMain()
 
 
     return ${TestFlag}
-
-
 }
 #*********************************************************************************************************
 echo "*********************************************************"
