@@ -71,7 +71,13 @@ runEncodedNumCheck()
             echo "RecYUV   size: ${aRecYUVLayerSize[$i]}"
             echo "InputYUV size: ${aInputYUVSizeLayer[$i]}"
 
-            [ ! ${aRecYUVLayerSize[$i]} -eq ${aInputYUVSizeLayer[$i]} ] && return 1
+            if [ ! ${aRecYUVLayerSize[$i]} -eq ${aInputYUVSizeLayer[$i]} ]
+            then
+                EncoderCheckResult="1-Encoder failed!--EncodedNum not match "
+                DecoderCheckResult="3-Decoder cannot be checked!"
+                runOutputFailedCheckLog>${CheckLogFile}
+                return 1
+            fi
         done
     fi
 
