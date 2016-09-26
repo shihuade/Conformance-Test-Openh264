@@ -22,36 +22,18 @@
 
 runCopySubCaseFileToAllCasesFile()
 {
-    if [ ! $# -eq 1 ]
-    then
-        echo -e "\033[31m usage: runCopySubCaseFileToAllCasesFile \${SubCasesFile}  \033[0m"
-        return 0
-    fi
-
     SubCasesFile=$1
     let "LineIndex=0"
+
+    [ ${FileIndex} -eq 3 ] && [ $NewFileFlag -eq 0 ] && cat ${SubCasesFile} >${OutputFile}  && let "NewFileFlag = 1" && return 0
+    [ ${FileIndex} -eq 3 ] && [ $NewFileFlag -eq 1 ] && cat ${SubCasesFile} >>${OutputFile} && return 0
     while read line
     do
-        if [ ${LineIndex} -eq 0 ]
-        then
-            HeadLine=${line}
-        fi
+        [ ${LineIndex} -eq 0 ] && HeadLine=${line}
 
-        if [ ${NewFileFlag} -eq 0 ]
-        then
-            if [ ! ${FileIndex} -eq 3 ]
-            then
+        [ ${NewFileFlag} -eq 0 ] && echo ${HeadLine} > ${OutputFile} && let "NewFileFlag  = 1"
 
-                echo ${HeadLine}  >${OutputFile}
-            fi
-
-            let "NewFileFlag  = 1"
-        fi
-
-        if [ ${LineIndex} -gt 0 ]
-        then
-            echo ${line}  >>${OutputFile}
-        fi
+        [ ${LineIndex} -gt 0 ]   && echo ${line} >>${OutputFile}
 
         let "LineIndex ++"
     done < ${SubCasesFile}
@@ -73,16 +55,13 @@ runGetTestSummary()
     done
 }
 
-
 runGenerateFilePreFixBasedIndex()
 {
-
     AssignedCasesPassStatusFile="${TestYUVName}_AllCasesOutput"
     UnPassedCasesFile="${TestYUVName}_UnpassedCasesOutput"
     AssignedCasesSHATableFile="${TestYUVName}_AllCases_SHA1_Table"
     CaseSummaryFile="${TestYUVName}"
 
-    #CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary.log"
     if [ ${FileIndex}  -eq 0 ]
     then
         FileNamePrefix="${AssignedCasesPassStatusFile}_SubCasesIndex_"
@@ -102,8 +81,6 @@ runGenerateFilePreFixBasedIndex()
     fi
 
     OutputFile=${SummaryDir}/${OutputFileName}
-    echo "" >${OutputFile}
-
 }
 
 runCheck()
@@ -163,6 +140,14 @@ runMain()
 
 
 }
+#*********************************************************************************************************
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters are:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo
+
 SubCasesFileDir=$1
 TestYUVName=$2
 FileIndex=$3
