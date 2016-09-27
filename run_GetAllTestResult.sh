@@ -215,6 +215,15 @@ runGetAllYUVTestResult  #>${AllTestResultCombineConsole}
     return ${AllTestFlag}
 
 }
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
+
 if [ ! $# -eq 3  ]
 then
     runUsage
@@ -224,13 +233,6 @@ fi
 TestType=$1
 ConfigureFile=$2
 AllTestResultPassFlagFile=$3
-
-echo ""
-echo "*********************************************************"
-echo "     call bash file is $0"
-echo "     input parameters is:"
-echo "        $0 $@"
-echo "*********************************************************"
-echo ""
-
 runMain
+
+
