@@ -195,7 +195,7 @@ runMain()
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
 
 	#get all test summary
-    runGetAllYUVTestResult >${AllTestResultCombineConsole}
+runGetAllYUVTestResult  #>${AllTestResultCombineConsole}
 
     runRenameSHA1TableFile
 
