@@ -38,6 +38,13 @@ runGetFinalTestResult()
     #check test type
     if [ ${TestType} = "SGETest" ]
     then
+        if [ ! ${AllTestFlag} -eq 0 ]
+        then
+            echo -e "\033[31m **********************************************************************************\033[0m"
+            echo -e "\033[31m     SGE cases submmition failed!             \033[0m"
+            echo -e "\033[31m **********************************************************************************\033[0m"
+            exit 1
+        fi
         echo -e "\033[32m ********************************************************************************************\033[0m"
         echo -e "\033[32m     please run below command to check whether all SGE jobs have been completed!             \033[0m"
         echo -e "\033[32m       ./run_SGEJobStatusUpdate.sh  SGEJobsSubmittedInfo.log ${AllJobsCompletedFlagFile} \n\n\033[0m"
@@ -47,8 +54,16 @@ runGetFinalTestResult()
         return 0
     elif [ ${TestType} = "LocalTest" ]
     then
+        echo -e "\033[32m **************************************************************************\033[0m"
+        echo -e "\033[32m **************************************************************************\033[0m"
+        echo -e "\033[32m **************************************************************************\033[0m"
+        echo -e "\033[32m  Combining all sub-cases report/.csv files and double check final result  \033[0m"
+        echo -e "\033[32m **************************************************************************\033[0m"
+        echo -e "\033[32m **************************************************************************\033[0m"
+        echo -e "\033[32m **************************************************************************\033[0m"
         ./run_GetAllTestResult.sh  ${TestType}  ${ConfigureFile} ${AllTestResultPassFlag}
         let "AllTestFlag =$?"
+
     fi
 }
 
@@ -95,16 +110,9 @@ runMain()
     echo -e "\033[32m   testing all cases for all test sequences......                          \033[0m"
     echo -e "\033[32m **************************************************************************\033[0m"
     ./run_TestAllSequencesAllCasesTest.sh  ${TestType}  ${AllTestDataFolder}  ${FinalResultDir} ${ConfigureFile}
+    AllTestFlag=$?
 
-    echo -e "\033[32m **************************************************************************\033[0m"
-    echo -e "\033[32m **************************************************************************\033[0m"
-    echo -e "\033[32m **************************************************************************\033[0m"
-    echo -e "\033[32m  Combining all sub-cases report/.csv files and double check final result  \033[0m"
-    echo -e "\033[32m **************************************************************************\033[0m"
-    echo -e "\033[32m **************************************************************************\033[0m"
-    echo -e "\033[32m **************************************************************************\033[0m"
-
-runGetFinalTestResult
+    runGetFinalTestResult
 
     return ${AllTestFlag}
 }

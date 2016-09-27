@@ -42,7 +42,7 @@ runSGETest()
     ./run_SGEJobSubmit.sh  ${AllTestDataDir} ${ConfigureFile} ${SGEJobListFile}
     if [ ! $? -eq 0 ]
     then
-        echo -e "\033[31m usage: failed to summit SGE jobs \033[0m"
+        echo -e "\033[31m failed to summit SGE jobs \033[0m"
         exit 1
 
     fi

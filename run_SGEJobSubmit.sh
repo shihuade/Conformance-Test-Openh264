@@ -64,6 +64,7 @@ runSGEJobSubmit()
             echo "submitting job ......"
             # e.g.: Your job 534 ("CREW_176x144_30.yuv_SGE_Test_SubCaseIndex_1") has been submitted
             aSubmitJobList[$JobNum]=`qsub  ${vSGEFile} `
+            [ ! $? -eq 0 ] &&     let "SubmmitFlag = 1"
             echo "submit job is ${aSubmitJobList[$JobNum]} "
             echo "${aSubmitJobList[$JobNum]}" >>${SGEJobListFile}
             let "JobNum ++"
@@ -90,6 +91,7 @@ runMain()
 	CurrentDir=`pwd`
 
 	let "CurrentSGEJobNum=0"
+    let "SubmmitFlag = 0"
 	declare -a aTestYUVList
 
 	#get full path info
@@ -108,7 +110,7 @@ runMain()
 
     runSGEJobSubmit
 
-    return 0
+    return $SubmmitFlag
 
 }
 AllTestDataDir=$1
