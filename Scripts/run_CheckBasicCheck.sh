@@ -28,7 +28,6 @@ runOutputFailedCheckLog()
 
 runEncoderFailedCheck()
 {
-EncoderFlag=1
 	if [ ! ${EncoderFlag} -eq 0 ]
 	then
 		EncoderCheckResult="1-Encoder failed!"
