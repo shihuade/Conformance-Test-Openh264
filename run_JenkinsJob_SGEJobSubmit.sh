@@ -54,7 +54,9 @@ runInitial()
     SGEJobCancelJobLog="SGEJobsCancelInfo.log"
     JobsStatusLog="SGEJobStatus.txt"
 
-    ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
+#ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
+ConfigureFile="CaseConfigure/case_for_linux_fast_test.cfg"
+
     CodecInfoLog="CodecInfo.log"
     SummaryInfo="NULL"
 
