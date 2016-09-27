@@ -143,6 +143,7 @@ runSGEJobStatusCheck()
 		let "JonRunningFlag=0"
 		for((j=0;j<${CurrentSGEQueueJobNum};j++))
 		do
+            #e.g.:aCurrentSGEQueueJobIDList=(501 r 502 r 503 w 504 qw), so need to j*2; r means running, qw means queue wait
             let "QueueIDIndex = j*2"
             let "QueueStatusIndex = QueueIDIndex+1"
 		

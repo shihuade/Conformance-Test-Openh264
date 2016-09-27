@@ -30,8 +30,6 @@ runGetAllYUVTestResult()
         echo ""
         echo "combining sub-set cases files into single all cases file..."
         echo ""
-#CaseSummaryFile="${ResultPath}/${TestYUVName}_SubCasesIndex_${SubCaseIndex}.Summary.log"
-
         DetailSummaryFile="${FinalTestReportDir}/${TestYUV}_AllCasesAllSlaves.Summary.log"
         SummaryFile="${FinalTestReportDir}/TestReport_${TestYUV}.log"
         SHA1TableFile="${FinalTestReportDir}/${TestYUV}_AllCases_SHA1_Table.csv"
@@ -185,6 +183,7 @@ runMain()
 
     #Summary report for all test sequences
     AllTestSummary="${FinalTestReportDir}/AllTestYUVsSummary.txt"
+    AllTestResultCombineConsole="${FinalTestReportDir}/AllTestResultCombineConsole.txt"
     #Detail report file for all test sequences under all slaves test report
     AllYUVAllSlavesTestReort="${FinalTestReportDir}/AllTestYUVsAllSlavesDetailTestReport.txt"
     let "AllTestFlag=0"
@@ -194,7 +193,7 @@ runMain()
     aTestYUVList=(`./Scripts/run_GetTestYUVSet.sh  ${ConfigureFile}`)
 
 	#get all test summary
-	runGetAllYUVTestResult
+    runGetAllYUVTestResult >${AllTestResultCombineConsole}
 
     runRenameSHA1TableFile
 

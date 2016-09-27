@@ -22,8 +22,6 @@ runUsage()
     echo ""
 }
 
-
-
 runInital()
 {
     CurrentDir=`pwd`
@@ -48,6 +46,7 @@ runInital()
     SGEJobsReportLog="${TestProfile}_JobReport.txt"
     AllTestSummary="AllTestYUVsSummary.txt"
     SGEJobsAllTestSummary="${TestProfile}_AllTestYUVsSummary.txt"
+    AllCasesAllYUVsResultReportConsole="${TestProfile}_AllCasesAllYUVsResultReportConsole.txt"
     AllJobsCompletedFlagFile="AllSGEJobsCompleted.flag"
     AllTestResultPassFlag="AllCasesPass.flag"
     CodecInfoLog="CodecInfo.log"
@@ -56,8 +55,6 @@ runInital()
     FailedJobsInfo="FailedJobsDetailInfo.txt"
     UnRunCasesJobsInfo="UnRunCasesJobsDetailInfo.txt"
     UnknownReasonJobsInfo="UnknownReasonJobsDetailInfo.txt"
-
-
 }
 
 runOutputBasicInfo()
@@ -123,12 +120,10 @@ runGetAllCompletedJobReport()
         fi
     done
 
-    cat ${SGEJobsReportLog}
+    #cat ${SGEJobsReportLog}
 
     echo "*****************************************************************************"
     echo ""
-
-
 }
 
 runGetSummary()
@@ -141,7 +136,7 @@ runGetSummary()
         echo " Final summary for all jobs ---- ${TestProfile}"
         echo "*****************************************************************************"
         echo ""
-        ./run_GetAllTestResult.sh SGETest ${CaseConfigureFile} ${AllTestResultPassFlag}
+        ./run_GetAllTestResult.sh SGETest ${CaseConfigureFile} ${AllTestResultPassFlag} >${AllCasesAllYUVsResultReportConsole}
         cat  ${SGEJobsTestSpace}/${FinalTestReportDir}/${AllTestSummary}
         cp   ${SGEJobsTestSpace}/${FinalTestReportDir}/${AllTestSummary}  ${AttachmentsDir}/${SGEJobsAllTestSummary}
     fi
@@ -204,7 +199,7 @@ runMain()
 {
     runInital
     runOutputBasicInfo
-    runUpdateScript
+    #runUpdateScript
     runUpdateJobStatus
 
     runGetAllCompletedJobReport
