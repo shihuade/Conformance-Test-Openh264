@@ -107,7 +107,9 @@ runUpdateRepos()
     [ ! $? -eq 0 ] && echo "pull to latest commit failed!" && cd ${CurrentDir} && return 1
 
     runGetCodecInfo>${CodecReposInfo}
+    cp -f ${CodecReposInfo} ${CurrentDir}
     cd ${CurrentDir}
+
     return 0
 }
 
@@ -126,6 +128,7 @@ runCloneRepos()
     [ ! $? -eq 0 ] && echo "checkout to branch ${Branch} failed!" && cd ${CurrentDir} && return 1
 
     runGetCodecInfo>${CodecReposInfo}
+    cp -f ${CodecReposInfo} ${CurrentDir}
 
     cd ${CurrentDir}
     return 0
