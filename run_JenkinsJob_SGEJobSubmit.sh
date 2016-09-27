@@ -53,6 +53,7 @@ runInitial()
     SGEJobSubmittedLog="SGEJobsSubmittedInfo.log"
     SGEJobCancelJobLog="SGEJobsCancelInfo.log"
     JobsStatusLog="SGEJobStatus.txt"
+    CodecReposInfo="CodecReposInfo.log"
 
 #ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
 ConfigureFile="CaseConfigure/case_for_linux_fast_test.cfg"
@@ -203,6 +204,7 @@ runSubmitSGEJobs()
     ./run_Main.sh SGETest  ${ConfigureFile}  "${CodecBranch}"  "${ReposAddr}"
 
 }
+
 runGenerateDateInfo()
 {
     echo "****************************************" >${JobSubmittedDateLog}
@@ -255,10 +257,8 @@ runCheckAndSubmitJobs()
         fi
 
     fi
-
-
-
 }
+
 runCopyFilesToAttachedDir()
 {
 
@@ -266,50 +266,17 @@ runCopyFilesToAttachedDir()
     echo "*****************************************************************************"
     echo " copy files to attached dir for ${TestProfile}"
     echo "*****************************************************************************"
-    if [ -e ${SGEJobSubmittedLog} ]
-    then
-        cp ${SGEJobSubmittedLog}          ${AttachmentsDir}/${TestProfile}_${SGEJobSubmittedLog}
-    fi
 
-    if [ -e ${JobsStatusLog} ]
-    then
-        cp ${JobsStatusLog}               ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
-    fi
-
-    if [ -e ${AllJobsCompletedFlagFile} ]
-    then
-        cp ${AllJobsCompletedFlagFile}    ${AttachmentsDir}/${TestProfile}_${AllJobsCompletedFlagFile}
-    fi
-
-    if [ -e ${SGEJobCancelJobLog} ]
-    then
-        cp ${SGEJobCancelJobLog}    ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
-    fi
-
-    if [ -e ${ConfigureFile} ]
-    then
-        cp ${ConfigureFile}    ${AttachmentsDir}/${ConfigureFile}
-    fi
-
-    if [ -e ${CodecInfoLog} ]
-    then
-        cp ${CodecInfoLog}    ${AttachmentsDir}/${TestProfile}_${CodecInfoLog}
-    fi
-
-    if [ -e ${JobSubmittedDateLog} ]
-    then
-        cp ${JobSubmittedDateLog}    ${AttachmentsDir}/${JobSubmittedDateLog}
-    fi
- 
-    if [ -e ${SGEJobStatusLog} ]
-    then
-        cp ${SGEJobStatusLog}    ${AttachmentsDir}/${SGEJobStatusLog}
-    fi
-
-   if [ -e ${PrieviousJobBackupLog} ]
-    then
-        cp ${PrieviousJobBackupLog}    ${AttachmentsDir}/${PrieviousJobBackupLog}
-    fi
+    [ -e ${CodecReposInfo} ]      && cp ${CodecReposInfo}         ${AttachmentsDir}/${TestProfile}_${CodecReposInfo}
+    [ -e ${SGEJobSubmittedLog} ]  && cp ${SGEJobSubmittedLog}     ${AttachmentsDir}/${TestProfile}_${SGEJobSubmittedLog}
+    [ -e ${JobsStatusLog} ]       && cp ${JobsStatusLog}          ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
+    [ -e ${SGEJobCancelJobLog} ]  && cp ${SGEJobCancelJobLog}     ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
+    [ -e ${ConfigureFile} ]       && cp ${ConfigureFile}          ${AttachmentsDir}/${ConfigureFile}
+    [ -e ${CodecInfoLog} ]        && cp ${CodecInfoLog}           ${AttachmentsDir}/${TestProfile}_${CodecInfoLog}
+    [ -e ${JobSubmittedDateLog} ] && cp ${JobSubmittedDateLog}    ${AttachmentsDir}/${JobSubmittedDateLog}
+    [ -e ${SGEJobStatusLog} ]     && cp ${SGEJobStatusLog}        ${AttachmentsDir}/${SGEJobStatusLog}
+    [ -e ${PrieviousJobBackupLog} ]    && cp ${PrieviousJobBackupLog}       ${AttachmentsDir}/${PrieviousJobBackupLog}
+    [ -e ${AllJobsCompletedFlagFile} ] && cp ${AllJobsCompletedFlagFile}    ${AttachmentsDir}/${TestProfile}_${AllJobsCompletedFlagFile}
 
     echo ""
     echo "*****************************************************************************"
