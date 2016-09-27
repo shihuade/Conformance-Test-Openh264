@@ -32,8 +32,8 @@ runInital()
     AttachmentsDir="${JenkinsHomeDir}/${AttachmentsFolder}"
 
     CaseConfigureFileDir="CaseConfigure"
-# CaseConfigureFile="${CaseConfigureFileDir}/case_${TestProfile}.cfg"
-CaseConfigureFile="CaseConfigure/case_for_linux_fast_test.cfg"
+    CaseConfigureFile="${CaseConfigureFileDir}/case_${TestProfile}.cfg"
+    #CaseConfigureFile="CaseConfigure/case_for_linux_fast_test.cfg"
 
     FinalTestReportDir="FinalTestReport"
     FinalResultDir="FinalResult"

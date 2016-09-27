@@ -55,8 +55,8 @@ runInitial()
     JobsStatusLog="SGEJobStatus.txt"
     CodecReposInfo="CodecReposInfo.log"
 
-#ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
-ConfigureFile="CaseConfigure/case_for_linux_fast_test.cfg"
+    ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
+    #ConfigureFile="CaseConfigure/case_for_linux_fast_test.cfg"
 
     CodecInfoLog="CodecInfo.log"
     SummaryInfo="NULL"
