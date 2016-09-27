@@ -106,7 +106,7 @@ runGetAllCompletedJobReport()
 {
     echo ""
     echo "*****************************************************************************"
-    echo " report for completed jobs ---- ${TestProfile}"
+    echo " test reports list for completed jobs list as below:---${TestProfile}"
     echo "*****************************************************************************"
     echo ""
 
@@ -135,7 +135,7 @@ runGetSummary()
     then
         echo ""
         echo "*****************************************************************************"
-        echo " Final summary for all jobs ---- ${TestProfile}"
+        echo " Final SGE test summary for all jobs(for all YUVs)----${TestProfile}"
         echo "*****************************************************************************"
         echo ""
         ./run_GetAllTestResult.sh SGETest ${CaseConfigureFile} ${AllTestResultPassFlag}  >${AllCasesAllYUVsResultReportConsole}

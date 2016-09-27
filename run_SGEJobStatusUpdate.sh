@@ -327,7 +327,7 @@ runOutputStatusSummary()
         echo  ""
         echo ""
         echo  -e "\033[32m  ********************************************************************  \033[0m"
-        echo  -e "\033[32m      Completed jobs passed status info                                 \033[0m"
+        echo  -e "\033[32m      Completed jobs test cases status info                             \033[0m"
         echo  -e "\033[32m  ********************************************************************  \033[0m"
         echo  ""
         echo  -e "\033[32m Succed job num   is ${SuccedJobNum}                                    \033[0m"
