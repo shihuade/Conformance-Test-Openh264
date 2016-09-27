@@ -24,6 +24,8 @@ runGetAllYUVTestResult()
 {
     echo "">${AllTestSummary}
     echo "">${AllYUVAllSlavesTestReort}
+    echo "YUV list based cfg file ${ConfigureFile} is:"
+    echo "  ${aTestYUVList[@]}"
     for TestYUV in ${aTestYUVList[@]}
     do
         # combine sub-cases files into single all cases file

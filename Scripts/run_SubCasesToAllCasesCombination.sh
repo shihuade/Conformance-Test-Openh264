@@ -50,8 +50,7 @@ runGetTestSummary()
         echo "      SubFileIndex      is: ${SubFileIndex}"
         echo "      SubFile           is: ${file}"
         echo -e "\033[32m ********************************************************* \033[0m"
-        runCopySubCaseFileToAllCasesFile ${file}
-        let "SubFileIndex ++"
+       [ -e ${file} ] && runCopySubCaseFileToAllCasesFile ${file} && let "SubFileIndex ++"
     done
 }
 
