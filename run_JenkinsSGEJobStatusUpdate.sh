@@ -32,7 +32,9 @@ runInital()
     AttachmentsDir="${JenkinsHomeDir}/${AttachmentsFolder}"
 
     CaseConfigureFileDir="CaseConfigure"
-    CaseConfigureFile="${CaseConfigureFileDir}/case_${TestProfile}.cfg"
+# CaseConfigureFile="${CaseConfigureFileDir}/case_${TestProfile}.cfg"
+ConfigureFile="CaseConfigure/case_for_linux_fast_test.cfg"
+
     FinalTestReportDir="FinalTestReport"
     FinalResultDir="FinalResult"
     SGEIPInfoFile="${CurrentDir}/Tools/SGE.cfg"
