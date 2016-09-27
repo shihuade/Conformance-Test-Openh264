@@ -233,6 +233,12 @@
       location = "group:CaseConfigure"
       name = "CaseConfigure">
       <FileRef
+         location = "group:case_SHA1Table_SCC.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_SVC.cfg">
+      </FileRef>
+      <FileRef
          location = "group:case.cfg">
       </FileRef>
       <FileRef
