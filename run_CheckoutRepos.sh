@@ -79,6 +79,13 @@ runCheckParameter()
 	return 0
 }
 
+runGetCodecInfo()
+{
+    git remote -v
+    git branch
+    git log -4
+}
+
 runUpdateRepos()
 {
     cd ${CheckoutDir}
@@ -99,6 +106,7 @@ runUpdateRepos()
     git pull origin ${Branch}
     [ ! $? -eq 0 ] && echo "pull to latest commit failed!" && cd ${CurrentDir} && return 1
 
+    runGetCodecInfo>${CodecReposInfo}
     cd ${CurrentDir}
     return 0
 }
@@ -116,6 +124,9 @@ runCloneRepos()
     cd ${CheckoutDir}
     git checkout ${Branch}
     [ ! $? -eq 0 ] && echo "checkout to branch ${Branch} failed!" && cd ${CurrentDir} && return 1
+
+    runGetCodecInfo>${CodecReposInfo}
+
     cd ${CurrentDir}
     return 0
 }
@@ -149,6 +160,7 @@ runOutputReposCommitInfo()
 runMain()
 {
     CurrentDir=`pwd`
+    CodecReposInfo="CodecReposInfo.log"
 	runCheckParameter
     runOutputReposUpdateInfo
 
