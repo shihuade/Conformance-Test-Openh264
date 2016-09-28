@@ -151,6 +151,9 @@ runParseCaseConfigure()
     aEnableBackgroundDetection=(`cat ${ConfigureFile}  | grep ^EnableBackgroundDetection  | awk 'BEGIN {FS="[#:\r]" } {print $2}' `)
     aEnableAdaptiveQuantization=(`cat ${ConfigureFile} | grep ^EnableAdaptiveQuantization | awk 'BEGIN {FS="[#:\r]" } {print $2}' `)
     Multiple16Flag=(`cat ${ConfigureFile}              | grep ^Multiple16Flag             | awk 'BEGIN {FS="[#:\r]" } {print $2}' `)
+
+    #overwrite encoded frame num for special resolition
+    [ ${PicW} -gt 320 ] && [ ${PicW} -le 640 ] && FramesToBeEncoded=(100)
 }
 #usage: runGetSliceNum  $SliceMd
 runGetSliceNum()
@@ -182,7 +185,7 @@ runFirstStageCase()
 			do
 				for RCModeIndex in ${aRCMode[@]}
 				do
-					if [[  "$aRCModeIndex" =~  "0"  ]]
+					if [[  "$aRCModeIndex" =~  "-1"  ]]
 					then
 						aQPforTest=${aInitialQP[@]}
 						aTargetBitrateSet=("256,256,256,256,")
@@ -234,13 +237,6 @@ runSecondStageCase()
         for SlcMode in ${aSliceMode[@]}
         do
             aSliceNumber=( `runGetSliceNum  $SlcMode ` )
-            #for slice number based on different thread number
-            if [ $SlcMode -eq 0  ]
-            then
-              ThreadNumber=( 1 )
-            else
-              ThreadNumber=( ${aMultipleThreadIdc[@]} )
-            fi
             if [  $SlcMode -eq 3  ]
             then
                 let "TempNalSize=${MaxNalSize}"
@@ -249,6 +245,10 @@ runSecondStageCase()
             fi
             for SlcNum in ${aSliceNumber[@]}
             do
+                #thread num based on slice num
+                ThreadNumber=( ${aMultipleThreadIdc[@]} )
+                [ $SlcMode -eq 0  ] || [ ${SlcNum} -eq 1 ]  && ThreadNumber=( 1 )
+
                 for  IntraPeriodIndex in ${aIntraPeriod[@]}
                 do
                     for ThreadNum in ${ThreadNumber[@]}
@@ -439,17 +439,14 @@ runAfterGenerate()
 runMain()
 {
   [ ! -f ${ConfigureFile} ] && ConfigureFile=`echo ${ConfigureFile} | awk 'BEGIN {FS="/"} {print $NF}'`
-  if [ ! -f ${ConfigureFile} ]
-  then
-    echo "configure file does not exist, please double check!"
-    echo "${ConfigureFile} for cases generation!"
-    exit 1
-  fi
+  [ ! -f ${ConfigureFile} ] && echo "configure file does not exist, please double check!" && exit 1
 
   StartTime=`date`
-  runGlobalVariableInital  $TestSequence  $OutputCaseFile
-  runParseCaseConfigure  ${ConfigureFile}
+  runGlobalVariableInital
   runParseYUVInfo
+
+  runParseCaseConfigure
+
   runMultiLayerInitial
   runBeforeGenerate
   runFirstStageCase
