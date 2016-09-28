@@ -10,7 +10,7 @@
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh FailedJobUnpassedNum
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobID
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobName
-#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobUnpassedNum
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobPassedNum
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh UnRunCaseJobID
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh UnRunCaseJobName
 #
@@ -75,7 +75,7 @@ runInitial()
 
     declare -a aSuccedJobIDList
     declare -a aSuccedJobNameList
-    declare -a aSuccedJobUnpassedCasesNumList
+    declare -a aSuccedJobPassedCasesNumList
     declare -a aSuccedJobTestDirList
 
 
@@ -213,7 +213,7 @@ runParseStatus()
             # Test report for YUV MSHD_320x192_12fps.yuv
             TempString=`echo $line | awk '{print $6}'`
             SGEJobName=${TempString}
-        elif [[ "$line" =~ "can not find test yuv file" ]]
+        elif [[ "$line" =~ "Test YUV file check failed!" ]]
         then
             # can not find test yuv
             let "JobCompletedFlag=1"
@@ -254,7 +254,7 @@ runUpdateJobPassedStatus()
     else
         aSuccedJobIDList[${SuccedJobNum}]=${SGEJobID}
         aSuccedJobNameList[${SuccedJobNum}]=${SGEJobName}
-        aSuccedJobUnpassedCasesNumList[${SuccedJobNum}]=${PassedCasesNum}
+        aSuccedJobPassedCasesNumList[${SuccedJobNum}]=${PassedCasesNum}
 
         aSuccedJobTestDirList[${SuccedJobNum}]=${TestDir}
         let "SuccedJobNum ++"
@@ -304,7 +304,7 @@ runOutputParseResult()
         echo ${aSuccedJobNameList[@]}
     elif [ "${Option}" = "SuccedJobPassedNum" ]
     then
-        echo ${aSuccedJobUnpassedCasesNumList[@]}
+        echo ${aSuccedJobPassedCasesNumList[@]}
     elif [ "${Option}" = "UnRunCaseJobID" ]
     then
         echo ${aUnRunCaseJobIDList[@]}
