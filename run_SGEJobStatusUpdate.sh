@@ -37,7 +37,7 @@ runInitial()
 
     declare -a aSuccedJobIDList
     declare -a aSuccedJobNameList
-    declare -a aSuccedJobUnpassedCasesNumList
+    declare -a aSuccedJobPassedCasesNumList
 
     declare -a aUnRunCaseJobIDList
     declare -a aUnRunCaseJobNameList
@@ -200,7 +200,7 @@ runUpdateSGEJobPassedStatus()
 
     aSuccedJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   SuccedJobID `)
     aSuccedJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobName `)
-    aSuccedJobUnpassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobPassedNum `)
+    aSuccedJobPassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobPassedNum `)
 
     aUnRunCaseJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   UnRunCaseJobID `)
     aUnRunCaseJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh UnRunCaseJobName `)
