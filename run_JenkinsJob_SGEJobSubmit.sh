@@ -271,7 +271,7 @@ runCopyFilesToAttachedDir()
     [ -e ${SGEJobSubmittedLog} ]  && cp ${SGEJobSubmittedLog}     ${AttachmentsDir}/${TestProfile}_${SGEJobSubmittedLog}
     [ -e ${JobsStatusLog} ]       && cp ${JobsStatusLog}          ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
     [ -e ${SGEJobCancelJobLog} ]  && cp ${SGEJobCancelJobLog}     ${AttachmentsDir}/${TestProfile}_${JobsStatusLog}
-    [ -e ${ConfigureFile} ]       && cp ${ConfigureFile}          ${AttachmentsDir}/${ConfigureFile}
+    [ -e ${ConfigureFile} ]       && cp ${ConfigureFile}          ${AttachmentsDir}
     [ -e ${CodecInfoLog} ]        && cp ${CodecInfoLog}           ${AttachmentsDir}/${TestProfile}_${CodecInfoLog}
     [ -e ${JobSubmittedDateLog} ] && cp ${JobSubmittedDateLog}    ${AttachmentsDir}/${JobSubmittedDateLog}
     [ -e ${SGEJobStatusLog} ]     && cp ${SGEJobStatusLog}        ${AttachmentsDir}/${SGEJobStatusLog}
