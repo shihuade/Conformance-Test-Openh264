@@ -116,13 +116,12 @@ runGetAllCompletedJobReport()
         echo file is $file
         if [ -e ${file} ]
         then
-
             echo "report file: ${file}">>${SGEJobsReportLog}
             cat ${file} >>${SGEJobsReportLog}
         fi
     done
 
-    #cat ${SGEJobsReportLog}
+    cat ${SGEJobsReportLog}
 
     echo "*****************************************************************************"
     echo ""
