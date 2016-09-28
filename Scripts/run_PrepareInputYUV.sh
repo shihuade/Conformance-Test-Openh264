@@ -60,6 +60,9 @@ runGetOriginYUVInfo()
     #size in bytes
     let "FrameSize = $OriginWidth * ${OriginHeight} * 12 / 8"
     let "MaxFrameNum=${OriginYUVSize}/ $FrameSize"
+
+    #overwrite encoded frame num for special resolition,which the same with run_GenerateCase.sh
+    [ ${OriginWidth} -gt 320 ] && [ ${OriginWidth} -le 640 ] && EncodedFrmNum=100
 }
 
 runCheckEncodedFrameNum()

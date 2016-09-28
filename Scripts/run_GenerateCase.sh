@@ -152,7 +152,8 @@ runParseCaseConfigure()
     aEnableAdaptiveQuantization=(`cat ${ConfigureFile} | grep ^EnableAdaptiveQuantization | awk 'BEGIN {FS="[#:\r]" } {print $2}' `)
     Multiple16Flag=(`cat ${ConfigureFile}              | grep ^Multiple16Flag             | awk 'BEGIN {FS="[#:\r]" } {print $2}' `)
 
-    #overwrite encoded frame num for special resolition
+    #overwrite encoded frame num for special resolition, need to keep the same logic which in run_PrepareInputYUV.sh
+    # encode frame num is used to check recYUVSize and JMDecYUVSize in case validate logic in run_CheckBasicCheck.sh
     [ ${PicW} -gt 320 ] && [ ${PicW} -le 640 ] && FramesToBeEncoded=(100)
 }
 #usage: runGetSliceNum  $SliceMd
