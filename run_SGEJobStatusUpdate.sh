@@ -460,10 +460,7 @@ runMain()
         touch ${SGEJobsFinishFlagFile}
     fi
 
-    if [ ! ${FailedJobNum} -eq 0 ]
-    then
-        touch ${FaildJobInfoLog}
-    fi
+    [ ! ${FailedJobNum} -eq 0 ] || [ ! ${UnKnownReasonFailedJobNum} -eq 0 ] && touch ${FaildJobInfoLog}
 
     return 0
 
