@@ -63,6 +63,8 @@ runCheckInputYUV()
         echo -e "\033[31m Failed!                                                              \033[0m"
         return 1
     fi
+
+    echo "@runCheckInputYUV,TestYUVFullPath is $TestYUVFullPath "
 }
 
 runTestOneYUV()
