@@ -61,19 +61,19 @@ runPromptInfo()
     then
         echo ""
         echo -e "\033[34m ************************************************************************** \033[0m"
-        echo -e "\033[34m      Finale test result:  All test succed!       \033[0m"
+        echo -e "\033[34m      Final test result:  All test succed!       \033[0m"
         echo -e "\033[34m **************************************************************************** \033[0m"
         echo ""
     else
         echo ""
         echo -e "\033[31m ************************************************************************** \033[0m"
-        echo -e "\033[31m      Finale test result:  Not all cases passed!  \033[0m"
+        echo -e "\033[31m      Final test result:  Not all cases passed!  \033[0m"
         echo -e "\033[31m **************************************************************************** \033[0m"
         echo ""
     fi
     echo -e "\033[34m **************************************************************************** \033[0m"
     echo  -e "\033[32m        Summary result can be found in ./FinalTestReport                     \033[0m"
-    echo  -e "\033[32m        All result can be found     in ./FinaleRestult                       \033[0m"
+    echo  -e "\033[32m        All result can be found     in ./FinalRestult                       \033[0m"
     echo  -e "\033[32m        SHA1  table  can be found   in ./SHA1Table                           \033[0m"
     echo -e "\033[34m **************************************************************************** \033[0m"
 

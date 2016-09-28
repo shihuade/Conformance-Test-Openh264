@@ -58,21 +58,21 @@ runGetLayrBRPoint()
 #   aTestBRPointLayer0=(400  150)  aTestBRPointLayer1=(600  300)
 #   aTestBRPointLayer2=(1000  500) aTestBRPointLayer3=(0    0)
 #
-#   aFinaleTestBRSet=(400 600 1000 0, 150 300 500 0)
+#   aFinalTestBRSet=(400 600 1000 0, 150 300 500 0)
 #******************************************************************************************
 runGenerateTestBRSet()
 {
     BRPonitNum=${#aTestBRPointLayer3[@]}
     BRPointForAllLayer=""
-    FinaleTestBRSet=""
+    FinalTestBRSet=""
 
     for ((i=0;i<${BRPonitNum}; i++))
     do
         BRPointForAllLayer="${aTestBRPointLayer0[$i]}  ${aTestBRPointLayer1[$i]}  ${aTestBRPointLayer2[$i]}  ${aTestBRPointLayer3[$i]}"
-        FinaleTestBRSet="${FinaleTestBRSet} ${BRPointForAllLayer}, "
+        FinalTestBRSet="${FinalTestBRSet} ${BRPointForAllLayer}, "
     done
 
-    echo ${FinaleTestBRSet}
+    echo ${FinalTestBRSet}
 }
 
 runOutputTempData()
