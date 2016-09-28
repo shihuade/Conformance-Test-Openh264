@@ -239,37 +239,19 @@
          location = "group:case_SHA1Table_SVC.cfg">
       </FileRef>
       <FileRef
-         location = "group:case.cfg">
-      </FileRef>
-      <FileRef
          location = "group:case_for_linux_fast_test.cfg">
       </FileRef>
       <FileRef
          location = "group:case_for_Mac_fast_test.cfg">
       </FileRef>
       <FileRef
-         location = "group:case_for_Mac_SVC.cfg">
-      </FileRef>
-      <FileRef
          location = "group:case_SCC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SCC_base.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SHA1Table.cfg">
       </FileRef>
       <FileRef
          location = "group:case_SHA1Table_for_mac.cfg">
       </FileRef>
       <FileRef
-         location = "group:case_SHA1Table_new.cfg">
-      </FileRef>
-      <FileRef
          location = "group:case_SVC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SVC_base.cfg">
       </FileRef>
       <FileRef
          location = "group:layer2.cfg">
