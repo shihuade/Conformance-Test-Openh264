@@ -20,6 +20,7 @@ runGlobalVariableInitial()
     LocalWorkingDir=""
     TestYUVFullPath=""
     CurrentDir=`pwd`
+    TestResult=""
 }
 
 runGetYUVFullPath()
@@ -70,7 +71,7 @@ runTestOneYUV()
     runCheckInputYUV     >${InputYUVCheck}
     let "ReturnValue=$?"
     cat ${InputYUVCheck}
-    [ ! ${ReturnValue} -eq 0 ] && return 1
+    [ ! ${ReturnValue} -eq 0 ] && TestResult="Test YUV file check failed! not exist or zero size!" && return 1
 
     #test assigned cases
     ./run_TestAssignedCases.sh  ${LocalWorkingDir}  ${ConfigureFile}    \
@@ -81,6 +82,7 @@ runTestOneYUV()
     #copy test result files to final dir
     cp  -f ${LocalWorkingDir}/result/*.csv  ${FinalResultDir}
 
+    [ ! ${ReturnValue} -eq 0 ] && TestResult="Not all cases passed!"
     return ${ReturnValue}
 }
 
@@ -132,7 +134,7 @@ runOutoutTestReport()
     #output final result
     if [  ! ${PassedFlag} -eq 0 ]
     then
-        echo -e "\033[31m Failed!                            \033[0m"
+        echo -e "\033[31m Failed!  ${TestResult}             \033[0m"
         echo -e "\033[31m Not all Cases passed the test! \n\n\033[0m"
     else
         echo -e "\033[32m Succeed!                           \033[0m"
