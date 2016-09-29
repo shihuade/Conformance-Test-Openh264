@@ -66,6 +66,7 @@ runEncodedNumCheck()
         let "SizeMatchFlag=0"
         for((i=0;i<${SpatailLayerNum};i++))
         do
+            [ ${SpatailLayerNum} -eq 1 ]  && aInputYUVSizeLayer[0]=${TopLayerSize}
             [ -e ${aRecYUVFileList[$i]} ] && aRecYUVLayerSize[$i]=`ls -l ${aRecYUVFileList[$i]} | awk '{print $5}'`
 
             echo "RecYUV   size: ${aRecYUVLayerSize[$i]}"

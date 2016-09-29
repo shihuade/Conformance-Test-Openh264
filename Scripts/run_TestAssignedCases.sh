@@ -97,14 +97,16 @@ runParseInputYUVPrepareLog()
 {
     local PrepareLog=$1
 
-    SizeLayer0=(`cat ${PrepareLog} | grep "LayerSize_0"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
-    SizeLayer1=(`cat ${PrepareLog} | grep "LayerSize_1"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
-    SizeLayer2=(`cat ${PrepareLog} | grep "LayerSize_2"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
-    SizeLayer3=(`cat ${PrepareLog} | grep "LayerSize_3"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    SizeLayer0=(`cat ${PrepareLog} | grep "LayerSize_0"    | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    SizeLayer1=(`cat ${PrepareLog} | grep "LayerSize_1"    | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    SizeLayer2=(`cat ${PrepareLog} | grep "LayerSize_2"    | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    SizeLayer3=(`cat ${PrepareLog} | grep "LayerSize_3"    | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    LayerNum=(`cat ${PrepareLog}   | grep "NumberLayer"    | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    FrameNum=(`cat ${PrepareLog}   | grep "EncodedFrmNum"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
+    InputYUVName=(`cat ${PrepareLog}  | grep "InputYUV"    | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
 
-    FrameNum=(`cat ${PrepareLog} | grep "EncodedFrmNum"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
-    InputYUVName=(`cat ${PrepareLog}  | grep "InputYUV"  | awk 'BEGIN {FS="[:\r]"} {print $2}' `)
-
+    aLayerSizeList=(${SizeLayer0} ${SizeLayer1} ${SizeLayer2} ${SizeLayer3})
+    TopLayerSize=${aLayerSizeList[${LayerNum}-1]}
     YUVSizeLayer0=${SizeLayer0};  YUVSizeLayer1=${SizeLayer1};  YUVSizeLayer2=${SizeLayer2};  YUVSizeLayer3=${SizeLayer3}
     EncodedFrmNum=${FrameNum}
 }
@@ -132,9 +134,9 @@ runToolCheck()
 {
     if [ "${TestPlatform}" = "Mac" ]
     then
-        [ ! -e ${JMDecoder} ]   && echo "JMDecoder   ${JMDecoder} does not exist!"   && exit 1
+        [ ! -e ${JMDecoder} ]   && echo "JMDecoder   ${JMDecoder} does not exist!"     && exit 1
     else
-        [ ! -e ${JSVMDecoder} ] && echo "JSVMDecoder ${JSVMDecoder} does not exist!" && exit 1
+        [ ! -e ${JSVMDecoder} ] && echo "JSVMDecoder ${JSVMDecoder} does not exist!"   && exit 1
     fi
 
     [ ! -e ${WelsDecoder} ]   && echo "WelsDecoder   ${WelsDecoder} does not exist!"   && exit 1
@@ -177,9 +179,10 @@ runExportVariable()
     export JMDecoder;    export JSVMDecoder;  export WelsDecoder
     export IssueDataPath;export TempDataPath
     export EncoderLog;   export CheckLogFile
-    export InputYUV;     export TestYUVName;  export InputYUVSHA1String;
-    export YUVSizeLayer0;export YUVSizeLayer1;
+    export InputYUV;     export TestYUVName;  export InputYUVSHA1String
+    export YUVSizeLayer0;export YUVSizeLayer1
     export YUVSizeLayer2;export YUVSizeLayer3
+    export TopLayerSize
 
     export RecYUVFile0;  export RecYUVFile1;  export RecYUVFile2;  export RecYUVFile3
     export RecCropYUV0;  export RecCropYUV1;  export RecCropYUV2;  export RecCropYUV3
