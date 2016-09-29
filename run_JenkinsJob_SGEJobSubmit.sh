@@ -19,10 +19,10 @@ runUsage()
     echo "                                        \${CodecBranch} \${ReposAddr} \${ConfigureFile}"
     echo ""
     echo " e.g.: "
-    echo "     run_JenkinsJob_SGEJobSubmit.sh  0 SCC master https://github.com/openh264.git"
-    echo "     run_JenkinsJob_SGEJobSubmit.sh  1 SCC master https://github.com/openh264.git"
-    echo "     run_JenkinsJob_SGEJobSubmit.sh  0 SVC master https://github.com/openh264.git"
-    echo "     run_JenkinsJob_SGEJobSubmit.sh  1 SVC master https://github.com/openh264.git"
+    echo "     run_JenkinsJob_SGEJobSubmit.sh  false SCC master https://github.com/openh264.git"
+    echo "     run_JenkinsJob_SGEJobSubmit.sh  true  SCC master https://github.com/openh264.git"
+    echo "     run_JenkinsJob_SGEJobSubmit.sh  false SVC master https://github.com/openh264.git"
+    echo "     run_JenkinsJob_SGEJobSubmit.sh  true  SVC master https://github.com/openh264.git"
     echo ""
     echo "     KillRunningJobFlag ==1, kill current running jobs and submit new jobs"
     echo ""
@@ -363,7 +363,7 @@ echo "        $0 $@"
 echo "*********************************************************"
 echo ""
 
-if [ ! $# -lt 4 ]
+if [ $# -lt 4 ]
 then
     runUsage
     exit 1
