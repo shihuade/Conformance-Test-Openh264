@@ -20,6 +20,7 @@ runUsage()
 
 runRemovedPreviousTestData()
 {
+    git clean -fdx
 
 	if [ -d $AllTestDataFolder ]
 	then
