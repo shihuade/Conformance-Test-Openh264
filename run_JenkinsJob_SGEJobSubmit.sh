@@ -16,7 +16,7 @@ runUsage()
 {
     echo ""
     echo " Usage: run_JenkinsJob_SGEJobSubmit.sh  \${KillRunningJobFlag} \${TestProfile}"
-    echo "                                        \${CodecBranch}        \${ReposAddr}"
+    echo "                                        \${CodecBranch} \${ReposAddr} \${ConfigureFile}"
     echo ""
     echo " e.g.: "
     echo "     run_JenkinsJob_SGEJobSubmit.sh  0 SCC master https://github.com/openh264.git"
@@ -49,14 +49,12 @@ runInitial()
     let " SubmitJobStatusFlag = 0"
 
     #log file for attachments
-    #log file for attachments
     SGEJobSubmittedLog="SGEJobsSubmittedInfo.log"
     SGEJobCancelJobLog="SGEJobsCancelInfo.log"
     JobsStatusLog="SGEJobStatus.txt"
     CodecReposInfo="CodecReposInfo.log"
 
-    ConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
-    #ConfigureFile="CaseConfigure/case_for_linux_fast_test.cfg"
+    DefaultConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
 
     CodecInfoLog="CodecInfo.log"
     SummaryInfo="NULL"
@@ -312,6 +310,7 @@ runOutputSUmmary()
 
 runCheck()
 {
+    [ ${ConfigureFile} = "" ] && ConfigureFile=${DefaultConfigureFile}
 
     if [ ! -e ${ConfigureFile} ]
     then
@@ -355,7 +354,16 @@ runMain()
     runOutputSUmmary
 }
 
-if [ ! $# -eq 4 ]
+#*************************************************************************
+echo ""
+echo "*********************************************************"
+echo "     call bash file is $0"
+echo "     input parameters is:"
+echo "        $0 $@"
+echo "*********************************************************"
+echo ""
+
+if [ ! $# -lt 4 ]
 then
     runUsage
     exit 1
@@ -365,16 +373,10 @@ TestProfile=$1
 KillJobsFlag=$2
 CodecBranch=$3
 ReposAddr=$4
+ConfigureFile=$5
 
-echo ""
-echo "*********************************************************"
-echo "     call bash file is $0"
-echo "     input parameters is:"
-echo "        $0 $@"
-echo "*********************************************************"
-echo ""
-
-runMain ${TestProfile} ${KillJobsFlag}  "${CodecBranch}"  "${ReposAddr}"
+runMain
+#*************************************************************************
 
 
 
