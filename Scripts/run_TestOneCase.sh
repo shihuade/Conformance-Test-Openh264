@@ -50,7 +50,7 @@ runEncoderCommandInital()
 					slcmd0 slcnum0 slcmd1 slcnum1 \
 					slcmd2 slcnum2 slcmd3 slcnum3 \
 					MaxNalSZ  \
-					iper   thread  ltr \
+					iper   thread loadbalancing ltr \
 					db  denois  scene  bgd  aq )
 	NumParameter=${#aEncoderCommandSet[@]}
 	for ((i=0;i<NumParameter; i++))
