@@ -57,7 +57,7 @@ runInitial()
     DefaultConfigureFile="CaseConfigure/case_${TestProfile}.cfg"
 
     CodecInfoLog="CodecInfo.log"
-    SummaryInfo="NULL"
+    SummaryInfo=""
 
     SCCStatusLog="SCCSGEJobStatus.txt"
     SVCStatusLog="SVCSGEJobStatus.txt"
@@ -230,6 +230,8 @@ runCancelAllRunningJobsAndSubmitNewJobs()
     runSubmitSGEJobs
     runGenerateDateInfo
 
+    SummaryInfo="Cancel all running jobs and submit new jobs"
+
 }
 
 runCheckAndSubmitJobs()
@@ -250,8 +252,8 @@ runCheckAndSubmitJobs()
             runGenerateDateInfo
             SummaryInfo="Backup previous test data and submit new jobs based on setting"
         else
-            echo "skip job submit as previous jobs have not been completed yet!"
             SummaryInfo="skip job submit as previous jobs have not been completed yet!"
+            echo ${SummaryInfo}
         fi
 
     fi
@@ -291,7 +293,7 @@ runOutputSUmmary()
     echo " Configure file is ${ConfigureFile}"
     echo " Codec branch   is ${CodecBranch}"
     echo " ReposAddr      is ${ReposAddr}"
-    echo ""
+    echo " SubmitJobStatusFlag is ${SubmitJobStatusFlag}"
     echo " SummaryInfo for this job is:"
     if [ ${SubmitJobStatusFlag} -eq 0 ]
     then
