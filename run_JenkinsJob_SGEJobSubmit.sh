@@ -287,25 +287,27 @@ runOutputSUmmary()
 {
 
     echo ""
-    echo "*****************************************************************************"
+    echo -e "\033[32m **************************************************************************\033[0m"
     echo " TestProfile    is ${TestProfile}"
     echo " KillJobsFlag   is ${KillJobsFlag}"
     echo " Configure file is ${ConfigureFile}"
     echo " Codec branch   is ${CodecBranch}"
     echo " ReposAddr      is ${ReposAddr}"
     echo " SubmitJobStatusFlag is ${SubmitJobStatusFlag}"
+    echo -e "\033[32m **************************************************************************\033[0m"
+
     echo " SummaryInfo for this job is:"
     if [ ${SubmitJobStatusFlag} -eq 0 ]
     then
         echo " ${SummaryInfo}--all is well!"
-        echo "*****************************************************************************"
+        echo -e "\033[32m ***************************************************************\n\n\n\033[0m"
         exit 0
     else
         echo " ${SummaryInfo}"
         echo "    --previous submit jobs failed!"
         echo "    --please double check "
         echo "    --and refer detail from privous backup log file--${PrieviousJobBackupLog}"
-        echo "*****************************************************************************"
+        echo -e "\033[32m ***************************************************************\n\n\n\033[0m"
         exit 1
     fi
 }
