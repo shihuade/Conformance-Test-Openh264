@@ -5,13 +5,13 @@
 #      --usage:  ./run_SGEJobCancel.sh  ${Option}
 #
 #      --e.g:
-#            1) resubmit all jobs
+#            1) cancel all jobs
 #                   ./run_SGEJobCancel.sh  All
 #
-#            2) resubmit all releated jobs of given YUVs
+#            2) cancel all releated jobs of given YUVs
 #                   ./run_SGEJobCancel.sh  YUV  01.yuv 02.yuv
 #
-#            2) resubmit given Job IDs
+#            2) cancel given Job IDs
 #                   ./run_SGEJobCancel.sh  JobID  123  124  126
 #
 #
