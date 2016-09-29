@@ -32,11 +32,6 @@ runGlobalVariableInitial()
 
 	DownSampleExe="DownConvertStatic"
 
-	declare -a aYUVInfo
-	declare -a aLayerWidth
-	declare -a aLayerHeight
-	declare -a aYUVSize
-
     NumberLayer=1
     aLayerWidth=(0 0 0 0)
     aLayerHeight=(0 0 0 0)
@@ -77,19 +72,22 @@ runCheckEncodedFrameNum()
 
 runSetLayerInfo()
 {
+    aLayerWidth=(0 0 0 0)
+    aLayerHeight=(0 0 0 0)
+    aYUVSize=(0 0 0 0)
+
     NumberLayer=`./run_GetSpatialLayerNum.sh ${OriginWidth} ${OriginHeight}`
 
     #layer resolution for laye0,layer1,layer2,layer3 is the same with case setting,
     #please refer to run_GenerateCase.sh
-    #eg. Multiple16Flag=0; OriginHeight=720  then aLayerHeight=(720  360 180 90)
-    #    Multiple16Flag=1; OriginHeight=720  then aLayerHeight=(720 352 176 80)
+    #eg. Multiple16Flag=0; OriginHeight=720  then aLayerHeight=(90 180 360 720)
+    #    Multiple16Flag=1; OriginHeight=720  then aLayerHeight=(80 176 352 720)
 
-    let "factor = 1"
     for((i=0;i<${NumberLayer};i++))
     do
+        let "factor  = 2 ** (${NumberLayer} -1 - $i)"
         let "aLayerWidth[$i]  = OriginWidth  / factor"
         let "aLayerHeight[$i] = OriginHeight / factor"
-        let "factor *= 2"
 
         if [ ${Multiple16Flag} -eq 1  ]
         then
@@ -119,8 +117,8 @@ runSetLayerInfo()
 runPrepareInputYUV()
 {
     let "CropYUVFlag = 0"
-    [ ! ${OriginWidth}  -eq ${aLayerWidth[0]}  ] &&  let "CropYUVFlag = 1"
-    [ ! ${OriginHeight} -eq ${aLayerHeight[0]} ] &&  let "CropYUVFlag = 1"
+    [ ! ${OriginWidth}  -eq ${aLayerWidth[$NumberLayer-1]}  ]  &&  let "CropYUVFlag = 1"
+    [ ! ${OriginHeight} -eq ${aLayerHeight[$NumberLayer -1]} ] &&  let "CropYUVFlag = 1"
 
     if [ ${CropYUVFlag} -eq 1 ]
     then
@@ -159,16 +157,19 @@ runOutputPrepareLog()
     #OriginYUVSize: 314572800
     #MaxFrameNum  : 640
     #NumberLayer:   3
-    #EncodedFrmNum: 640
-    #LayerPicW_0:   640
-    #LayerPicH_H_0: 512
-    #LayerSize_0:   314572800
+    #EncodedFrmNum: 100
+    #LayerPicW_0:   160
+    #LayerPicH_H_0: 128
+    #LayerSize_0:   3072000
     #LayerPicW_1:   320
     #LayerPicH_H_1: 256
-    #LayerSize_1:   78643200
-    #LayerPicW_2:   160
-    #LayerPicH_H_2: 128
-    #LayerSize_2:   19660800
+    #LayerSize_1:   12288000
+    #LayerPicW_2:   640
+    #LayerPicH_H_2: 512
+    #LayerSize_2:   49152000
+    #LayerPicW_3:   0
+    #LayerPicH_H_3: 0
+    #LayerSize_3:   0
     #*****************************************************
 
     echo ""
@@ -178,7 +179,7 @@ runOutputPrepareLog()
     echo "NumberLayer:   ${NumberLayer}"
     echo "EncodedFrmNum: ${EncodedFrmNum}"
 
-    for ((i=0; i<${NumberLayer}; i++ ))
+    for ((i=0; i<4; i++ ))
 	do
         echo "LayerPicW_${i}:   ${aLayerWidth[$i]}"
         echo "LayerPicH_H_${i}: ${aLayerHeight[$i]}"
@@ -215,16 +216,13 @@ runMain()
     runPrepareInputYUV
 	if [ ! ${PrepareFlag} -eq 0 ]
 	then
-		echo ""
-		echo -e "\033[31m  input YUV preparation failed! \033[0m"
-		echo ""
+		echo -e "\033[31m\n  input YUV preparation failed! \n\033[0m"
 		exit 1
 	fi
 
 	runOutputPrepareLog >${PrepareLog}
-	echo ""
-	echo -e "\033[32m  input YUV preparation succeed! \033[0m"
-	echo ""
+    cat ${PrepareLog}
+    echo -e "\033[32m\n  input YUV preparation succeed! \n\033[0m"
 
 	return 0
 }
