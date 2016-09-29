@@ -3,7 +3,7 @@
 # brief:
 #      --copy file from SGE host/master  based on configure file
 #      --usage:  run_CopyFilesFromSGE.sh  ${HostOption} \
-#                                         \${HostType}  \
+#                                         \${JobIDOrTestProfile}  \
 #                                         \${FileName}  \
 #                                         \${DestDir}
 #
@@ -14,10 +14,10 @@
 runUsage()
 {
     echo ""
-    echo -e "\033[31m Usage: run_CopyFilesFromSGE.sh  \${HostOption}   \033[0m"
-    echo -e "\033[31m                                 \${HostType}     \033[0m"
-    echo -e "\033[31m                                 \${FileName}     \033[0m"
-    echo -e "\033[31m                                 \${DestDir}      \033[0m"
+    echo -e "\033[31m Usage: run_CopyFilesFromSGE.sh  \${HostOption}          \033[0m"
+    echo -e "\033[31m                                 \${JobIDOrTestProfile}  \033[0m"
+    echo -e "\033[31m                                 \${FileName}            \033[0m"
+    echo -e "\033[31m                                 \${DestDir}             \033[0m"
     echo ""
     echo -e "\033[32m  e.g.: run_CopyFilesFromSGE.sh  Host-GuanYu 733 "*.csv"  ./TestData             \033[0m"
     echo -e "\033[32m        copy all .csv test result files from host GuanYU with SGE job ID 733     \033[0m"
@@ -106,7 +106,7 @@ runParseInputOption()
     if [[ "${HostOption}" =~ "Host-" ]]
     then
         HostName=`echo $HostOption | awk 'BEGIN {FS="-"} {print $2}'`
-        JobID=${HostType}
+        JobID=${JobIDOrTestProfile}
         RemoteIP=`./run_ParseSGEHostsIP.sh  ${ConfigureFile}  ${HostOption} `
         RemoteSourceDir=`./run_ParseSGEHostsTestDataDir.sh  ${ConfigureFile}  ${HostOption} `
         RemoteSourceFilePath="${RemoteSourceDir}/SGEJobID_${JobID}/${HostDataFolder}/${FileName}"
@@ -114,7 +114,7 @@ runParseInputOption()
     elif [[ "${HostOption}" =~ "Master" ]]
     then
         HostName="Master-LiuBei"
-        TestType=${HostType}
+        TestType=${JobIDOrTestProfile}
         RemoteIP=`./run_ParseSGEHostsIP.sh  ${ConfigureFile}  Master `
         #Dir-Master-LiuBei-SCC
         RemoteSourceDir=`./run_ParseSGEHostsTestDataDir.sh   ${ConfigureFile}  "Master-${TestType}" `
@@ -164,7 +164,7 @@ runMain()
 }
 
 HostOption=$1
-HostType=$2
+JobIDOrTestProfile=$2
 FileName=$3
 DestDir=$4
 echo "FileName is ${FileName}"
