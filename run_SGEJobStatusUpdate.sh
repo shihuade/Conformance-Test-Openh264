@@ -120,14 +120,14 @@ runParseJobsDetailInfo()
 
 runOutputParseInfo()
 {
-    echo  -e "\033[32m Total submitted job num   is ${SubmittedJobNum}                \033[0m"
-    echo  -e "\033[32m Current job num in queue  is ${CurrentSGEQueueJobNum}          \033[0m"
+    echo  -e "\033[32m Total submitted job num            is ${SubmittedJobNum}              \033[0m"
+    echo  -e "\033[32m Current job num in queue(SVC+SCC)  is ${CurrentSGEQueueJobNum}        \033[0m"
     echo  ""
-    echo  -e "\033[32m Submitted jobs' ID        is ${aSubmittedSGEJobIDList[@]}      \033[0m"
+    echo  -e "\033[32m Submitted jobs' ID                 is ${aSubmittedSGEJobIDList[@]}    \033[0m"
     echo  ""
-    echo  -e "\033[32m Current queue's job ID    is ${aCurrentSGEQueueJobIDList[@]}   \033[0m"
+    echo  -e "\033[32m Current queue's job ID             is ${aCurrentSGEQueueJobIDList[@]} \033[0m"
     echo  ""
-    echo  -e "\033[32m Submitted jobs' name      is ${aSubmittedSGEJobNameList[@]}    \033[0m"
+    echo  -e "\033[32m Submitted jobs' name               is ${aSubmittedSGEJobNameList[@]}  \033[0m"
     echo  ""
 }
 
