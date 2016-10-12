@@ -117,13 +117,13 @@ runSetLayerInfo()
 runPrepareInputYUV()
 {
     let "CropYUVFlag = 0"
-    [ ! ${OriginWidth}  -eq ${aLayerWidth[$NumberLayer-1]}  ]  &&  let "CropYUVFlag = 1"
+    [ ! ${OriginWidth}  -eq ${aLayerWidth[$NumberLayer-1]}   ]  &&  let "CropYUVFlag = 1"
     [ ! ${OriginHeight} -eq ${aLayerHeight[$NumberLayer -1]} ] &&  let "CropYUVFlag = 1"
 
     if [ ${CropYUVFlag} -eq 1 ]
     then
         #rename new input yuv file due to resolution change
-        NewInputYUVName=`./run_RenameYUVfileWithNewResolution.sh ${OriginYUVName} ${aLayerWidth[0]} ${aLayerHeight[0]}`
+        NewInputYUVName=`./run_RenameYUVfileWithNewResolution.sh ${OriginYUVName} ${aLayerWidth[$NumberLayer-1]} ${aLayerHeight[$NumberLayer-1]}`
         if [ -e ${OutPutDir}/${NewInputYUVName} ]
         then
             ./run_SafeDelete.sh  ${OutPutDir}/${NewInputYUVName}
@@ -136,7 +136,7 @@ runPrepareInputYUV()
             exit 1
         fi
 
-        RunCommand="./${DownSampleExe}  ${OriginWidth} ${OriginHeight} ${OriginYUV}  ${aLayerWidth[0]}  ${aLayerHeight[0]}  ${OutPutDir}/${NewInputYUVName}"
+        RunCommand="./${DownSampleExe} ${OriginWidth} ${OriginHeight} ${OriginYUV} ${aLayerWidth[$NumberLayer-1]} ${aLayerHeight[$NumberLayer-1]} ${OutPutDir}/${NewInputYUVName}"
         echo "new input YUV name after croped is ${OutPutDir}/${NewInputYUVName}"
         echo "RunCommand is ${RunCommand}"
         ${RunCommand}
