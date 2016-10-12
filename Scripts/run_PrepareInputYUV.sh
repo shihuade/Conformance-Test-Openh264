@@ -136,7 +136,10 @@ runPrepareInputYUV()
             exit 1
         fi
 
-        ./${DownSampleExe}  ${OriginWidth} ${OriginHeight} ${OriginYUV}  ${aLayerWidth[0]}  ${aLayerHeight[0]}  ${OutPutDir}/${NewInputYUVName}
+        RunCommand="./${DownSampleExe}  ${OriginWidth} ${OriginHeight} ${OriginYUV}  ${aLayerWidth[0]}  ${aLayerHeight[0]}  ${OutPutDir}/${NewInputYUVName}"
+        echo "new input YUV name after croped is ${OutPutDir}/${NewInputYUVName}"
+        echo "RunCommand is ${RunCommand}"
+        ${RunCommand}
         if [ ! $? -eq 0 ]
         then
             let "PrepareFlag=1"
