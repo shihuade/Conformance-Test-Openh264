@@ -61,7 +61,7 @@ runPromptInfo()
     then
         echo ""
         echo -e "\033[34m ************************************************************************** \033[0m"
-        echo -e "\033[34m      Final test result:  All test succed!       \033[0m"
+        echo -e "\033[34m      Final test result:  All test succeed!       \033[0m"
         echo -e "\033[34m **************************************************************************** \033[0m"
         echo ""
     else

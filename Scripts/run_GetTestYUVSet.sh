@@ -126,7 +126,7 @@ runTranscodeBitStreamToYUV()
             let "ReturnFlag=1"
         else
             ${ScriptsDir}/run_BitStreamToYUV.sh ${InputBitStreamFile} ${BitStreamToYUVFolder}  ${Decoder}
-            aBitStreamToYUVFlag[$i]="Transcoded Succed!"
+            aBitStreamToYUVFlag[$i]="Transcoded Succeed!"
         fi
         let "i ++"
     done

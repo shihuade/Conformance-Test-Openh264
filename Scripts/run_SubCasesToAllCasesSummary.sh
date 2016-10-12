@@ -62,7 +62,7 @@ runOutputTestSummary()
         let "TestFlag=1"
     else
         echo -e "\033[32m   All Cases passed the test!   \033[0m"
-        echo -e "\033[32m     Succed!   \033[0m"
+        echo -e "\033[32m     Succeed!   \033[0m"
         let "TestFlag=0"
     fi
 

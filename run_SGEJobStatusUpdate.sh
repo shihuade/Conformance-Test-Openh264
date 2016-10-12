@@ -35,9 +35,9 @@ runInitial()
     declare -a aFailedJobNameList
     declare -a aFailedJobUnpassedCasesNumList
 
-    declare -a aSuccedJobIDList
-    declare -a aSuccedJobNameList
-    declare -a aSuccedJobPassedCasesNumList
+    declare -a aSucceedJobIDList
+    declare -a aSucceedJobNameList
+    declare -a aSucceedJobPassedCasesNumList
 
     declare -a aUnRunCaseJobIDList
     declare -a aUnRunCaseJobNameList
@@ -46,7 +46,7 @@ runInitial()
     declare -a aUnknownReasonFailedJobNameList
 
     declare -a aFailedJobTestDirList
-    declare -a aSuccedJobTestDirList
+    declare -a aSucceedJobTestDirList
     declare -a aUnRunCaseJobTestDirList
 
 
@@ -56,7 +56,7 @@ runInitial()
     let "RunningJobNum=0"
     let "WaitingJobNum=0"
     let "CompletedJobNum=0"
-    let "SuccedJobNum=0"
+    let "SucceedJobNum=0"
     let "FailedJobNum=0"
     let "UnRunCasesJobNum=0"
     let "UnKnownReasonFailedJobNum=0"
@@ -69,14 +69,14 @@ runInitial()
 
     CurrentDir=`pwd`
     TestSpace="${CurrentDir}/AllTestData"
-    SuccedJobsInfo="${CurrentDir}/SuccedJobsDetailInfo.txt"
+    SucceedJobsInfo="${CurrentDir}/SucceedJobsDetailInfo.txt"
     FailedJobsInfo="${CurrentDir}/FailedJobsDetailInfo.txt"
     UnRunCasesJobsInfo="${CurrentDir}/UnRunCasesJobsDetailInfo.txt"
     UnknownReasonJobsInfo="${CurrentDir}/UnknownReasonJobsDetailInfo.txt"
 
     date
     DateInfo=`date`
-    echo "${DateInfo}">${SuccedJobsInfo}
+    echo "${DateInfo}">${SucceedJobsInfo}
     echo "${DateInfo}">${FailedJobsInfo}
     echo "${DateInfo}">${UnRunCasesJobsInfo}
     echo "${DateInfo}">${UnknownReasonJobsInfo}
@@ -191,31 +191,31 @@ runSGEJobStatusCheck()
 
 runUpdateSGEJobPassedStatus()
 {
-    #aOptionList=(FailedJobID FailedJobName FailedJobUnPassedNum SuccedJobID SuccedJobName SuccedJobPassedNum)
+    #aOptionList=(FailedJobID FailedJobName FailedJobUnPassedNum SucceedJobID SucceedJobName SucceedJobPassedNum)
 
     aFailedJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   FailedJobID `)
     aFailedJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh FailedJobName `)
     aFailedJobUnpassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh FailedJobUnpassedNum `)
 
 
-    aSuccedJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   SuccedJobID `)
-    aSuccedJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobName `)
-    aSuccedJobPassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobPassedNum `)
+    aSucceedJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   SucceedJobID `)
+    aSucceedJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh SucceedJobName `)
+    aSucceedJobPassedCasesNumList=(`./Scripts/run_ParseSGEJobPassStatus.sh SucceedJobPassedNum `)
 
     aUnRunCaseJobIDList=(`./Scripts/run_ParseSGEJobPassStatus.sh   UnRunCaseJobID `)
     aUnRunCaseJobNameList=(`./Scripts/run_ParseSGEJobPassStatus.sh UnRunCaseJobName `)
 
 
     aFailedJobTestDirList=(`./Scripts/run_ParseSGEJobPassStatus.sh FailedJobTestDir `)
-    aSuccedJobTestDirList=(`./Scripts/run_ParseSGEJobPassStatus.sh SuccedJobTestDir `)
+    aSucceedJobTestDirList=(`./Scripts/run_ParseSGEJobPassStatus.sh SucceedJobTestDir `)
     aUnRunCaseJobTestDirList=(`./Scripts/run_ParseSGEJobPassStatus.sh UnRunCaseJobTestDir `)
 
 
     let "FailedJobNum=${#aFailedJobIDList[@]}"
-    let "SuccedJobNum=${#aSuccedJobIDList[@]}"
+    let "SucceedJobNum=${#aSucceedJobIDList[@]}"
     let "UnRunCasesJobNum=${#aUnRunCaseJobIDList[@]}"
 
-    let "DetectedJobNum= ${FailedJobNum} + ${SuccedJobNum} + ${UnRunCasesJobNum}"
+    let "DetectedJobNum= ${FailedJobNum} + ${SucceedJobNum} + ${UnRunCasesJobNum}"
     let "UnKnownReasonFailedJobNum=${CompletedJobNum} - ${DetectedJobNum}"
 
     if [ ! ${UnKnownReasonFailedJobNum} -eq 0  ]
@@ -226,7 +226,7 @@ runUpdateSGEJobPassedStatus()
 runGetUnknownReasonFailedJobInfo()
 {
     declare -a DetectedJobList
-    DetectedJobList=( ${aRunningJobIDList[@]} ${aWaitingJobIDList[@]} ${aFailedJobIDList[@]} ${aSuccedJobIDList[@]} ${aUnRunCaseJobIDList[@]} )
+    DetectedJobList=( ${aRunningJobIDList[@]} ${aWaitingJobIDList[@]} ${aFailedJobIDList[@]} ${aSucceedJobIDList[@]} ${aUnRunCaseJobIDList[@]} )
 	let "DetectedJobNum =${#DetectedJobList[@]}"
 	echo DetectedJobNum is ${DetectedJobNum}
     echo DetectedJobList is ${DetectedJobList[@]}
@@ -289,14 +289,14 @@ runOutputJobDetailInfoFile()
             fi
         done
 
-        ## for succed jobs' info
-        for ((j=0;j<${SuccedJobNum};j++))
+        ## for succeed jobs' info
+        for ((j=0;j<${SucceedJobNum};j++))
         do
-            let "DetectedJobID = ${aSuccedJobIDList[$j]}"
+            let "DetectedJobID = ${aSucceedJobIDList[$j]}"
             if [ "${SubmittedJobID}" = "${DetectedJobID}" ]
             then
-                echo "${SubmittedJobID}  ${vSubCasesIndex}  ${vTestDir} ">>${SuccedJobsInfo}
-                echo "            ----Test dir is: ${aSuccedJobTestDirList}">>${SuccedJobsInfo}
+                echo "${SubmittedJobID}  ${vSubCasesIndex}  ${vTestDir} ">>${SucceedJobsInfo}
+                echo "            ----Test dir is: ${aSucceedJobTestDirList}">>${SucceedJobsInfo}
 
             fi
         done
@@ -330,9 +330,9 @@ runOutputStatusSummary()
         echo  -e "\033[32m      Completed jobs test cases status info                             \033[0m"
         echo  -e "\033[32m  ********************************************************************  \033[0m"
         echo  ""
-        echo  -e "\033[32m Succed job num   is ${SuccedJobNum}                                    \033[0m"
+        echo  -e "\033[32m Succeed job num  is ${SucceedJobNum}                                   \033[0m"
         echo  ""
-        echo  -e "\033[32m Succed job ID    is ${aSuccedJobIDList[@]}                             \033[0m"
+        echo  -e "\033[32m Succeed job ID   is ${aSucceedJobIDList[@]}                            \033[0m"
         echo  ""
         echo  -e "\033[31m Failed job num   is ${FailedJobNum}                                    \033[0m"
         echo  ""
@@ -377,9 +377,9 @@ runOutputStatusSummary()
         echo  -e "\033[32m      Completed jobs passed status info                                 \033[0m"
         echo  -e "\033[32m  ********************************************************************  \033[0m"
         echo  ""
-        echo  -e "\033[32m Succed job num   is ${#aSuccedJobIDList[@]}                            \033[0m"
+        echo  -e "\033[32m Succeed job num  is ${#aSucceedJobIDList[@]}                           \033[0m"
         echo  ""
-        echo  -e "\033[32m Succed job ID    is ${aSuccedJobIDList[@]}                             \033[0m"
+        echo  -e "\033[32m Succeed job ID   is ${aSucceedJobIDList[@]}                            \033[0m"
         echo  ""
         echo  -e "\033[31m Failed job num   is ${#aFailedJobIDList[@]}                            \033[0m"
         echo  ""

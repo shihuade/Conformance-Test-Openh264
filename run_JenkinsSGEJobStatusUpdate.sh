@@ -53,7 +53,7 @@ runInital()
     AllTestResultPassFlag="AllCasesPass.flag"
     CodecInfoLog="CodecInfo.log"
 
-    SuccedJobsInfo="SuccedJobsDetailInfo.txt"
+    SucceedJobsInfo="SucceedJobsDetailInfo.txt"
     FailedJobsInfo="FailedJobsDetailInfo.txt"
     UnRunCasesJobsInfo="UnRunCasesJobsDetailInfo.txt"
     UnknownReasonJobsInfo="UnknownReasonJobsDetailInfo.txt"
@@ -174,9 +174,9 @@ runCopyFilesToAchiveDir()
         cp ${SGEIPInfoFile}  ${AttachmentsDir}/SGEIPInfo.txt
     fi
 
-    if [ -e ${SuccedJobsInfo} ]
+    if [ -e ${SucceedJobsInfo} ]
     then
-        cp ${SuccedJobsInfo}  ${AttachmentsDir}/${TestProfile}_${SuccedJobsInfo}
+        cp ${SucceedJobsInfo}  ${AttachmentsDir}/${TestProfile}_${SucceedJobsInfo}
     fi
 
     if [ -e ${FailedJobsInfo} ]

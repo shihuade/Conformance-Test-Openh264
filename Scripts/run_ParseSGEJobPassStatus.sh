@@ -8,9 +8,9 @@
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh FailedJobID
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh FailedJobName
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh FailedJobUnpassedNum
-#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobID
-#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobName
-#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SuccedJobPassedNum
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SucceedJobID
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SucceedJobName
+#      --e.g.:  ./run_ParseSGEJobPassStatus.sh SucceedJobPassedNum
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh UnRunCaseJobID
 #      --e.g.:  ./run_ParseSGEJobPassStatus.sh UnRunCaseJobName
 #
@@ -31,14 +31,14 @@ runUsage()
     echo -e "\033[32m e.g.:  3) get failed jobs' un-passed cases num                 \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh FailedJobUnpassedNum   \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  4) get succed jobs' ID list                             \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobID            \033[0m"
+    echo -e "\033[32m e.g.:  4) get succeed jobs' ID list                            \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SucceedJobID           \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  5) get succed jobs' name list                           \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobName          \033[0m"
+    echo -e "\033[32m e.g.:  5) get succeed jobs' name list                          \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SucceedJobName         \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  6) get succed jobs' passed cases num                    \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobPassedNum     \033[0m"
+    echo -e "\033[32m e.g.:  6) get succeed jobs' passed cases num                   \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SucceedJobPassedNum    \033[0m"
     echo ""
     echo -e "\033[32m e.g.:  7) get un-run case jobs' ID list(e.g.:YUV not found)    \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobID         \033[0m"
@@ -52,8 +52,8 @@ runUsage()
     echo -e "\033[32m e.g.:  10) get failed jobs' test Dir list                      \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh FailedJobTestDir       \033[0m"
     echo ""
-    echo -e "\033[32m e.g.:  11) get succed jobs' test Dir list                      \033[0m"
-    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SuccedJobTestDir       \033[0m"
+    echo -e "\033[32m e.g.:  11) get succeed jobs' test Dir list                     \033[0m"
+    echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh SucceedJobTestDir      \033[0m"
     echo ""
     echo -e "\033[32m e.g.:  12) get un-runCases jobs' test Dir list                 \033[0m"
     echo -e "\033[32m          ./run_ParseSGEJobPassStatus.sh UnRunCaseJobTestDir    \033[0m"
@@ -73,17 +73,17 @@ runInitial()
     declare -a aUnRunCaseJobTestDirList
 
 
-    declare -a aSuccedJobIDList
-    declare -a aSuccedJobNameList
-    declare -a aSuccedJobPassedCasesNumList
-    declare -a aSuccedJobTestDirList
+    declare -a aSucceedJobIDList
+    declare -a aSucceedJobNameList
+    declare -a aSucceedJobPassedCasesNumList
+    declare -a aSucceedJobTestDirList
 
 
     declare -a aAllJobsHostNameList
     declare -a aAllJobIDList
 
     let "FailedJobNum=0"
-    let "SuccedJobNum=0"
+    let "SucceedJobNum=0"
     let "UnRunCaseJobNum=0"
     let "AllJobNum=0"
 
@@ -252,12 +252,12 @@ runUpdateJobPassedStatus()
         aFailedJobTestDirList[${FailedJobNum}]=${TestDir}
         let "FailedJobNum ++"
     else
-        aSuccedJobIDList[${SuccedJobNum}]=${SGEJobID}
-        aSuccedJobNameList[${SuccedJobNum}]=${SGEJobName}
-        aSuccedJobPassedCasesNumList[${SuccedJobNum}]=${PassedCasesNum}
+        aSucceedJobIDList[${SucceedJobNum}]=${SGEJobID}
+        aSucceedJobNameList[${SucceedJobNum}]=${SGEJobName}
+        aSucceedJobPassedCasesNumList[${SucceedJobNum}]=${PassedCasesNum}
 
-        aSuccedJobTestDirList[${SuccedJobNum}]=${TestDir}
-        let "SuccedJobNum ++"
+        aSucceedJobTestDirList[${SucceedJobNum}]=${TestDir}
+        let "SucceedJobNum ++"
     fi
 
     aAllJobsHostNameList[${AllJobNum}]=${SGEJobHost}
@@ -296,15 +296,15 @@ runOutputParseResult()
     elif [ "${Option}" = "FailedJobUnPassedNum" ]
     then
         echo ${aFailedJobUnpassedCasesNumList[@]}
-    elif [ "${Option}" = "SuccedJobID" ]
+    elif [ "${Option}" = "SucceedJobID" ]
     then
-        echo ${aSuccedJobIDList[@]}
-    elif [ "${Option}" = "SuccedJobName" ]
+        echo ${aSucceedJobIDList[@]}
+    elif [ "${Option}" = "SucceedJobName" ]
     then
-        echo ${aSuccedJobNameList[@]}
-    elif [ "${Option}" = "SuccedJobPassedNum" ]
+        echo ${aSucceedJobNameList[@]}
+    elif [ "${Option}" = "SucceedJobPassedNum" ]
     then
-        echo ${aSuccedJobPassedCasesNumList[@]}
+        echo ${aSucceedJobPassedCasesNumList[@]}
     elif [ "${Option}" = "UnRunCaseJobID" ]
     then
         echo ${aUnRunCaseJobIDList[@]}
@@ -321,9 +321,9 @@ runOutputParseResult()
     then
         echo ${aFailedJobTestDirList[@]}
 
-    elif [ "${Option}" = "SuccedJobTestDir" ]
+    elif [ "${Option}" = "SucceedJobTestDir" ]
     then
-        echo ${aSuccedJobTestDirList[@]}
+        echo ${aSucceedJobTestDirList[@]}
 
     elif [ "${Option}" = "UnRunCaseJobTestDir" ]
     then
@@ -335,7 +335,7 @@ runOptionValidateCheck()
 {
     declare -a aOptionList
     aOptionList=(FailedJobID FailedJobName FailedJobUnpassedNum FailedJobTestDir \
-                 SuccedJobID SuccedJobName SuccedJobPassedNum   SuccedJobTestDir \
+                 SucceedJobID SucceedJobName SucceedJobPassedNum   SucceedJobTestDir \
                  UnRunCaseJobID UnRunCaseJobName   UnRunCaseJobTestDir \
                  AllHostsName AllCompletedJobsID  )
     let "Flag=1"
