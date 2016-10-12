@@ -123,7 +123,7 @@ runPrepareInputYUV()
     if [ ${CropYUVFlag} -eq 1 ]
     then
         #rename new input yuv file due to resolution change
-        NewInputYUVName=`../Tools/run_RenameYUVfileWithNewResolution.sh ${OriginYUVName} ${aLayerWidth[0]} ${aLayerHeight[0]}`
+        NewInputYUVName=`./run_RenameYUVfileWithNewResolution.sh ${OriginYUVName} ${aLayerWidth[0]} ${aLayerHeight[0]}`
         if [ -e ${OutPutDir}/${NewInputYUVName} ]
         then
             ./run_SafeDelete.sh  ${OutPutDir}/${NewInputYUVName}

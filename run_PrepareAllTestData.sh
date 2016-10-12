@@ -33,7 +33,7 @@ runGlobalVariableInitial()
     #the same with run_main.sh
     AllTestDataFolder="AllTestData";SHA1TableFolder="SHA1Table";FinalResultDir="FinalResult"
     CodecFolder="Codec";Codec_Linux="Codec_Linux";Codec_Mac="Codec_Mac"
-    ScriptFolder="Scripts"
+    ScriptFolder="Scripts"; ToolsScriptsFolder="Tools"
     BitStreamToYUVFolder="BitStreamToYUV"
     FinalTestReportDir="FinalTestReport"
 
@@ -54,7 +54,7 @@ runRemovedPreviousTestData()
 	[ -d $AllTestDataFolder ]    && ./${ScriptFolder}/run_SafeDelete.sh  $AllTestDataFolder
 	[ -d $SHA1TableFolder ]      && ./${ScriptFolder}/run_SafeDelete.sh  $SHA1TableFolder
 	[ -d $FinalResultDir ]       && ./${ScriptFolder}/run_SafeDelete.sh  $FinalResultDir
-	[ -d $FinalTestReportDir ]           && ./${ScriptFolder}/run_SafeDelete.sh  $FinalTestReportDir
+	[ -d $FinalTestReportDir ]   && ./${ScriptFolder}/run_SafeDelete.sh  $FinalTestReportDir
     [ -d $BitStreamToYUVFolder ] && ./${ScriptFolder}/run_SafeDelete.sh  $BitStreamToYUVFolder
     [ -d $CodecFolder ]          && ./${ScriptFolder}/run_SafeDelete.sh  $CodecFolder
     #[ -d $SourceFolder ]        && ./${ScriptFolder}/run_SafeDelete.sh  $SourceFolder
@@ -153,7 +153,8 @@ runPrepareTestSpace()
 
         #copy codec app, script files, cfg files to test space for one YUV
 		mkdir -p ${SubFolder}
-        cp ${CodecFolder}/*  ${SubFolder};  cp ${ScriptFolder}/*  ${SubFolder};  cp ${ConfigureFile} ${SubFolder}
+        cp ${CodecFolder}/*  ${SubFolder};  cp ${ScriptFolder}/*  ${SubFolder}; cp ${ToolsScriptsFolder}/*  ${SubFolder};
+        cp ${ConfigureFile}  ${SubFolder};
 
         #if input format is bit stream, will decode to YUV, and sub-folder as input YUV dir
         [ ${InputFileFormat} -eq 1 ] && cp ${BitStreamToYUVFolder}/${TestYUV}  ${SubFolder}
