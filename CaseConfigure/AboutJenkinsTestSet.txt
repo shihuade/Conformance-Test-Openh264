@@ -125,57 +125,57 @@
 #     --20768 case * 1/4 = 5192 cases\
 #
 # case in case_SVC.cfg for 1/2 or 1/4 setting:
-#     --IntraPeriod:             0   64
-#     --EnableLongTermReference: 1   0
+#     --IntraPeriod:                0   64
+#     --EnableSceneChangeDetection: 1   0
 #
 # 1/4 partition table:
-#      | ICaseNumInPartition | IntraPeriod | EnableLongTermReference |
-#      | 5192 cases          |     0       |      1                  |
-#      | 5192 cases          |     0       |      0                  |
-#      | 5192 cases          |    64       |      1                  |
-#      | 5192 cases          |    64       |      0                  |
+#      | ICaseNumInPartition | IntraPeriod | EnableSceneChangeDetection |
+#      | 5192 cases          |     0       |      1                     |
+#      | 5192 cases          |     0       |      0                     |
+#      | 5192 cases          |    64       |      1                     |
+#      | 5192 cases          |    64       |      0                     |
 #*******************************************************************************************
 #  test case set partition and run time estimation
 #*******************************************************************************************
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #TestSet0:  Jiessie_James_talking_1280x720_30.yuv
-#           IntraPeriod=0,  EnableLongTermReference=1,
+#           IntraPeriod=0,  EnableSceneChangeDetection=1,
 #           CaseNum=5192,   TestSet run time=2.3*5192s=11941.6s=3.32hours
 #
 #TestSet1:  Jiessie_James_talking_1280x720_30.yuv
-#           IntraPeriod=0,  EnableLongTermReference=0,
+#           IntraPeriod=0,  EnableSceneChangeDetection=0,
 #           CaseNum=5192,   TestSet run time=2.3*5192s=11941.6s=3.32hours
 #
 #TestSet2:  Jiessie_James_talking_1280x720_30.yuv
-#           IntraPeriod=64, EnableLongTermReference=1,
+#           IntraPeriod=64, EnableSceneChangeDetection=1,
 #           CaseNum=5192,   TestSet run time=2.3*5192s=11941.6s=3.32hours
 #
 #TestSet3:  Jiessie_James_talking_1280x720_30.yuv
-#           IntraPeriod=64, EnableLongTermReference=0,
+#           IntraPeriod=64, EnableSceneChangeDetection=0,
 #           CaseNum=5192,   TestSet run time=2.3*5192s=11941.6s=3.32hours
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #TestSet4:  candyHF2_640x480.yuv
-#           IntraPeriod=0,  EnableLongTermReference=1,
+#           IntraPeriod=0,  EnableSceneChangeDetection=1,
 #           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
 #
 #TestSet5:  candyHF2_640x480.yuv
-#           IntraPeriod=0,  EnableLongTermReference=0,
+#           IntraPeriod=0,  EnableSceneChangeDetection=0,
 #           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
 #
 #TestSet6:  candyHF2_640x480.yuv
-#           IntraPeriod=64, EnableLongTermReference=1,
+#           IntraPeriod=64, EnableSceneChangeDetection=1,
 #           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
 #
 #TestSet7:  candyHF2_640x480.yuv
-#           IntraPeriod=64, EnableLongTermReference=0,
+#           IntraPeriod=64, EnableSceneChangeDetection=0,
 #           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #TestSet8:  MSHD_320x192_12fps.yuv.yuv
-#           IntraPeriod=0/64, EnableLongTermReference=0/1,
+#           IntraPeriod=0/64, EnableSceneChangeDetection=0/1,
 #           CaseNum=10384,    TestSet run time=0.3*10384=3115.2s=0.87hours
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #TestSet9:  Switch_sample_a_1024x768.yuv
-#           IntraPeriod=0/64,  EnableLongTermReference=0/1,
+#           IntraPeriod=0/64,  EnableSceneChangeDetection=0/1,
 #           CaseNum=10384,     TestSet run time=0.2*10384=2076s=0.58hours
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #*******************************************************************************************
