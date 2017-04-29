@@ -1,0 +1,216 @@
+#*******************************************************************************************
+#Brief:
+#     inorder to transform conformance test from SGE test platform to Jenkins platform
+#     test case set in need to split cases based on configuration file
+#
+#     ----every test set cases should run within one jenkins job
+#         for example:
+#                --test set: case_Jenkins_SCC_TestSet0.cfg,
+#                --job name: should looks like: XXX-Jenkins_SCC_TestSet0-XXX
+#
+#     ----to optimize overall test time, it is better that each test set have the same
+#         test time,for example:
+#                --1000 SVC cases for 720p may equal to 360p * 2
+#                --so it's better to set test case like:
+#                   720p in testset0: 500  cases
+#                   360p in testset1: 1000 cases
+#*******************************************************************************************
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#*****************************  Test set for SCC *******************************************
+#     ----full test cases, please refer to case_SCC.cfg
+#     ----test yuv list:
+#         --desktop_dialog_1920x1080_i420.yuv
+#         --Doc_roll_with_figures_1440x912.yuv
+#         --PPT_BJUT_1280x720.yuv
+#         --Switch_sample_a_1024x768.yuv
+#
+#     ----Test case run time based previous test data：
+#         --32 frames, 1920*1088: about 2.7 seconds per case
+#         --32 frames, 1440x912:  about 2.2 seconds per case
+#         --32 frames, 1280*720:  about 1.7 seconds per case
+#         --32 frames, 1024x768:  about 1.5 seconds per case
+#
+#     ----full cases num for one test YUV in case_SCC.cfg:  10368 cases
+#
+#     ----overall and average test run time:
+#         overall run time = (2.7 + 2.2 + 1.7 + 1.5)*10368cases=83980.8s=1399.68m=23.33hours
+#         average run time for 10 slaves = 23.33/10 = 2.33 hours
+#*******************************************************************************************
+# cases partition for one YUV in 1/2 or 1/4:
+#     --10368 case * 1/4 = 2592 cases\
+#
+# case in case_SCC.cfg for 1/2 or 1/4 setting:
+#     --IntraPeriod:             0   64
+#     --EnableLongTermReference: 1   0
+#
+# 1/4 partition table:
+#      | ICaseNumInPartition | IntraPeriod | EnableLongTermReference |
+#      | 2592 cases          |     0       |      1                  |
+#      | 2592 cases          |     0       |      0                  |
+#      | 2592 cases          |    64       |      1                  |
+#      | 2592 cases          |    64       |      0                  |
+#*******************************************************************************************
+#  test case set partition and run time estimation
+#*******************************************************************************************
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TestSet0:  desktop_dialog_1920x1080_i420.yuv
+#           IntraPeriod=0,  EnableLongTermReference=1,
+#           CaseNum=2592,   TestSet run time=2.7*2592s=6998.4s=1.94hours
+#
+#TestSet1:  desktop_dialog_1920x1080_i420.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0,
+#           CaseNum=2592,   TestSet run time=2.7*2592s=6998.4s=1.94hours
+#
+#TestSet2:  desktop_dialog_1920x1080_i420.yuv
+#           IntraPeriod=64, EnableLongTermReference=1,
+#           CaseNum=2592,   TestSet run time=2.7*2592s=6998.4s=1.94hours
+#
+#TestSet3:  desktop_dialog_1920x1080_i420.yuv
+#           IntraPeriod=64, EnableLongTermReference=0,
+#           CaseNum=2592,   TestSet run time=2.7*2592s=6998.4s=1.94hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TestSet4:  Doc_roll_with_figures_1440x912.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0/1,
+#           CaseNum=5184,   TestSet run time=2.2*5184=11404.8s=3.17hours
+#
+#TestSet5:  Doc_roll_with_figures_1440x912.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0/1,
+#           CaseNum=5184,   TestSet run time=2.2*5184=11404.8s=3.17hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TestSet6:  PPT_BJUT_1280x720.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0/1,
+#           CaseNum=5184,   TestSet run time=1.7*5184=8812.8s=2.45hours
+#
+#TestSet7:  PPT_BJUT_1280x720.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0/1,
+#           CaseNum=5184,   TestSet run time=1.7*5184=8812.8s=2.45hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TestSet8:  Switch_sample_a_1024x768.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0/1,
+#           CaseNum=5184,   TestSet run time=1.5*5184=7776=2.16hours
+#
+#TestSet9:  Switch_sample_a_1024x768.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0/1,
+#           CaseNum=5184,   TestSet run time=1.5*5184=7776=2.16hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#*******************************************************************************************
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#*****************************  Test set for SVC *******************************************
+#     ----full test cases, please refer to case_SVC.cfg
+#     ----test yuv list:
+#         --Jiessie_James_talking_1280x720_30.yuv
+#         --candyHF2_640x480.yuv
+#         --MSHD_320x192_12fps.yuv
+#         --CiscoVT_2people_160x96_6.25fps.yuv
+#
+#     ----Test case run time based previous test data：
+#         --32 frames, 1280x720:  about 2.3 seconds per case（MultiLayer）
+#         --32 frames, 640x480:   about 1.7 seconds per case
+#         --32 frames, 320x192:   about 0.3 seconds per case
+#         --32 frames, 160x96:    about 0.2 seconds per case
+#
+#     ----full cases num for one test YUV in case_SVC.cfg:
+#         --20768 cases(multi layer)
+#         --10384 cases(sigle layer)
+#
+#     ----overall and average test run time:
+#         overall run time = (2.3 + 1.7) * 20768 + (0.3 + 0.2)*10384cases
+#                          =88264s=24.52hours
+#         average run time for 10 slaves = 24.52/10 = 2.45 hours
+#*******************************************************************************************
+# cases partition for one YUV in 1/2 or 1/4:
+#     --20768 case * 1/4 = 5192 cases\
+#
+# case in case_SVC.cfg for 1/2 or 1/4 setting:
+#     --IntraPeriod:             0   64
+#     --EnableLongTermReference: 1   0
+#
+# 1/4 partition table:
+#      | ICaseNumInPartition | IntraPeriod | EnableLongTermReference |
+#      | 5192 cases          |     0       |      1                  |
+#      | 5192 cases          |     0       |      0                  |
+#      | 5192 cases          |    64       |      1                  |
+#      | 5192 cases          |    64       |      0                  |
+#*******************************************************************************************
+#  test case set partition and run time estimation
+#*******************************************************************************************
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TestSet0:  Jiessie_James_talking_1280x720_30.yuv
+#           IntraPeriod=0,  EnableLongTermReference=1,
+#           CaseNum=5192,   TestSet run time=2.3*5192s=11941.6s=3.32hours
+#
+#TestSet1:  Jiessie_James_talking_1280x720_30.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0,
+#           CaseNum=5192,   TestSet run time=2.3*5192s=11941.6s=3.32hours
+#
+#TestSet2:  Jiessie_James_talking_1280x720_30.yuv
+#           IntraPeriod=64, EnableLongTermReference=1,
+#           CaseNum=5192,   TestSet run time=2.3*5192s=11941.6s=3.32hours
+#
+#TestSet3:  Jiessie_James_talking_1280x720_30.yuv
+#           IntraPeriod=64, EnableLongTermReference=0,
+#           CaseNum=5192,   TestSet run time=2.3*5192s=11941.6s=3.32hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TestSet4:  candyHF2_640x480.yuv
+#           IntraPeriod=0,  EnableLongTermReference=1,
+#           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
+#
+#TestSet5:  candyHF2_640x480.yuv
+#           IntraPeriod=0,  EnableLongTermReference=0,
+#           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
+#
+#TestSet6:  candyHF2_640x480.yuv
+#           IntraPeriod=64, EnableLongTermReference=1,
+#           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
+#
+#TestSet7:  candyHF2_640x480.yuv
+#           IntraPeriod=64, EnableLongTermReference=0,
+#           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TestSet8:  MSHD_320x192_12fps.yuv.yuv
+#           IntraPeriod=0/64, EnableLongTermReference=0/1,
+#           CaseNum=10384,    TestSet run time=0.3*10384=3115.2s=0.87hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TestSet9:  Switch_sample_a_1024x768.yuv
+#           IntraPeriod=0/64,  EnableLongTermReference=0/1,
+#           CaseNum=10384,     TestSet run time=0.2*10384=2076s=0.58hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#*******************************************************************************************
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#*****************************  Test set among 10 slaves ***********************************
+# Test set run time estimation
+#*******************************************************************************************
+# SCC_TestSet0 1.94 hours    SVC_TestSet0: 3.32 hours
+# SCC_TestSet1 1.94 hours    SVC_TestSet1: 3.32 hours
+# SCC_TestSet2 1.94 hours    SVC_TestSet2: 3.32 hours
+# SCC_TestSet3 1.94 hours    SVC_TestSet3: 3.32 hours
+# SCC_TestSet4 3.17 hours    SVC_TestSet4: 2.45 hours
+# SCC_TestSet5 3.17 hours    SVC_TestSet5: 2.45 hours
+# SCC_TestSet6 2.45 hours    SVC_TestSet6: 2.45 hours
+# SCC_TestSet7 2.45 hours    SVC_TestSet7: 2.45 hours
+# SCC_TestSet8 2.16 hours    SVC_TestSet8: 0.87 hours
+# SCC_TestSet9 2.16 hours    SVC_TestSet9: 0.58 hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# test slaves asign and run time estimation
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+#Slave0:   SCC_TestSet0 + SVC_Test0 = 1.94 + 3.32 = 5.26 hours
+#Slave1:   SCC_TestSet1 + SVC_Test1 = 1.94 + 3.32 = 5.26 hours
+#Slave2:   SCC_TestSet2 + SVC_Test2 = 1.94 + 3.32 = 5.26 hours
+#Slave3:   SCC_TestSet3 + SVC_Test3 = 1.94 + 3.32 = 5.26 hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#Slave4:   SCC_TestSet4 + SVC_Test8 = 3.17 + 0.87 = 4.04 hours
+#Slave5:   SCC_TestSet5 + SVC_Test9 = 3.17 + 0.58 = 3.75 hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#Slave6:   SCC_TestSet6 + SVC_Test4 = 2.45 + 2.45 = 4.90 hours
+#Slave7:   SCC_TestSet7 + SVC_Test5 = 2.45 + 2.45 = 4.90 hours
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#Slave8:   SCC_TestSet8 + SVC_Test6 = 2.16 + 2.45 = 4.61 hours
+#Slave9:   SCC_TestSet9 + SVC_Test7 = 2.16 + 2.45 = 4.61 hours
+#
+#*******************************************************************************************
