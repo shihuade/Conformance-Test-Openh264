@@ -37,6 +37,7 @@ runInitial()
     TestSet6=""
     TestSet7=""
     TestSet8=""
+    TestSet9=""
 
     CurrentDir=`pwd`
     ScriptsDir="${CurrentDir}/Scripts"
@@ -82,7 +83,9 @@ runParseInputSetting()
 		elif  [[ "$line" =~ ^TestSet8  ]]
 		then
 			TestSet8=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
-
+        elif  [[ "$line" =~ ^TestSet9  ]]
+        then
+            TestSet9=`echo $line | awk 'BEGIN {FS="[#:\r]" } {print $2}' `
         elif [[ "$line" =~ ^InputFormat  ]]
         then
             TempString=`echo $line | awk 'BEGINE {FS=":"} {print $2}' `
@@ -98,8 +101,7 @@ runParseInputSetting()
 
     done <${ConfigureFile}
 
-	aInputTestFileList=(${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8})
-
+	aInputTestFileList=(${TestSet0}  ${TestSet1}  ${TestSet2}  ${TestSet3}  ${TestSet4}  ${TestSet5}  ${TestSet6}  ${TestSet7} ${TestSet8} ${TestSet9})
 
  }
 
