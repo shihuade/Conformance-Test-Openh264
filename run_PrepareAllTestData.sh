@@ -33,6 +33,9 @@ runGlobalVariableInitial()
     #the same with run_main.sh
     AllTestDataFolder="AllTestData";SHA1TableFolder="SHA1Table";FinalResultDir="FinalResult"
     CodecFolder="Codec";Codec_Linux="Codec_Linux";Codec_Mac="Codec_Mac"
+    Tools32Bits="${Codec_Linux}/Tools32Bits"
+    Tools64Bits="${Codec_Linux}/Tools64Bits"
+    ToolsAppDir="${Tools32Bits}"
     ScriptFolder="Scripts"; ToolsScriptsFolder="Tools"
     BitStreamToYUVFolder="BitStreamToYUV"
     FinalTestReportDir="FinalTestReport"
@@ -102,9 +105,19 @@ runUpdateCodec()
 {
     #copy JM/JSVM/DowsampleApp etc. tools to codec folder
     echo "Test platform is ${Platform}; copy JM/JSVM etc. tools to codec"
-    [ "${Platform}" = "Linux" ] && cp -f  ${Codec_Linux}/*  ${CodecFolder}
-    [ "${Platform}" = "Mac" ]   && cp -f  ${Codec_Mac}/*    ${CodecFolder}
+    #for linux platform, check test os's bit version, 32bits or 64 bits
+    if [ "${Platform}" = "Linux" ]
+    then
+        BitVersion=`uname --machine`
+        [ "${BitVersion}" = "x86_64" ] && ToolsAppDir="${Tools64Bits}"
+        [ "${BitVersion}" = "i686"   ] && ToolsAppDir="${Tools32Bits}"
 
+        cp -f  ${ToolsAppDir}/*      ${CodecFolder}
+        cp -f  ${Codec_Linux}/*.cfg  ${CodecFolder}
+    elif [ "${Platform}" = "Mac" ]
+    then
+        cp -f  ${Codec_Mac}/*    ${CodecFolder}
+    fi
     #checkout openh264 repos and switch to test branch
     ./run_CheckoutRepos.sh  ${Openh264GitAddr} ${Branch} ${SourceFolder} ${ReposUpdateOption}
 	[  ! $? -eq 0 ] && echo -e "\033[31m\n Failed to checkout openh264 repository! \n\033[0m" && exit 1
