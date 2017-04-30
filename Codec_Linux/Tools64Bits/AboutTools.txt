@@ -1,0 +1,21 @@
+#**************************************************************
+Tools app build on centos 6.5 64 bits version
+i686
+#**************************************************************
+    ----JMDecoder/DownConvertStatic
+        git clone from: https://github.com/shihuade/JSVM.git
+        bin file from JSVM/bin/
+        with build from JSVM/JSVM/H264Extension/build/linux/
+        with default make setting
+#**************************************************************
+    ----JMDecoder
+        git clone from: https://github.com/shihuade/JM.git
+        JM19.0
+        bin file from JM/bin/
+        with build from JM/ with default make setting
+#**************************************************************
+    ----extractor.app
+        from train pangu project
+        bin file: under pangu/extractor/build/linux/bin/
+        build under pangu/extractor/build/linux/bld/
+#**************************************************************
