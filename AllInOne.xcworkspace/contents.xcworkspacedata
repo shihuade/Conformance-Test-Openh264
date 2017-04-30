@@ -2,22 +2,191 @@
 <Workspace
    version = "1.0">
    <Group
-      location = "group:Codec"
-      name = "Codec">
+      location = "group:CaseConfigure"
+      name = "CaseConfigure">
       <FileRef
-         location = "group:DownConvertStatic">
+         location = "group:AboutJenkinsTestSet.txt">
       </FileRef>
       <FileRef
-         location = "group:extractor.a">
+         location = "group:case_for_linux_fast_test.cfg">
       </FileRef>
       <FileRef
-         location = "group:extractor.app">
+         location = "group:case_for_Mac_fast_test.cfg">
       </FileRef>
       <FileRef
-         location = "group:extractor.so">
+         location = "group:case_Jenkins_SCC_TestSet0.cfg">
       </FileRef>
       <FileRef
-         location = "group:H264AVCDecoderLibTestStatic">
+         location = "group:case_Jenkins_SCC_TestSet1.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SCC_TestSet2.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SCC_TestSet3.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SCC_TestSet4.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SCC_TestSet5.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SCC_TestSet6.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SCC_TestSet7.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SCC_TestSet8.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SCC_TestSet9.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet0.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet1.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet2.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet3.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet4.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet5.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet6.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet7.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet8.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_Jenkins_SVC_TestSet9.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SCC.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_for_Linux.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_for_Linux_1.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_for_Linux_2.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_for_mac.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_SCC.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_SVC.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SHA1Table_SVC_MultiLayer.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:case_SVC.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:layer2.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:welsenc.cfg">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:Codec_Linux"
+      name = "Codec_Linux">
+      <FileRef
+         location = "group:h264dec">
+      </FileRef>
+      <FileRef
+         location = "group:h264enc">
+      </FileRef>
+      <FileRef
+         location = "group:layer0.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:layer1.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:layer2.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:layer3.cfg">
+      </FileRef>
+      <Group
+         location = "group:Tools32Bits"
+         name = "Tools32Bits">
+         <FileRef
+            location = "group:AboutTools.txt">
+         </FileRef>
+         <FileRef
+            location = "group:DownConvertStatic">
+         </FileRef>
+         <FileRef
+            location = "group:extractor.a">
+         </FileRef>
+         <FileRef
+            location = "group:extractor.app">
+         </FileRef>
+         <FileRef
+            location = "group:extractor.so">
+         </FileRef>
+         <FileRef
+            location = "group:JMDecoder">
+         </FileRef>
+         <FileRef
+            location = "group:JSVMDecoder">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Tools64Bits"
+         name = "Tools64Bits">
+         <FileRef
+            location = "group:AboutTools.txt">
+         </FileRef>
+         <FileRef
+            location = "group:DownConvertStatic">
+         </FileRef>
+         <FileRef
+            location = "group:extractor.a">
+         </FileRef>
+         <FileRef
+            location = "group:extractor.app">
+         </FileRef>
+         <FileRef
+            location = "group:extractor.so">
+         </FileRef>
+         <FileRef
+            location = "group:JMDecoder">
+         </FileRef>
+         <FileRef
+            location = "group:JSVMDecoder">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:welsenc.cfg">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:Codec_Mac"
+      name = "Codec_Mac">
+      <FileRef
+         location = "group:Adobe_PDF_sample_a_1024x768_50Frms.264">
       </FileRef>
       <FileRef
          location = "group:h264dec">
@@ -42,6 +211,9 @@
       </FileRef>
       <FileRef
          location = "group:welsenc.cfg">
+      </FileRef>
+      <FileRef
+         location = "group:Zhling_1280x720.264">
       </FileRef>
    </Group>
    <FileRef
@@ -227,40 +399,6 @@
       </FileRef>
       <FileRef
          location = "group:SGE.cfg">
-      </FileRef>
-   </Group>
-   <Group
-      location = "group:CaseConfigure"
-      name = "CaseConfigure">
-      <FileRef
-         location = "group:case_SHA1Table_SVC_MultiLayer.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SHA1Table_SCC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SHA1Table_SVC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_for_linux_fast_test.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_for_Mac_fast_test.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SCC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SHA1Table_for_mac.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:case_SVC.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:layer2.cfg">
-      </FileRef>
-      <FileRef
-         location = "group:welsenc.cfg">
       </FileRef>
    </Group>
    <Group
