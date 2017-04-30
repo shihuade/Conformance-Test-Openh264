@@ -170,7 +170,7 @@
 #           IntraPeriod=64, EnableSceneChangeDetection=0,
 #           CaseNum=5192,   TestSet run time=1.7*5192s=8826.4s=2.45hours
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#TestSet8:  MSHD_320x192_12fps.yuv.yuv
+#TestSet8:  MSHD_320x192_12fps.yuv
 #           IntraPeriod=0/64, EnableSceneChangeDetection=0/1,
 #           CaseNum=10384,    TestSet run time=0.3*10384=3115.2s=0.87hours
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
