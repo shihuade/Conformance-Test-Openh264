@@ -259,7 +259,7 @@ TestCaseExample()
 {
     TestPlatform="Mac"
     JMDecoder="JMDecoder"
-    JSVMDecoder="H264AVCDecoderLibTestStatic"
+    JSVMDecoder="JSVMDecoder"
     WelsDecoder="h264dec"
     IssueDataPath="issue"
     TempDataPath="TempData"

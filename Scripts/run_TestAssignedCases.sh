@@ -79,7 +79,7 @@ runGlobalVariableInitial()
     RecYUVFile2="${TempDataPath}/${TestYUVName}_rec_2.yuv";RecYUVFile3="${TempDataPath}/${TestYUVName}_rec_3.yuv"
     RecCropYUV0="${TempDataPath}/${TestYUVName}_rec_0_cropped.yuv";RecCropYUV1="${TempDataPath}/${TestYUVName}_rec_1_cropped.yuv"
     RecCropYUV2="${TempDataPath}/${TestYUVName}_rec_2_cropped.yuv";RecCropYUV3="${TempDataPath}/${TestYUVName}_rec_3_cropped.yuv"
-    JMDecoder="JMDecoder";JSVMDecoder="H264AVCDecoderLibTestStatic";WelsDecoder="h264dec"
+    JMDecoder="JMDecoder";JSVMDecoder="JSVMDecoder";WelsDecoder="h264dec"
 }
 
 runParseConfigure()
