@@ -224,12 +224,12 @@ runAllCaseTest()
 
             let "CaseIndex=$TotalCaseNum"
             export CaseIndex;
-#runTestAndCheckOneCase  >>${AssignedCasesConsoleLogFile} 2>&1
+            runTestAndCheckOneCase  >>${AssignedCasesConsoleLogFile} 2>&1
 			echo "TempDataPath is : ${TempDataPath}"
 			echo "LogFileIndex is : ${LogFileIndex}"
 			echo "LineIndex is ${LineIndex}"
 			echo "ResultPath is ${ResultPath}"
-            runTestAndCheckOneCase
+#runTestAndCheckOneCase
 
 			let "TotalCaseNum++"
 		fi
